@@ -1,0 +1,8 @@
+= hello(1)
+otreblan
+v0.0.1
+:doctype: manpage
+:manmanual: Man template
+
+== Name
+hello - a template

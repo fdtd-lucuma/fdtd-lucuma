@@ -1,0 +1,45 @@
+# Maintainer: {{ USER_NAME }} <{{ USER_EMAIL }}>
+
+# shellcheck shell=bash disable=SC2034,SC2154,SC2164
+
+pkgname={{ NAME }}-git
+pkgver=v{{ VERSION }}
+pkgrel=1
+epoch=
+pkgdesc="{{ DESCRIPTION }}"
+arch=('x86_64')
+url="{{ HOMEPAGE_URL }}"
+license=('GPL3')
+groups=()
+depends=('gcc-libs')
+makedepends=('git' 'asciidoctor' 'cmake' 'bash-completion')
+checkdepends=()
+optdepends=()
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+_gitrepo="$(git rev-parse --show-toplevel)"
+_headcommit="$(git rev-parse HEAD)"
+source=("$pkgname::git+file://$_gitrepo#commit=$_headcommit")
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/$pkgname"
+	( set -o pipefail
+	git describe --long 2>/dev/null | sed 's/^v-//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	)
+}
+
+build() {
+	cmake -B build -S "$pkgname" \
+		-DCMAKE_BUILD_TYPE='None' \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}

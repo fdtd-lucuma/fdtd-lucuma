@@ -1,0 +1,73 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ammaraskar/gcc-problem-matcher@master
+
+    - name: deps
+      run: sudo apt install asciidoctor bash-completion
+
+    - name: configure
+      run: cmake -B build
+        -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
+        -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
+        -DCMAKE_BUILD_TYPE=None
+        -DCMAKE_INSTALL_PREFIX=/usr
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+
+    - name: build
+      run: |
+          export MAKEFLAGS=-j$(nproc)
+          cmake --build build
+
+    - name: deb
+      run: |
+          strip --strip-all $(find build -maxdepth 1 -executable -type f)
+          cmake --build build --target package
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ubuntu_package
+        path: build/*.deb
+
+  arch-linux:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+
+    steps:
+    - uses: ammaraskar/gcc-problem-matcher@master
+    - name: Build user
+      run: |
+          USER=ab
+          useradd "$USER"
+          echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/pacman" >> "/etc/sudoers.d/$USER-no-password"
+
+    - run: pacman -Syu --noconfirm git
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - run: chown --recursive ab ./
+
+    - name: makepkg
+      working-directory: ./pkg/arch
+      run: |
+        export MAKEFLAGS=-j$(nproc)
+        export PKGDEST=./
+        sudo -Eu ab makepkg -s --noconfirm
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: arch_package
+        path: pkg/arch/*.pkg.tar.*

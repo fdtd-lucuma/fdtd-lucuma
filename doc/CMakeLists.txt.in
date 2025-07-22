@@ -1,0 +1,72 @@
+# {{ DESCRIPTION }}
+# Copyright © {{ YEAR }} {{ USER_NAME }}
+#
+# {{ NAME }} is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# {{ NAME }} is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with {{ NAME }}.  If not, see <http://www.gnu.org/licenses/>.
+
+find_program(ASCIIDOCTOR asciidoctor)
+
+if(NOT ASCIIDOCTOR)
+	message(SEND_ERROR "asciidoctor not found in $PATH")
+endif()
+
+function(add_man_target)
+	set(options)
+	set(oneValueArgs SECTION TARGET)
+	set(multiValueArgs SOURCES)
+
+	cmake_parse_arguments(ADD_MAN_TARGET
+		"${options}"
+		"${oneValueArgs}"
+		"${multiValueArgs}"
+		${ARGN}
+	)
+
+	string(REGEX MATCH "^[0123456789nx]" SECTION_NUM ${ADD_MAN_TARGET_SECTION})
+
+	foreach(SOURCE IN LISTS ADD_MAN_TARGET_SOURCES)
+		get_filename_component(MAN_NAME ${SOURCE} NAME_WE)
+		set(GROFF_NAME "${MAN_NAME}.${ADD_MAN_TARGET_SECTION}")
+
+		add_custom_command(OUTPUT ${GROFF_NAME}
+			DEPENDS ${SOURCE}
+			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+			COMMENT "${SOURCE} -> ${GROFF_NAME}"
+			COMMAND
+				asciidoctor
+					--backend manpage
+					--out-file "${CMAKE_CURRENT_BINARY_DIR}/${GROFF_NAME}"
+					${SOURCE}
+		)
+
+		list(APPEND MAN_GROFF ${GROFF_NAME})
+
+		install(FILES
+			"${CMAKE_CURRENT_BINARY_DIR}/${GROFF_NAME}"
+			DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/man/man${SECTION_NUM}/"
+		)
+	endforeach()
+
+	add_custom_target(${ADD_MAN_TARGET_TARGET}
+		DEPENDS
+			"${MAN_GROFF}"
+	)
+
+endfunction()
+
+add_subdirectory(man1)
+
+add_custom_target(doc ALL
+	DEPENDS
+		man1
+)

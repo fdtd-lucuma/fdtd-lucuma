@@ -1,0 +1,23 @@
+[![C/C++ CI](https://github.com/{{ REPOSITORY }}/workflows/C/C++%20CI/badge.svg)](https://github.com/{{ REPOSITORY }}/actions?query=workflow%3A%22C%2FC%2B%2B+CI%22)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/{{ REPOSITORY }}?logo=github)
+![GitHub](https://img.shields.io/github/license/{{ REPOSITORY }}?logo=gnu)
+
+# {{ DESCRIPTION }}
+
+## Dependencies
+
+* `asciidoctor`
+* `bash-completion`
+* `cmake`
+
+## Build
+``` bash
+git clone {{ HOMEPAGE_URL }}
+cd {{ NAME }}
+
+mkdir -p build
+cd build
+
+cmake ..
+make
+```
