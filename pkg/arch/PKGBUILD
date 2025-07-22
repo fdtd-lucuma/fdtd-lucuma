@@ -1,14 +1,14 @@
-# Maintainer: {{ USER_NAME }} <{{ USER_EMAIL }}>
+# Maintainer: Otreblan <otreblain@gmail.com>
 
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
-pkgname={{ NAME }}-git
-pkgver=v{{ VERSION }}
+pkgname=fdtd-vulkan-git
+pkgver=v0.0.0
 pkgrel=1
 epoch=
-pkgdesc="{{ DESCRIPTION }}"
+pkgdesc="Una GUI para fdtd"
 arch=('x86_64')
-url="{{ HOMEPAGE_URL }}"
+url="https://github.com/fdtd-lucuma/fdtd-vulkan"
 license=('GPL3')
 groups=()
 depends=('gcc-libs')

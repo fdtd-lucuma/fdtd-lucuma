@@ -1,25 +1,25 @@
-# {{ DESCRIPTION }}
-# Copyright © {{ YEAR }} {{ USER_NAME }}
+# Una GUI para fdtd
+# Copyright © 2025 Otreblan
 #
-# {{ NAME }} is free software: you can redistribute it and/or modify
+# fdtd-vulkan is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# {{ NAME }} is distributed in the hope that it will be useful,
+# fdtd-vulkan is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with {{ NAME }}.  If not, see <http://www.gnu.org/licenses/>.
+# along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.13.0)
 
-project({{ NAME }}
-	VERSION {{ VERSION }}
-	DESCRIPTION "{{ DESCRIPTION }}"
-	HOMEPAGE_URL "{{ HOMEPAGE_URL }}"
+project(fdtd-vulkan
+	VERSION 0.0.0
+	DESCRIPTION "Una GUI para fdtd"
+	HOMEPAGE_URL "https://github.com/fdtd-lucuma/fdtd-vulkan"
 )
 
 # Default build type
@@ -44,7 +44,6 @@ set_target_properties(${PROJECT_NAME}
 find_package(bash-completion)
 
 add_subdirectory(src) # Sources list
-add_subdirectory(doc) # Documentation
 add_subdirectory(pkg) # Packaging
 
 ## Shared libraries
