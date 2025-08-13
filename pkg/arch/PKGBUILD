@@ -12,7 +12,7 @@ url="https://github.com/fdtd-lucuma/fdtd-vulkan"
 license=('GPL3')
 groups=()
 depends=('gcc-libs')
-makedepends=('git' 'asciidoctor' 'cmake' 'bash-completion')
+makedepends=('git' 'asciidoctor' 'cmake' 'bash-completion' 'ninja')
 checkdepends=()
 optdepends=()
 provides=("${pkgname%-git}")
@@ -31,7 +31,7 @@ pkgver() {
 }
 
 build() {
-	cmake -B build -S "$pkgname" \
+	cmake -B build -G Ninja -S "$pkgname" \
 		-DCMAKE_BUILD_TYPE='None' \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \

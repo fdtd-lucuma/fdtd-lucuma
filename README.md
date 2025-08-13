@@ -6,18 +6,18 @@
 
 ## Dependencies
 
-* `asciidoctor`
 * `bash-completion`
 * `cmake`
+* `ninja`
 
 ## Build
 ``` bash
 git clone https://github.com/fdtd-lucuma/fdtd-vulkan
 cd fdtd-vulkan
 
-mkdir -p build
-cd build
+cmake -B build -G Ninja
+cmake --build build
 
-cmake ..
-make
+cd build
+./fdtd-vulkan
 ```

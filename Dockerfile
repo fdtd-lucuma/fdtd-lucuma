@@ -13,7 +13,7 @@ RUN --mount=type=bind,from=dependencies,source=/var/cache/makepkg/pkg/,target=/v
 	./install-deps.sh
 WORKDIR /fdtd-vulkan
 COPY . .
-RUN cmake -B build
+RUN cmake -B build -G Ninja
 RUN cmake --build build --parallel $(nproc)
 
 FROM build AS exec
