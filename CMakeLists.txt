@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.13.0)
+cmake_minimum_required(VERSION 3.28.0)
 
 project(fdtd-vulkan
 	VERSION 0.0.0
@@ -37,7 +37,7 @@ add_executable(${PROJECT_NAME})
 # C++ version
 set_target_properties(${PROJECT_NAME}
 	PROPERTIES
-		CXX_STANDARD 20
+		CXX_STANDARD 23
 )
 
 # Packages

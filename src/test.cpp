@@ -14,10 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-import test;
+module;
 
-int main()
+#include <iostream>
+
+export module test;
+
+
+export void hello()
 {
-	hello();
-	return 0;
+	std::cout << "Hello world\n";
 }
