@@ -31,7 +31,7 @@ pkgver() {
 }
 
 build() {
-	cmake -B build -G Ninja -S "$pkgname" \
+	cmake -B build -S "$pkgname" \
 		-DCMAKE_BUILD_TYPE='None' \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \

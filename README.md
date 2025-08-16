@@ -6,9 +6,7 @@
 
 ## Dependencies
 
-* `bash-completion`
-* `cmake`
-* `ninja`
+Read [./pkg/ubuntu/dependencies.txt](./pkg/ubuntu/dependencies.txt)
 
 ## Build (Ubuntu)
 ``` bash
