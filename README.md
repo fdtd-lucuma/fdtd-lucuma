@@ -15,7 +15,7 @@
 git clone https://github.com/fdtd-lucuma/fdtd-vulkan
 cd fdtd-vulkan
 
-cmake -B build -G Ninja
+cmake -B build
 cmake --build build
 
 cd build
