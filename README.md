@@ -10,10 +10,12 @@
 * `cmake`
 * `ninja`
 
-## Build
+## Build (Ubuntu)
 ``` bash
 git clone https://github.com/fdtd-lucuma/fdtd-vulkan
 cd fdtd-vulkan
+
+xargs -a pkg/ubuntu/dependencies.txt -- sudo apt install
 
 cmake -B build
 cmake --build build

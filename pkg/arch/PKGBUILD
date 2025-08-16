@@ -11,8 +11,8 @@ arch=('x86_64')
 url="https://github.com/fdtd-lucuma/fdtd-vulkan"
 license=('GPL3')
 groups=()
-depends=('gcc-libs')
-makedepends=('git' 'asciidoctor' 'cmake' 'bash-completion' 'ninja')
+depends=('gcc-libs' 'vulkan-icd-loader')
+makedepends=('git' 'cmake' 'bash-completion' 'vulkan-headers')
 checkdepends=()
 optdepends=()
 provides=("${pkgname%-git}")
@@ -35,7 +35,7 @@ build() {
 		-DCMAKE_BUILD_TYPE='None' \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+		-DCMAKE_UNITY_BUILD=ON
 
 	cmake --build build
 }

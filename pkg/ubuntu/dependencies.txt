@@ -1,0 +1,5 @@
+bash-completion
+build-essential
+cmake
+libvulkan-dev
+pkgconf

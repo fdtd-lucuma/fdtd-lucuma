@@ -46,18 +46,17 @@ find_package(bash-completion)
 add_subdirectory(src) # Sources list
 add_subdirectory(pkg) # Packaging
 
-## Shared libraries
-#pkg_check_modules(libraries
-#	REQUIRED IMPORTED_TARGET
-#		libfoo1
-#		libfoo2
-#)
-#
-## Linking
-#target_link_libraries(${PROJECT_NAME}
-#	PRIVATE
-#		PkgConfig::libraries
-#)
+# Shared libraries
+pkg_check_modules(libraries
+	REQUIRED IMPORTED_TARGET
+		vulkan
+)
+
+# Linking
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+		PkgConfig::libraries
+)
 
 # Default flags
 target_compile_options(${PROJECT_NAME}

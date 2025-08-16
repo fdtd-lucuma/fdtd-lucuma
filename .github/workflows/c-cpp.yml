@@ -15,15 +15,16 @@ jobs:
     - uses: ammaraskar/gcc-problem-matcher@master
 
     - name: deps
-      run: sudo apt install ninja bash-completion
+      run: xargs -a pkg/ubuntu/dependencies.txt -- sudo apt-get install
 
     - name: configure
-      run: cmake -B build -G Ninja
+      run: cmake -B build
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_BUILD_TYPE=None
         -DCMAKE_INSTALL_PREFIX=/usr
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+        -DCMAKE_UNITY_BUILD=ON
 
     - name: build
       run: |
@@ -32,7 +33,7 @@ jobs:
 
     - name: deb
       run: |
-          strip --strip-all $(find build -maxdepth 1 -executable -type f)
+          find build -maxdepth 1 -executable -type f -exec strip --strip-all {} \+
           cmake --build build --target package
 
     - uses: actions/upload-artifact@v4
