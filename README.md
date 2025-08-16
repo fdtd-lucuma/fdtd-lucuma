@@ -21,3 +21,13 @@ cmake --build build
 cd build
 ./fdtd-vulkan
 ```
+
+## Build (Arch Linux)
+``` bash
+git clone https://github.com/fdtd-lucuma/fdtd-vulkan
+cd fdtd-vulkan
+
+paru -Bi pkg/arch/
+
+fdtd-vulkan
+```
