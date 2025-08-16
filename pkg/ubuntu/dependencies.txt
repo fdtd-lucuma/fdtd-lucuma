@@ -2,4 +2,5 @@ bash-completion
 build-essential
 cmake
 libvulkan-dev
+libvulkan-memory-allocator-dev
 pkgconf

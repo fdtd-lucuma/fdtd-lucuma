@@ -52,10 +52,23 @@ pkg_check_modules(libraries
 		vulkan
 )
 
+find_package(VulkanMemoryAllocator REQUIRED)
+
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
+
+		GPUOpen::VulkanMemoryAllocator
+)
+
+# Macros
+target_compile_definitions(${PROJECT_NAME}
+	PRIVATE
+		$<$<CONFIG:DEBUG>:VK_DEBUG>
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+		VMA_DYNAMIC_VULKAN_FUNCTIONS=1
+		VMA_STATIC_VULKAN_FUNCTIONS=0
 )
 
 # Default flags

@@ -43,16 +43,10 @@ jobs:
 
   arch-linux:
     runs-on: ubuntu-latest
-    container: archlinux:base-devel
+    container: greyltc/archlinux-aur:paru
 
     steps:
     - uses: ammaraskar/gcc-problem-matcher@master
-    - name: Build user
-      run: |
-          USER=ab
-          useradd "$USER"
-          echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/pacman" >> "/etc/sudoers.d/$USER-no-password"
-
     - run: pacman -Syu --noconfirm git
 
     - uses: actions/checkout@v4
@@ -61,12 +55,11 @@ jobs:
 
     - run: chown --recursive ab ./
 
-    - name: makepkg
+    - name: build
       working-directory: ./pkg/arch
       run: |
-        export MAKEFLAGS=-j$(nproc)
-        export PKGDEST=./
-        sudo -Eu ab makepkg -s --noconfirm
+        echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
+        sudo -Eu ab paru -B .
 
     - uses: actions/upload-artifact@v4
       with:

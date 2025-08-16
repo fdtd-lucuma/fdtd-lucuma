@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-vulkan-git
-pkgver=r9.5f39ca8
+pkgver=r12.7d82991
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -11,8 +11,17 @@ arch=('x86_64')
 url="https://github.com/fdtd-lucuma/fdtd-vulkan"
 license=('GPL3')
 groups=()
-depends=('gcc-libs' 'vulkan-icd-loader')
-makedepends=('git' 'cmake' 'bash-completion' 'vulkan-headers')
+depends=(
+	'gcc-libs'
+	'vulkan-icd-loader'
+)
+makedepends=(
+	'bash-completion'
+	'cmake'
+	'git'
+	'vulkan-headers'
+	'vulkan-memory-allocator'
+)
 checkdepends=()
 optdepends=()
 provides=("${pkgname%-git}")
