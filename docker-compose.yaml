@@ -1,0 +1,7 @@
+services:
+  vulkan:
+    build: .
+    develop:
+      watch:
+        - action: rebuild
+          path: .
