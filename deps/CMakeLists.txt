@@ -25,6 +25,11 @@ FetchContent_MakeAvailable(imgui)
 
 add_library(imgui)
 
+set_target_properties(imgui
+	PROPERTIES
+		UNITY_BUILD OFF
+)
+
 target_sources(imgui
 	PRIVATE
 		${imgui_SOURCE_DIR}/imgui.cpp
