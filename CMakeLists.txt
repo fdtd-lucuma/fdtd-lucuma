@@ -27,6 +27,8 @@ if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+set(FETCHCONTENT_QUIET OFF) # Remove this once CMake 3.30 is released in Ubuntu
+
 include(FetchContent)
 include(GNUInstallDirs)
 include(FindPkgConfig)
@@ -53,6 +55,7 @@ if(NOT USE_SYSTEM_LIBS)
 		EnTT
 		GIT_REPOSITORY https://github.com/skypjack/entt
 		GIT_TAG        v3.15.0
+		GIT_PROGRESS   ON
 		OVERRIDE_FIND_PACKAGE
 	)
 
