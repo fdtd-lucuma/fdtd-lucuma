@@ -46,6 +46,7 @@ find_package(bash-completion)
 
 add_subdirectory(src) # Sources list
 add_subdirectory(pkg) # Packaging
+add_subdirectory(deps) # Hardcoded dependencies
 
 if(NOT USE_SYSTEM_LIBS)
 	FetchContent_Declare(
@@ -73,6 +74,7 @@ find_package(glm REQUIRED)
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
+		imgui
 
 	INTERFACE # Header only
 		GPUOpen::VulkanMemoryAllocator
