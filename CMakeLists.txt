@@ -78,8 +78,10 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
 		imgui
-		GPUOpen::VulkanMemoryAllocator
 		EnTT::EnTT
+
+	INTERFACE
+		GPUOpen::VulkanMemoryAllocator
 		glm::glm-header-only
 )
 
