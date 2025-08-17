@@ -43,13 +43,6 @@ set_target_properties(${PROJECT_NAME}
 		CXX_STANDARD 23
 )
 
-# Packages
-find_package(bash-completion)
-
-add_subdirectory(src) # Sources list
-add_subdirectory(pkg) # Packaging
-add_subdirectory(deps) # Hardcoded dependencies
-
 if(NOT USE_SYSTEM_LIBS)
 	FetchContent_Declare(
 		EnTT
@@ -63,6 +56,12 @@ if(NOT USE_SYSTEM_LIBS)
 	FetchContent_MakeAvailable(EnTT)
 endif()
 
+# Packages
+find_package(bash-completion REQUIRED)
+find_package(VulkanMemoryAllocator REQUIRED)
+find_package(EnTT REQUIRED)
+find_package(glm REQUIRED)
+
 # Shared libraries
 pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET
@@ -70,19 +69,17 @@ pkg_check_modules(libraries
 		glfw3
 )
 
-find_package(VulkanMemoryAllocator REQUIRED)
-find_package(EnTT REQUIRED)
-find_package(glm REQUIRED)
+add_subdirectory(src) # Sources list
+add_subdirectory(pkg) # Packaging
+add_subdirectory(deps) # Hardcoded dependencies
 
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
 		imgui
-
-	INTERFACE # Header only
 		GPUOpen::VulkanMemoryAllocator
-		EnTT:EnTT
+		EnTT::EnTT
 		glm::glm-header-only
 )
 
