@@ -63,7 +63,7 @@ jobs:
         PKGDEST=./ sudo \
           --user ab \
           --preserve-env=PKGDEST \
-          --
+          -- \
           paru \
             --noconfirm \
             --batchinstall \
