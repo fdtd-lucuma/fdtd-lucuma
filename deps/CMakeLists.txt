@@ -31,6 +31,12 @@ set_target_properties(imgui
 		UNITY_BUILD OFF
 )
 
+target_compile_definitions(imgui
+	PRIVATE
+		$<$<CONFIG:DEBUG>:VK_DEBUG>
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+)
+
 target_sources(imgui
 	PRIVATE
 		${imgui_SOURCE_DIR}/imgui.cpp
