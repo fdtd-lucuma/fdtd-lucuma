@@ -27,6 +27,12 @@ FetchContent_MakeAvailable(imgui)
 
 add_library(imgui)
 
+# C++ version
+set_target_properties(imgui
+	PROPERTIES
+		CXX_STANDARD 23
+)
+
 # imgui fails when unity builds are active
 set_target_properties(imgui
 	PROPERTIES
