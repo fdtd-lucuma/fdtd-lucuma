@@ -64,6 +64,7 @@ jobs:
           --batchinstall \
           --skipreview \
           --nocleanafter \
+          --verbose \
           -B .
 
     - uses: actions/upload-artifact@v4
