@@ -37,6 +37,7 @@ target_compile_definitions(imgui
 	PRIVATE
 		$<$<CONFIG:DEBUG>:VK_DEBUG>
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+		GLFW_INCLUDE_VULKAN
 )
 
 target_sources(imgui
