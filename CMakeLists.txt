@@ -55,6 +55,7 @@ if(NOT USE_SYSTEM_LIBS)
 		EnTT
 		GIT_REPOSITORY https://github.com/skypjack/entt
 		GIT_TAG        v3.15.0
+		GIT_SHALLOW    ON
 		GIT_PROGRESS   ON
 		OVERRIDE_FIND_PACKAGE
 	)
