@@ -27,6 +27,7 @@ if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+include(FetchContent)
 include(GNUInstallDirs)
 include(FindPkgConfig)
 include(CPack)
@@ -46,6 +47,17 @@ find_package(bash-completion)
 add_subdirectory(src) # Sources list
 add_subdirectory(pkg) # Packaging
 
+if(NOT USE_SYSTEM_LIBS)
+	FetchContent_Declare(
+		EnTT
+		GIT_REPOSITORY https://github.com/skypjack/entt
+		GIT_TAG        v3.15.0
+		OVERRIDE_FIND_PACKAGE
+	)
+
+	FetchContent_MakeAvailable(EnTT)
+endif()
+
 # Shared libraries
 pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET
@@ -53,13 +65,16 @@ pkg_check_modules(libraries
 )
 
 find_package(VulkanMemoryAllocator REQUIRED)
+find_package(EnTT REQUIRED)
 
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
 
+	INTERFACE # Header only
 		GPUOpen::VulkanMemoryAllocator
+		EnTT:EnTT
 )
 
 # Macros

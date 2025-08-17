@@ -19,7 +19,10 @@ FROM install-dependecies AS build
 WORKDIR /fdtd-vulkan
 RUN --mount=type=bind,source=.,target=./source \
 	--mount=type=cache,target=./build,sharing=private \
-	cmake -B build -S source && \
+	cmake \
+		-DUSE_SYSTEM_LIBS=ON \
+		-B build \
+		-S source && \
 	cmake --build build --parallel $(nproc) && \
 	cp -r build build_copy
 

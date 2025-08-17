@@ -18,6 +18,7 @@ depends=(
 makedepends=(
 	'bash-completion'
 	'cmake'
+	'entt'
 	'git'
 	'vulkan-headers'
 	'vulkan-memory-allocator'
@@ -44,7 +45,8 @@ build() {
 		-DCMAKE_BUILD_TYPE='None' \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-		-DCMAKE_UNITY_BUILD=ON
+		-DCMAKE_UNITY_BUILD=ON \
+		-DUSE_SYSTEM_LIBS=ON \
 
 	cmake --build build
 }
