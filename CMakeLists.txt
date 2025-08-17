@@ -66,6 +66,7 @@ pkg_check_modules(libraries
 
 find_package(VulkanMemoryAllocator REQUIRED)
 find_package(EnTT REQUIRED)
+find_package(glm REQUIRED)
 
 # Linking
 target_link_libraries(${PROJECT_NAME}
@@ -75,6 +76,7 @@ target_link_libraries(${PROJECT_NAME}
 	INTERFACE # Header only
 		GPUOpen::VulkanMemoryAllocator
 		EnTT:EnTT
+		glm::glm-header-only
 )
 
 # Macros
