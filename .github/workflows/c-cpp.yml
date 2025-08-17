@@ -53,7 +53,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - run: chown --recursive ab ./ /var/ab/
+    - run: chown --recursive ab .
 
     - name: build
       working-directory: ./pkg/arch
