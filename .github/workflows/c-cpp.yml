@@ -59,7 +59,7 @@ jobs:
       working-directory: ./pkg/arch
       run: |
         echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
-        sudo -Eu ab paru \
+        sudo -u ab paru \
           --noconfirm \
           --batchinstall \
           --skipreview \
