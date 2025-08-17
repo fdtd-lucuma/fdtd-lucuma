@@ -55,22 +55,25 @@ jobs:
 
     - run: chown --recursive ab .
 
+    - name: config
+      run: sed
+        -e 's/MAKEFLAGS.*/MAKEFLAGS="-j$(nproc)"/'
+        -e '/OPTIONS/ s/\bdebug\b/!debug/'
+        -i /etc/makepkg.conf
+
     - name: build
       working-directory: ./pkg/arch
-      run: |
-        echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
-
-        PKGDEST=./ sudo \
-          --user ab \
-          --preserve-env=PKGDEST \
-          -- \
-          paru \
-            --noconfirm \
-            --batchinstall \
-            --skipreview \
-            --nocleanafter \
-            --verbose \
-            --build .
+      run: PKGDEST=./ sudo
+        --user ab
+        --preserve-env=PKGDEST
+        --
+        paru
+          --noconfirm
+          --batchinstall
+          --skipreview
+          --nocleanafter
+          --verbose
+          --build .
 
     - uses: actions/upload-artifact@v4
       with:
