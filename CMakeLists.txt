@@ -62,6 +62,7 @@ endif()
 pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET
 		vulkan
+		glfw3
 )
 
 find_package(VulkanMemoryAllocator REQUIRED)

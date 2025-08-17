@@ -1,6 +1,7 @@
 bash-completion
 build-essential
 cmake
+libglfw3-dev
 libglm-dev
 libvulkan-dev
 libvulkan-memory-allocator-dev

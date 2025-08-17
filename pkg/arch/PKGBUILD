@@ -13,6 +13,7 @@ license=('GPL3')
 groups=()
 depends=(
 	'gcc-libs'
+	'glfw'
 	'vulkan-icd-loader'
 )
 makedepends=(
