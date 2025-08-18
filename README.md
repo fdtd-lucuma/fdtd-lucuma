@@ -13,7 +13,7 @@ Read [./pkg/ubuntu/dependencies.txt](./pkg/ubuntu/dependencies.txt)
 git clone https://github.com/fdtd-lucuma/fdtd-vulkan
 cd fdtd-vulkan
 
-xargs -a pkg/ubuntu/dependencies.txt -- sudo apt install
+xargs -oa pkg/ubuntu/dependencies.txt -- sudo apt install
 
 cmake -B build
 cmake --build build
