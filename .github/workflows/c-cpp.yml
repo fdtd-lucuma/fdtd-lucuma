@@ -13,13 +13,13 @@ jobs:
 
     steps:
     - name: git
-      run: sudo apt-get install -y git
+      run: apt-get install -y git
 
     - uses: actions/checkout@v4
     - uses: ammaraskar/gcc-problem-matcher@master
 
     - name: deps
-      run: xargs -a pkg/ubuntu/dependencies.txt -- sudo apt-get install -y
+      run: xargs -a pkg/ubuntu/dependencies.txt -- apt-get install -y
 
     - name: configure
       run: cmake -B build
