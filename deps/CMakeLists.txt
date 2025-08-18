@@ -23,7 +23,18 @@ FetchContent_Declare(
 	GIT_PROGRESS   ON
 )
 
-FetchContent_MakeAvailable(imgui)
+FetchContent_Declare(
+	VulkanMemoryAllocator-Hpp
+	GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp
+	GIT_TAG                v3.2.1
+	GIT_SHALLOW            ON
+	GIT_PROGRESS           ON
+	GIT_SUBMODULES         ""
+	GIT_SUBMODULES_RECURSE OFF
+	OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_MakeAvailable(imgui VulkanMemoryAllocator-Hpp)
 
 add_library(imgui)
 

@@ -17,6 +17,7 @@
 #include <iostream>
 
 #include <entt/entt.hpp>
+#include <vk_mem_alloc.hpp>
 
 int main()
 {

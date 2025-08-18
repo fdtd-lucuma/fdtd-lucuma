@@ -56,9 +56,14 @@ if(NOT USE_SYSTEM_LIBS)
 	FetchContent_MakeAvailable(EnTT)
 endif()
 
+add_subdirectory(src) # Sources list
+add_subdirectory(pkg) # Packaging
+add_subdirectory(deps) # Hardcoded dependencies
+
 # Packages
 find_package(bash-completion REQUIRED)
 find_package(VulkanMemoryAllocator REQUIRED)
+find_package(VulkanMemoryAllocator-Hpp REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(glm REQUIRED)
 
@@ -69,16 +74,13 @@ pkg_check_modules(libraries
 		glfw3
 )
 
-add_subdirectory(src) # Sources list
-add_subdirectory(pkg) # Packaging
-add_subdirectory(deps) # Hardcoded dependencies
-
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
 		imgui
 		EnTT::EnTT
+		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
 
 	INTERFACE
 		GPUOpen::VulkanMemoryAllocator
