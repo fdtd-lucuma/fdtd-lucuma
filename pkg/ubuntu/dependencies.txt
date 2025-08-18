@@ -1,9 +1,11 @@
 bash-completion
 build-essential
+clang
 cmake
 file
 libglfw3-dev
 libglm-dev
 libvulkan-dev
 libvulkan-memory-allocator-dev
+ninja-build
 pkgconf

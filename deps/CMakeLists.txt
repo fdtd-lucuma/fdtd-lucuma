@@ -14,6 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
+if(NOT USE_SYSTEM_LIBS)
+	FetchContent_Declare(
+		EnTT
+		GIT_REPOSITORY https://github.com/skypjack/entt
+		GIT_TAG        v3.15.0
+		GIT_SHALLOW    ON
+		GIT_PROGRESS   ON
+		OVERRIDE_FIND_PACKAGE
+	)
+
+	FetchContent_MakeAvailable(EnTT)
+endif()
 
 FetchContent_Declare(
 	imgui
@@ -73,3 +85,31 @@ target_include_directories(imgui
 	PUBLIC
 		${imgui_SOURCE_DIR}
 )
+
+# Packages
+find_package(bash-completion REQUIRED)
+find_package(VulkanMemoryAllocator REQUIRED)
+find_package(VulkanMemoryAllocator-Hpp REQUIRED)
+find_package(EnTT REQUIRED)
+find_package(glm REQUIRED)
+find_package(Vulkan REQUIRED)
+
+# Shared libraries
+pkg_check_modules(libraries
+	REQUIRED IMPORTED_TARGET GLOBAL
+		glfw3
+)
+
+# set up Vulkan C++ module as a library
+add_library(VulkanHppModule)
+target_sources(VulkanHppModule PUBLIC
+  FILE_SET CXX_MODULES
+  BASE_DIRS ${Vulkan_INCLUDE_DIR}
+  FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+)
+set_target_properties(VulkanHppModule
+	PROPERTIES
+		CXX_STANDARD 23
+)
+
+target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)

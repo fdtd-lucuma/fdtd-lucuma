@@ -18,10 +18,12 @@ depends=(
 )
 makedepends=(
 	'bash-completion'
+	'clang'
 	'cmake'
 	'entt'
 	'git'
 	'glm'
+	'ninja'
 	'vulkan-headers'
 	'vulkan-memory-allocator'
 )
@@ -43,7 +45,7 @@ pkgver() {
 }
 
 build() {
-	cmake -B build -S "$pkgname" \
+	cmake -G Ninja -B build -S "$pkgname" \
 		-DCMAKE_BUILD_TYPE='None' \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \

@@ -14,20 +14,26 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.28.0)
-
-project(fdtd-vulkan
-	VERSION 0.0.0
-	DESCRIPTION "Una GUI para fdtd"
-	HOMEPAGE_URL "https://github.com/fdtd-lucuma/fdtd-vulkan"
-)
+cmake_minimum_required(VERSION 3.30.0)
 
 # Default build type
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-set(FETCHCONTENT_QUIET OFF) # Remove this once CMake 3.30 is released in Ubuntu
+if(NOT DEFINED ENV{CC})
+	set(CMAKE_C_COMPILER "/usr/bin/clang")
+endif()
+
+if(NOT DEFINED ENV{CXX})
+	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+endif()
+
+project(fdtd-vulkan
+	VERSION 0.0.0
+	DESCRIPTION "Una GUI para fdtd"
+	HOMEPAGE_URL "https://github.com/fdtd-lucuma/fdtd-vulkan"
+)
 
 include(FetchContent)
 include(GNUInstallDirs)
@@ -43,36 +49,9 @@ set_target_properties(${PROJECT_NAME}
 		CXX_STANDARD 23
 )
 
-if(NOT USE_SYSTEM_LIBS)
-	FetchContent_Declare(
-		EnTT
-		GIT_REPOSITORY https://github.com/skypjack/entt
-		GIT_TAG        v3.15.0
-		GIT_SHALLOW    ON
-		GIT_PROGRESS   ON
-		OVERRIDE_FIND_PACKAGE
-	)
-
-	FetchContent_MakeAvailable(EnTT)
-endif()
-
 add_subdirectory(src) # Sources list
 add_subdirectory(pkg) # Packaging
 add_subdirectory(deps) # Hardcoded dependencies
-
-# Packages
-find_package(bash-completion REQUIRED)
-find_package(VulkanMemoryAllocator REQUIRED)
-find_package(VulkanMemoryAllocator-Hpp REQUIRED)
-find_package(EnTT REQUIRED)
-find_package(glm REQUIRED)
-
-# Shared libraries
-pkg_check_modules(libraries
-	REQUIRED IMPORTED_TARGET
-		vulkan
-		glfw3
-)
 
 # Linking
 target_link_libraries(${PROJECT_NAME}
@@ -81,6 +60,7 @@ target_link_libraries(${PROJECT_NAME}
 		imgui
 		EnTT::EnTT
 		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
+		VulkanHppModule
 
 	INTERFACE
 		GPUOpen::VulkanMemoryAllocator
@@ -97,6 +77,7 @@ target_compile_definitions(${PROJECT_NAME}
 		GLM_FORCE_DEPTH_ZERO_TO_ONE
 		GLM_FORCE_RADIANS
 		GLFW_INCLUDE_VULKAN
+		VMA_ENABLE_VULKAN_HPP_MODULE
 )
 
 # Default flags

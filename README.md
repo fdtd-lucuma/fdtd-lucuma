@@ -15,7 +15,7 @@ cd fdtd-vulkan
 
 xargs -oa pkg/ubuntu/dependencies.txt -- sudo apt install
 
-cmake -B build
+cmake -B build -G Ninja
 cmake --build build
 
 cd build
