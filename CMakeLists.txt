@@ -53,20 +53,6 @@ add_subdirectory(src) # Sources list
 add_subdirectory(pkg) # Packaging
 add_subdirectory(deps) # Hardcoded dependencies
 
-# Linking
-target_link_libraries(${PROJECT_NAME}
-	PRIVATE
-		PkgConfig::libraries
-		imgui
-		EnTT::EnTT
-		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
-		VulkanHppModule
-
-	INTERFACE
-		GPUOpen::VulkanMemoryAllocator
-		glm::glm-header-only
-)
-
 # Macros
 target_compile_definitions(${PROJECT_NAME}
 	PRIVATE

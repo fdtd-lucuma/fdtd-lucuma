@@ -103,9 +103,9 @@ pkg_check_modules(libraries
 # set up Vulkan C++ module as a library
 add_library(VulkanHppModule)
 target_sources(VulkanHppModule PUBLIC
-  FILE_SET CXX_MODULES
-  BASE_DIRS ${Vulkan_INCLUDE_DIR}
-  FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+	FILE_SET CXX_MODULES
+	BASE_DIRS ${Vulkan_INCLUDE_DIR}
+	FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
 )
 set_target_properties(VulkanHppModule
 	PROPERTIES
@@ -119,3 +119,18 @@ target_compile_definitions(VulkanHppModule
 )
 
 target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
+
+# Linking
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+		PkgConfig::libraries
+		imgui
+		EnTT::EnTT
+		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
+		VulkanHppModule
+
+	INTERFACE
+		GPUOpen::VulkanMemoryAllocator
+		glm::glm-header-only
+)
+
