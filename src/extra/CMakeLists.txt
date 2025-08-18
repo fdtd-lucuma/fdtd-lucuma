@@ -14,9 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(extra)
-
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		main.cpp
+		vma.cpp
 )
