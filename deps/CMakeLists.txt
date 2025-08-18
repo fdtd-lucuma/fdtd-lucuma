@@ -112,4 +112,10 @@ set_target_properties(VulkanHppModule
 		CXX_STANDARD 23
 )
 
+target_compile_definitions(VulkanHppModule
+	PRIVATE
+		$<$<CONFIG:DEBUG>:VK_DEBUG>
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+)
+
 target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
