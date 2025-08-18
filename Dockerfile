@@ -22,6 +22,7 @@ RUN --mount=type=bind,source=.,target=./source \
 	cmake \
 		-DUSE_SYSTEM_LIBS=ON \
 		-B build \
+		-G Ninja \
 		-S source && \
 	cmake --build build --parallel $(nproc) && \
 	cp -r build build_copy
