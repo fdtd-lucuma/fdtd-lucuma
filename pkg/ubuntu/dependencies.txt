@@ -1,6 +1,7 @@
 bash-completion
 build-essential
 cmake
+file
 libglfw3-dev
 libglm-dev
 libvulkan-dev
