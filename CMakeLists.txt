@@ -19,14 +19,14 @@ cmake_minimum_required(VERSION 3.30.0)
 # Default build type
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug")
-endif()
 
-if(NOT DEFINED ENV{CC})
-	set(CMAKE_C_COMPILER "/usr/bin/clang")
-endif()
+	if(NOT DEFINED ENV{CC})
+		set(CMAKE_C_COMPILER "/usr/bin/clang")
+	endif()
 
-if(NOT DEFINED ENV{CXX})
-	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+	if(NOT DEFINED ENV{CXX})
+		set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+	endif()
 endif()
 
 project(fdtd-vulkan
