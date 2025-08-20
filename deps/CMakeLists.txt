@@ -66,6 +66,7 @@ target_compile_definitions(imgui
 	PRIVATE
 		$<$<CONFIG:DEBUG>:VK_DEBUG>
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+	PUBLIC
 		GLFW_INCLUDE_VULKAN
 )
 
@@ -114,11 +115,34 @@ set_target_properties(VulkanHppModule
 
 target_compile_definitions(VulkanHppModule
 	PRIVATE
-		$<$<CONFIG:DEBUG>:VK_DEBUG>
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+	PUBLIC
+		$<$<CONFIG:DEBUG>:VK_DEBUG>
 )
 
 target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
+
+# set up glm C++ module as a library
+add_library(GlmModule)
+target_sources(GlmModule PUBLIC
+	FILE_SET CXX_MODULES
+	BASE_DIRS /usr/include # How can I get the glm include dir?
+	FILES /usr/include/glm/glm.cppm
+)
+set_target_properties(GlmModule
+	PROPERTIES
+		CXX_STANDARD 23
+)
+
+target_compile_definitions(GlmModule
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+	PUBLIC
+		GLM_FORCE_DEPTH_ZERO_TO_ONE
+		GLM_FORCE_RADIANS
+)
+
+target_link_libraries(GlmModule PUBLIC glm::glm-header-only)
 
 # Linking
 target_link_libraries(${PROJECT_NAME}
@@ -128,9 +152,9 @@ target_link_libraries(${PROJECT_NAME}
 		EnTT::EnTT
 		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
 		VulkanHppModule
+		GlmModule
 
 	INTERFACE
 		GPUOpen::VulkanMemoryAllocator
-		glm::glm-header-only
 )
 
