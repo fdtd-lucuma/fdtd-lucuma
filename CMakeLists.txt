@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.30.0)
+cmake_minimum_required(VERSION 4.0.2)
+
+set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444" )
 
 # Default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -28,6 +30,9 @@ if(NOT CMAKE_BUILD_TYPE)
 		set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 	endif()
 endif()
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_MODULE_STD 1)
 
 project(fdtd-vulkan
 	VERSION 0.0.0

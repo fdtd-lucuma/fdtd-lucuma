@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <iostream>
-
 #include <entt/entt.hpp>
 
+import std;
 import vk_mem_alloc_hpp;
 import vulkan_hpp;
 import glm;
