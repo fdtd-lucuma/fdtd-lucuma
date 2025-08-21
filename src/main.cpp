@@ -15,6 +15,7 @@
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <entt/entt.hpp>
+#include <imgui.h>
 
 import std;
 import vk_mem_alloc_hpp;
