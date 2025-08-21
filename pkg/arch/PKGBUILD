@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-vulkan-git
-pkgver=r54.a422aef
+pkgver=r56.97306d8
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
