@@ -14,21 +14,25 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 4.0.2)
+cmake_minimum_required(VERSION 4.0.3)
 
+# Change this each version
+# Read Help/dev/experimental.rst at CMake's repo for more info
 set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444" )
 
 # Default build type
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug")
 
-	if(NOT DEFINED ENV{CC})
-		set(CMAKE_C_COMPILER "/usr/bin/clang")
-	endif()
+endif()
 
-	if(NOT DEFINED ENV{CXX})
-		set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-	endif()
+# As of 2025 module : private doesn't compile with gcc
+if(NOT DEFINED ENV{CC})
+	set(CMAKE_C_COMPILER "/usr/bin/clang")
+endif()
+
+if(NOT DEFINED ENV{CXX})
+	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 endif()
 
 set(CMAKE_CXX_STANDARD 23)
