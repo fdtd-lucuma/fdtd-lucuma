@@ -17,7 +17,10 @@
 #include <iostream>
 
 #include <entt/entt.hpp>
-#include <vk_mem_alloc.hpp>
+
+import vk_mem_alloc_hpp;
+import vulkan_hpp;
+import glm;
 
 int main()
 {

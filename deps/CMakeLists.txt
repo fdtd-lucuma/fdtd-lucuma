@@ -144,17 +144,43 @@ target_compile_definitions(GlmModule
 
 target_link_libraries(GlmModule PUBLIC glm::glm-header-only)
 
+# set up vma hpp C++ module as a library
+add_library(VulkanMemoryAllocator-HppModule)
+target_sources(VulkanMemoryAllocator-HppModule PUBLIC
+	FILE_SET CXX_MODULES
+	BASE_DIRS ${VulkanMemoryAllocator-Hpp_SOURCE_DIR}
+	FILES ${VulkanMemoryAllocator-Hpp_SOURCE_DIR}/src/vk_mem_alloc.cppm
+)
+set_target_properties(VulkanMemoryAllocator-HppModule
+	PROPERTIES
+		CXX_STANDARD 23
+)
+
+target_compile_definitions(VulkanMemoryAllocator-HppModule
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+	PUBLIC
+		VMA_DYNAMIC_VULKAN_FUNCTIONS=1
+		VMA_STATIC_VULKAN_FUNCTIONS=0
+		VMA_ENABLE_VULKAN_HPP_MODULE
+)
+
+target_link_libraries(VulkanMemoryAllocator-HppModule
+	PUBLIC
+		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
+		VulkanHppModule
+
+	INTERFACE
+		GPUOpen::VulkanMemoryAllocator
+)
+
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
 		imgui
 		EnTT::EnTT
-		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
-		VulkanHppModule
+		VulkanMemoryAllocator-HppModule
 		GlmModule
-
-	INTERFACE
-		GPUOpen::VulkanMemoryAllocator
 )
 

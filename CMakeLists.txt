@@ -57,9 +57,6 @@ add_subdirectory(deps) # Hardcoded dependencies
 target_compile_definitions(${PROJECT_NAME}
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
-		VMA_DYNAMIC_VULKAN_FUNCTIONS=1
-		VMA_STATIC_VULKAN_FUNCTIONS=0
-		VMA_ENABLE_VULKAN_HPP_MODULE
 )
 
 # Default flags
