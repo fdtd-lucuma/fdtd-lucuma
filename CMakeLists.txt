@@ -25,6 +25,9 @@ if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+# https://gcc.gnu.org/onlinedocs/libstdc++/manual/debug_mode_using.html
+add_compile_options($<$<CONFIG:DEBUG>:-D_GLIBCXX_DEBUG>)
+
 # As of 2025 module : private doesn't compile with gcc
 if(NOT DEFINED ENV{CC})
 	set(CMAKE_C_COMPILER "/usr/bin/clang")

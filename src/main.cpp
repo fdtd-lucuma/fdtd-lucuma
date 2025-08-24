@@ -26,5 +26,9 @@ int main()
 {
 	std::cout << "Hello world\n";
 
-	return 0;
+	std::vector<int> v;
+
+	v[0]++;
+
+	return EXIT_SUCCESS;
 }
