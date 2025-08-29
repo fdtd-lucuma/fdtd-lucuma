@@ -16,12 +16,14 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		argument_parser.cpp
 		main.cpp
+		simulator.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			argument_parser.cpp
-			fdtd.cpp
-			simulator.cpp
+			argument_parser.cppm
+			fdtd.cppm
+			simulator.cppm
 )

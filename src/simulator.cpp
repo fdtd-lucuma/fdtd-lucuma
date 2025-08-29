@@ -18,27 +18,34 @@ module;
 
 #include <cstdlib>
 
-export module fdtd:simulator;
+module fdtd;
 
-import std;
-import :argument_parser;
+simulator::simulator(argument_parser& parser):
+	parser(parser)
+{}
 
-export class simulator
+argument_parser& simulator::get_parser() const
 {
-public:
-	simulator(argument_parser& parser):
-		parser(parser)
-	{}
+	return parser;
+}
 
-	argument_parser& get_parser() const
-	{
-		return parser;
-	}
+int simulator::run() {
+	init_vulkan();
 
-	int run() {
-		return EXIT_SUCCESS;
-	}
+	return EXIT_SUCCESS;
+}
 
-private:
-	argument_parser& parser;
-};
+void simulator::init_vulkan() {
+	constexpr vk::ApplicationInfo applicattionInfo {
+		.applicationVersion = vk::makeVersion(0, 0, 0),
+		.pEngineName        = "Fdtd",
+		.engineVersion      = vk::makeVersion(0, 0, 0),
+		.apiVersion         = vk::ApiVersion14,
+	};
+
+	vk::InstanceCreateInfo instanceCreateInfo {
+		.pApplicationInfo = &applicattionInfo,
+	};
+
+	instance = context.createInstance(instanceCreateInfo);
+}

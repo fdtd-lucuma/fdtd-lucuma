@@ -16,13 +16,25 @@
 
 module;
 
-#include <unistd.h>
+export module fdtd:simulator;
 
-module fdtd;
+import :argument_parser;
+export import vulkan_hpp;
 
-import std;
+export class simulator
+{
+public:
+	simulator(argument_parser& parser);
 
-void argument_parser::parse(int argc, char** argv){
-	for(int i = 0; i < argc; i++)
-		std::cout << argv[i] << '\n';
-}
+	argument_parser& get_parser() const;
+
+	int run();
+
+private:
+	argument_parser& parser;
+
+	vk::raii::Context  context;
+	vk::raii::Instance instance = nullptr;
+
+	void init_vulkan();
+};
