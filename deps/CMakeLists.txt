@@ -55,7 +55,16 @@ FetchContent_Declare(
 	OVERRIDE_FIND_PACKAGE
 )
 
-FetchContent_MakeAvailable(imgui VulkanMemoryAllocator-Hpp vkfw)
+FetchContent_Declare(
+	magic_enum
+	GIT_REPOSITORY https://github.com/Neargye/magic_enum
+	GIT_TAG        v0.9.7
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+	OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_MakeAvailable(imgui VulkanMemoryAllocator-Hpp vkfw magic_enum)
 
 # Packages
 find_package(VulkanMemoryAllocator REQUIRED)
@@ -64,6 +73,7 @@ find_package(EnTT REQUIRED)
 find_package(glm REQUIRED)
 find_package(Vulkan REQUIRED)
 find_package(vkfw REQUIRED)
+find_package(magic_enum REQUIRED)
 
 # Shared libraries
 pkg_check_modules(libraries
@@ -224,6 +234,30 @@ target_link_libraries(VulkanMemoryAllocator-HppModule
 		GPUOpen::VulkanMemoryAllocator
 )
 
+# set up magic enum C++ module as a library
+add_library(magic_enumModule)
+target_sources(magic_enumModule PUBLIC
+	FILE_SET CXX_MODULES
+	BASE_DIRS ${magic_enum_SOURCE_DIR}
+	FILES ${magic_enum_SOURCE_DIR}/module/magic_enum.cppm
+)
+set_target_properties(magic_enumModule
+	PROPERTIES
+		CXX_STANDARD 23
+)
+
+target_compile_definitions(magic_enumModule
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+	PUBLIC
+		MAGIC_ENUM_USE_STD_MODULE
+)
+
+target_include_directories(magic_enumModule
+	PRIVATE
+		${magic_enum_SOURCE_DIR}/include
+)
+
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
@@ -233,5 +267,6 @@ target_link_libraries(${PROJECT_NAME}
 		VulkanMemoryAllocator-HppModule
 		GlmModule
 		VkfwModule
+		magic_enumModule
 )
 
