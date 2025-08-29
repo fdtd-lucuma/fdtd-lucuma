@@ -14,8 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
+module;
+
 #include <entt/entt.hpp>
 #include <imgui.h>
+
+export module fdtd;
 
 import std;
 import vk_mem_alloc_hpp;

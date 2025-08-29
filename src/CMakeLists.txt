@@ -16,5 +16,8 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		main.cpp
+		FILE_SET fdtd
+		TYPE CXX_MODULES
+		FILES
+			main.cpp
 )
