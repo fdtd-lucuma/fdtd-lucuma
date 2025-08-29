@@ -18,7 +18,5 @@ module;
 
 export module fdtd;
 
-export import fdtd.utils;
-
 export import :argument_parser;
 export import :simulator;

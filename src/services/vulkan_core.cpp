@@ -16,28 +16,35 @@
 
 module;
 
-#include <cstdlib>
+module fdtd.services;
 
-module fdtd;
-
-import std;
-import fdtd.utils;
-import fdtd.services;
-
-Simulator::Simulator(ArgumentParser& argumentParser):
-	argumentParser(argumentParser)
-{}
-
-ArgumentParser& Simulator::getArgumentParser() const
+VulkanCore::VulkanCore([[maybe_unused]] Injector& injector)
 {
-	return argumentParser;
+	init();
 }
 
-int Simulator::run()
+vk::raii::Context& VulkanCore::getContext()
 {
-	Injector injector;
+	return context;
+}
 
-	injector.emplace_injectable<VulkanAll>(injector);
+vk::Instance VulkanCore::getInstance()
+{
+	return instance;
+}
 
-	return EXIT_SUCCESS;
+void VulkanCore::init()
+{
+	constexpr vk::ApplicationInfo applicattionInfo {
+		.applicationVersion = vk::makeVersion(0, 0, 0),
+		.pEngineName        = "Fdtd",
+		.engineVersion      = vk::makeVersion(0, 0, 0),
+		.apiVersion         = vk::ApiVersion14,
+	};
+
+	vk::InstanceCreateInfo instanceCreateInfo {
+		.pApplicationInfo = &applicattionInfo,
+	};
+
+	instance = context.createInstance(instanceCreateInfo);
 }

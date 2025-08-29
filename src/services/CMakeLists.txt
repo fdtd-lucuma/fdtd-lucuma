@@ -16,12 +16,13 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		vulkan.cpp
+		vulkan_all.cpp
+		vulkan_core.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			utils.cppm
-			vulkan.cppm
-			injector.cppm
+			services.cppm
+			vulkan_all.cppm
+			vulkan_core.cppm
 )

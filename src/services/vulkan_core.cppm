@@ -16,28 +16,23 @@
 
 module;
 
-#include <cstdlib>
+export module fdtd.services:vulkan_core;
 
-module fdtd;
+export import fdtd.utils;
+export import vulkan_hpp;
 
-import std;
-import fdtd.utils;
-import fdtd.services;
-
-Simulator::Simulator(ArgumentParser& argumentParser):
-	argumentParser(argumentParser)
-{}
-
-ArgumentParser& Simulator::getArgumentParser() const
+export class VulkanCore
 {
-	return argumentParser;
-}
+public:
+	VulkanCore(Injector& injector);
 
-int Simulator::run()
-{
-	Injector injector;
+	vk::raii::Context& getContext();
+	vk::Instance getInstance();
 
-	injector.emplace_injectable<VulkanAll>(injector);
+private:
+	vk::raii::Context  context;
+	vk::raii::Instance instance = nullptr;
 
-	return EXIT_SUCCESS;
-}
+	void init();
+
+};

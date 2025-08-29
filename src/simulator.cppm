@@ -19,7 +19,6 @@ module;
 export module fdtd:simulator;
 
 import :argument_parser;
-export import vulkan_hpp;
 
 export class Simulator
 {
@@ -33,8 +32,4 @@ public:
 private:
 	ArgumentParser& argumentParser;
 
-	vk::raii::Context  context;
-	vk::raii::Instance instance = nullptr;
-
-	void initVulkan();
 };

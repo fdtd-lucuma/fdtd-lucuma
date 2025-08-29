@@ -19,3 +19,4 @@ module;
 export module fdtd.utils;
 
 export import :vulkan;
+export import :injector;

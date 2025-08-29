@@ -28,4 +28,5 @@ target_sources(${PROJECT_NAME}
 			simulator.cppm
 )
 
+add_subdirectory(services)
 add_subdirectory(utils)

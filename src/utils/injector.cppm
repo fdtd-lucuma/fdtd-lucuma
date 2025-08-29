@@ -16,28 +16,31 @@
 
 module;
 
-#include <cstdlib>
+#include <entt/entt.hpp>
 
-module fdtd;
+export module fdtd.utils:injector;
 
-import std;
-import fdtd.utils;
-import fdtd.services;
-
-Simulator::Simulator(ArgumentParser& argumentParser):
-	argumentParser(argumentParser)
-{}
-
-ArgumentParser& Simulator::getArgumentParser() const
+export class Injector
 {
-	return argumentParser;
-}
+public:
+	template<typename Type, typename... Args>
+	Type& emplace_injectable(Args &&...args) {
+		return registry.ctx().emplace<Type>(std::forward<Args>(args)...);
+	}
 
-int Simulator::run()
-{
-	Injector injector;
+	template<typename Type>
+	[[nodiscard]] Type& inject() {
+		if(registry.ctx().contains<Type>())
+			return registry.ctx().get<Type>();
 
-	injector.emplace_injectable<VulkanAll>(injector);
+		return emplace_injectable<Type>(*this);
+	}
 
-	return EXIT_SUCCESS;
-}
+	template<typename Type>
+	[[nodiscard]] const Type& inject() const {
+		return registry.ctx().get<Type>();
+	}
+
+private:
+	entt::registry registry;
+};
