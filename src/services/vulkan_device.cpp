@@ -20,38 +20,43 @@ module fdtd.services;
 
 import std;
 
-VulkanCore::VulkanCore([[maybe_unused]] Injector& injector)
+VulkanDevice::VulkanDevice([[maybe_unused]] Injector& injector):
+	vulkanCore(injector.inject<VulkanCore>())
 {
 	init();
 }
 
-vk::raii::Context& VulkanCore::getContext()
+vk::raii::PhysicalDevice& VulkanDevice::getPhysicalDevice()
 {
-	return context;
+	return physicalDevice;
 }
 
-vk::raii::Instance& VulkanCore::getInstance()
+vk::raii::Device& VulkanDevice::getDevice()
 {
-	return instance;
+	return device;
 }
 
-void VulkanCore::init()
+void VulkanDevice::init()
 {
-	createInstance();
+	createDevices();
 }
 
-void VulkanCore::createInstance()
+void VulkanDevice::createDevices()
 {
-	constexpr vk::ApplicationInfo applicattionInfo {
-		.applicationVersion = vk::makeVersion(0, 0, 0),
-		.pEngineName        = "Fdtd",
-		.engineVersion      = vk::makeVersion(0, 0, 0),
-		.apiVersion         = vk::ApiVersion14,
-	};
+	physicalDevice = selectPhysicalDevice();
 
-	vk::InstanceCreateInfo instanceCreateInfo {
-		.pApplicationInfo = &applicattionInfo,
-	};
+	constexpr vk::DeviceCreateInfo deviceCreateInfo{};
 
-	instance = context.createInstance(instanceCreateInfo);
+	device = physicalDevice.createDevice(deviceCreateInfo);
+}
+
+vk::raii::PhysicalDevice VulkanDevice::selectPhysicalDevice()
+{
+	for(const auto& device: vulkanCore.getInstance().enumeratePhysicalDevices())
+	{
+		// TODO: Force from command line arguments
+		return device;
+	}
+
+	throw std::runtime_error("Failed to find a Vulkan compatible GPU");
 }

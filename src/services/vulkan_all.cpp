@@ -21,7 +21,8 @@ module fdtd.services;
 import std;
 
 VulkanAll::VulkanAll(Injector& injector):
-	vulkanCore(injector.inject<VulkanCore>())
+	vulkanCore(injector.inject<VulkanCore>()),
+	vulkanDevice(injector.inject<VulkanDevice>())
 {
 
 	listVulkanExtensions();

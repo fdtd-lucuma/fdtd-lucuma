@@ -20,3 +20,4 @@ export module fdtd.services;
 
 export import :vulkan_all;
 export import :vulkan_core;
+export import :vulkan_device;

@@ -26,13 +26,15 @@ export class VulkanCore
 public:
 	VulkanCore(Injector& injector);
 
-	vk::raii::Context& getContext();
-	vk::Instance getInstance();
+	vk::raii::Context&  getContext();
+	vk::raii::Instance& getInstance();
 
 private:
 	vk::raii::Context  context;
 	vk::raii::Instance instance = nullptr;
 
 	void init();
+
+	void createInstance();
 
 };
