@@ -22,4 +22,6 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			argument_parser.cpp
+			fdtd.cpp
+			simulator.cpp
 )

@@ -22,5 +22,7 @@ int main(int argc, char** argv)
 
 	parser.parse(argc, argv);
 
-	return 0;
+	simulator sim(parser);
+
+	return sim.run();
 }

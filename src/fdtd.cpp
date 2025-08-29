@@ -16,17 +16,7 @@
 
 module;
 
-#include <unistd.h>
+export module fdtd;
 
-export module fdtd:argument_parser;
-
-import std;
-
-export class argument_parser
-{
-public:
-	void parse(int argc, char** argv){
-		for(int i = 0; i < argc; i++)
-			std::cout << argv[i] << '\n';
-	}
-};
+export import :argument_parser;
+export import :simulator;
