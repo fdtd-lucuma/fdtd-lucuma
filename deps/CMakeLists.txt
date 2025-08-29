@@ -117,6 +117,7 @@ target_compile_definitions(VkfwModule
 		#VKFW_NO_INCLUDE_VULKAN_HPP
 		VKFW_ENABLE_VULKAN_HPP_MODULE
 		#VKFW_ENABLE_STD_MODULE
+		VKFW_NO_STRUCT_CONSTRUCTORS
 )
 
 target_link_libraries(VkfwModule
