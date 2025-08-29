@@ -57,44 +57,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(imgui VulkanMemoryAllocator-Hpp vkfw)
 
-add_library(imgui)
-
-# C++ version
-set_target_properties(imgui
-	PROPERTIES
-		CXX_STANDARD 23
-)
-
-# imgui fails when unity builds are active
-set_target_properties(imgui
-	PROPERTIES
-		UNITY_BUILD OFF
-)
-
-target_compile_definitions(imgui
-	PRIVATE
-		$<$<CONFIG:DEBUG>:VK_DEBUG>
-		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
-		GLFW_INCLUDE_VULKAN
-)
-
-target_sources(imgui
-	PRIVATE
-		${imgui_SOURCE_DIR}/imgui.cpp
-		${imgui_SOURCE_DIR}/imgui_demo.cpp
-		${imgui_SOURCE_DIR}/imgui_draw.cpp
-		${imgui_SOURCE_DIR}/imgui_tables.cpp
-		${imgui_SOURCE_DIR}/imgui_widgets.cpp
-		${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
-		${imgui_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
-		${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
-)
-
-target_include_directories(imgui
-	PUBLIC
-		${imgui_SOURCE_DIR}
-)
-
 # Packages
 find_package(VulkanMemoryAllocator REQUIRED)
 find_package(VulkanMemoryAllocator-Hpp REQUIRED)
@@ -121,13 +83,12 @@ set_target_properties(VulkanHppModule
 		CXX_STANDARD 23
 )
 
-
 target_compile_definitions(VulkanHppModule
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
 		$<$<CONFIG:DEBUG>:VK_DEBUG>
-		VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
+		VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
 		# TODO: Find out why this doesn't work
 		#VULKAN_HPP_ENABLE_STD_MODULE
 		VULKAN_HPP_STD_MODULE=std
@@ -167,6 +128,47 @@ target_link_libraries(VkfwModule
 target_include_directories(VkfwModule
 	PRIVATE
 		${vkfw_SOURCE_DIR}/include
+)
+
+add_library(imgui)
+
+# C++ version
+set_target_properties(imgui
+	PROPERTIES
+		CXX_STANDARD 23
+)
+
+# imgui fails when unity builds are active
+set_target_properties(imgui
+	PROPERTIES
+		UNITY_BUILD OFF
+)
+
+target_compile_definitions(imgui
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+)
+
+target_sources(imgui
+	PRIVATE
+		${imgui_SOURCE_DIR}/imgui.cpp
+		${imgui_SOURCE_DIR}/imgui_demo.cpp
+		${imgui_SOURCE_DIR}/imgui_draw.cpp
+		${imgui_SOURCE_DIR}/imgui_tables.cpp
+		${imgui_SOURCE_DIR}/imgui_widgets.cpp
+		${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+		${imgui_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
+		${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
+)
+
+target_include_directories(imgui
+	PUBLIC
+		${imgui_SOURCE_DIR}
+)
+
+target_link_libraries(imgui
+	PUBLIC
+		VkfwModule
 )
 
 # set up glm C++ module as a library

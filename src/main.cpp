@@ -15,6 +15,9 @@
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
 import fdtd;
+#include <vulkan/vulkan_hpp_macros.hpp>
+
+VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 int main(int argc, char** argv)
 {
