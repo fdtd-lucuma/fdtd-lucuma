@@ -38,6 +38,7 @@ if(NOT DEFINED ENV{CXX})
 endif()
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_FIND_PACKAGE_TARGETS_GLOBAL TRUE)
 set(CMAKE_CXX_MODULE_STD 1)
 add_compile_options(-Wp,-D_FORTIFY_SOURCE=0 -Wno-macro-redefined) # Quickfix: Disable fortification on release build types
 
