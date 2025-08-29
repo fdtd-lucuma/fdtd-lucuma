@@ -46,7 +46,16 @@ FetchContent_Declare(
 	OVERRIDE_FIND_PACKAGE
 )
 
-FetchContent_MakeAvailable(imgui VulkanMemoryAllocator-Hpp)
+FetchContent_Declare(
+	vkfw
+	GIT_REPOSITORY https://github.com/Cvelth/vkfw
+	GIT_TAG        main
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+	OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_MakeAvailable(imgui VulkanMemoryAllocator-Hpp vkfw)
 
 add_library(imgui)
 
@@ -93,6 +102,7 @@ find_package(VulkanMemoryAllocator-Hpp REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(glm REQUIRED)
 find_package(Vulkan REQUIRED)
+find_package(vkfw REQUIRED)
 
 # Shared libraries
 pkg_check_modules(libraries
@@ -112,14 +122,52 @@ set_target_properties(VulkanHppModule
 		CXX_STANDARD 23
 )
 
+
 target_compile_definitions(VulkanHppModule
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
 		$<$<CONFIG:DEBUG>:VK_DEBUG>
+		# TODO: Find out why this doesn't work
+		#VULKAN_HPP_ENABLE_STD_MODULE
+		VULKAN_HPP_STD_MODULE=std
 )
 
 target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
+
+# set up vkfw C++ module as a library
+add_library(VkfwModule)
+target_sources(VkfwModule PUBLIC
+	FILE_SET CXX_MODULES
+	BASE_DIRS ${vkfw_SOURCE_DIR}
+	FILES ${vkfw_SOURCE_DIR}/include/vkfw/vkfw.cppm
+)
+set_target_properties(VkfwModule
+	PROPERTIES
+		CXX_STANDARD 23
+)
+
+target_compile_definitions(VkfwModule
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+	PUBLIC
+		# TODO: Find out why this doesn't work
+		#VKFW_NO_INCLUDE_VULKAN
+		#VKFW_NO_INCLUDE_VULKAN_HPP
+		VKFW_ENABLE_VULKAN_HPP_MODULE
+		#VKFW_ENABLE_STD_MODULE
+)
+
+target_link_libraries(VkfwModule
+	PUBLIC
+		VulkanHppModule
+)
+
+# TODO: Find what to do when the library doesn't have an alias
+target_include_directories(VkfwModule
+	PRIVATE
+		${vkfw_SOURCE_DIR}/include
+)
 
 # set up glm C++ module as a library
 add_library(GlmModule)
@@ -159,7 +207,6 @@ target_compile_definitions(VulkanMemoryAllocator-HppModule
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
-		VULKAN_HPP_STD_MODULE=std
 		VMA_DYNAMIC_VULKAN_FUNCTIONS=1
 		VMA_STATIC_VULKAN_FUNCTIONS=0
 		VMA_ENABLE_VULKAN_HPP_MODULE
@@ -182,5 +229,6 @@ target_link_libraries(${PROJECT_NAME}
 		EnTT::EnTT
 		VulkanMemoryAllocator-HppModule
 		GlmModule
+		VkfwModule
 )
 

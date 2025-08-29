@@ -21,6 +21,7 @@ import std;
 import vk_mem_alloc_hpp;
 import vulkan_hpp;
 import glm;
+import vkfw;
 
 int main()
 {
