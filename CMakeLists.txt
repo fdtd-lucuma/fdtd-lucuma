@@ -38,7 +38,6 @@ if(NOT DEFINED ENV{CXX})
 endif()
 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_FIND_PACKAGE_TARGETS_GLOBAL TRUE)
 set(CMAKE_CXX_MODULE_STD 1)
 add_compile_options(-Wp,-D_FORTIFY_SOURCE=0 -Wno-macro-redefined) # Quickfix: Disable fortification on release build types
 
@@ -79,6 +78,8 @@ target_compile_options(${PROJECT_NAME}
 )
 
 # Bash completion
+find_package(bash-completion REQUIRED)
+
 file(WRITE ${CMAKE_BINARY_DIR}/bash-completion/${PROJECT_NAME}
 	"complete -F _longopt ${PROJECT_NAME}"
 )

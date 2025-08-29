@@ -96,7 +96,6 @@ target_include_directories(imgui
 )
 
 # Packages
-find_package(bash-completion REQUIRED)
 find_package(VulkanMemoryAllocator REQUIRED)
 find_package(VulkanMemoryAllocator-Hpp REQUIRED)
 find_package(EnTT REQUIRED)
