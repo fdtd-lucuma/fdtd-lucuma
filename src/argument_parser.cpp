@@ -22,7 +22,7 @@ module fdtd;
 
 import std;
 
-void argument_parser::parse(int argc, char** argv){
+void ArgumentParser::parse(int argc, char** argv){
 	for(int i = 0; i < argc; i++)
 		std::cout << argv[i] << '\n';
 }

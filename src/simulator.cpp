@@ -20,22 +20,22 @@ module;
 
 module fdtd;
 
-simulator::simulator(argument_parser& parser):
-	parser(parser)
+Simulator::Simulator(ArgumentParser& argumentParser):
+	argumentParser(argumentParser)
 {}
 
-argument_parser& simulator::get_parser() const
+ArgumentParser& Simulator::getArgumentParser() const
 {
-	return parser;
+	return argumentParser;
 }
 
-int simulator::run() {
-	init_vulkan();
+int Simulator::run() {
+	initVulkan();
 
 	return EXIT_SUCCESS;
 }
 
-void simulator::init_vulkan() {
+void Simulator::initVulkan() {
 	constexpr vk::ApplicationInfo applicattionInfo {
 		.applicationVersion = vk::makeVersion(0, 0, 0),
 		.pEngineName        = "Fdtd",

@@ -18,11 +18,11 @@ import fdtd;
 
 int main(int argc, char** argv)
 {
-	argument_parser parser;
+	ArgumentParser argumentParser;
 
-	parser.parse(argc, argv);
+	argumentParser.parse(argc, argv);
 
-	simulator sim(parser);
+	Simulator sim(argumentParser);
 
 	return sim.run();
 }

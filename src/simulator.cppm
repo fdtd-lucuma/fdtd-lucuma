@@ -21,20 +21,20 @@ export module fdtd:simulator;
 import :argument_parser;
 export import vulkan_hpp;
 
-export class simulator
+export class Simulator
 {
 public:
-	simulator(argument_parser& parser);
+	Simulator(ArgumentParser& argumentParser);
 
-	argument_parser& get_parser() const;
+	ArgumentParser& getArgumentParser() const;
 
 	int run();
 
 private:
-	argument_parser& parser;
+	ArgumentParser& argumentParser;
 
 	vk::raii::Context  context;
 	vk::raii::Instance instance = nullptr;
 
-	void init_vulkan();
+	void initVulkan();
 };

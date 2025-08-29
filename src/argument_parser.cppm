@@ -18,7 +18,7 @@ module;
 
 export module fdtd:argument_parser;
 
-export class argument_parser
+export class ArgumentParser
 {
 public:
 	void parse(int argc, char** argv);
