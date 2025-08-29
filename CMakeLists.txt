@@ -74,7 +74,7 @@ target_compile_definitions(${PROJECT_NAME}
 # Default flags
 target_compile_options(${PROJECT_NAME}
 	PRIVATE
-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra>
+		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -fdiagnostics-color=always>
 )
 
 # Bash completion
