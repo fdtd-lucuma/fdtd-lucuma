@@ -16,6 +16,8 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		vulkan.cpp
+	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES

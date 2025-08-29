@@ -38,3 +38,7 @@ std::ostream& operator<<(std::ostream& output, vk::Flags<T> flags)
 
 	return output << (T)(MaskType)flags;
 }
+
+export void listVulkanExtensions();
+
+export std::ostream& operator<<(std::ostream& output, vk::Instance instance);
