@@ -22,6 +22,7 @@ module fdtd;
 
 import std;
 import magic_enum;
+import fdtd.utils;
 
 Simulator::Simulator(ArgumentParser& argumentParser):
 	argumentParser(argumentParser)
@@ -40,24 +41,6 @@ void listVulkanExtensions()
 		std::cout << '\t' << extension.extensionName << '\n';
 }
 
-template <>
-struct magic_enum::customize::enum_range<vk::QueueFlagBits> {
-	static constexpr bool is_flags = true;
-};
-
-
-template<typename T>
-requires std::is_enum_v<T> && (magic_enum::customize::enum_range<T>::is_flags == true)
-void listFlags(vk::Flags<T> flags, std::ostream& output = std::cout)
-{
-	using magic_enum::iostream_operators::operator<<;
-
-	using MaskType = typename vk::Flags<T>::MaskType;
-
-	output << (T)(MaskType)flags;
-
-}
-
 void listQueues(std::span<const vk::QueueFamilyProperties> families, std::ostream& output = std::cout)
 {
 	output << "Device queue families:\n";
@@ -67,13 +50,8 @@ void listQueues(std::span<const vk::QueueFamilyProperties> families, std::ostrea
 		output
 			<< "Queue family " << i++ << ":\n"
 			<< "\tQueue count: " << family.queueCount << '\n'
-			<< "\tQueue flags: "
+			<< "\tQueue flags: " << family.queueFlags << '\n'
 		;
-
-		listFlags(family.queueFlags, output);
-
-		output << '\n';
-
 	}
 
 }

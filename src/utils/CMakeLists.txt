@@ -16,16 +16,9 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		argument_parser.cpp
-		main.cpp
-		simulator.cpp
-	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			argument_parser.cppm
-			fdtd.cppm
-			simulator.cppm
+			utils.cppm
+			vulkan.cppm
 )
-
-add_subdirectory(utils)
