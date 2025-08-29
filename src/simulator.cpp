@@ -21,7 +21,6 @@ module;
 module fdtd;
 
 import std;
-import fdtd.utils;
 
 Simulator::Simulator(ArgumentParser& argumentParser):
 	argumentParser(argumentParser)
