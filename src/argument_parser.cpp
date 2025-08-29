@@ -14,13 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-import fdtd;
+module;
 
-int main(int argc, char** argv)
+#include <unistd.h>
+
+export module fdtd;
+
+import std;
+
+export class argument_parser
 {
-	argument_parser parser;
-
-	parser.parse(argc, argv);
-
-	return 0;
-}
+public:
+	void parse(int argc, char** argv){
+		for(int i = 0; i < argc; i++)
+			std::cout << argv[i] << '\n';
+	}
+};
