@@ -37,7 +37,7 @@ int Simulator::run()
 {
 	Injector injector;
 
-	injector.emplace_injectable<VulkanAll>(injector);
+	injector.emplace<VulkanAll>(injector);
 
 	return EXIT_SUCCESS;
 }

@@ -16,29 +16,32 @@
 
 module;
 
-#include <entt/entt.hpp>
+#include <entt/entity/registry.hpp>
+#include <iostream>
 
 export module fdtd.utils:injector;
+
+template<typename T>
+constexpr bool is_move_only_v = std::is_move_constructible_v<T> && !std::is_copy_constructible_v<T>;
 
 export class Injector
 {
 public:
 	template<typename Type, typename... Args>
-	Type& emplace_injectable(Args &&...args) {
-		return registry.ctx().emplace<Type>(std::forward<Args>(args)...);
+	requires is_move_only_v<Type>
+	Type& emplace(Args &&...args) {
+		Type newObject(std::forward<Args>(args)...);
+
+		return registry.ctx().emplace<Type>(std::move(newObject));
 	}
 
 	template<typename Type>
+	requires is_move_only_v<Type>
 	[[nodiscard]] Type& inject() {
 		if(registry.ctx().contains<Type>())
 			return registry.ctx().get<Type>();
 
-		return emplace_injectable<Type>(*this);
-	}
-
-	template<typename Type>
-	[[nodiscard]] const Type& inject() const {
-		return registry.ctx().get<Type>();
+		return emplace<Type>(*this);
 	}
 
 private:

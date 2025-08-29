@@ -24,6 +24,8 @@ export import vulkan_hpp;
 export class VulkanCore
 {
 public:
+	VulkanCore(VulkanCore const &) = delete;
+	VulkanCore(VulkanCore&&) = default;
 	VulkanCore(Injector& injector);
 
 	vk::raii::Context&  getContext();

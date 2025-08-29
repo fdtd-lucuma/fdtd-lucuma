@@ -26,6 +26,8 @@ export import vulkan_hpp;
 export class VulkanDevice
 {
 public:
+	VulkanDevice(VulkanDevice const &) = delete;
+	VulkanDevice(VulkanDevice&&) = default;
 	VulkanDevice(Injector& injector);
 
 	vk::raii::PhysicalDevice& getPhysicalDevice();
