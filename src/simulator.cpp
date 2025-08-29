@@ -20,6 +20,8 @@ module;
 
 module fdtd;
 
+import std;
+
 Simulator::Simulator(ArgumentParser& argumentParser):
 	argumentParser(argumentParser)
 {}
@@ -29,8 +31,14 @@ ArgumentParser& Simulator::getArgumentParser() const
 	return argumentParser;
 }
 
+void listVulkanExtensions() {
+	for(const auto& extension: vk::enumerateInstanceExtensionProperties())
+		std::cout << '\t' << extension.extensionName << '\n';
+}
+
 int Simulator::run() {
 	initVulkan();
+	listVulkanExtensions();
 
 	return EXIT_SUCCESS;
 }
