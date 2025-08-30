@@ -26,7 +26,10 @@ export class Injector
 public:
 	template<typename Type, typename BaseType = Type, typename... Args>
 	Type& emplace(Args &&...args) {
-		return *registry.ctx().emplace<std::unique_ptr<BaseType>>(std::make_unique<Type>(std::forward<Args>(args)...));
+		auto ptr = std::make_unique<Type>(std::forward<Args>(args)...);
+		onCreate<Type, BaseType>();
+
+		return *registry.ctx().emplace<std::unique_ptr<BaseType>>(std::move(ptr));
 	}
 
 	template<typename Type, typename BaseType = Type>
@@ -37,6 +40,22 @@ public:
 		return emplace<Type, BaseType>(*this);
 	}
 
+	~Injector();
+
 private:
 	entt::registry registry;
+
+	std::vector<std::function<void()>> deleters;
+
+	template<typename Type, typename BaseType>
+	void onCreate()
+	{
+		// Ensure correct destructor order
+		deleters.emplace_back([this](){
+			registry.ctx().erase<std::unique_ptr<BaseType>>();
+			std::cerr << "Deleted " << typeid(Type).name() << '\n';
+		});
+
+		std::cerr << "Created " << typeid(Type).name() << '\n';
+	}
 };
