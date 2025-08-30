@@ -30,6 +30,6 @@ public:
 
 private:
 	VulkanCore&   vulkanCore;
-	VulkanDevice& vulkanDevice;
 	VulkanDebug&  vulkanDebug;
+	VulkanDevice& vulkanDevice;
 };
