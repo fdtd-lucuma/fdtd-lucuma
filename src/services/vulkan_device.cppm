@@ -42,5 +42,6 @@ private:
 	void createDevices();
 
 	vk::raii::PhysicalDevice selectPhysicalDevice();
+	bool isSuitable(vk::PhysicalDevice physicalDevice);
 
 };

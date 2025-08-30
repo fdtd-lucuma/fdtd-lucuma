@@ -52,11 +52,21 @@ void VulkanDevice::createDevices()
 
 vk::raii::PhysicalDevice VulkanDevice::selectPhysicalDevice()
 {
-	for(const auto& device: vulkanCore.getInstance().enumeratePhysicalDevices())
+	auto filter = [this](const auto& x){return isSuitable(x);};
+
+	// TODO: Force from command line arguments
+	for(const auto& device:
+		vulkanCore.getInstance().enumeratePhysicalDevices() |
+		std::views::filter(filter)
+	)
 	{
-		// TODO: Force from command line arguments
 		return device;
 	}
 
 	throw std::runtime_error("Failed to find a Vulkan compatible GPU");
+}
+
+bool VulkanDevice::isSuitable(vk::PhysicalDevice physicalDevice)
+{
+	return true;
 }
