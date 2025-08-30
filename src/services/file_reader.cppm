@@ -32,6 +32,12 @@ import std;
 export class FileBuffer
 {
 public:
+	FileBuffer(FileBuffer const&) = delete;
+	FileBuffer(FileBuffer&& other);
+
+	FileBuffer& operator=(FileBuffer const&) = delete;
+	FileBuffer& operator=(FileBuffer&&)      = default;
+
 	FileBuffer(const std::filesystem::path& path);
 	~FileBuffer();
 
@@ -43,8 +49,9 @@ private:
 	enum class BufferType
 	{
 		COPY,
-		MMAP
-	} bufferType;
+		MMAP,
+		MOVED_FROM
+	} bufferType = BufferType::MOVED_FROM;
 
 	std::vector<char> copyBuffer;
 
@@ -53,7 +60,7 @@ private:
 #if (HAS_MMAP==1)
 	struct
 	{
-		char* buffer;
+		char* buffer = nullptr;
 		struct ::stat sb;
 	} mmapData;
 #endif

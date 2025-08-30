@@ -83,6 +83,14 @@ bool FileBuffer::readIntoMmap(const std::filesystem::path& path)
 #endif
 }
 
+FileBuffer::FileBuffer(FileBuffer&& other):
+	bufferType(std::exchange(other.bufferType, {})),
+	copyBuffer(std::exchange(other.copyBuffer, {}))
+#if (HAS_MMAP==1)
+	,mmapData(std::exchange(other.mmapData, {}))
+#endif
+	{}
+
 FileBuffer::FileBuffer(const std::filesystem::path& path)
 {
 	if(!readIntoMmap(path))
@@ -110,6 +118,8 @@ std::span<char const> FileBuffer::getBuffer() const
 		case BufferType::MMAP:
 			return std::span<char const>(mmapData.buffer, mmapData.sb.st_size);
 #endif
+		default:
+			return std::span<char const>{};
 	}
 }
 
