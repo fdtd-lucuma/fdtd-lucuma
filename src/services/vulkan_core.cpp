@@ -20,14 +20,15 @@ module fdtd.services;
 
 import std;
 
-VulkanCore::VulkanCore([[maybe_unused]] Injector& injector)
+VulkanCore::VulkanCore([[maybe_unused]] Injector& injector):
+	vulkanContext(injector.inject<VulkanContext>())
 {
 	init();
 }
 
 vk::raii::Context& VulkanCore::getContext()
 {
-	return context;
+	return vulkanContext.getContext();
 }
 
 vk::raii::Instance& VulkanCore::getInstance()
@@ -53,5 +54,5 @@ void VulkanCore::createInstance()
 		.pApplicationInfo = &applicattionInfo,
 	};
 
-	instance = context.createInstance(instanceCreateInfo);
+	instance = getContext().createInstance(instanceCreateInfo);
 }

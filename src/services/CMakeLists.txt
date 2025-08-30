@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME}
 	PRIVATE
 		file_reader.cpp
 		vulkan_all.cpp
+		vulkan_context.cpp
 		vulkan_core.cpp
 		vulkan_device.cpp
 	PRIVATE
@@ -27,6 +28,7 @@ target_sources(${PROJECT_NAME}
 			file_reader.cppm
 			services.cppm
 			vulkan_all.cppm
+			vulkan_context.cppm
 			vulkan_core.cppm
 			vulkan_device.cppm
 )

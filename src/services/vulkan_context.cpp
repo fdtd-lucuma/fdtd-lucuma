@@ -16,10 +16,15 @@
 
 module;
 
-export module fdtd.services;
+module fdtd.services;
 
-export import :file_reader;
-export import :vulkan_all;
-export import :vulkan_context;
-export import :vulkan_core;
-export import :vulkan_device;
+import std;
+
+VulkanContext::VulkanContext([[maybe_unused]] Injector& injector)
+{
+}
+
+vk::raii::Context& VulkanContext::getContext()
+{
+	return context;
+}

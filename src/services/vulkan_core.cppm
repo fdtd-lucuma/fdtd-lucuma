@@ -21,6 +21,8 @@ export module fdtd.services:vulkan_core;
 export import fdtd.utils;
 export import vulkan_hpp;
 
+import :vulkan_context;
+
 export class VulkanCore
 {
 public:
@@ -30,7 +32,8 @@ public:
 	vk::raii::Instance& getInstance();
 
 private:
-	vk::raii::Context  context;
+	VulkanContext& vulkanContext;
+
 	vk::raii::Instance instance = nullptr;
 
 	void init();
