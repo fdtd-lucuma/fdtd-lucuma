@@ -16,12 +16,28 @@
 
 module;
 
-export module fdtd.services;
+export module fdtd.services:vulkan_debug_requirements;
 
-export import :file_reader;
-export import :vulkan_all;
-export import :vulkan_context;
-export import :vulkan_core;
-export import :vulkan_debug;
-export import :vulkan_debug_requirements;
-export import :vulkan_device;
+export import fdtd.utils;
+
+import std;
+
+export class VulkanDebugRequirements
+{
+public:
+	VulkanDebugRequirements(Injector& injector);
+
+	std::vector<const char*> getRequiredLayers();
+	std::vector<const char*> getRequiredExtensions();
+
+#ifdef NDEBUG
+	constexpr static bool enableValidationLayers = false;
+#else
+	constexpr static bool enableValidationLayers = true;
+#endif
+
+private:
+	constexpr static std::array<const char*, 1> validationLayers = {
+		"VK_LAYER_KHRONOS_validation"
+	};
+};

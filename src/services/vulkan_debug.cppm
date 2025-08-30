@@ -16,12 +16,15 @@
 
 module;
 
+#include <vulkan/vk_platform.h>
+
 export module fdtd.services:vulkan_debug;
 
 export import fdtd.utils;
 export import vulkan_hpp;
 
-import :vulkan_context;
+import :vulkan_core;
+import :vulkan_debug_requirements;
 import std;
 
 export class VulkanDebug
@@ -31,16 +34,28 @@ public:
 
 	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();
+
 private:
-	VulkanContext& vulkanContext;
+	VulkanCore&              vulkanCore;
+	VulkanDebugRequirements& vulkanDebugRequirements;
 
-	constexpr static std::array<const char*, 1> validationLayers = {
-		"VK_LAYER_KHRONOS_validation"
-	};
+	vk::raii::DebugUtilsMessengerEXT debugMessenger = nullptr;
 
-#ifdef NDEBUG
-	constexpr static bool enableValidationLayers = false;
-#else
-	constexpr static bool enableValidationLayers = true;
-#endif
+	void init();
+
+	void setupDebugMessenger();
+
+	static VKAPI_ATTR vk::Bool32 VKAPI_CALL debugCallback(
+		vk::DebugUtilsMessageSeverityFlagBitsEXT      severity,
+		vk::DebugUtilsMessageTypeFlagsEXT             type,
+		const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData,
+		void*                                         pUserData
+	);
+
+	vk::Bool32 debugCallback(
+		vk::DebugUtilsMessageSeverityFlagBitsEXT      severity,
+		vk::DebugUtilsMessageTypeFlagsEXT             type,
+		const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData
+	);
+
 };

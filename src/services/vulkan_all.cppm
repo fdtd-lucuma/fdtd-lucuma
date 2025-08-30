@@ -21,6 +21,7 @@ export module fdtd.services:vulkan_all;
 export import fdtd.utils;
 import :vulkan_core;
 import :vulkan_device;
+import :vulkan_debug;
 
 export class VulkanAll
 {
@@ -30,4 +31,5 @@ public:
 private:
 	VulkanCore&   vulkanCore;
 	VulkanDevice& vulkanDevice;
+	VulkanDebug&  vulkanDebug;
 };

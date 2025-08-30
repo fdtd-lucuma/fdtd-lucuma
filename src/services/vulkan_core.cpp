@@ -22,7 +22,7 @@ import std;
 
 VulkanCore::VulkanCore([[maybe_unused]] Injector& injector):
 	vulkanContext(injector.inject<VulkanContext>()),
-	vulkanDebug(injector.inject<VulkanDebug>())
+	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())
 {
 	init();
 }
@@ -67,7 +67,7 @@ void VulkanCore::createInstance()
 
 std::vector<const char*> VulkanCore::getRequiredLayers()
 {
-	auto result = vulkanDebug.getRequiredLayers();
+	auto result = vulkanDebugRequirements.getRequiredLayers();
 
 	checkLayers(result);
 
@@ -77,7 +77,7 @@ std::vector<const char*> VulkanCore::getRequiredLayers()
 std::vector<const char*> VulkanCore::getRequiredExtensions()
 {
 	// TODO: glfw
-	auto result = vulkanDebug.getRequiredExtensions();
+	auto result = vulkanDebugRequirements.getRequiredExtensions();
 
 	checkExtensions(result);
 

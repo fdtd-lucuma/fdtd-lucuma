@@ -22,7 +22,8 @@ export import fdtd.utils;
 export import vulkan_hpp;
 
 import :vulkan_context;
-import :vulkan_debug;
+import :vulkan_debug_requirements;
+import std;
 
 export class VulkanCore
 {
@@ -33,8 +34,8 @@ public:
 	vk::raii::Instance& getInstance();
 
 private:
-	VulkanContext& vulkanContext;
-	VulkanDebug&   vulkanDebug;
+	VulkanContext&           vulkanContext;
+	VulkanDebugRequirements& vulkanDebugRequirements;
 
 	vk::raii::Instance instance = nullptr;
 

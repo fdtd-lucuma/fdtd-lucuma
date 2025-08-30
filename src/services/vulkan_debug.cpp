@@ -16,31 +16,83 @@
 
 module;
 
+#include <vulkan/vk_platform.h>
+
 module fdtd.services;
 
 import std;
 
 VulkanDebug::VulkanDebug([[maybe_unused]] Injector& injector):
-	vulkanContext(injector.inject<VulkanContext>())
+	vulkanCore(injector.inject<VulkanCore>()),
+	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())
 {
+	init();
 }
 
 std::vector<const char*> VulkanDebug::getRequiredLayers()
 {
-	std::vector<const char*> result;
-
-	if(enableValidationLayers)
-		result.append_range(validationLayers);
-
-	return result;
+	return vulkanDebugRequirements.getRequiredLayers();
 }
 
 std::vector<const char*> VulkanDebug::getRequiredExtensions()
 {
-	std::vector<const char*> result;
+	return vulkanDebugRequirements.getRequiredExtensions();
+}
 
-	if(enableValidationLayers)
-		result.emplace_back(vk::EXTDebugUtilsExtensionName);
+void VulkanDebug::init()
+{
+	if constexpr(VulkanDebugRequirements::enableValidationLayers)
+		setupDebugMessenger();
+}
 
-	return result;
+void VulkanDebug::setupDebugMessenger()
+{
+	using enum vk::DebugUtilsMessageSeverityFlagBitsEXT;
+	using enum vk::DebugUtilsMessageTypeFlagBitsEXT;
+
+	vk::DebugUtilsMessageSeverityFlagsEXT severityFlags {
+		eVerbose |
+		eWarning |
+		eError
+	};
+
+	vk::DebugUtilsMessageTypeFlagsEXT messageTypeFlags {
+		eGeneral |
+		ePerformance |
+		eValidation
+	};
+
+	vk::DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXT{
+		.messageSeverity = severityFlags,
+		.messageType = messageTypeFlags,
+		.pfnUserCallback = &debugCallback,
+		.pUserData = this,
+	};
+
+	debugMessenger = vulkanCore.getInstance().createDebugUtilsMessengerEXT(debugUtilsMessengerCreateInfoEXT);
+}
+
+VKAPI_ATTR vk::Bool32 VKAPI_CALL VulkanDebug::debugCallback(
+	vk::DebugUtilsMessageSeverityFlagBitsEXT      severity,
+	vk::DebugUtilsMessageTypeFlagsEXT             type,
+	const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData,
+	void*                                         pUserData
+)
+{
+	return ((VulkanDebug*)pUserData)->debugCallback(severity, type, pCallbackData);
+}
+
+vk::Bool32 VulkanDebug::debugCallback(
+	vk::DebugUtilsMessageSeverityFlagBitsEXT      severity,
+	vk::DebugUtilsMessageTypeFlagsEXT             type,
+	const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData
+)
+{
+	std::cerr
+		<< "Validation layer: type " << to_string(type) << '\n'
+		<< "\tmsg: " << pCallbackData->pMessage << '\n'
+		<< "\tseverity: " << to_string(severity) << '\n'
+	;
+
+	return vk::False;
 }

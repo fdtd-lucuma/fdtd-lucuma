@@ -16,12 +16,32 @@
 
 module;
 
-export module fdtd.services;
+#include <vulkan/vk_platform.h>
 
-export import :file_reader;
-export import :vulkan_all;
-export import :vulkan_context;
-export import :vulkan_core;
-export import :vulkan_debug;
-export import :vulkan_debug_requirements;
-export import :vulkan_device;
+module fdtd.services;
+
+import std;
+
+VulkanDebugRequirements::VulkanDebugRequirements([[maybe_unused]] Injector& injector)
+{
+}
+
+std::vector<const char*> VulkanDebugRequirements::getRequiredLayers()
+{
+	std::vector<const char*> result;
+
+	if constexpr(enableValidationLayers)
+		result.append_range(validationLayers);
+
+	return result;
+}
+
+std::vector<const char*> VulkanDebugRequirements::getRequiredExtensions()
+{
+	std::vector<const char*> result;
+
+	if constexpr(enableValidationLayers)
+		result.emplace_back(vk::EXTDebugUtilsExtensionName);
+
+	return result;
+}

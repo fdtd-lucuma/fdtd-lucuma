@@ -22,7 +22,8 @@ import std;
 
 VulkanAll::VulkanAll(Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>()),
-	vulkanDevice(injector.inject<VulkanDevice>())
+	vulkanDevice(injector.inject<VulkanDevice>()),
+	vulkanDebug(injector.inject<VulkanDebug>())
 {
 
 	listVulkanExtensions();
