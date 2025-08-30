@@ -16,6 +16,7 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		file_reader.cpp
 		vulkan_all.cpp
 		vulkan_core.cpp
 		vulkan_device.cpp
@@ -23,6 +24,7 @@ target_sources(${PROJECT_NAME}
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
+			file_reader.cppm
 			services.cppm
 			vulkan_all.cppm
 			vulkan_core.cppm

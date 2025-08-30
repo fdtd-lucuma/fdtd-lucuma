@@ -16,8 +16,14 @@
 
 module;
 
-export module fdtd.utils;
+#include <cerrno>
+#include <cstring>
 
-export import :vulkan;
-export import :injector;
-export import :exceptions;
+export module fdtd.utils:exceptions;
+
+import std;
+
+export void inline throwFile(const std::filesystem::path& path)
+{
+	throw std::runtime_error(path.string() + ": " + strerror(errno));
+}

@@ -24,4 +24,5 @@ target_sources(${PROJECT_NAME}
 			utils.cppm
 			vulkan.cppm
 			injector.cppm
+			exceptions.cppm
 )

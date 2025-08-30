@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-module;
+#pragma once
 
-export module fdtd.utils;
+#if defined(__unix__) || defined(__APPLE__) || defined(__MACH__) || defined(__linux__) || defined(__FreeBSD__)
+#    define HAS_MMAP 1
+#else
+#    define HAS_MMAP 0
+#endif
 
-export import :vulkan;
-export import :injector;
-export import :exceptions;
