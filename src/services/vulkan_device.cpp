@@ -68,5 +68,13 @@ vk::raii::PhysicalDevice VulkanDevice::selectPhysicalDevice()
 
 bool VulkanDevice::isSuitable(vk::PhysicalDevice physicalDevice)
 {
+	auto properties = physicalDevice.getProperties();
+	//auto features   = physicalDevice.getFeatures();
+
+	if(properties.apiVersion < vk::ApiVersion14)
+		return false;
+
+	// TODO: Check for extensions
+
 	return true;
 }
