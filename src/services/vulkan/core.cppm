@@ -16,32 +16,36 @@
 
 module;
 
-#include <vulkan/vk_platform.h>
+export module fdtd.services.vulkan:core;
 
-module fdtd.services;
+export import fdtd.utils;
+export import vulkan_hpp;
 
+import :context;
+import :debug_requirements;
 import std;
 
-VulkanDebugRequirements::VulkanDebugRequirements([[maybe_unused]] Injector& injector)
+export class VulkanCore
 {
-}
+public:
+	VulkanCore(Injector& injector);
 
-std::vector<const char*> VulkanDebugRequirements::getRequiredLayers()
-{
-	std::vector<const char*> result;
+	vk::raii::Context&  getContext();
+	vk::raii::Instance& getInstance();
 
-	if constexpr(enableValidationLayers)
-		result.append_range(validationLayers);
+	std::vector<const char*> getRequiredLayers();
+	std::vector<const char*> getRequiredExtensions();
 
-	return result;
-}
+private:
+	VulkanContext&           vulkanContext;
+	VulkanDebugRequirements& vulkanDebugRequirements;
 
-std::vector<const char*> VulkanDebugRequirements::getRequiredExtensions()
-{
-	std::vector<const char*> result;
+	vk::raii::Instance instance = nullptr;
 
-	if constexpr(enableValidationLayers)
-		result.emplace_back(vk::EXTDebugUtilsExtensionName);
+	void init();
 
-	return result;
-}
+	void createInstance();
+
+	void checkLayers(std::span<const char* const> requiredLayers);
+	void checkExtensions(std::span<const char* const> requiredExtensions);
+};

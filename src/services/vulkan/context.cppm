@@ -16,36 +16,19 @@
 
 module;
 
-export module fdtd.services:vulkan_core;
+export module fdtd.services.vulkan:context;
 
 export import fdtd.utils;
 export import vulkan_hpp;
 
-import :vulkan_context;
-import :vulkan_debug_requirements;
-import std;
-
-export class VulkanCore
+export class VulkanContext
 {
 public:
-	VulkanCore(Injector& injector);
+	VulkanContext(Injector& injector);
 
 	vk::raii::Context&  getContext();
-	vk::raii::Instance& getInstance();
-
-	std::vector<const char*> getRequiredLayers();
-	std::vector<const char*> getRequiredExtensions();
 
 private:
-	VulkanContext&           vulkanContext;
-	VulkanDebugRequirements& vulkanDebugRequirements;
+	vk::raii::Context  context;
 
-	vk::raii::Instance instance = nullptr;
-
-	void init();
-
-	void createInstance();
-
-	void checkLayers(std::span<const char* const> requiredLayers);
-	void checkExtensions(std::span<const char* const> requiredExtensions);
 };

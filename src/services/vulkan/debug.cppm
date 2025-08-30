@@ -18,13 +18,13 @@ module;
 
 #include <vulkan/vk_platform.h>
 
-export module fdtd.services:vulkan_debug;
+export module fdtd.services.vulkan:debug;
 
 export import fdtd.utils;
 export import vulkan_hpp;
 
-import :vulkan_core;
-import :vulkan_debug_requirements;
+import :core;
+import :debug_requirements;
 import std;
 
 export class VulkanDebug

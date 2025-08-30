@@ -18,7 +18,7 @@ module;
 
 #include <ranges>
 
-module fdtd.services;
+module fdtd.services.vulkan;
 
 import std;
 

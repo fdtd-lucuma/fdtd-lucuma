@@ -16,20 +16,11 @@
 
 module;
 
-export module fdtd.services:vulkan_all;
+export module fdtd.services.vulkan;
 
-export import fdtd.utils;
-import :vulkan_core;
-import :vulkan_device;
-import :vulkan_debug;
-
-export class VulkanAll
-{
-public:
-	VulkanAll(Injector& injector);
-
-private:
-	VulkanCore&   vulkanCore;
-	VulkanDebug&  vulkanDebug;
-	VulkanDevice& vulkanDevice;
-};
+export import :all;
+export import :context;
+export import :core;
+export import :debug;
+export import :debug_requirements;
+export import :device;

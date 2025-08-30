@@ -16,32 +16,20 @@
 
 module;
 
-export module fdtd.services:vulkan_device;
-
-import :vulkan_core;
+export module fdtd.services.vulkan:all;
 
 export import fdtd.utils;
-export import vulkan_hpp;
+import :core;
+import :device;
+import :debug;
 
-export class VulkanDevice
+export class VulkanAll
 {
 public:
-	VulkanDevice(Injector& injector);
-
-	vk::raii::PhysicalDevice& getPhysicalDevice();
-	vk::raii::Device&         getDevice();
+	VulkanAll(Injector& injector);
 
 private:
-	VulkanCore& vulkanCore;
-
-	vk::raii::PhysicalDevice physicalDevice = nullptr;
-	vk::raii::Device         device         = nullptr;
-
-	void init();
-
-	void createDevices();
-
-	vk::raii::PhysicalDevice selectPhysicalDevice();
-	bool isSuitable(vk::PhysicalDevice physicalDevice);
-
+	VulkanCore&   vulkanCore;
+	VulkanDebug&  vulkanDebug;
+	VulkanDevice& vulkanDevice;
 };

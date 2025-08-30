@@ -16,15 +16,17 @@
 
 module;
 
-module fdtd.services;
+module fdtd.services.vulkan;
 
 import std;
 
-VulkanContext::VulkanContext([[maybe_unused]] Injector& injector)
+VulkanAll::VulkanAll(Injector& injector):
+	vulkanCore(injector.inject<VulkanCore>()),
+	vulkanDebug(injector.inject<VulkanDebug>()),
+	vulkanDevice(injector.inject<VulkanDevice>())
 {
-}
 
-vk::raii::Context& VulkanContext::getContext()
-{
-	return context;
+	listVulkanExtensions();
+	std::cout << vulkanDevice.getPhysicalDevice();
+
 }

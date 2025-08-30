@@ -16,7 +16,7 @@
 
 module;
 
-export module fdtd.services:vulkan_debug_requirements;
+export module fdtd.services.vulkan:debug_requirements;
 
 export import fdtd.utils;
 

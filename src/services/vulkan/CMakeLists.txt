@@ -16,13 +16,21 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		file_reader.cpp
+		all.cpp
+		context.cpp
+		core.cpp
+		debug.cpp
+		debug_requirements.cpp
+		device.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			file_reader.cppm
-			services.cppm
+			all.cppm
+			context.cppm
+			core.cppm
+			debug.cppm
+			debug_requirements.cppm
+			device.cppm
+			vulkan.cppm
 )
-
-add_subdirectory(vulkan)
