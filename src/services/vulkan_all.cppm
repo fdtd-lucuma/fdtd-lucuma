@@ -25,8 +25,6 @@ import :vulkan_device;
 export class VulkanAll
 {
 public:
-	VulkanAll(VulkanAll const &) = delete;
-	VulkanAll(VulkanAll&&) = default;
 	VulkanAll(Injector& injector);
 
 private:
