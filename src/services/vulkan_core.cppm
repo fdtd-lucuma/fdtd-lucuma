@@ -42,4 +42,9 @@ private:
 
 	void createInstance();
 
+	std::vector<const char*> getRequiredLayers();
+	std::vector<const char*> getRequiredExtensions();
+
+	void checkLayers(std::span<const char* const> requiredLayers);
+	void checkExtensions(std::span<const char* const> requiredExtensions);
 };

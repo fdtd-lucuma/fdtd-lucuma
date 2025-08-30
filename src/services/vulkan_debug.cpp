@@ -32,41 +32,15 @@ std::vector<const char*> VulkanDebug::getRequiredLayers()
 	if(enableValidationLayers)
 		result.append_range(validationLayers);
 
-	checkLayers(result);
-
 	return result;
 }
 
-bool noAnyLayerInProperties(
-	std::span<const char* const> requiredLayers,
-	std::span<const vk::LayerProperties> layerProperties
-)
+std::vector<const char*> VulkanDebug::getRequiredExtensions()
 {
-	return std::ranges::any_of(requiredLayers,
-		[&](const auto& requiredLayer)
-		{
-			return std::ranges::none_of(layerProperties,
-				[&](const auto& layerProperty)
-				{
-					return strcmp(layerProperty.layerName, requiredLayer) == 0;
-				}
-			);
-		}
-	);
-}
+	std::vector<const char*> result;
 
-void VulkanDebug::checkLayers(std::span<const char* const> requiredLayers)
-{
-	const auto layerProperties = vulkanContext.getContext().enumerateInstanceLayerProperties();
+	if(enableValidationLayers)
+		result.emplace_back(vk::EXTDebugUtilsExtensionName);
 
-	if(noAnyLayerInProperties(requiredLayers, layerProperties))
-	{
-		std::cerr << "Required layers:\n";
-
-		for(const auto& layer: requiredLayers)
-			std::cerr << '\t' << layer << '\n';
-
-		throw std::runtime_error("One or more required layers are not supported");
-	}
-
+	return result;
 }

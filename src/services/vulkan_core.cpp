@@ -51,13 +51,96 @@ void VulkanCore::createInstance()
 		.apiVersion         = vk::ApiVersion14,
 	};
 
-	auto layers = vulkanDebug.getRequiredLayers();
+	auto layers     = getRequiredLayers();
+	auto extensions = getRequiredExtensions();
 
 	vk::InstanceCreateInfo instanceCreateInfo {
 		.pApplicationInfo = &applicattionInfo,
 	};
 
-	instanceCreateInfo.setPEnabledLayerNames(layers);
+	instanceCreateInfo
+		.setPEnabledLayerNames(layers)
+		.setPEnabledExtensionNames(extensions);
 
 	instance = getContext().createInstance(instanceCreateInfo);
+}
+
+std::vector<const char*> VulkanCore::getRequiredLayers()
+{
+	auto result = vulkanDebug.getRequiredLayers();
+
+	checkLayers(result);
+
+	return result;
+}
+
+std::vector<const char*> VulkanCore::getRequiredExtensions()
+{
+	// TODO: glfw
+	auto result = vulkanDebug.getRequiredExtensions();
+
+	checkExtensions(result);
+
+	return result;
+}
+
+bool noAnyLayerInProperties(
+	std::span<const char* const> requiredLayers,
+	std::span<const vk::LayerProperties> layerProperties
+)
+{
+	return std::ranges::any_of(requiredLayers,
+		[&](const auto& requiredLayer)
+		{
+			return std::ranges::none_of(layerProperties,
+				[&](const auto& layerProperty)
+				{
+					return strcmp(layerProperty.layerName, requiredLayer) == 0;
+				}
+			);
+		}
+	);
+}
+
+bool noExtensionInProperties(
+	const char* const requiredExtension,
+	std::span<const vk::ExtensionProperties> extensionProperties
+)
+{
+	return std::ranges::none_of(extensionProperties,
+		[&](const auto& extensionProperty)
+		{
+			return strcmp(extensionProperty.extensionName, requiredExtension) == 0;
+		}
+	);
+}
+
+void VulkanCore::checkLayers(std::span<const char* const> requiredLayers)
+{
+	const auto layerProperties = getContext().enumerateInstanceLayerProperties();
+
+	if(noAnyLayerInProperties(requiredLayers, layerProperties))
+	{
+		std::cerr << "Required layers:\n";
+
+		for(const auto& layer: requiredLayers)
+			std::cerr << '\t' << layer << '\n';
+
+		throw std::runtime_error("One or more required layers are not supported");
+	}
+
+}
+
+void VulkanCore::checkExtensions(std::span<const char* const> requiredExtensions)
+{
+	const auto extensionProperties = getContext().enumerateInstanceExtensionProperties();
+
+	for(const auto& extension: requiredExtensions)
+	{
+		if(noExtensionInProperties(extension, extensionProperties))
+		{
+			throw std::runtime_error("Required extension not supported: " + std::string(extension));
+		}
+	}
+
 }

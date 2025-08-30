@@ -30,7 +30,7 @@ public:
 	VulkanDebug(Injector& injector);
 
 	std::vector<const char*> getRequiredLayers();
-
+	std::vector<const char*> getRequiredExtensions();
 private:
 	VulkanContext& vulkanContext;
 
@@ -43,6 +43,4 @@ private:
 #else
 	constexpr static bool enableValidationLayers = true;
 #endif
-
-	void checkLayers(std::span<const char* const> requiredLayers);
 };
