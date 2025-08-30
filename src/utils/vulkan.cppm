@@ -18,26 +18,8 @@ module;
 
 export module fdtd.utils:vulkan;
 
-import magic_enum;
 import vulkan_hpp;
 import std;
-
-/// Put Vulkan bitset enum template specializations here
-template <>
-struct magic_enum::customize::enum_range<vk::QueueFlagBits> {
-	static constexpr bool is_flags = true;
-};
-
-export template<typename T>
-requires std::is_enum_v<T> && (magic_enum::customize::enum_range<T>::is_flags == true)
-std::ostream& operator<<(std::ostream& output, vk::Flags<T> flags)
-{
-	using magic_enum::iostream_operators::operator<<;
-
-	using MaskType = typename vk::Flags<T>::MaskType;
-
-	return output << (T)(MaskType)flags;
-}
 
 export void listVulkanExtensions();
 

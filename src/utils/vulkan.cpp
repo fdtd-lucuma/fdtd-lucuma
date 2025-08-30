@@ -20,7 +20,6 @@ module;
 
 module fdtd.utils;
 
-import magic_enum;
 import vulkan_hpp;
 import std;
 
@@ -41,7 +40,7 @@ std::ostream& listQueueFamilies(std::ostream& output, std::span<const vk::QueueF
 		output
 			<< "Queue family " << i++ << ":\n"
 			<< "\tQueue count: " << family.queueCount << '\n'
-			<< "\tQueue flags: " << family.queueFlags << '\n'
+			<< "\tQueue flags: " << to_string(family.queueFlags) << '\n'
 		;
 	}
 
@@ -50,8 +49,6 @@ std::ostream& listQueueFamilies(std::ostream& output, std::span<const vk::QueueF
 
 std::ostream& operator<<(std::ostream& output, vk::Instance instance)
 {
-	using magic_enum::iostream_operators::operator<<;
-
 	for(const auto& device: instance.enumeratePhysicalDevices())
 	{
 		const auto properties = device.getProperties();
@@ -67,7 +64,7 @@ std::ostream& operator<<(std::ostream& output, vk::Instance instance)
 				<< vk::versionMajor(properties.driverVersion) << '.'
 				<< vk::versionMinor(properties.driverVersion) << '.'
 				<< vk::versionPatch(properties.driverVersion) << '\n'
-			<< "Device type: " << properties.deviceType << '\n'
+			<< "Device type: " << to_string(properties.deviceType) << '\n'
 			<< "Max image dimension 1D: " << properties.limits.maxImageDimension1D << '\n'
 			<< "Max image dimension 2D: " << properties.limits.maxImageDimension2D << '\n'
 			<< "Max image dimension 3D: " << properties.limits.maxImageDimension3D << '\n'
