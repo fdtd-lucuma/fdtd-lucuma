@@ -9,3 +9,4 @@ libvulkan-dev
 libvulkan-memory-allocator-dev
 ninja-build
 pkgconf
+vulkan-validationlayers

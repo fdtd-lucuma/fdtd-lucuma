@@ -21,7 +21,8 @@ module fdtd.services;
 import std;
 
 VulkanCore::VulkanCore([[maybe_unused]] Injector& injector):
-	vulkanContext(injector.inject<VulkanContext>())
+	vulkanContext(injector.inject<VulkanContext>()),
+	vulkanDebug(injector.inject<VulkanDebug>())
 {
 	init();
 }
@@ -50,9 +51,13 @@ void VulkanCore::createInstance()
 		.apiVersion         = vk::ApiVersion14,
 	};
 
+	auto layers = vulkanDebug.getRequiredLayers();
+
 	vk::InstanceCreateInfo instanceCreateInfo {
 		.pApplicationInfo = &applicattionInfo,
 	};
+
+	instanceCreateInfo.setPEnabledLayerNames(layers);
 
 	instance = getContext().createInstance(instanceCreateInfo);
 }

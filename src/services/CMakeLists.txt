@@ -20,6 +20,7 @@ target_sources(${PROJECT_NAME}
 		vulkan_all.cpp
 		vulkan_context.cpp
 		vulkan_core.cpp
+		vulkan_debug.cpp
 		vulkan_device.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -30,5 +31,6 @@ target_sources(${PROJECT_NAME}
 			vulkan_all.cppm
 			vulkan_context.cppm
 			vulkan_core.cppm
+			vulkan_debug.cppm
 			vulkan_device.cppm
 )

@@ -27,6 +27,7 @@ makedepends=(
 	'ninja'
 	'vulkan-headers'
 	'vulkan-memory-allocator'
+	'vulkan-validation-layers'
 )
 checkdepends=()
 optdepends=()
