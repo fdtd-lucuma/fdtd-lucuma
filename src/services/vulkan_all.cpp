@@ -27,6 +27,6 @@ VulkanAll::VulkanAll(Injector& injector):
 {
 
 	listVulkanExtensions();
-	std::cout << vulkanCore.getInstance();
+	std::cout << vulkanDevice.getPhysicalDevice();
 
 }

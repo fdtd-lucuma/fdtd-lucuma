@@ -24,3 +24,4 @@ import std;
 export void listVulkanExtensions();
 
 export std::ostream& operator<<(std::ostream& output, vk::Instance instance);
+export std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice);

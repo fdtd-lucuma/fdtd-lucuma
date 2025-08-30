@@ -50,30 +50,33 @@ std::ostream& listQueueFamilies(std::ostream& output, std::span<const vk::QueueF
 std::ostream& operator<<(std::ostream& output, vk::Instance instance)
 {
 	for(const auto& device: instance.enumeratePhysicalDevices())
-	{
-		const auto properties = device.getProperties();
-		const auto family = device.getQueueFamilyProperties();
-
-		output
-			<< "Device name: " << properties.deviceName << '\n'
-			<< "Vulkan API version: "
-				<< vk::versionMajor(properties.apiVersion) << '.'
-				<< vk::versionMinor(properties.apiVersion) << '.'
-				<< vk::versionPatch(properties.apiVersion) << '\n'
-			<< "Vulkan driver version: "
-				<< vk::versionMajor(properties.driverVersion) << '.'
-				<< vk::versionMinor(properties.driverVersion) << '.'
-				<< vk::versionPatch(properties.driverVersion) << '\n'
-			<< "Device type: " << to_string(properties.deviceType) << '\n'
-			<< "Max image dimension 1D: " << properties.limits.maxImageDimension1D << '\n'
-			<< "Max image dimension 2D: " << properties.limits.maxImageDimension2D << '\n'
-			<< "Max image dimension 3D: " << properties.limits.maxImageDimension3D << '\n'
-			<< "Max compute shared memory size: " << properties.limits.maxComputeSharedMemorySize << '\n'
-		;
-
-		listQueueFamilies(output, family);
-	}
+		output << device;
 
 	return output;
+}
+
+std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice)
+{
+	const auto properties = physicalDevice.getProperties();
+	const auto family = physicalDevice.getQueueFamilyProperties();
+
+	output
+		<< "Device name: " << properties.deviceName << '\n'
+		<< "Vulkan API version: "
+			<< vk::versionMajor(properties.apiVersion) << '.'
+			<< vk::versionMinor(properties.apiVersion) << '.'
+			<< vk::versionPatch(properties.apiVersion) << '\n'
+		<< "Vulkan driver version: "
+			<< vk::versionMajor(properties.driverVersion) << '.'
+			<< vk::versionMinor(properties.driverVersion) << '.'
+			<< vk::versionPatch(properties.driverVersion) << '\n'
+		<< "Device type: " << to_string(properties.deviceType) << '\n'
+		<< "Max image dimension 1D: " << properties.limits.maxImageDimension1D << '\n'
+		<< "Max image dimension 2D: " << properties.limits.maxImageDimension2D << '\n'
+		<< "Max image dimension 3D: " << properties.limits.maxImageDimension3D << '\n'
+		<< "Max compute shared memory size: " << properties.limits.maxComputeSharedMemorySize << '\n'
+	;
+
+	return listQueueFamilies(output, family);
 }
 
