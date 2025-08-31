@@ -80,7 +80,7 @@ target_sources(VulkanHppModule PUBLIC
 )
 set_target_properties(VulkanHppModule
 	PROPERTIES
-		CXX_STANDARD 23
+		CXX_STANDARD 26
 )
 
 target_compile_definitions(VulkanHppModule
@@ -105,7 +105,7 @@ target_sources(VkfwModule PUBLIC
 )
 set_target_properties(VkfwModule
 	PROPERTIES
-		CXX_STANDARD 23
+		CXX_STANDARD 26
 )
 
 target_compile_definitions(VkfwModule
@@ -136,7 +136,7 @@ add_library(imgui)
 # C++ version
 set_target_properties(imgui
 	PROPERTIES
-		CXX_STANDARD 23
+		CXX_STANDARD 26
 )
 
 # imgui fails when unity builds are active
@@ -181,7 +181,7 @@ target_sources(GlmModule PUBLIC
 )
 set_target_properties(GlmModule
 	PROPERTIES
-		CXX_STANDARD 23
+		CXX_STANDARD 26
 )
 
 target_compile_definitions(GlmModule
@@ -203,7 +203,7 @@ target_sources(VulkanMemoryAllocator-HppModule PUBLIC
 )
 set_target_properties(VulkanMemoryAllocator-HppModule
 	PROPERTIES
-		CXX_STANDARD 23
+		CXX_STANDARD 26
 )
 
 target_compile_definitions(VulkanMemoryAllocator-HppModule

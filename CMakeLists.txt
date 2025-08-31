@@ -37,7 +37,7 @@ if(NOT DEFINED ENV{CXX})
 	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_MODULE_STD 1)
 add_compile_options(-Wp,-D_FORTIFY_SOURCE=0 -Wno-macro-redefined) # Quickfix: Disable fortification on release build types
 
@@ -58,7 +58,7 @@ add_executable(${PROJECT_NAME})
 # C++ version
 set_target_properties(${PROJECT_NAME}
 	PROPERTIES
-		CXX_STANDARD 23
+		CXX_STANDARD 26
 )
 
 add_subdirectory(src) # Sources list

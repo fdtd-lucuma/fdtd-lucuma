@@ -16,8 +16,6 @@
 
 module;
 
-#include <ranges>
-
 module fdtd.services.vulkan;
 
 import std;
@@ -69,11 +67,9 @@ void VulkanCore::createInstance()
 
 std::vector<const char*> VulkanCore::getRequiredLayers()
 {
-	const std::array vectorVector {
-		vulkanDebugRequirements.getRequiredLayers(),
-	};
-
-	auto result = vectorVector | std::views::join | std::ranges::to<std::vector>();
+	auto result = std::views::concat(
+		vulkanDebugRequirements.getRequiredLayers()
+		) | std::ranges::to<std::vector>();
 
 	checkLayers(result);
 
@@ -82,12 +78,11 @@ std::vector<const char*> VulkanCore::getRequiredLayers()
 
 std::vector<const char*> VulkanCore::getRequiredExtensions()
 {
-	// TODO: glfw
-	const std::array vectorVector {
-		vulkanDebugRequirements.getRequiredExtensions(),
-	};
 
-	auto result = vectorVector | std::views::join | std::ranges::to<std::vector>();
+	auto result = std::views::concat(
+		vulkanDebugRequirements.getRequiredExtensions()
+		// TODO: glfw
+		) | std::ranges::to<std::vector>();
 
 	checkExtensions(result);
 
