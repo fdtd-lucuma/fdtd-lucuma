@@ -110,9 +110,9 @@ target_compile_definitions(VkfwModule
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
-		# TODO: Find out why this doesn't work
+		# TODO: Find out how to dedup vulkan module target
 		#VKFW_NO_INCLUDE_VULKAN
-		#VKFW_NO_INCLUDE_VULKAN_HPP
+		VKFW_NO_INCLUDE_VULKAN_HPP
 		VKFW_ENABLE_VULKAN_HPP_MODULE
 		#VKFW_ENABLE_STD_MODULE
 		VKFW_NO_STRUCT_CONSTRUCTORS
@@ -121,6 +121,7 @@ target_compile_definitions(VkfwModule
 target_link_libraries(VkfwModule
 	PUBLIC
 		VulkanHppModule
+		vkfw
 )
 
 # TODO: Find what to do when the library doesn't have an alias
