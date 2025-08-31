@@ -87,10 +87,8 @@ target_compile_definitions(VulkanHppModule
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
-		$<$<CONFIG:DEBUG>:VK_DEBUG>
 		VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
-		# TODO: Find out why this doesn't work
-		#VULKAN_HPP_ENABLE_STD_MODULE
+		VULKAN_HPP_ENABLE_STD_MODULE
 		VULKAN_HPP_STD_MODULE=std
 )
 
