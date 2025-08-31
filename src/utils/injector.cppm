@@ -27,9 +27,12 @@ public:
 	template<typename Type, typename BaseType = Type, typename... Args>
 	Type& emplace(Args &&...args) {
 		auto ptr = std::make_unique<Type>(std::forward<Args>(args)...);
+		auto& ref = *ptr;
+
 		onCreate<Type, BaseType>();
 
-		return *registry.ctx().emplace<std::unique_ptr<BaseType>>(std::move(ptr));
+		registry.ctx().emplace<std::unique_ptr<BaseType>>(std::move(ptr));
+		return ref;
 	}
 
 	template<typename Type, typename BaseType = Type>
