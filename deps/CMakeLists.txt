@@ -49,7 +49,7 @@ FetchContent_Declare(
 FetchContent_Declare(
 	vkfw
 	GIT_REPOSITORY https://github.com/Cvelth/vkfw
-	GIT_TAG        main
+	GIT_TAG        origin/main
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
 	OVERRIDE_FIND_PACKAGE

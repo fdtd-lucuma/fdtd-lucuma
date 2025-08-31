@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-vulkan-git
-pkgver=r95.38c6be4
+pkgver=r97.8b61b9a
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -35,8 +35,18 @@ provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 _gitrepo="$(git rev-parse --show-toplevel)"
 _headcommit="$(git rev-parse HEAD)"
-source=("$pkgname::git+file://$_gitrepo#commit=$_headcommit")
-md5sums=('SKIP')
+source=(
+	"$pkgname::git+file://$_gitrepo#commit=$_headcommit"
+	"imgui-git::git+https://github.com/ocornut/imgui#branch=docking"
+	"vma-hpp-git::git+https://github.com/YaaZ/VulkanMemoryAllocator-Hpp#tag=v3.2.1"
+	"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"
+)
+sha256sums=(
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+)
 
 pkgver() {
 	cd "$srcdir/$pkgname"
@@ -53,6 +63,10 @@ build() {
 		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
 		-DCMAKE_UNITY_BUILD=ON \
 		-DUSE_SYSTEM_LIBS=ON \
+		-DFETCHCONTENT_FULLY_DISCONNECTED=ON \
+		-DFETCHCONTENT_SOURCE_DIR_IMGUI="$srcdir/imgui-git" \
+		-DFETCHCONTENT_SOURCE_DIR_VULKANMEMORYALLOCATOR-HPP="$srcdir/vma-hpp-git" \
+		-DFETCHCONTENT_SOURCE_DIR_VKFW="$srcdir/vkfw-git"
 
 	cmake --build build
 }
