@@ -16,8 +16,6 @@
 
 module;
 
-#include <vulkan/vk_platform.h>
-
 module fdtd.services.vulkan;
 
 import std;
