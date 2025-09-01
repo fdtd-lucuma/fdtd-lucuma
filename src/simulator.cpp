@@ -23,6 +23,7 @@ module fdtd;
 import std;
 import fdtd.utils;
 import fdtd.services;
+import fdtd.services.vulkan;
 
 Simulator::Simulator(ArgumentParser& argumentParser):
 	argumentParser(argumentParser)

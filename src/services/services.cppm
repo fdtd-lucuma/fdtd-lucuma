@@ -18,6 +18,4 @@ module;
 
 export module fdtd.services;
 
-export import fdtd.services.vulkan;
-
 export import :file_reader;
