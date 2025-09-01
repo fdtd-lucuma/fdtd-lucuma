@@ -25,6 +25,7 @@ makedepends=(
 	'glm'
 	'llvm'
 	'ninja'
+	'shader-slang'
 	'vulkan-headers'
 	'vulkan-memory-allocator'
 	'vulkan-validation-layers'
