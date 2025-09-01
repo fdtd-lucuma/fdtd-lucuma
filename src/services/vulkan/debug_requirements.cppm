@@ -18,9 +18,9 @@ module;
 
 export module fdtd.services.vulkan:debug_requirements;
 
-export import fdtd.utils;
-
 import std;
+
+import fdtd.utils;
 
 export class VulkanDebugRequirements
 {

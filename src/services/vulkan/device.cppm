@@ -18,10 +18,12 @@ module;
 
 export module fdtd.services.vulkan:device;
 
+import vulkan_hpp;
+
+import fdtd.utils;
+
 import :core;
 
-export import fdtd.utils;
-export import vulkan_hpp;
 
 export class VulkanDevice
 {

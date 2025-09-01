@@ -18,6 +18,9 @@ module;
 
 export module fdtd.services.vulkan;
 
+import fdtd.utils;
+import vulkan_hpp;
+
 export import :all;
 export import :context;
 export import :core;

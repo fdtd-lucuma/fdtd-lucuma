@@ -20,12 +20,13 @@ module;
 
 export module fdtd.services.vulkan:debug;
 
-export import fdtd.utils;
-export import vulkan_hpp;
+import vulkan_hpp;
+import std;
+
+import fdtd.utils;
 
 import :core;
 import :debug_requirements;
-import std;
 
 export class VulkanDebug
 {

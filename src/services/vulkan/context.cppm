@@ -18,8 +18,8 @@ module;
 
 export module fdtd.services.vulkan:context;
 
-export import fdtd.utils;
-export import vulkan_hpp;
+import fdtd.utils;
+import vulkan_hpp;
 
 export class VulkanContext
 {

@@ -18,12 +18,13 @@ module;
 
 export module fdtd.services.vulkan:core;
 
-export import fdtd.utils;
-export import vulkan_hpp;
+import vulkan_hpp;
+import std;
+
+import fdtd.utils;
 
 import :context;
 import :debug_requirements;
-import std;
 
 export class VulkanCore
 {

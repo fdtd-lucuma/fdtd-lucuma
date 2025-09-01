@@ -18,7 +18,8 @@ module;
 
 export module fdtd.services.vulkan:all;
 
-export import fdtd.utils;
+import fdtd.utils;
+
 import :core;
 import :device;
 import :debug;

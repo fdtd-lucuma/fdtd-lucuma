@@ -25,7 +25,7 @@ module;
 
 export module fdtd.services:file_reader;
 
-export import fdtd.utils;
+import fdtd.utils;
 
 import std;
 
