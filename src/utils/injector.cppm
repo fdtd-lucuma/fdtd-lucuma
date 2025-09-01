@@ -17,9 +17,10 @@
 module;
 
 #include <entt/entity/registry.hpp>
-#include <iostream>
 
 export module fdtd.utils:injector;
+
+import std;
 
 export class Injector
 {
