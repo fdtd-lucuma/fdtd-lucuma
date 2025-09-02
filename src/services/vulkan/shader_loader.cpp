@@ -28,21 +28,13 @@ VulkanShaderLoader::VulkanShaderLoader(Injector& injector):
 	fileReader(injector.inject<FileReader>())
 {}
 
-template <typename T>
-void assertAligned(const void* ptr) {
-	assert(reinterpret_cast<std::uintptr_t>(ptr) % alignof(T) == 0 && "Pointer is not properly aligned for T");
-}
-
 ReturnType<vk::raii::ShaderModule> VulkanShaderLoader::createShaderModule(const std::filesystem::path& path)
 {
 	auto buffer = fileReader.read(path);
+	auto span = buffer.getAlignedBuffer();
 
-	assertAligned<uint32_t>(buffer.getData());
-
-	vk::ShaderModuleCreateInfo createInfo {
-		.codeSize = buffer.getSize() * sizeof(char),
-		.pCode    = (const uint32_t*)buffer.getData(),
-	};
+	vk::ShaderModuleCreateInfo createInfo {};
+	createInfo.setCode(span);
 
 	return vulkanDevice.getDevice().createShaderModule(createInfo);
 }

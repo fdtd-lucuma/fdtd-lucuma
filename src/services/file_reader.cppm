@@ -17,6 +17,7 @@
 module;
 
 #include "../macros.hpp"
+#include <cstdint>
 
 #if (HAS_MMAP==1)
 #    include <sys/mman.h>
@@ -41,10 +42,8 @@ public:
 	FileBuffer(const std::filesystem::path& path);
 	~FileBuffer();
 
-	std::span<const char> getBuffer() const;
-
-	size_t      getSize() const;
-	const char* getData() const;
+	std::span<const char>     getBuffer() const;
+	std::span<const uint32_t> getAlignedBuffer() const;
 
 	operator std::span<char const>() const;
 
