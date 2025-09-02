@@ -16,6 +16,7 @@
 
 module;
 
+// TODO: Wait until https://github.com/KhronosGroup/Vulkan-Hpp/pull/2273 is merged
 #include <vulkan/vulkan_raii.hpp>
 
 export module fdtd.utils:vulkan;
