@@ -16,11 +16,13 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		argument_parser.cpp
 		file_reader.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
+			argument_parser.cppm
 			file_reader.cppm
 			services.cppm
 )

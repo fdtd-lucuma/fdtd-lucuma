@@ -25,19 +25,14 @@ import fdtd.utils;
 import fdtd.services;
 import fdtd.services.vulkan;
 
-Simulator::Simulator(ArgumentParser& argumentParser):
-	argumentParser(argumentParser)
+Simulator::Simulator()
 {}
 
-ArgumentParser& Simulator::getArgumentParser() const
-{
-	return argumentParser;
-}
-
-int Simulator::run()
+int Simulator::run(int argc, char** argv)
 {
 	Injector injector;
 
+	injector.emplace<ArgumentParser>(argc, argv);
 	injector.emplace<VulkanAll>(injector);
 
 	return EXIT_SUCCESS;

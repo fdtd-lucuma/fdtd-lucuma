@@ -26,7 +26,9 @@ export class Injector
 {
 public:
 	template<typename Type, typename BaseType = Type, typename... Args>
-	Type& emplace(Args &&...args) {
+	requires std::constructible_from<Type, Args...> && std::is_base_of_v<BaseType, Type>
+	Type& emplace(Args &&...args)
+	{
 		auto ptr = std::make_unique<Type>(std::forward<Args>(args)...);
 		auto& ref = *ptr;
 
@@ -37,11 +39,26 @@ public:
 	}
 
 	template<typename Type, typename BaseType = Type>
-	[[nodiscard]] BaseType& inject() {
-		if(registry.ctx().contains<std::unique_ptr<BaseType>>())
-			return *registry.ctx().get<std::unique_ptr<BaseType>>();
+	requires std::is_base_of_v<BaseType, Type>
+	[[nodiscard]] BaseType& inject()
+	{
+		auto ptr = registry.ctx().find<std::unique_ptr<BaseType>>();
 
-		return emplace<Type, BaseType>(*this);
+		if(ptr != nullptr)
+			return **ptr;
+
+		if constexpr(std::constructible_from<Type, Injector&>)
+		{
+			return emplace<Type, BaseType>(*this);
+		}
+		else
+		{
+			using namespace std::literals::string_literals;
+
+			static const std::string msg = "Tried to use "s + typeid(Type).name() + " but it was not initialized\n";
+			std::cerr << msg << '\n';
+			throw new std::runtime_error(msg);
+		}
 	}
 
 	~Injector();
@@ -52,6 +69,7 @@ private:
 	std::vector<std::function<void()>> deleters;
 
 	template<typename Type, typename BaseType>
+	requires std::is_base_of_v<BaseType, Type>
 	void onCreate()
 	{
 		// Ensure correct destructor order

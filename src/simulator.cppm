@@ -18,18 +18,12 @@ module;
 
 export module fdtd:simulator;
 
-import :argument_parser;
-
 export class Simulator
 {
 public:
-	Simulator(ArgumentParser& argumentParser);
+	Simulator();
 
-	ArgumentParser& getArgumentParser() const;
-
-	int run();
+	int run(int argc, char** argv);
 
 private:
-	ArgumentParser& argumentParser;
-
 };

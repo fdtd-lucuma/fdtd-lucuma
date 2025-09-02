@@ -21,3 +21,4 @@ export module fdtd.services;
 import fdtd.utils;
 
 export import :file_reader;
+export import :argument_parser;
