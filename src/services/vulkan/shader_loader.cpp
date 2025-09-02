@@ -33,7 +33,7 @@ void assertAligned(const void* ptr) {
 	assert(reinterpret_cast<std::uintptr_t>(ptr) % alignof(T) == 0 && "Pointer is not properly aligned for T");
 }
 
-vk::raii::ShaderModule VulkanShaderLoader::createShaderModule(const std::filesystem::path& path)
+ReturnType<vk::raii::ShaderModule> VulkanShaderLoader::createShaderModule(const std::filesystem::path& path)
 {
 	auto buffer = fileReader.read(path);
 

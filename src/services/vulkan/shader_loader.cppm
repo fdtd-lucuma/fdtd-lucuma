@@ -35,6 +35,6 @@ private:
 	VulkanDevice& vulkanDevice;
 	FileReader&   fileReader;
 
-	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
+	ReturnType<vk::raii::ShaderModule> createShaderModule(const std::filesystem::path& path);
 
 };

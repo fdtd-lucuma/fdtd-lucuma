@@ -16,6 +16,8 @@
 
 module;
 
+#include <vulkan/vulkan_raii.hpp>
+
 export module fdtd.utils:vulkan;
 
 import vulkan_hpp;
@@ -25,3 +27,6 @@ export void listVulkanExtensions();
 
 export std::ostream& operator<<(std::ostream& output, vk::Instance instance);
 export std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice);
+
+export template<typename T>
+using ReturnType = vk::raii::detail::CreateReturnType<T>::Type;
