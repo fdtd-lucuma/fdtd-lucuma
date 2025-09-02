@@ -18,8 +18,6 @@ module;
 
 module fdtd.services.vulkan;
 
-import std;
-
 VulkanDevice::VulkanDevice([[maybe_unused]] Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>())
 {

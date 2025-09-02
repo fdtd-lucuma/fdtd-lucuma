@@ -16,28 +16,25 @@
 
 module;
 
-module fdtd.services.vulkan;
+export module fdtd.services.vulkan:shader_loader;
 
-VulkanDebugRequirements::VulkanDebugRequirements([[maybe_unused]] Injector& injector)
+import vulkan_hpp;
+import std;
+
+import fdtd.utils;
+import fdtd.services;
+
+import :device;
+
+export class VulkanShaderLoader
 {
-}
+public:
+	VulkanShaderLoader(Injector& injector);
 
-std::vector<const char*> VulkanDebugRequirements::getRequiredLayers()
-{
-	std::vector<const char*> result;
+private:
+	VulkanDevice& vulkanDevice;
+	FileReader&   fileReader;
 
-	if constexpr(enableValidationLayers)
-		result.append_range(validationLayers);
+	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
 
-	return result;
-}
-
-std::vector<const char*> VulkanDebugRequirements::getRequiredExtensions()
-{
-	std::vector<const char*> result;
-
-	if constexpr(enableValidationLayers)
-		result.emplace_back(vk::EXTDebugUtilsExtensionName);
-
-	return result;
-}
+};

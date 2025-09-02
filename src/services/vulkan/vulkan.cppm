@@ -18,8 +18,9 @@ module;
 
 export module fdtd.services.vulkan;
 
-import fdtd.utils;
+import std;
 import vulkan_hpp;
+import fdtd.utils;
 
 export import :all;
 export import :context;
@@ -27,3 +28,4 @@ export import :core;
 export import :debug;
 export import :debug_requirements;
 export import :device;
+export import :shader_loader;

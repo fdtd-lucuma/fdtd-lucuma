@@ -20,8 +20,6 @@ module;
 
 module fdtd.services.vulkan;
 
-import std;
-
 VulkanDebug::VulkanDebug([[maybe_unused]] Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>()),
 	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())

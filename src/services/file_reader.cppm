@@ -41,7 +41,10 @@ public:
 	FileBuffer(const std::filesystem::path& path);
 	~FileBuffer();
 
-	std::span<char const> getBuffer() const;
+	std::span<const char> getBuffer() const;
+
+	size_t      getSize() const;
+	const char* getData() const;
 
 	operator std::span<char const>() const;
 

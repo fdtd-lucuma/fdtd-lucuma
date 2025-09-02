@@ -18,8 +18,6 @@ module;
 
 module fdtd.services.vulkan;
 
-import std;
-
 VulkanCore::VulkanCore([[maybe_unused]] Injector& injector):
 	vulkanContext(injector.inject<VulkanContext>()),
 	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())

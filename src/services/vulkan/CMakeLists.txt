@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
 		debug.cpp
 		debug_requirements.cpp
 		device.cpp
+		shader_loader.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -32,5 +33,6 @@ target_sources(${PROJECT_NAME}
 			debug.cppm
 			debug_requirements.cppm
 			device.cppm
+			shader_loader.cppm
 			vulkan.cppm
 )

@@ -18,8 +18,6 @@ module;
 
 module fdtd.services.vulkan;
 
-import std;
-
 VulkanAll::VulkanAll(Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>()),
 	vulkanDebug(injector.inject<VulkanDebug>()),

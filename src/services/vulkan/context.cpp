@@ -18,8 +18,6 @@ module;
 
 module fdtd.services.vulkan;
 
-import std;
-
 VulkanContext::VulkanContext([[maybe_unused]] Injector& injector)
 {
 }

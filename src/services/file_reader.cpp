@@ -108,7 +108,7 @@ FileBuffer::~FileBuffer()
 #endif
 }
 
-std::span<char const> FileBuffer::getBuffer() const
+std::span<const char> FileBuffer::getBuffer() const
 {
 	switch(bufferType)
 	{
@@ -121,6 +121,16 @@ std::span<char const> FileBuffer::getBuffer() const
 		default:
 			return std::span<char const>{};
 	}
+}
+
+size_t FileBuffer::getSize() const
+{
+	return getBuffer().size();
+}
+
+const char* FileBuffer::getData() const
+{
+	return getBuffer().data();
 }
 
 FileBuffer::operator std::span<char const>() const
