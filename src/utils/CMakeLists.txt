@@ -16,8 +16,9 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		vulkan.cpp
+		exceptions.cpp
 		injector.cpp
+		vulkan.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES

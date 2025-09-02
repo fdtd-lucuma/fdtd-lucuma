@@ -1,4 +1,3 @@
-// Una GUI para fdtd
 // Copyright © 2025 Otreblan
 //
 // fdtd-vulkan is free software: you can redistribute it and/or modify
@@ -16,8 +15,14 @@
 
 module;
 
-export module fdtd.utils:exceptions;
+#include <cerrno>
+#include <cstring>
+
+module fdtd.utils;
 
 import std;
 
-export void throwFile(const std::filesystem::path& path);
+void throwFile(const std::filesystem::path& path)
+{
+	throw std::runtime_error(path.string() + ": " + strerror(errno));
+}
