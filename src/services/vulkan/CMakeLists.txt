@@ -34,5 +34,6 @@ target_sources(${PROJECT_NAME}
 			debug_requirements.cppm
 			device.cppm
 			shader_loader.cppm
+			utils.cppm
 			vulkan.cppm
 )

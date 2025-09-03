@@ -16,17 +16,17 @@
 
 module;
 
-export module fdtd.services.vulkan;
+export module fdtd.services.vulkan:utils;
 
 import std;
 import vulkan_hpp;
-import fdtd.utils;
 
-export import :all;
-export import :context;
-export import :core;
-export import :debug;
-export import :debug_requirements;
-export import :device;
-export import :shader_loader;
-export import :utils;
+import fdtd.services;
+
+export template<typename T = std::uint32_t>
+vk::ArrayProxyNoTemporaries<const T> toProxy(const FileBuffer& buffer)
+{
+	const auto span = buffer.getBuffer<T>();
+
+	return {span};
+}
