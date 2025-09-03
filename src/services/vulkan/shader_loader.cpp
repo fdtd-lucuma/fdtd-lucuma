@@ -31,7 +31,7 @@ VulkanShaderLoader::VulkanShaderLoader(Injector& injector):
 ReturnType<vk::raii::ShaderModule> VulkanShaderLoader::createShaderModule(const std::filesystem::path& path)
 {
 	auto buffer = fileReader.read(path);
-	auto span = buffer.getAlignedBuffer();
+	auto span = buffer.getBuffer<uint32_t>();
 
 	vk::ShaderModuleCreateInfo createInfo {};
 	createInfo.setCode(span);

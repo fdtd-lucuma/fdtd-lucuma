@@ -17,7 +17,7 @@
 module;
 
 #include "../macros.hpp"
-#include <cstdint>
+#include <cassert>
 
 #if (HAS_MMAP==1)
 #    include <sys/mman.h>
@@ -29,6 +29,12 @@ export module fdtd.services:file_reader;
 import fdtd.utils;
 
 import std;
+
+template <typename T>
+void assertAligned(const void* ptr) {
+	assert(reinterpret_cast<std::uintptr_t>(ptr) % alignof(T) == 0 && "Pointer is not properly aligned for T");
+}
+
 
 export class FileBuffer
 {
@@ -42,10 +48,22 @@ public:
 	FileBuffer(const std::filesystem::path& path);
 	~FileBuffer();
 
-	std::span<const char>     getBuffer() const;
-	std::span<const uint32_t> getAlignedBuffer() const;
+	template<typename T = char>
+	std::span<const T> getBuffer() const
+	{
+		auto span = getBuffer();
 
-	operator std::span<char const>() const;
+		assertAligned<T>(span.data());
+		assert(span.size() % sizeof(T) == 0);
+
+		return {(const T*)span.data(), span.size_bytes() / sizeof(T)};
+	}
+
+	template <typename T>
+	operator std::span<const T>() const
+	{
+		return getBuffer<T>();
+	}
 
 private:
 	enum class BufferType

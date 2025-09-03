@@ -17,7 +17,6 @@
 module;
 
 #include <cassert>
-#include <cstdint>
 #include "../macros.hpp"
 
 #if (HAS_MMAP==1)
@@ -109,7 +108,8 @@ FileBuffer::~FileBuffer()
 #endif
 }
 
-std::span<const char> FileBuffer::getBuffer() const
+template<>
+std::span<const char> FileBuffer::getBuffer<char>() const
 {
 	switch(bufferType)
 	{
@@ -122,26 +122,6 @@ std::span<const char> FileBuffer::getBuffer() const
 		default:
 			return std::span<char const>{};
 	}
-}
-
-template <typename T>
-void assertAligned(const void* ptr) {
-	assert(reinterpret_cast<std::uintptr_t>(ptr) % alignof(T) == 0 && "Pointer is not properly aligned for T");
-}
-
-std::span<const uint32_t> FileBuffer::getAlignedBuffer() const
-{
-	auto span = getBuffer();
-
-	assertAligned<uint32_t>(span.data());
-	assert(span.size() % sizeof(uint32_t) == 0);
-
-	return {(uint32_t*)span.data(), span.size_bytes() / sizeof(uint32_t)};
-}
-
-FileBuffer::operator std::span<char const>() const
-{
-	return getBuffer();
 }
 
 FileReader::FileReader([[maybe_unused]]Injector& injector)
