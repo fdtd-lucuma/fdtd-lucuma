@@ -4,6 +4,15 @@
 
 # Una GUI para fdtd
 
+## Run
+
+```bash
+git clone https://github.com/fdtd-lucuma/fdtd-vulkan
+cd fdtd-vulkan
+
+docker compose up
+```
+
 ## Dependencies
 
 Read [./pkg/ubuntu/dependencies.txt](./pkg/ubuntu/dependencies.txt)
