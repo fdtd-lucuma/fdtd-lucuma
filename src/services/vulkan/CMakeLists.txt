@@ -23,6 +23,7 @@ target_sources(${PROJECT_NAME}
 		debug_requirements.cpp
 		device.cpp
 		shader_loader.cpp
+		utils.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES

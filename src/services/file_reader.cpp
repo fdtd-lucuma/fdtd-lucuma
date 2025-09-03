@@ -17,6 +17,10 @@
 module;
 
 #include <cassert>
+#include <streambuf>
+#include <filesystem>
+#include <vector>
+#include <utility>
 #include "../macros.hpp"
 
 #if (HAS_MMAP==1)
@@ -31,7 +35,7 @@ module;
 
 module fdtd.services;
 
-import std;
+//import std;
 
 void cleanFd(int* fd)
 {

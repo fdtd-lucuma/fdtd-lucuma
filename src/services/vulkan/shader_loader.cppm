@@ -25,6 +25,7 @@ import fdtd.utils;
 import fdtd.services;
 
 import :device;
+import :utils;
 
 export class VulkanShaderLoader
 {

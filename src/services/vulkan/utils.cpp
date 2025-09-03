@@ -18,7 +18,7 @@ module;
 
 #include <unistd.h>
 
-module fdtd.utils;
+module fdtd.services.vulkan;
 
 import vulkan_hpp;
 import std;
