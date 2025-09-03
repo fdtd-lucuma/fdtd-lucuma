@@ -34,6 +34,9 @@ vk::ArrayProxyNoTemporaries<const T> toProxy(const FileBuffer& buffer)
 	return {span};
 }
 
+template<typename T = std::uint32_t>
+vk::ArrayProxyNoTemporaries<const T> toProxy(FileBuffer&& buffer) = delete;
+
 void listVulkanExtensions();
 
 std::ostream& operator<<(std::ostream& output, vk::Instance instance);
