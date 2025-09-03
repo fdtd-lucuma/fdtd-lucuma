@@ -10,5 +10,6 @@ paru \
 	--skipreview \
 	--noconfirm \
 	--nocleanafter \
+	--norebuild \
 	--needed \
 	"${depends[@]}" "${makedepends[@]}"

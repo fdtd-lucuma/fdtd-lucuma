@@ -13,7 +13,7 @@ RUN \
 	--mount=type=bind,from=build-dependencies,source=/var/ab/pkg/arch,target=/fdtd-vulkan \
 	--mount=type=bind,from=build-dependencies,source=/var/cache/makepkg/pkg/,target=/var/cache/makepkg/pkg/ \
 	--mount=type=cache,target=/var/cache/pacman/pkg,sharing=private \
-	./install-deps.sh
+	./install-deps.sh vulkan-validation-layers vulkan-radeon #TODO: Change driver by target
 
 FROM install-dependecies AS build
 WORKDIR /fdtd-vulkan

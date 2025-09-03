@@ -1,6 +1,12 @@
 services:
-  vulkan:
+  amd-vulkan:
     build: .
+    restart: always
+    environment:
+      - XDG_RUNTIME_DIR=/tmp/runtime-root
+    devices:
+      - /dev/dri
+      - /dev/kfd
     develop:
       watch:
         - action: rebuild
