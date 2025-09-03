@@ -26,7 +26,7 @@ import vulkan_hpp;
 
 import fdtd.services;
 
-export template<typename T = std::uint32_t>
+template<typename T = std::uint32_t>
 vk::ArrayProxyNoTemporaries<const T> toProxy(const FileBuffer& buffer)
 {
 	const auto span = buffer.getBuffer<T>();
@@ -34,10 +34,10 @@ vk::ArrayProxyNoTemporaries<const T> toProxy(const FileBuffer& buffer)
 	return {span};
 }
 
-export void listVulkanExtensions();
+void listVulkanExtensions();
 
-export std::ostream& operator<<(std::ostream& output, vk::Instance instance);
-export std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice);
+std::ostream& operator<<(std::ostream& output, vk::Instance instance);
+std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice);
 
-export template<typename T>
+template<typename T>
 using ReturnType = vk::raii::detail::CreateReturnType<T>::Type;
