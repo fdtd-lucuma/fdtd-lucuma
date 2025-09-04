@@ -25,7 +25,6 @@ import fdtd.utils;
 import fdtd.services;
 
 import :device;
-import :utils;
 
 export class VulkanShaderLoader
 {
@@ -36,6 +35,6 @@ private:
 	VulkanDevice& vulkanDevice;
 	FileReader&   fileReader;
 
-	ReturnType<vk::raii::ShaderModule> createShaderModule(const std::filesystem::path& path);
+	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
 
 };

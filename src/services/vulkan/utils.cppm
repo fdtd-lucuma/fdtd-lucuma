@@ -16,9 +16,6 @@
 
 module;
 
-// TODO: Wait until https://github.com/KhronosGroup/Vulkan-Hpp/pull/2273 is merged
-#include <vulkan/vulkan_raii.hpp>
-
 export module fdtd.services.vulkan:utils;
 
 import std;
@@ -41,6 +38,3 @@ void listVulkanExtensions();
 
 std::ostream& operator<<(std::ostream& output, vk::Instance instance);
 std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice);
-
-template<typename T>
-using ReturnType = vk::raii::detail::CreateReturnType<T>::Type;

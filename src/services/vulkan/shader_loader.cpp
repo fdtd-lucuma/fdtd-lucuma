@@ -28,7 +28,7 @@ VulkanShaderLoader::VulkanShaderLoader(Injector& injector):
 	fileReader(injector.inject<FileReader>())
 {}
 
-ReturnType<vk::raii::ShaderModule> VulkanShaderLoader::createShaderModule(const std::filesystem::path& path)
+vk::raii::ShaderModule VulkanShaderLoader::createShaderModule(const std::filesystem::path& path)
 {
 	auto buffer = fileReader.read(path);
 
