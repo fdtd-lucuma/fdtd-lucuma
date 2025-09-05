@@ -44,10 +44,10 @@ public:
 private:
 	VulkanCore& vulkanCore;
 
-	vk::raii::Device device       = nullptr;
+	vk::raii::Device device = nullptr;
 
-	QueueFamilyInfo computeQueueInfo;
-	vk::raii::Queue computeQueue = nullptr;
+	QueueFamilyInfo              computeQueueInfo;
+	std::vector<vk::raii::Queue> computeQueues;
 
 	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();
@@ -60,4 +60,6 @@ private:
 	void createDevice();
 
 	QueueFamilyInfo selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties);
+
+	std::vector<vk::raii::Queue> createQueues(const QueueFamilyInfo& info);
 };

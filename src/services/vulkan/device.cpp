@@ -16,6 +16,8 @@
 
 module;
 
+#include <cassert>
+
 module fdtd.services.vulkan;
 
 VulkanDevice::VulkanDevice([[maybe_unused]] Injector& injector):
@@ -37,7 +39,9 @@ vk::raii::Device& VulkanDevice::getDevice()
 
 vk::raii::Queue& VulkanDevice::getComputeQueue()
 {
-	return computeQueue;
+	assert(!computeQueues.empty());
+
+	return computeQueues[0];
 }
 
 void VulkanDevice::init()
@@ -116,7 +120,8 @@ void VulkanDevice::createDevice()
 	;
 
 	device = getPhysicalDevice().createDevice(deviceCreateInfo);
-	computeQueue = device.getQueue(computeQueueInfo.index, 0);
+
+	computeQueues = createQueues(computeQueueInfo);
 }
 
 std::vector<const char*> VulkanDevice::getRequiredLayers()
@@ -127,4 +132,12 @@ std::vector<const char*> VulkanDevice::getRequiredLayers()
 std::vector<const char*> VulkanDevice::getRequiredExtensions()
 {
 	return {};
+}
+
+std::vector<vk::raii::Queue> VulkanDevice::createQueues(const QueueFamilyInfo& info)
+{
+	return
+		std::views::iota(0u, info.count) |
+		std::views::transform([&](auto i){return device.getQueue(info.index, i);}) |
+		std::ranges::to<std::vector>();
 }
