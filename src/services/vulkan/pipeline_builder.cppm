@@ -28,6 +28,12 @@ import :shader_loader;
 
 export class VulkanPipelineBuilder;
 
+export struct VulkanComputePipelineInfo
+{
+	std::filesystem::path shaderPath;
+	std::string           entrypoint = "main";
+};
+
 export class VulkanComputePipelineData
 {
 public:
@@ -35,7 +41,7 @@ public:
 private:
 	vk::raii::Pipeline pipeline = nullptr;
 
-	VulkanComputePipelineData(VulkanPipelineBuilder& builder);
+	VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info);
 
 	friend class VulkanPipelineBuilder;
 };
@@ -45,7 +51,7 @@ class VulkanPipelineBuilder
 public:
 	VulkanPipelineBuilder(Injector& injector);
 
-	VulkanComputePipelineData createComputePipeline();
+	VulkanComputePipelineData createComputePipeline(const VulkanComputePipelineInfo& info);
 
 private:
 	VulkanDevice&       vulkanDevice;

@@ -34,6 +34,11 @@ int Simulator::run(int argc, char** argv)
 
 	injector.emplace<ArgumentParser>(argc, argv);
 	injector.emplace<VulkanAll>(injector);
+	auto& builder = injector.emplace<VulkanPipelineBuilder>(injector);
+
+	auto pipeline = builder.createComputePipeline({
+		.shaderPath = "./test.spv",
+	});
 
 	return EXIT_SUCCESS;
 }

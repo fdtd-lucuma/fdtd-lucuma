@@ -24,14 +24,23 @@ VulkanPipelineBuilder::VulkanPipelineBuilder(Injector& injector):
 {
 }
 
-VulkanComputePipelineData VulkanPipelineBuilder::createComputePipeline()
+VulkanComputePipelineData VulkanPipelineBuilder::createComputePipeline(const VulkanComputePipelineInfo& info)
 {
-	return {*this};
+	return {*this, info};
 }
 
-VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& builder)
+VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info)
 {
+	auto shaderModule = builder.vulkanShaderLoader.createShaderModule(info.shaderPath);
+
+	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
+		.stage  = vk::ShaderStageFlagBits::eCompute,
+		.module = shaderModule,
+		.pName  = info.entrypoint.c_str(),
+	};
+
 	vk::ComputePipelineCreateInfo computePipelineCreateInfo {
+		.stage = pipelineShaderStageCreateInfo,
 	};
 
 	pipeline = builder.vulkanDevice.getDevice().createComputePipeline(nullptr, computePipelineCreateInfo);

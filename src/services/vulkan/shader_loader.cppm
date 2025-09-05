@@ -31,10 +31,10 @@ export class VulkanShaderLoader
 public:
 	VulkanShaderLoader(Injector& injector);
 
+	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
+
 private:
 	VulkanDevice& vulkanDevice;
 	FileReader&   fileReader;
-
-	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
 
 };
