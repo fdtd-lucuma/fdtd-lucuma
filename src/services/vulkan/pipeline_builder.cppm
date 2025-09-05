@@ -16,19 +16,40 @@
 
 module;
 
-export module fdtd.services.vulkan;
+export module fdtd.services.vulkan:pipeline_builder;
 
-import std;
 import vulkan_hpp;
+import std;
+
 import fdtd.utils;
 
-export import :all;
-export import :context;
-export import :core;
-export import :debug;
-export import :debug_requirements;
-export import :device;
-export import :pipeline_builder;
-
+import :device;
 import :shader_loader;
-import :utils;
+
+export class VulkanPipelineBuilder;
+
+export class VulkanComputePipelineData
+{
+public:
+
+private:
+	vk::raii::Pipeline pipeline = nullptr;
+
+	VulkanComputePipelineData(VulkanPipelineBuilder& builder);
+
+	friend class VulkanPipelineBuilder;
+};
+
+class VulkanPipelineBuilder
+{
+public:
+	VulkanPipelineBuilder(Injector& injector);
+
+	VulkanComputePipelineData createComputePipeline();
+
+private:
+	VulkanDevice&       vulkanDevice;
+	VulkanShaderLoader& vulkanShaderLoader;
+
+	friend class VulkanComputePipelineData;
+};

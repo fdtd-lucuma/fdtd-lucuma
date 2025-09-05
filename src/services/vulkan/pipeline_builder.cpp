@@ -16,19 +16,24 @@
 
 module;
 
-export module fdtd.services.vulkan;
+module fdtd.services.vulkan;
 
-import std;
-import vulkan_hpp;
-import fdtd.utils;
+VulkanPipelineBuilder::VulkanPipelineBuilder(Injector& injector):
+	vulkanDevice(injector.inject<VulkanDevice>()),
+	vulkanShaderLoader(injector.inject<VulkanShaderLoader>())
+{
+}
 
-export import :all;
-export import :context;
-export import :core;
-export import :debug;
-export import :debug_requirements;
-export import :device;
-export import :pipeline_builder;
+VulkanComputePipelineData VulkanPipelineBuilder::createComputePipeline()
+{
+	return {*this};
+}
 
-import :shader_loader;
-import :utils;
+VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& builder)
+{
+	vk::ComputePipelineCreateInfo computePipelineCreateInfo {
+	};
+
+	pipeline = builder.vulkanDevice.getDevice().createComputePipeline(nullptr, computePipelineCreateInfo);
+}
+
