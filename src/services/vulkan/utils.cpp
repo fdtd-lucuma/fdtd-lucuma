@@ -23,9 +23,9 @@ module fdtd.services.vulkan;
 import vulkan_hpp;
 import std;
 
-void listVulkanExtensions()
+void list_vulkan_extensions()
 {
-	std::cout << "Vulkan extensions:\n";
+	std::cout << "Vulkan instance extensions:\n";
 
 	for(const auto& extension: vk::enumerateInstanceExtensionProperties())
 		std::cout << '\t' << extension.extensionName << '\n';
@@ -39,8 +39,7 @@ std::ostream& listQueueFamilies(std::ostream& output, std::span<const vk::QueueF
 	{
 		output
 			<< "Queue family " << i++ << ":\n"
-			<< "\tQueue count: " << family.queueCount << '\n'
-			<< "\tQueue flags: " << to_string(family.queueFlags) << '\n'
+			<< family
 		;
 	}
 
@@ -58,7 +57,6 @@ std::ostream& operator<<(std::ostream& output, vk::Instance instance)
 std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice)
 {
 	const auto properties = physicalDevice.getProperties();
-	const auto family = physicalDevice.getQueueFamilyProperties();
 
 	output
 		<< "Device name: " << properties.deviceName << '\n'
@@ -77,6 +75,15 @@ std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice
 		<< "Max compute shared memory size: " << properties.limits.maxComputeSharedMemorySize << '\n'
 	;
 
-	return listQueueFamilies(output, family);
+	return listQueueFamilies(output, physicalDevice.getQueueFamilyProperties());
 }
 
+std::ostream& operator<<(std::ostream& output, vk::QueueFamilyProperties properties)
+{
+	output
+		<< "\tQueue count: " << properties.queueCount << '\n'
+		<< "\tQueue flags: " << to_string(properties.queueFlags) << '\n'
+	;
+
+	return output;
+}

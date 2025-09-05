@@ -24,7 +24,7 @@ import vulkan_hpp;
 import fdtd.services;
 
 template<typename T = std::uint32_t>
-vk::ArrayProxyNoTemporaries<const T> toProxy(const FileBuffer& buffer)
+vk::ArrayProxyNoTemporaries<const T> to_proxy(const FileBuffer& buffer)
 {
 	const auto span = buffer.getBuffer<T>();
 
@@ -32,9 +32,10 @@ vk::ArrayProxyNoTemporaries<const T> toProxy(const FileBuffer& buffer)
 }
 
 template<typename T = std::uint32_t>
-vk::ArrayProxyNoTemporaries<const T> toProxy(FileBuffer&& buffer) = delete;
+vk::ArrayProxyNoTemporaries<const T> to_proxy(FileBuffer&& buffer) = delete;
 
-void listVulkanExtensions();
+void list_vulkan_extensions();
 
 std::ostream& operator<<(std::ostream& output, vk::Instance instance);
 std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice);
+std::ostream& operator<<(std::ostream& output, vk::QueueFamilyProperties properties);

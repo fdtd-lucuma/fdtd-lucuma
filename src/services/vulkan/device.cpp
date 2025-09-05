@@ -26,7 +26,7 @@ VulkanDevice::VulkanDevice([[maybe_unused]] Injector& injector):
 
 vk::raii::PhysicalDevice& VulkanDevice::getPhysicalDevice()
 {
-	return physicalDevice;
+	return vulkanCore.getPhysicalDevice();
 }
 
 vk::raii::Device& VulkanDevice::getDevice()
@@ -34,45 +34,97 @@ vk::raii::Device& VulkanDevice::getDevice()
 	return device;
 }
 
+
+vk::raii::Queue& VulkanDevice::getComputeQueue()
+{
+	return computeQueue;
+}
+
 void VulkanDevice::init()
 {
-	createDevices();
+	createDevice();
 }
 
-void VulkanDevice::createDevices()
+QueueFamilyInfo VulkanDevice::selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties)
 {
-	physicalDevice = selectPhysicalDevice();
+	auto filter = [&](std::uint32_t i) {return (bool)(properties[i].queueFlags & vk::QueueFlagBits::eCompute); };
 
-	constexpr vk::DeviceCreateInfo deviceCreateInfo{};
+	std::uint32_t maxCount = std::numeric_limits<std::uint32_t>::lowest();
+	std::uint32_t maxIndex;
 
-	device = physicalDevice.createDevice(deviceCreateInfo);
-}
-
-vk::raii::PhysicalDevice VulkanDevice::selectPhysicalDevice()
-{
-	auto filter = [this](const auto& x){return isSuitable(x);};
-
-	// TODO: Force from command line arguments
-	for(const auto& device:
-		vulkanCore.getInstance().enumeratePhysicalDevices() |
-		std::views::filter(filter)
-	)
+	for(std::uint32_t i: std::views::iota(0u, (std::uint32_t)properties.size()) | std::views::filter(filter))
 	{
-		return device;
+		if(properties[i].queueCount > maxCount)
+		{
+			maxCount = properties[i].queueCount;
+			maxIndex = i;
+		}
 	}
 
-	throw std::runtime_error("Failed to find a Vulkan compatible GPU");
+	if(maxCount == std::numeric_limits<std::uint32_t>::lowest())
+		throw new std::runtime_error("Couldn't find a compute queue family.");
+
+	return {
+		.index = maxIndex,
+		.count = maxCount,
+	};
 }
 
-bool VulkanDevice::isSuitable(vk::PhysicalDevice physicalDevice)
+vk::DeviceQueueCreateInfo VulkanDevice::getComputeQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties)
 {
-	auto properties = physicalDevice.getProperties();
-	//auto features   = physicalDevice.getFeatures();
+	computeQueueInfo = selectComputeQueueFamily(properties);
 
-	if(properties.apiVersion < vk::ApiVersion14)
-		return false;
+	std::cout
+		<< "Selected queue family for compute:\n"
+		<< "Queue family " << computeQueueInfo.index << ":\n"
+		<< properties[computeQueueInfo.index]
+	;
 
-	// TODO: Check for extensions
+	vk::DeviceQueueCreateInfo computeQueueCreateInfo {
+		.queueFamilyIndex = computeQueueInfo.index,
+	};
 
-	return true;
+	computeQueueCreateInfo.setQueuePriorities(computeQueueInfo.priorities);
+
+	return computeQueueCreateInfo;
+}
+
+std::vector<vk::DeviceQueueCreateInfo> VulkanDevice::getQueueCreateInfos()
+{
+	auto queueProperties = getPhysicalDevice().getQueueFamilyProperties();
+
+	return {
+		getComputeQueueCreateInfo(queueProperties)
+	};
+}
+
+void VulkanDevice::createDevice()
+{
+	//auto features   = getPhysicalDevice().getFeatures();
+
+	auto extensions = getRequiredExtensions();
+	auto layers     = getRequiredLayers();
+
+	auto queues = getQueueCreateInfos();
+
+	vk::DeviceCreateInfo deviceCreateInfo{};
+
+	deviceCreateInfo
+		.setPEnabledLayerNames(layers)
+		.setPEnabledExtensionNames(extensions)
+		.setQueueCreateInfos(queues)
+	;
+
+	device = getPhysicalDevice().createDevice(deviceCreateInfo);
+	computeQueue = device.getQueue(computeQueueInfo.index, 0);
+}
+
+std::vector<const char*> VulkanDevice::getRequiredLayers()
+{
+	return {};
+}
+
+std::vector<const char*> VulkanDevice::getRequiredExtensions()
+{
+	return {};
 }

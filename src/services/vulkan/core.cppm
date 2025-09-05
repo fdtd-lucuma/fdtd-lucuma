@@ -31,22 +31,28 @@ export class VulkanCore
 public:
 	VulkanCore(Injector& injector);
 
-	vk::raii::Context&  getContext();
-	vk::raii::Instance& getInstance();
-
-	std::vector<const char*> getRequiredLayers();
-	std::vector<const char*> getRequiredExtensions();
+	vk::raii::Context&        getContext();
+	vk::raii::Instance&       getInstance();
+	vk::raii::PhysicalDevice& getPhysicalDevice();
 
 private:
 	VulkanContext&           vulkanContext;
 	VulkanDebugRequirements& vulkanDebugRequirements;
 
-	vk::raii::Instance instance = nullptr;
+	vk::raii::Instance       instance       = nullptr;
+	vk::raii::PhysicalDevice physicalDevice = nullptr;
 
 	void init();
 
 	void createInstance();
 
+	std::vector<const char*> getRequiredLayers();
+	std::vector<const char*> getRequiredExtensions();
+
 	void checkLayers(std::span<const char* const> requiredLayers);
 	void checkExtensions(std::span<const char* const> requiredExtensions);
+
+	void createPhysicalDevice();
+	vk::raii::PhysicalDevice selectPhysicalDevice();
+	bool isSuitable(vk::PhysicalDevice physicalDevice);
 };

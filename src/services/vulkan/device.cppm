@@ -24,6 +24,13 @@ import fdtd.utils;
 
 import :core;
 
+struct QueueFamilyInfo
+{
+	std::uint32_t index = 0;
+	std::uint32_t count = 0;
+
+	std::vector<float> priorities = std::vector<float>(count, 1.0f);
+};
 
 export class VulkanDevice
 {
@@ -32,18 +39,25 @@ public:
 
 	vk::raii::PhysicalDevice& getPhysicalDevice();
 	vk::raii::Device&         getDevice();
+	vk::raii::Queue&          getComputeQueue();
 
 private:
 	VulkanCore& vulkanCore;
 
-	vk::raii::PhysicalDevice physicalDevice = nullptr;
-	vk::raii::Device         device         = nullptr;
+	vk::raii::Device device       = nullptr;
+
+	QueueFamilyInfo computeQueueInfo;
+	vk::raii::Queue computeQueue = nullptr;
+
+	std::vector<const char*> getRequiredLayers();
+	std::vector<const char*> getRequiredExtensions();
 
 	void init();
 
-	void createDevices();
+	vk::DeviceQueueCreateInfo getComputeQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties);
 
-	vk::raii::PhysicalDevice selectPhysicalDevice();
-	bool isSuitable(vk::PhysicalDevice physicalDevice);
+	std::vector<vk::DeviceQueueCreateInfo> getQueueCreateInfos();
+	void createDevice();
 
+	QueueFamilyInfo selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties);
 };

@@ -35,9 +35,15 @@ vk::raii::Instance& VulkanCore::getInstance()
 	return instance;
 }
 
+vk::raii::PhysicalDevice& VulkanCore::getPhysicalDevice()
+{
+	return physicalDevice;
+}
+
 void VulkanCore::init()
 {
 	createInstance();
+	createPhysicalDevice();
 }
 
 void VulkanCore::createInstance()
@@ -146,4 +152,38 @@ void VulkanCore::checkExtensions(std::span<const char* const> requiredExtensions
 		}
 	}
 
+}
+
+void VulkanCore::createPhysicalDevice()
+{
+	physicalDevice = selectPhysicalDevice();
+}
+
+vk::raii::PhysicalDevice VulkanCore::selectPhysicalDevice()
+{
+	auto filter = [this](const auto& x){return isSuitable(x);};
+
+	// TODO: Force from command line arguments
+	for(const auto& device:
+		getInstance().enumeratePhysicalDevices() |
+		std::views::filter(filter)
+	)
+	{
+		return device;
+	}
+
+	throw std::runtime_error("Failed to find a Vulkan compatible GPU");
+}
+
+bool VulkanCore::isSuitable(vk::PhysicalDevice physicalDevice)
+{
+	auto properties = physicalDevice.getProperties();
+	//auto features   = physicalDevice.getFeatures();
+
+	if(properties.apiVersion < vk::ApiVersion14)
+		return false;
+
+	// TODO: Check for extensions
+
+	return true;
 }

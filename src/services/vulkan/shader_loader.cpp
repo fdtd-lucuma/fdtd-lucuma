@@ -33,7 +33,7 @@ vk::raii::ShaderModule VulkanShaderLoader::createShaderModule(const std::filesys
 	auto buffer = fileReader.read(path);
 
 	vk::ShaderModuleCreateInfo createInfo {};
-	createInfo.setCode(toProxy(buffer));
+	createInfo.setCode(to_proxy(buffer));
 
 	return vulkanDevice.getDevice().createShaderModule(createInfo);
 }
