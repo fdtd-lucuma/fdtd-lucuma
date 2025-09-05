@@ -31,6 +31,11 @@ VulkanComputePipelineData VulkanPipelineBuilder::createComputePipeline(const Vul
 
 VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info)
 {
+	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
+	};
+
+	layout = builder.vulkanDevice.getDevice().createPipelineLayout(pipelineLayoutCreateInfo);
+
 	auto shaderModule = builder.vulkanShaderLoader.createShaderModule(info.shaderPath);
 
 	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
@@ -40,7 +45,8 @@ VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& buil
 	};
 
 	vk::ComputePipelineCreateInfo computePipelineCreateInfo {
-		.stage = pipelineShaderStageCreateInfo,
+		.stage  = pipelineShaderStageCreateInfo,
+		.layout = layout,
 	};
 
 	pipeline = builder.vulkanDevice.getDevice().createComputePipeline(nullptr, computePipelineCreateInfo);

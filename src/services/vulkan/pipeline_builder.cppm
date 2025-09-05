@@ -39,7 +39,8 @@ export class VulkanComputePipelineData
 public:
 
 private:
-	vk::raii::Pipeline pipeline = nullptr;
+	vk::raii::PipelineLayout layout   = nullptr;
+	vk::raii::Pipeline       pipeline = nullptr;
 
 	VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info);
 
