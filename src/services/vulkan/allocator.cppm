@@ -60,7 +60,7 @@ public:
 	VulkanBuffer allocate();
 
 	void flush(VulkanBuffer& buffer, vk::DeviceSize offset = 0, vk::DeviceSize size = vk::WholeSize);
-	void flush(std::span<VulkanBuffer> buffers, std::span<const vk::DeviceSize> offsets, std::span<const vk::DeviceSize> sizes);
+	vk::Result flush(std::span<VulkanBuffer> buffers, std::span<const vk::DeviceSize> offsets = {}, std::span<const vk::DeviceSize> sizes = {});
 
 private:
 	VulkanCore&   vulkanCore;

@@ -93,11 +93,15 @@ void VulkanAllocator::flush(VulkanBuffer& buffer, vk::DeviceSize offset, vk::Dev
 	getAllocator().flushAllocation(buffer.getAllocation(), offset, size);
 }
 
-void VulkanAllocator::flush(std::span<VulkanBuffer> buffers, std::span<const vk::DeviceSize> offsets, std::span<const vk::DeviceSize> sizes)
+vk::Result VulkanAllocator::flush(std::span<VulkanBuffer> buffers, std::span<const vk::DeviceSize> offsets, std::span<const vk::DeviceSize> sizes)
 {
 	auto allocations = buffers |
 		std::views::transform(&VulkanBuffer::getAllocation) |
 		std::ranges::to<std::vector>();
 
-	getAllocator().flushAllocations(allocations, offsets, sizes);
+	return getAllocator().flushAllocations(
+		allocations.size(), allocations.data(),
+		offsets.empty() ? nullptr : offsets.data(),
+		sizes.empty() ? nullptr : sizes.data()
+	);
 }
