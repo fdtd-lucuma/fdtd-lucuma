@@ -23,6 +23,7 @@ import vk_mem_alloc_hpp;
 
 VulkanBuffer::VulkanBuffer(VulkanBuffer&& other):
 	buffer(std::exchange(other.buffer, {})),
+	info(std::exchange(other.info, {})),
 	allocation(std::exchange(other.allocation, {}))
 {}
 
