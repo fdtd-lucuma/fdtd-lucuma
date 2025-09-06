@@ -28,7 +28,7 @@ import :shader_loader;
 
 export class VulkanPipelineBuilder;
 
-export struct VulkanComputePipelineInfo
+export struct VulkanComputePipelineCreateInfo
 {
 	struct setLayout {
 		std::vector<vk::DescriptorSetLayoutBinding> bindings;
@@ -39,17 +39,22 @@ export struct VulkanComputePipelineInfo
 	std::vector<setLayout> setLayouts;
 };
 
-export class VulkanComputePipelineData
+export class VulkanComputePipeline
 {
 public:
+	std::span<vk::raii::DescriptorSetLayout> getDescriptorSetLayouts();
+	std::vector<vk::DescriptorSetLayout>     getDescriptorSetLayoutsUnraii();
+
+	vk::raii::PipelineLayout& getLayout();
+	vk::raii::Pipeline&       getPipeline();
 
 private:
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
 
-	vk::raii::PipelineLayout      layout              = nullptr;
-	vk::raii::Pipeline            pipeline            = nullptr;
+	vk::raii::PipelineLayout layout   = nullptr;
+	vk::raii::Pipeline       pipeline = nullptr;
 
-	VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info);
+	VulkanComputePipeline(VulkanPipelineBuilder& builder, const VulkanComputePipelineCreateInfo& info);
 
 	friend class VulkanPipelineBuilder;
 };
@@ -59,11 +64,11 @@ class VulkanPipelineBuilder
 public:
 	VulkanPipelineBuilder(Injector& injector);
 
-	VulkanComputePipelineData createComputePipeline(const VulkanComputePipelineInfo& info);
+	VulkanComputePipeline createComputePipeline(const VulkanComputePipelineCreateInfo& info);
 
 private:
 	VulkanDevice&       vulkanDevice;
 	VulkanShaderLoader& vulkanShaderLoader;
 
-	friend class VulkanComputePipelineData;
+	friend class VulkanComputePipeline;
 };

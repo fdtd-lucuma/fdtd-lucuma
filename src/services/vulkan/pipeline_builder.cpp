@@ -24,12 +24,12 @@ VulkanPipelineBuilder::VulkanPipelineBuilder(Injector& injector):
 {
 }
 
-VulkanComputePipelineData VulkanPipelineBuilder::createComputePipeline(const VulkanComputePipelineInfo& info)
+VulkanComputePipeline VulkanPipelineBuilder::createComputePipeline(const VulkanComputePipelineCreateInfo& info)
 {
 	return {*this, info};
 }
 
-VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info)
+VulkanComputePipeline::VulkanComputePipeline(VulkanPipelineBuilder& builder, const VulkanComputePipelineCreateInfo& info)
 {
 	auto& device = builder.vulkanDevice.getDevice();
 
@@ -72,5 +72,25 @@ VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& buil
 	};
 
 	pipeline = device.createComputePipeline(nullptr, computePipelineCreateInfo);
+}
+
+std::span<vk::raii::DescriptorSetLayout> VulkanComputePipeline::getDescriptorSetLayouts()
+{
+	return descriptorSetLayouts;
+}
+
+std::vector<vk::DescriptorSetLayout> VulkanComputePipeline::getDescriptorSetLayoutsUnraii()
+{
+	return unraii(getDescriptorSetLayouts());
+}
+
+vk::raii::PipelineLayout& VulkanComputePipeline::getLayout()
+{
+	return layout;
+}
+
+vk::raii::Pipeline& VulkanComputePipeline::getPipeline()
+{
+	return pipeline;
 }
 

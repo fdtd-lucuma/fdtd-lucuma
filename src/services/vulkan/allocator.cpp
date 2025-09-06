@@ -16,20 +16,34 @@
 
 module;
 
-export module fdtd.services.vulkan;
+module fdtd.services.vulkan;
 
-import std;
-import vulkan_hpp;
-import fdtd.utils;
+import vk_mem_alloc_hpp;
 
-export import :all;
-export import :context;
-export import :core;
-export import :debug;
-export import :debug_requirements;
-export import :device;
-export import :pipeline_builder;
-export import :allocator;
+VulkanAllocator::VulkanAllocator(Injector& injector):
+	vulkanCore(injector.inject<VulkanCore>()),
+	vulkanDevice(injector.inject<VulkanDevice>())
+{
+	init();
+}
 
-import :shader_loader;
-import :utils;
+void VulkanAllocator::init()
+{
+	createAllocator();
+}
+
+void VulkanAllocator::createAllocator()
+{
+	vma::VulkanFunctions vulkanFunctions {
+	};
+
+	vma::AllocatorCreateInfo allocatorCreateInfo {
+		.physicalDevice   = vulkanCore.getPhysicalDevice(),
+		.device           = vulkanDevice.getDevice(),
+		.pVulkanFunctions = &vulkanFunctions,
+		.instance         = vulkanCore.getInstance(),
+		.vulkanApiVersion = vk::ApiVersion14
+	};
+
+	allocator = vma::createAllocatorUnique(allocatorCreateInfo);
+}

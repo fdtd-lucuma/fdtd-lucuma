@@ -20,9 +20,10 @@ export module fdtd.services.vulkan:all;
 
 import fdtd.utils;
 
+import :allocator;
 import :core;
-import :device;
 import :debug;
+import :device;
 
 export class VulkanAll
 {
@@ -30,7 +31,8 @@ public:
 	VulkanAll(Injector& injector);
 
 private:
-	VulkanCore&   vulkanCore;
-	VulkanDebug&  vulkanDebug;
-	VulkanDevice& vulkanDevice;
+	VulkanCore&      vulkanCore;
+	VulkanDebug&     vulkanDebug;
+	VulkanDevice&    vulkanDevice;
+	VulkanAllocator& vulkanAllocator;
 };

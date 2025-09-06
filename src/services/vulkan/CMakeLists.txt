@@ -17,6 +17,7 @@
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		all.cpp
+		allocator.cpp
 		context.cpp
 		core.cpp
 		debug.cpp
@@ -30,6 +31,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			all.cppm
+			allocator.cppm
 			context.cppm
 			core.cppm
 			debug.cppm

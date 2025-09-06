@@ -23,7 +23,8 @@ import :utils;
 VulkanAll::VulkanAll(Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>()),
 	vulkanDebug(injector.inject<VulkanDebug>()),
-	vulkanDevice(injector.inject<VulkanDevice>())
+	vulkanDevice(injector.inject<VulkanDevice>()),
+	vulkanAllocator(injector.inject<VulkanAllocator>())
 {
 
 	list_vulkan_extensions();
