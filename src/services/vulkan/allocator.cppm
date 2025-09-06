@@ -32,6 +32,8 @@ export class VulkanAllocator
 public:
 	VulkanAllocator(Injector& injector);
 
+	vma::Allocator getAllocator();
+
 private:
 	VulkanCore&   vulkanCore;
 	VulkanDevice& vulkanDevice;

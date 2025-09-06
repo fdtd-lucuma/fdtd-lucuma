@@ -34,16 +34,17 @@ void VulkanAllocator::init()
 
 void VulkanAllocator::createAllocator()
 {
-	vma::VulkanFunctions vulkanFunctions {
-	};
-
 	vma::AllocatorCreateInfo allocatorCreateInfo {
 		.physicalDevice   = vulkanCore.getPhysicalDevice(),
 		.device           = vulkanDevice.getDevice(),
-		.pVulkanFunctions = &vulkanFunctions,
 		.instance         = vulkanCore.getInstance(),
 		.vulkanApiVersion = vk::ApiVersion14
 	};
 
 	allocator = vma::createAllocatorUnique(allocatorCreateInfo);
+}
+
+vma::Allocator VulkanAllocator::getAllocator()
+{
+	return *allocator;
 }
