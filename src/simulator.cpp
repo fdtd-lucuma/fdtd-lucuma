@@ -37,7 +37,7 @@ int Simulator::run(int argc, char** argv)
 	auto& builder = injector.emplace<VulkanPipelineBuilder>(injector);
 
 	auto pipeline = builder.createComputePipeline({
-		.shaderPath = "./test.spv",
+		.shaderPath = "./share/shaders/hello_world.spv",
 	});
 
 	return EXIT_SUCCESS;

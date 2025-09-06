@@ -52,6 +52,10 @@ include(GNUInstallDirs)
 include(FindPkgConfig)
 include(CPack)
 
+# ./cmake
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(SpirvTarget)
+
 # The program itself
 add_executable(${PROJECT_NAME})
 
@@ -64,6 +68,7 @@ set_target_properties(${PROJECT_NAME}
 add_subdirectory(src) # Sources list
 add_subdirectory(pkg) # Packaging
 add_subdirectory(deps) # Hardcoded dependencies
+add_subdirectory(share)
 
 # Macros
 target_compile_definitions(${PROJECT_NAME}
