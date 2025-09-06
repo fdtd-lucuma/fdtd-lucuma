@@ -16,6 +16,8 @@
 
 module;
 
+#include <ranges>
+
 module fdtd.services.vulkan;
 
 VulkanCore::VulkanCore([[maybe_unused]] Injector& injector):

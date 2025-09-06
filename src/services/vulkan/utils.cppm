@@ -34,6 +34,18 @@ vk::ArrayProxyNoTemporaries<const T> to_proxy(const FileBuffer& buffer)
 template<typename T = std::uint32_t>
 vk::ArrayProxyNoTemporaries<const T> to_proxy(FileBuffer&& buffer) = delete;
 
+template<typename RAIIT, typename T = RAIIT::CppType>
+std::vector<T> unraii(std::span<const RAIIT> raiis) {
+	return raiis |
+		std::views::transform([](const auto& x){return *x;}) |
+		std::ranges::to<std::vector>();
+}
+
+template<typename RAIIT, typename T = RAIIT::CppType>
+std::vector<T> unraii(const std::vector<RAIIT>& raiis) {
+	return unraii(std::span{raiis});
+}
+
 void list_vulkan_extensions();
 
 std::ostream& operator<<(std::ostream& output, vk::Instance instance);

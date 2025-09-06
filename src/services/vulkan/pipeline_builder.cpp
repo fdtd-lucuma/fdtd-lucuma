@@ -51,9 +51,7 @@ VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& buil
 	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
 	};
 
-	auto setLayouts = descriptorSetLayouts |
-		std::views::transform([](const auto& x){return *x;}) |
-		std::ranges::to<std::vector>();
+	auto setLayouts = unraii(descriptorSetLayouts);
 
 	pipelineLayoutCreateInfo.setSetLayouts(setLayouts);
 
