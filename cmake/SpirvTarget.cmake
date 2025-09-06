@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
+#TODO: Multiple entrypoints for different stages
+#TODO: Definitions
+
 function(add_spirv_target)
 	set(options)
 	set(oneValueArgs TARGET DESTINATION)
@@ -35,20 +38,20 @@ function(add_spirv_target)
 		set(BINARY_NAME "${SOURCE_NAME}.spv")
 
 		add_custom_command(
-			OUTPUT "${BINARY_NAME}"
+			OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}"
 			DEPENDS "${SOURCE}"
 			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-			COMMAND "${SLANG_EXECUTABLE}" "${SOURCE}" -profile glsl_450 -target spirv -o "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}" -entry main
+			COMMAND "${SLANG_EXECUTABLE}" "${SOURCE}" -O3 -profile spirv_1_4 -target spirv -o "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}" -entry main
 			COMMENT "${SOURCE} -> ${BINARY_NAME}"
+			VERBATIM
 		)
 
-		list(APPEND BINARIES "${BINARY_NAME}")
-		list(APPEND BINARY_PATHS "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}")
+		list(APPEND BINARIES "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}")
 
 	endforeach()
 
 	install(
-		FILES "${BINARY_PATHS}"
+		FILES "${BINARIES}"
 		DESTINATION "${ARG_DESTINATION}"
 	)
 
