@@ -101,9 +101,5 @@ void VulkanAllocator::flush(std::span<VulkanBuffer> buffers, std::span<const vk:
 		std::views::transform([](auto& x){return x.getAllocation();}) |
 		std::ranges::to<std::vector>();
 
-	getAllocator().flushAllocations(
-		allocations,
-		offsets,
-		sizes
-	);
+	getAllocator().flushAllocations(allocations, offsets, sizes);
 }
