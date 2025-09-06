@@ -31,11 +31,23 @@ VulkanComputePipelineData VulkanPipelineBuilder::createComputePipeline(const Vul
 
 VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info)
 {
+	// Create descriptor set layout
+	vk::DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo {
+	};
+
+	descriptorSetLayoutCreateInfo.setBindings(info.bindings);
+
+	descriptorSetLayout = builder.vulkanDevice.getDevice().createDescriptorSetLayout(descriptorSetLayoutCreateInfo);
+
+	// Create pipeline layout
 	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
 	};
 
+	pipelineLayoutCreateInfo.setSetLayouts(*descriptorSetLayout);
+
 	layout = builder.vulkanDevice.getDevice().createPipelineLayout(pipelineLayoutCreateInfo);
 
+	// Create pipeline
 	auto shaderModule = builder.vulkanShaderLoader.createShaderModule(info.shaderPath);
 
 	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {

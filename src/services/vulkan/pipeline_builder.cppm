@@ -32,6 +32,8 @@ export struct VulkanComputePipelineInfo
 {
 	std::filesystem::path shaderPath;
 	std::string           entrypoint = "main";
+
+	std::vector<vk::DescriptorSetLayoutBinding> bindings;
 };
 
 export class VulkanComputePipelineData
@@ -39,8 +41,9 @@ export class VulkanComputePipelineData
 public:
 
 private:
-	vk::raii::PipelineLayout layout   = nullptr;
-	vk::raii::Pipeline       pipeline = nullptr;
+	vk::raii::DescriptorSetLayout descriptorSetLayout = nullptr;
+	vk::raii::PipelineLayout      layout              = nullptr;
+	vk::raii::Pipeline            pipeline            = nullptr;
 
 	VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info);
 
