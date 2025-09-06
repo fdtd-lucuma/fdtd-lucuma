@@ -27,12 +27,38 @@ import fdtd.utils;
 import :device;
 import :core;
 
+export class VulkanBuffer
+{
+public:
+	VulkanBuffer(VulkanBuffer const&) = delete;
+	VulkanBuffer(VulkanBuffer&& other);
+
+	VulkanBuffer& operator=(VulkanBuffer const&) = delete;
+	VulkanBuffer& operator=(VulkanBuffer&&)      = default;
+
+	vk::Buffer          getBuffer();
+	vma::AllocationInfo getInfo();
+	vma::Allocation     getAllocation();
+
+private:
+	VulkanBuffer() = default;
+
+	vma::UniqueBuffer     buffer;
+	vma::AllocationInfo   info;
+	vma::UniqueAllocation allocation;
+
+	friend class VulkanAllocator;
+};
+
 export class VulkanAllocator
 {
 public:
 	VulkanAllocator(Injector& injector);
 
 	vma::Allocator getAllocator();
+
+	VulkanBuffer allocate();
+	void         flush(VulkanBuffer& buffer, vk::DeviceSize offset = 0, vk::DeviceSize size = vk::WholeSize);
 
 private:
 	VulkanCore&   vulkanCore;

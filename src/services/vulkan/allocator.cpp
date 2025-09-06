@@ -20,6 +20,27 @@ module fdtd.services.vulkan;
 
 import vk_mem_alloc_hpp;
 
+
+VulkanBuffer::VulkanBuffer(VulkanBuffer&& other):
+	buffer(std::exchange(other.buffer, {})),
+	allocation(std::exchange(other.allocation, {}))
+{}
+
+vk::Buffer VulkanBuffer::getBuffer()
+{
+	return *buffer;
+}
+
+vma::AllocationInfo VulkanBuffer::getInfo()
+{
+	return info;
+}
+
+vma::Allocation VulkanBuffer::getAllocation()
+{
+	return *allocation;
+}
+
 VulkanAllocator::VulkanAllocator(Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>()),
 	vulkanDevice(injector.inject<VulkanDevice>())
@@ -47,4 +68,29 @@ void VulkanAllocator::createAllocator()
 vma::Allocator VulkanAllocator::getAllocator()
 {
 	return *allocator;
+}
+
+VulkanBuffer VulkanAllocator::allocate()
+{
+	VulkanBuffer buffer;
+
+	vk::BufferCreateInfo bufferCreateInfo {
+		//TODO
+	};
+
+	vma::AllocationCreateInfo allocationCreateInfo {
+		//TODO
+	};
+
+	auto [bbuffer, allocation] = getAllocator().createBufferUnique(bufferCreateInfo, allocationCreateInfo, &buffer.info);
+
+	buffer.buffer = std::move(bbuffer);
+	buffer.allocation = std::move(allocation);
+
+	return buffer;
+}
+
+void VulkanAllocator::flush(VulkanBuffer& buffer, vk::DeviceSize offset, vk::DeviceSize size)
+{
+	getAllocator().flushAllocation(buffer.getAllocation(), offset, size);
 }
