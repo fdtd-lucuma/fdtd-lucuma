@@ -31,7 +31,7 @@ import fdtd.utils;
 import std;
 
 template <typename T>
-void assertAligned(const void* ptr) {
+void assertAligned([[maybe_unused]] const void* ptr) {
 	assert(reinterpret_cast<std::uintptr_t>(ptr) % alignof(T) == 0 && "Pointer is not properly aligned for T");
 }
 
