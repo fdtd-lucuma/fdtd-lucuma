@@ -31,21 +31,33 @@ VulkanComputePipelineData VulkanPipelineBuilder::createComputePipeline(const Vul
 
 VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& builder, const VulkanComputePipelineInfo& info)
 {
-	// Create descriptor set layout
-	vk::DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo {
-	};
+	auto& device = builder.vulkanDevice.getDevice();
 
-	descriptorSetLayoutCreateInfo.setBindings(info.bindings);
+	// Create descriptor set layouts
+	descriptorSetLayouts = info.setLayouts |
+		std::views::transform([&](const auto& x)
+		{
+			vk::DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo {
+			};
 
-	descriptorSetLayout = builder.vulkanDevice.getDevice().createDescriptorSetLayout(descriptorSetLayoutCreateInfo);
+			descriptorSetLayoutCreateInfo.setBindings(x.bindings);
+
+			return device.createDescriptorSetLayout(descriptorSetLayoutCreateInfo);
+		}) |
+		std::ranges::to<std::vector>()
+	;
 
 	// Create pipeline layout
 	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
 	};
 
-	pipelineLayoutCreateInfo.setSetLayouts(*descriptorSetLayout);
+	auto setLayouts = descriptorSetLayouts |
+		std::views::transform([](const auto& x){return *x;}) |
+		std::ranges::to<std::vector>();
 
-	layout = builder.vulkanDevice.getDevice().createPipelineLayout(pipelineLayoutCreateInfo);
+	pipelineLayoutCreateInfo.setSetLayouts(setLayouts);
+
+	layout = device.createPipelineLayout(pipelineLayoutCreateInfo);
 
 	// Create pipeline
 	auto shaderModule = builder.vulkanShaderLoader.createShaderModule(info.shaderPath);
@@ -61,6 +73,6 @@ VulkanComputePipelineData::VulkanComputePipelineData(VulkanPipelineBuilder& buil
 		.layout = layout,
 	};
 
-	pipeline = builder.vulkanDevice.getDevice().createComputePipeline(nullptr, computePipelineCreateInfo);
+	pipeline = device.createComputePipeline(nullptr, computePipelineCreateInfo);
 }
 

@@ -39,22 +39,26 @@ int Simulator::run(int argc, char** argv)
 
 	auto pipeline = builder.createComputePipeline({
 		.shaderPath = "./share/shaders/hello_world.spv",
-		.bindings = {
-			vk::DescriptorSetLayoutBinding {
-				.binding        = 0,
-				.descriptorType = vk::DescriptorType::eStorageBuffer,
-				.stageFlags     = vk::ShaderStageFlagBits::eCompute,
-			},
-			vk::DescriptorSetLayoutBinding {
-				.binding        = 1,
-				.descriptorType = vk::DescriptorType::eStorageBuffer,
-				.stageFlags     = vk::ShaderStageFlagBits::eCompute,
-			},
-			vk::DescriptorSetLayoutBinding {
-				.binding        = 2,
-				.descriptorType = vk::DescriptorType::eStorageBuffer,
-				.stageFlags     = vk::ShaderStageFlagBits::eCompute,
-			},
+		.setLayouts = {
+			{
+				.bindings = {
+					vk::DescriptorSetLayoutBinding {
+						.binding        = 0,
+						.descriptorType = vk::DescriptorType::eStorageBuffer,
+						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+					},
+					vk::DescriptorSetLayoutBinding {
+						.binding        = 1,
+						.descriptorType = vk::DescriptorType::eStorageBuffer,
+						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+					},
+					vk::DescriptorSetLayoutBinding {
+						.binding        = 2,
+						.descriptorType = vk::DescriptorType::eStorageBuffer,
+						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+					},
+				}
+			}
 		}
 	});
 
