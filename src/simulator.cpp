@@ -35,7 +35,9 @@ int Simulator::run(int argc, char** argv)
 
 	injector.emplace<ArgumentParser>(argc, argv);
 	injector.emplace<VulkanAll>(injector);
-	auto& builder = injector.emplace<VulkanPipelineBuilder>(injector);
+
+	auto& builder   = injector.emplace<VulkanPipelineBuilder>(injector);
+	auto& allocator = injector.emplace<VulkanAllocator>(injector);
 
 	auto pipeline = builder.createComputePipeline({
 		.shaderPath = "./share/shaders/hello_world.spv",
@@ -61,6 +63,12 @@ int Simulator::run(int argc, char** argv)
 			}
 		}
 	});
+
+	auto buffer = allocator.allocate();
+
+	//TODO: Stuff
+
+	allocator.flush(buffer);
 
 	return EXIT_SUCCESS;
 }
