@@ -83,10 +83,7 @@ VulkanBuffer VulkanAllocator::allocate()
 		//TODO
 	};
 
-	auto [bbuffer, allocation] = getAllocator().createBufferUnique(bufferCreateInfo, allocationCreateInfo, &buffer.info);
-
-	buffer.buffer = std::move(bbuffer);
-	buffer.allocation = std::move(allocation);
+	std::tie(buffer.buffer, buffer.allocation) = getAllocator().createBufferUnique(bufferCreateInfo, allocationCreateInfo, &buffer.info);
 
 	return buffer;
 }
