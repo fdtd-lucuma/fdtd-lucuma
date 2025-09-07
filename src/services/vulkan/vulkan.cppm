@@ -41,16 +41,6 @@ using namespace fdtd::services::vulkan;
 
 //TODO: Find a way to automate this
 
-extern template Device&            Injector::inject<Device>();
-extern template All&               Injector::inject<All>();
-extern template Allocator&         Injector::inject<Allocator>();
-extern template Context&           Injector::inject<Context>();
-extern template Core&              Injector::inject<Core>();
-extern template Debug&             Injector::inject<Debug>();
-extern template DebugRequirements& Injector::inject<DebugRequirements>();
-extern template PipelineBuilder&   Injector::inject<PipelineBuilder>();
-extern template ShaderLoader&      Injector::inject<ShaderLoader>();
-
 extern template Device&            Injector::emplace<Device>(Injector&);
 extern template All&               Injector::emplace<All>(Injector&);
 extern template Allocator&         Injector::emplace<Allocator>(Injector&);
@@ -60,6 +50,16 @@ extern template Debug&             Injector::emplace<Debug>(Injector&);
 extern template DebugRequirements& Injector::emplace<DebugRequirements>(Injector&);
 extern template PipelineBuilder&   Injector::emplace<PipelineBuilder>(Injector&);
 extern template ShaderLoader&      Injector::emplace<ShaderLoader>(Injector&);
+
+extern template Device&            Injector::inject<Device>();
+extern template All&               Injector::inject<All>();
+extern template Allocator&         Injector::inject<Allocator>();
+extern template Context&           Injector::inject<Context>();
+extern template Core&              Injector::inject<Core>();
+extern template Debug&             Injector::inject<Debug>();
+extern template DebugRequirements& Injector::inject<DebugRequirements>();
+extern template PipelineBuilder&   Injector::inject<PipelineBuilder>();
+extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 }
 

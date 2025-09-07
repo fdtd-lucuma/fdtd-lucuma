@@ -27,6 +27,9 @@ namespace fdtd::utils
 {
 using namespace fdtd::services;
 
+//extern template ArgumentParser& Injector::emplace<ArgumentParser>(Injector&);
+extern template FileReader&     Injector::emplace<FileReader>(Injector&);
+
 extern template ArgumentParser& Injector::inject<ArgumentParser>();
 extern template FileReader&     Injector::inject<FileReader>();
 
