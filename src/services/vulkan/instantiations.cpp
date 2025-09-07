@@ -37,7 +37,8 @@ template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 namespace fdtd::services::vulkan
 {
+//TODO: Find a way to automate this
 
-template auto unraii(std::span<vk::raii::DescriptorSetLayout>);
+template std::vector<vk::DescriptorSetLayout> unraii(std::span<vk::raii::DescriptorSetLayout>);
 
 }

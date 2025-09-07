@@ -54,6 +54,8 @@ extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 namespace fdtd::services::vulkan
 {
 
-extern template auto unraii(std::span<vk::raii::DescriptorSetLayout>);
+//TODO: Find a way to automate this
+
+extern template std::vector<vk::DescriptorSetLayout> unraii(std::span<vk::raii::DescriptorSetLayout>);
 
 }
