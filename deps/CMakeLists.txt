@@ -36,6 +36,17 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
+	imgui-module
+	GIT_REPOSITORY         https://github.com/stripe2933/imgui-module
+	GIT_TAG                origin/docking
+	GIT_SHALLOW            ON
+	GIT_PROGRESS           ON
+	GIT_SUBMODULES         ""
+	GIT_SUBMODULES_RECURSE OFF
+	OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_Declare(
 	VulkanMemoryAllocator-Hpp
 	GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp
 	GIT_TAG                v3.2.1
@@ -55,7 +66,7 @@ FetchContent_Declare(
 	OVERRIDE_FIND_PACKAGE
 )
 
-FetchContent_MakeAvailable(imgui VulkanMemoryAllocator-Hpp vkfw)
+FetchContent_MakeAvailable(imgui imgui-module VulkanMemoryAllocator-Hpp vkfw)
 
 # Packages
 find_package(VulkanMemoryAllocator REQUIRED)
@@ -151,6 +162,14 @@ target_compile_definitions(imgui
 )
 
 target_sources(imgui
+	PUBLIC
+	FILE_SET CXX_MODULES
+	BASE_DIRS ${imgui-module_SOURCE_DIR}/generated
+	FILES
+		${imgui-module_SOURCE_DIR}/generated/imgui.cppm
+		${imgui-module_SOURCE_DIR}/generated/backends/imgui_impl_glfw.cppm
+		${imgui-module_SOURCE_DIR}/generated/backends/imgui_impl_vulkan.cppm
+
 	PRIVATE
 		${imgui_SOURCE_DIR}/imgui.cpp
 		${imgui_SOURCE_DIR}/imgui_demo.cpp
@@ -165,6 +184,12 @@ target_sources(imgui
 target_include_directories(imgui
 	PUBLIC
 		${imgui_SOURCE_DIR}
+		${imgui_SOURCE_DIR}/backends
+)
+
+target_compile_definitions(imgui
+	PUBLIC
+		IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 )
 
 target_link_libraries(imgui
