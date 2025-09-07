@@ -34,3 +34,11 @@ template PipelineBuilder&   Injector::inject<PipelineBuilder>();
 template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 }
+
+namespace fdtd::services::vulkan
+{
+//TODO: Find a way to automate this
+
+template std::vector<vk::DescriptorSetLayout> unraii<vk::raii::DescriptorSetLayout>(std::span<vk::raii::DescriptorSetLayout>);
+
+}
