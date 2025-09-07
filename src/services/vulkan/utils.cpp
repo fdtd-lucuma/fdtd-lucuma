@@ -21,6 +21,9 @@ module fdtd.services.vulkan;
 import vulkan_hpp;
 import std;
 
+namespace fdtd::services::vulkan
+{
+
 void list_vulkan_extensions()
 {
 	std::cout << "Vulkan instance extensions:\n";
@@ -84,4 +87,6 @@ std::ostream& operator<<(std::ostream& output, vk::QueueFamilyProperties propert
 	;
 
 	return output;
+}
+
 }

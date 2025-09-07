@@ -21,6 +21,11 @@ export module fdtd.services.vulkan:context;
 import fdtd.utils;
 import vulkan_hpp;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
 export class VulkanContext
 {
 public:
@@ -32,3 +37,5 @@ private:
 	vk::raii::Context  context;
 
 };
+
+}

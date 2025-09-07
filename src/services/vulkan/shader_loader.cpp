@@ -22,6 +22,9 @@ module fdtd.services.vulkan;
 
 import fdtd.services;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanShaderLoader::VulkanShaderLoader(Injector& injector):
 	vulkanDevice(injector.inject<VulkanDevice>()),
 	fileReader(injector.inject<FileReader>())
@@ -35,4 +38,6 @@ vk::raii::ShaderModule VulkanShaderLoader::createShaderModule(const std::filesys
 	createInfo.setCode(to_proxy(buffer));
 
 	return vulkanDevice.getDevice().createShaderModule(createInfo);
+}
+
 }

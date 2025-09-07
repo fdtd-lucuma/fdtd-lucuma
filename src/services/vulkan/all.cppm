@@ -25,6 +25,11 @@ import :core;
 import :debug;
 import :device;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
 export class VulkanAll
 {
 public:
@@ -36,3 +41,5 @@ private:
 	VulkanDevice&    vulkanDevice;
 	VulkanAllocator& vulkanAllocator;
 };
+
+}

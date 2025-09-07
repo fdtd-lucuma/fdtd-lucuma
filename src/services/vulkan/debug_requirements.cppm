@@ -22,6 +22,13 @@ import std;
 
 import fdtd.utils;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
+using namespace fdtd::utils;
+
 export class VulkanDebugRequirements
 {
 public:
@@ -41,3 +48,5 @@ private:
 		"VK_LAYER_KHRONOS_validation"
 	};
 };
+
+}

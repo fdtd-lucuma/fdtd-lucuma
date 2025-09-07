@@ -26,6 +26,11 @@ import fdtd.services;
 
 import :device;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
 export class VulkanShaderLoader
 {
 public:
@@ -38,3 +43,5 @@ private:
 	FileReader&   fileReader;
 
 };
+
+}

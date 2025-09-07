@@ -20,6 +20,9 @@ module;
 
 module fdtd.services.vulkan;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanCore::VulkanCore([[maybe_unused]] Injector& injector):
 	vulkanContext(injector.inject<VulkanContext>()),
 	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())
@@ -188,4 +191,6 @@ bool VulkanCore::isSuitable(vk::PhysicalDevice physicalDevice)
 	// TODO: Check for extensions
 
 	return true;
+}
+
 }

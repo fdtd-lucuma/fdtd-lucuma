@@ -22,7 +22,12 @@ module fdtd.utils;
 
 import std;
 
+namespace fdtd::utils
+{
+
 void throwFile(const std::filesystem::path& path)
 {
 	throw std::runtime_error(path.string() + ": " + strerror(errno));
+}
+
 }

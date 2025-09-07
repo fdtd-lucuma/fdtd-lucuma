@@ -23,6 +23,9 @@ import vulkan_hpp;
 
 import fdtd.services;
 
+namespace fdtd::services::vulkan
+{
+
 template<typename T = std::uint32_t>
 vk::ArrayProxyNoTemporaries<const T> to_proxy(const FileBuffer& buffer)
 {
@@ -51,3 +54,5 @@ void list_vulkan_extensions();
 std::ostream& operator<<(std::ostream& output, vk::Instance instance);
 std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice);
 std::ostream& operator<<(std::ostream& output, vk::QueueFamilyProperties properties);
+
+}

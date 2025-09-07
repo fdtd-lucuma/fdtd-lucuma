@@ -26,18 +26,21 @@ import fdtd.services;
 import fdtd.services.vulkan;
 import vulkan_hpp;
 
+namespace fdtd
+{
+
 Simulator::Simulator()
 {}
 
 int Simulator::run(int argc, char** argv)
 {
-	Injector injector;
+	utils::Injector injector;
 
-	injector.emplace<ArgumentParser>(argc, argv);
-	injector.emplace<VulkanAll>(injector);
+	injector.emplace<services::ArgumentParser>(argc, argv);
+	injector.emplace<services::vulkan::VulkanAll>(injector);
 
-	auto& builder   = injector.emplace<VulkanPipelineBuilder>(injector);
-	auto& allocator = injector.emplace<VulkanAllocator>(injector);
+	auto& builder   = injector.emplace<services::vulkan::VulkanPipelineBuilder>(injector);
+	auto& allocator = injector.emplace<services::vulkan::VulkanAllocator>(injector);
 
 	auto pipeline = builder.createComputePipeline({
 		.shaderPath = "./share/shaders/hello_world.spv",
@@ -71,4 +74,6 @@ int Simulator::run(int argc, char** argv)
 	allocator.flush(buffer);
 
 	return EXIT_SUCCESS;
+}
+
 }

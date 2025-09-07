@@ -20,6 +20,8 @@ module fdtd.services.vulkan;
 
 import vk_mem_alloc_hpp;
 
+namespace fdtd::services::vulkan
+{
 
 VulkanBuffer::VulkanBuffer(VulkanBuffer&& other):
 	buffer(std::exchange(other.buffer, {})),
@@ -104,4 +106,6 @@ vk::Result VulkanAllocator::flush(std::span<VulkanBuffer> buffers, std::span<con
 		offsets.empty() ? nullptr : offsets.data(),
 		sizes.empty() ? nullptr : sizes.data()
 	);
+}
+
 }

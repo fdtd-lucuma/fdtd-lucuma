@@ -27,6 +27,11 @@ import fdtd.utils;
 import :device;
 import :core;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
 export class VulkanBuffer
 {
 public:
@@ -73,3 +78,5 @@ private:
 	void createAllocator();
 
 };
+
+}

@@ -18,5 +18,5 @@ import fdtd;
 
 int main(int argc, char** argv)
 {
-	return Simulator().run(argc, argv);
+	return fdtd::Simulator().run(argc, argv);
 }

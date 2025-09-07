@@ -20,7 +20,12 @@ module fdtd.services;
 
 import std;
 
+namespace fdtd::services
+{
+
 ArgumentParser::ArgumentParser(int argc, char** argv){
 	for(int i = 0; i < argc; i++)
 		std::cout << argv[i] << '\n';
+}
+
 }

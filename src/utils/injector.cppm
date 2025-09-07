@@ -21,6 +21,9 @@ export module fdtd.utils:injector;
 import std;
 import fdtd.legacy_headers.entt;
 
+namespace fdtd::utils
+{
+
 export class Injector
 {
 public:
@@ -80,3 +83,5 @@ private:
 		std::cerr << "Created " << typeid(Type).name() << '\n';
 	}
 };
+
+}

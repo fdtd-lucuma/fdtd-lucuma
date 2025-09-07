@@ -18,6 +18,9 @@ module;
 
 module fdtd.services.vulkan;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanDebugRequirements::VulkanDebugRequirements([[maybe_unused]] Injector& injector)
 {
 }
@@ -40,4 +43,6 @@ std::vector<const char*> VulkanDebugRequirements::getRequiredExtensions()
 		result.emplace_back(vk::EXTDebugUtilsExtensionName);
 
 	return result;
+}
+
 }

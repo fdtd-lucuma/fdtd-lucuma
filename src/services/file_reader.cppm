@@ -30,6 +30,11 @@ import fdtd.utils;
 
 import std;
 
+namespace fdtd::services
+{
+
+using namespace fdtd::utils;
+
 template <typename T>
 void assertAligned([[maybe_unused]] const void* ptr) {
 	assert(reinterpret_cast<std::uintptr_t>(ptr) % alignof(T) == 0 && "Pointer is not properly aligned for T");
@@ -97,3 +102,5 @@ public:
 	FileBuffer read(const std::filesystem::path& path);
 private:
 };
+
+}

@@ -26,6 +26,11 @@ import fdtd.utils;
 import :context;
 import :debug_requirements;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
 export class VulkanCore
 {
 public:
@@ -56,3 +61,5 @@ private:
 	vk::raii::PhysicalDevice selectPhysicalDevice();
 	bool isSuitable(vk::PhysicalDevice physicalDevice);
 };
+
+}

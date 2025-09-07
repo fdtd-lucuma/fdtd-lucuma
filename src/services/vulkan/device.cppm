@@ -24,6 +24,11 @@ import fdtd.utils;
 
 import :core;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
 struct QueueFamilyInfo
 {
 	std::uint32_t index = 0;
@@ -63,3 +68,5 @@ private:
 
 	std::vector<vk::raii::Queue> createQueues(const QueueFamilyInfo& info);
 };
+
+}

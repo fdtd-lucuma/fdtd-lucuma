@@ -20,6 +20,9 @@ module;
 
 module fdtd.services.vulkan;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanDevice::VulkanDevice([[maybe_unused]] Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>())
 {
@@ -140,4 +143,6 @@ std::vector<vk::raii::Queue> VulkanDevice::createQueues(const QueueFamilyInfo& i
 		std::views::iota(0u, info.count) |
 		std::views::transform([&](auto i){return device.getQueue(info.index, i);}) |
 		std::ranges::to<std::vector>();
+}
+
 }

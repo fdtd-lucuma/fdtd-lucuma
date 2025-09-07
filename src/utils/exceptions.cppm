@@ -20,4 +20,9 @@ export module fdtd.utils:exceptions;
 
 import std;
 
+namespace fdtd::utils
+{
+
 export void throwFile(const std::filesystem::path& path);
+
+}

@@ -18,6 +18,9 @@ module;
 
 module fdtd.services.vulkan;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanContext::VulkanContext([[maybe_unused]] Injector& injector)
 {
 }
@@ -25,4 +28,6 @@ VulkanContext::VulkanContext([[maybe_unused]] Injector& injector)
 vk::raii::Context& VulkanContext::getContext()
 {
 	return context;
+}
+
 }

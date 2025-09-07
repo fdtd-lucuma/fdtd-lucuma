@@ -18,6 +18,9 @@ module;
 
 module fdtd.services.vulkan;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanPipelineBuilder::VulkanPipelineBuilder(Injector& injector):
 	vulkanDevice(injector.inject<VulkanDevice>()),
 	vulkanShaderLoader(injector.inject<VulkanShaderLoader>())
@@ -94,3 +97,4 @@ vk::raii::Pipeline& VulkanComputePipeline::getPipeline()
 	return pipeline;
 }
 
+}

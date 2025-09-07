@@ -20,6 +20,9 @@ module;
 
 module fdtd.services.vulkan;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanDebug::VulkanDebug([[maybe_unused]] Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>()),
 	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())
@@ -93,4 +96,6 @@ vk::Bool32 VulkanDebug::debugCallback(
 	;
 
 	return vk::False;
+}
+
 }

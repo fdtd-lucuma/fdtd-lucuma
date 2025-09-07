@@ -20,8 +20,13 @@ module;
 
 module fdtd.utils;
 
+namespace fdtd::utils
+{
+
 Injector::~Injector()
 {
 	for(const auto& f: deleters | std::views::reverse)
 		f();
+}
+
 }

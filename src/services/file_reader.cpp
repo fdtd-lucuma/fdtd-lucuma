@@ -37,6 +37,9 @@ module fdtd.services;
 
 //import std;
 
+namespace fdtd::services
+{
+
 void cleanFd(int* fd)
 {
 	assert(fd != nullptr);
@@ -135,4 +138,6 @@ FileReader::FileReader([[maybe_unused]]Injector& injector)
 FileBuffer FileReader::read(const std::filesystem::path& path)
 {
 	return FileBuffer(path);
+}
+
 }

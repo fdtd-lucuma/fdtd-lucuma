@@ -20,6 +20,9 @@ module fdtd.services.vulkan;
 
 import :utils;
 
+namespace fdtd::services::vulkan
+{
+
 VulkanAll::VulkanAll(Injector& injector):
 	vulkanCore(injector.inject<VulkanCore>()),
 	vulkanDebug(injector.inject<VulkanDebug>()),
@@ -29,5 +32,7 @@ VulkanAll::VulkanAll(Injector& injector):
 
 	list_vulkan_extensions();
 	std::cout << vulkanDevice.getPhysicalDevice();
+
+}
 
 }

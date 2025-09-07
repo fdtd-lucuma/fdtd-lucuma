@@ -18,6 +18,9 @@ module;
 
 export module fdtd:simulator;
 
+namespace fdtd
+{
+
 export class Simulator
 {
 public:
@@ -27,3 +30,5 @@ public:
 
 private:
 };
+
+}

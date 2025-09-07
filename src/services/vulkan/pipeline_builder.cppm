@@ -26,6 +26,11 @@ import fdtd.utils;
 import :device;
 import :shader_loader;
 
+namespace fdtd::services::vulkan
+{
+
+using namespace fdtd::utils;
+
 export class VulkanPipelineBuilder;
 
 export struct VulkanComputePipelineCreateInfo
@@ -72,3 +77,5 @@ private:
 
 	friend class VulkanComputePipeline;
 };
+
+}
