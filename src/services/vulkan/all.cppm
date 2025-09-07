@@ -20,15 +20,15 @@ export module fdtd.services.vulkan:all;
 
 import fdtd.utils;
 
-import :allocator;
-import :core;
-import :debug;
-import :device;
-
 namespace fdtd::services::vulkan
 {
 
 using namespace fdtd::utils;
+
+class Core;
+class Debug;
+class Device;
+class Allocator;
 
 export class All
 {

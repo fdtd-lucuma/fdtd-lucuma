@@ -23,9 +23,6 @@ import std;
 
 import fdtd.utils;
 
-import :device;
-import :shader_loader;
-
 namespace fdtd::services::vulkan
 {
 
@@ -63,6 +60,9 @@ private:
 
 	friend class PipelineBuilder;
 };
+
+class Device;
+class ShaderLoader;
 
 class PipelineBuilder
 {

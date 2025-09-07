@@ -24,9 +24,6 @@ import vulkan_hpp;
 
 import fdtd.utils;
 
-import :device;
-import :core;
-
 namespace fdtd::services::vulkan
 {
 
@@ -54,6 +51,9 @@ private:
 
 	friend class Allocator;
 };
+
+class Core;
+class Device;
 
 export class Allocator
 {

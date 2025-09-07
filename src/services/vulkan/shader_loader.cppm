@@ -24,12 +24,12 @@ import std;
 import fdtd.utils;
 import fdtd.services;
 
-import :device;
-
 namespace fdtd::services::vulkan
 {
 
 using namespace fdtd::utils;
+
+class Device;
 
 export class ShaderLoader
 {

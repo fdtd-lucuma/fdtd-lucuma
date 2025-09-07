@@ -25,13 +25,13 @@ import std;
 
 import fdtd.utils;
 
-import :core;
-import :debug_requirements;
-
 namespace fdtd::services::vulkan
 {
 
 using namespace fdtd::utils;
+
+class Core;
+class DebugRequirements;
 
 export class Debug
 {

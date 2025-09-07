@@ -19,10 +19,9 @@ module;
 export module fdtd.services.vulkan:device;
 
 import vulkan_hpp;
+import std;
 
 import fdtd.utils;
-
-import :core;
 
 namespace fdtd::services::vulkan
 {
@@ -36,6 +35,8 @@ struct QueueFamilyInfo
 
 	std::vector<float> priorities = std::vector<float>(count, 1.0f);
 };
+
+class Core;
 
 export class Device
 {
