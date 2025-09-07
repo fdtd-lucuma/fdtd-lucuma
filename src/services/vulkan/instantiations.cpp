@@ -54,3 +54,14 @@ namespace fdtd::services::vulkan
 template std::vector<vk::DescriptorSetLayout> unraii(std::span<vk::raii::DescriptorSetLayout>);
 
 }
+
+namespace std
+{
+using namespace fdtd::services::vulkan;
+
+template class std::span<Buffer>;
+template class std::span<vk::raii::DescriptorSetLayout>;
+
+template class std::vector<vk::DescriptorSetLayout>;
+
+}
