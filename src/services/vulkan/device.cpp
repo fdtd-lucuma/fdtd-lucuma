@@ -16,8 +16,6 @@
 
 module;
 
-#include <cassert>
-
 module fdtd.services.vulkan;
 
 namespace fdtd::services::vulkan
@@ -42,8 +40,6 @@ vk::raii::Device& Device::getDevice()
 
 vk::raii::Queue& Device::getComputeQueue()
 {
-	assert(!computeQueues.empty());
-
 	return computeQueues[0];
 }
 
