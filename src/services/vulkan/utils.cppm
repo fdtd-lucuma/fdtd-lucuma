@@ -34,7 +34,7 @@ vk::ArrayProxyNoTemporaries<const T> to_proxy(const FileBuffer& buffer)
 	return {span};
 }
 
-template vk::ArrayProxyNoTemporaries<const std::uint32_t> to_proxy(const FileBuffer& buffer);
+extern template vk::ArrayProxyNoTemporaries<const std::uint32_t> to_proxy(const FileBuffer& buffer);
 
 template<typename T = std::uint32_t>
 vk::ArrayProxyNoTemporaries<const T> to_proxy(FileBuffer&& buffer) = delete;

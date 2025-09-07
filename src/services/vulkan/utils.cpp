@@ -89,4 +89,7 @@ std::ostream& operator<<(std::ostream& output, vk::QueueFamilyProperties propert
 	return output;
 }
 
+template vk::ArrayProxyNoTemporaries<const std::uint32_t> to_proxy(const FileBuffer& buffer);
+
 }
+
