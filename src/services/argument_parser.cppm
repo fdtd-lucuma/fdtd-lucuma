@@ -30,11 +30,3 @@ public:
 };
 
 }
-
-namespace fdtd::utils
-{
-using namespace fdtd::services;
-
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-
-}

@@ -22,3 +22,12 @@ import fdtd.utils;
 
 export import :file_reader;
 export import :argument_parser;
+
+namespace fdtd::utils
+{
+using namespace fdtd::services;
+
+extern template ArgumentParser& Injector::inject<ArgumentParser>();
+extern template FileReader&     Injector::inject<FileReader>();
+
+}

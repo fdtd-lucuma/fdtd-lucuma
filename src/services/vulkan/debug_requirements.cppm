@@ -50,12 +50,3 @@ private:
 };
 
 }
-
-// Explicit template instantiations for faster compilation
-namespace fdtd::utils
-{
-using namespace fdtd::services::vulkan;
-
-extern template DebugRequirements& Injector::inject<DebugRequirements>();
-
-}
