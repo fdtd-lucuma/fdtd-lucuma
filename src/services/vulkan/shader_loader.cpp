@@ -17,7 +17,6 @@
 module;
 
 #include <cassert>
-#include <cstdint>
 
 module fdtd.services.vulkan;
 

@@ -16,8 +16,6 @@
 
 module;
 
-#include <unistd.h>
-
 module fdtd.services;
 
 import std;

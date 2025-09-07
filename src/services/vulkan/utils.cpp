@@ -16,8 +16,6 @@
 
 module;
 
-#include <unistd.h>
-
 module fdtd.services.vulkan;
 
 import vulkan_hpp;
@@ -35,7 +33,7 @@ std::ostream& listQueueFamilies(std::ostream& output, std::span<const vk::QueueF
 {
 	output << "Device queue families:\n";
 
-	for(size_t i = 0; const auto& family: families)
+	for(std::size_t i = 0; const auto& family: families)
 	{
 		output
 			<< "Queue family " << i++ << ":\n"
