@@ -54,7 +54,7 @@ ComputePipeline::ComputePipeline(PipelineBuilder& builder, const ComputePipeline
 	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
 	};
 
-	auto setLayouts = unraii(descriptorSetLayouts);
+	auto setLayouts = getDescriptorSetLayoutsUnraii();
 
 	pipelineLayoutCreateInfo.setSetLayouts(setLayouts);
 

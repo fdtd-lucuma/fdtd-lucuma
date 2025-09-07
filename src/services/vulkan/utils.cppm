@@ -40,7 +40,7 @@ vk::ArrayProxyNoTemporaries<const T> to_proxy(FileBuffer&& buffer) = delete;
 template<typename RAIIT, typename T = RAIIT::CppType>
 std::vector<T> unraii(std::span<RAIIT> raiis) {
 	return raiis |
-		std::views::transform(&RAIIT::operator T) |
+		std::views::transform([](RAIIT& x){return *x;}) |
 		std::ranges::to<std::vector>();
 }
 
