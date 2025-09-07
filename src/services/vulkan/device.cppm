@@ -77,6 +77,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template Device& Injector::inject<Device>();
+extern template Device& Injector::inject<Device>();
 
 }

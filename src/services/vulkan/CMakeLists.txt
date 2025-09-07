@@ -23,6 +23,7 @@ target_sources(${PROJECT_NAME}
 		debug.cpp
 		debug_requirements.cpp
 		device.cpp
+		instantiations.cpp
 		pipeline_builder.cpp
 		shader_loader.cpp
 		utils.cpp

@@ -85,6 +85,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template PipelineBuilder& Injector::inject<PipelineBuilder>();
+extern template PipelineBuilder& Injector::inject<PipelineBuilder>();
 
 }

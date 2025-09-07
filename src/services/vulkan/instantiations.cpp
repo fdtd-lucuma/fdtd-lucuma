@@ -16,46 +16,21 @@
 
 module;
 
-export module fdtd.services.vulkan:debug_requirements;
-
-import std;
-
-import fdtd.utils;
-
-namespace fdtd::services::vulkan
-{
-
-using namespace fdtd::utils;
-
-using namespace fdtd::utils;
-
-export class DebugRequirements
-{
-public:
-	DebugRequirements(Injector& injector);
-
-	std::vector<const char*> getRequiredLayers();
-	std::vector<const char*> getRequiredExtensions();
-
-#ifdef NDEBUG
-	constexpr static bool enableValidationLayers = false;
-#else
-	constexpr static bool enableValidationLayers = true;
-#endif
-
-private:
-	constexpr static std::array<const char*, 1> validationLayers = {
-		"VK_LAYER_KHRONOS_validation"
-	};
-};
-
-}
+module fdtd.services.vulkan;
 
 // Explicit template instantiations for faster compilation
 namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-extern template DebugRequirements& Injector::inject<DebugRequirements>();
+template Device&            Injector::inject<Device>();
+template All&               Injector::inject<All>();
+template Allocator&         Injector::inject<Allocator>();
+template Context&           Injector::inject<Context>();
+template Core&              Injector::inject<Core>();
+template Debug&             Injector::inject<Debug>();
+template DebugRequirements& Injector::inject<DebugRequirements>();
+template PipelineBuilder&   Injector::inject<PipelineBuilder>();
+template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 }

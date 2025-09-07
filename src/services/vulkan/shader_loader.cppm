@@ -51,6 +51,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template ShaderLoader& Injector::inject<ShaderLoader>();
+extern template ShaderLoader& Injector::inject<ShaderLoader>();
 
 }

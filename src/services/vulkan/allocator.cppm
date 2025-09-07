@@ -86,6 +86,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template Allocator& Injector::inject<Allocator>();
+extern template Allocator& Injector::inject<Allocator>();
 
 }

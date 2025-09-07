@@ -49,6 +49,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template All& Injector::inject<All>();
+extern template All& Injector::inject<All>();
 
 }

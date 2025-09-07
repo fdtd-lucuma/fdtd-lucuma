@@ -46,6 +46,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template Context& Injector::inject<Context>();
+extern template Context& Injector::inject<Context>();
 
 }

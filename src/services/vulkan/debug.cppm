@@ -73,6 +73,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template Debug& Injector::inject<Debug>();
+extern template Debug& Injector::inject<Debug>();
 
 }

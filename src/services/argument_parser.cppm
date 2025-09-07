@@ -35,6 +35,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
+extern template ArgumentParser& Injector::inject<ArgumentParser>();
 
 }

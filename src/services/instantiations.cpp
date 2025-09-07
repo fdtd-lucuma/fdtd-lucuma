@@ -16,46 +16,14 @@
 
 module;
 
-export module fdtd.services.vulkan:debug_requirements;
-
-import std;
-
-import fdtd.utils;
-
-namespace fdtd::services::vulkan
-{
-
-using namespace fdtd::utils;
-
-using namespace fdtd::utils;
-
-export class DebugRequirements
-{
-public:
-	DebugRequirements(Injector& injector);
-
-	std::vector<const char*> getRequiredLayers();
-	std::vector<const char*> getRequiredExtensions();
-
-#ifdef NDEBUG
-	constexpr static bool enableValidationLayers = false;
-#else
-	constexpr static bool enableValidationLayers = true;
-#endif
-
-private:
-	constexpr static std::array<const char*, 1> validationLayers = {
-		"VK_LAYER_KHRONOS_validation"
-	};
-};
-
-}
+module fdtd.services;
 
 // Explicit template instantiations for faster compilation
 namespace fdtd::utils
 {
-using namespace fdtd::services::vulkan;
+using namespace fdtd::services;
 
-extern template DebugRequirements& Injector::inject<DebugRequirements>();
+template ArgumentParser& Injector::inject<ArgumentParser>();
+template FileReader&     Injector::inject<FileReader>();
 
 }

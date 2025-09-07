@@ -69,6 +69,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services::vulkan;
 
-template Core& Injector::inject<Core>();
+extern template Core& Injector::inject<Core>();
 
 }
