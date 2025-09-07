@@ -16,16 +16,8 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		main.cpp
-		simulator.cpp
-	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			fdtd.cppm
-			simulator.cppm
+			entt.cppm
 )
-
-add_subdirectory(services)
-add_subdirectory(utils)
-add_subdirectory(legacy_headers)

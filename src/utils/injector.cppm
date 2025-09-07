@@ -16,11 +16,10 @@
 
 module;
 
-#include <entt/entity/registry.hpp>
-
 export module fdtd.utils:injector;
 
 import std;
+import fdtd.legacy_headers.entt;
 
 export class Injector
 {
