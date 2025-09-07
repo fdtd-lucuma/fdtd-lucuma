@@ -37,17 +37,17 @@ struct QueueFamilyInfo
 	std::vector<float> priorities = std::vector<float>(count, 1.0f);
 };
 
-export class VulkanDevice
+export class Device
 {
 public:
-	VulkanDevice(Injector& injector);
+	Device(Injector& injector);
 
 	vk::raii::PhysicalDevice& getPhysicalDevice();
 	vk::raii::Device&         getDevice();
 	vk::raii::Queue&          getComputeQueue();
 
 private:
-	VulkanCore& vulkanCore;
+	Core& core;
 
 	vk::raii::Device device = nullptr;
 

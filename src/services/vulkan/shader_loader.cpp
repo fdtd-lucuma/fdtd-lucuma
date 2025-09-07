@@ -25,19 +25,19 @@ import fdtd.services;
 namespace fdtd::services::vulkan
 {
 
-VulkanShaderLoader::VulkanShaderLoader(Injector& injector):
-	vulkanDevice(injector.inject<VulkanDevice>()),
+ShaderLoader::ShaderLoader(Injector& injector):
+	device(injector.inject<Device>()),
 	fileReader(injector.inject<FileReader>())
 {}
 
-vk::raii::ShaderModule VulkanShaderLoader::createShaderModule(const std::filesystem::path& path)
+vk::raii::ShaderModule ShaderLoader::createShaderModule(const std::filesystem::path& path)
 {
 	auto buffer = fileReader.read(path);
 
 	vk::ShaderModuleCreateInfo createInfo {};
 	createInfo.setCode(to_proxy(buffer));
 
-	return vulkanDevice.getDevice().createShaderModule(createInfo);
+	return device.getDevice().createShaderModule(createInfo);
 }
 
 }

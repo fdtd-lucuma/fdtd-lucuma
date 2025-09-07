@@ -33,17 +33,17 @@ namespace fdtd::services::vulkan
 
 using namespace fdtd::utils;
 
-export class VulkanDebug
+export class Debug
 {
 public:
-	VulkanDebug(Injector& injector);
+	Debug(Injector& injector);
 
 	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();
 
 private:
-	VulkanCore&              vulkanCore;
-	VulkanDebugRequirements& vulkanDebugRequirements;
+	Core&              core;
+	DebugRequirements& debugRequirements;
 
 	vk::raii::DebugUtilsMessengerEXT debugMessenger = nullptr;
 

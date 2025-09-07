@@ -30,16 +30,16 @@ namespace fdtd::services::vulkan
 
 using namespace fdtd::utils;
 
-export class VulkanAll
+export class All
 {
 public:
-	VulkanAll(Injector& injector);
+	All(Injector& injector);
 
 private:
-	VulkanCore&      vulkanCore;
-	VulkanDebug&     vulkanDebug;
-	VulkanDevice&    vulkanDevice;
-	VulkanAllocator& vulkanAllocator;
+	Core&      core;
+	Debug&     debug;
+	Device&    device;
+	Allocator& allocator;
 };
 
 }

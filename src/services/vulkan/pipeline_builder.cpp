@@ -21,20 +21,20 @@ module fdtd.services.vulkan;
 namespace fdtd::services::vulkan
 {
 
-VulkanPipelineBuilder::VulkanPipelineBuilder(Injector& injector):
-	vulkanDevice(injector.inject<VulkanDevice>()),
-	vulkanShaderLoader(injector.inject<VulkanShaderLoader>())
+PipelineBuilder::PipelineBuilder(Injector& injector):
+	device(injector.inject<Device>()),
+	shaderLoader(injector.inject<ShaderLoader>())
 {
 }
 
-VulkanComputePipeline VulkanPipelineBuilder::createComputePipeline(const VulkanComputePipelineCreateInfo& info)
+ComputePipeline PipelineBuilder::createComputePipeline(const ComputePipelineCreateInfo& info)
 {
 	return {*this, info};
 }
 
-VulkanComputePipeline::VulkanComputePipeline(VulkanPipelineBuilder& builder, const VulkanComputePipelineCreateInfo& info)
+ComputePipeline::ComputePipeline(PipelineBuilder& builder, const ComputePipelineCreateInfo& info)
 {
-	auto& device = builder.vulkanDevice.getDevice();
+	auto& device = builder.device.getDevice();
 
 	// Create descriptor set layouts
 	descriptorSetLayouts = info.setLayouts |
@@ -61,7 +61,7 @@ VulkanComputePipeline::VulkanComputePipeline(VulkanPipelineBuilder& builder, con
 	layout = device.createPipelineLayout(pipelineLayoutCreateInfo);
 
 	// Create pipeline
-	auto shaderModule = builder.vulkanShaderLoader.createShaderModule(info.shaderPath);
+	auto shaderModule = builder.shaderLoader.createShaderModule(info.shaderPath);
 
 	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
 		.stage  = vk::ShaderStageFlagBits::eCompute,
@@ -77,22 +77,22 @@ VulkanComputePipeline::VulkanComputePipeline(VulkanPipelineBuilder& builder, con
 	pipeline = device.createComputePipeline(nullptr, computePipelineCreateInfo);
 }
 
-std::span<vk::raii::DescriptorSetLayout> VulkanComputePipeline::getDescriptorSetLayouts()
+std::span<vk::raii::DescriptorSetLayout> ComputePipeline::getDescriptorSetLayouts()
 {
 	return descriptorSetLayouts;
 }
 
-std::vector<vk::DescriptorSetLayout> VulkanComputePipeline::getDescriptorSetLayoutsUnraii()
+std::vector<vk::DescriptorSetLayout> ComputePipeline::getDescriptorSetLayoutsUnraii()
 {
 	return unraii(getDescriptorSetLayouts());
 }
 
-vk::raii::PipelineLayout& VulkanComputePipeline::getLayout()
+vk::raii::PipelineLayout& ComputePipeline::getLayout()
 {
 	return layout;
 }
 
-vk::raii::Pipeline& VulkanComputePipeline::getPipeline()
+vk::raii::Pipeline& ComputePipeline::getPipeline()
 {
 	return pipeline;
 }

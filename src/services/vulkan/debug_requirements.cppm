@@ -29,10 +29,10 @@ using namespace fdtd::utils;
 
 using namespace fdtd::utils;
 
-export class VulkanDebugRequirements
+export class DebugRequirements
 {
 public:
-	VulkanDebugRequirements(Injector& injector);
+	DebugRequirements(Injector& injector);
 
 	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();

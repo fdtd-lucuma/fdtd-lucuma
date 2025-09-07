@@ -21,11 +21,11 @@ module fdtd.services.vulkan;
 namespace fdtd::services::vulkan
 {
 
-VulkanDebugRequirements::VulkanDebugRequirements([[maybe_unused]] Injector& injector)
+DebugRequirements::DebugRequirements([[maybe_unused]] Injector& injector)
 {
 }
 
-std::vector<const char*> VulkanDebugRequirements::getRequiredLayers()
+std::vector<const char*> DebugRequirements::getRequiredLayers()
 {
 	std::vector<const char*> result;
 
@@ -35,7 +35,7 @@ std::vector<const char*> VulkanDebugRequirements::getRequiredLayers()
 	return result;
 }
 
-std::vector<const char*> VulkanDebugRequirements::getRequiredExtensions()
+std::vector<const char*> DebugRequirements::getRequiredExtensions()
 {
 	std::vector<const char*> result;
 

@@ -32,44 +32,44 @@ namespace fdtd::services::vulkan
 
 using namespace fdtd::utils;
 
-export class VulkanBuffer
+export class Buffer
 {
 public:
-	VulkanBuffer(VulkanBuffer const&) = delete;
-	VulkanBuffer(VulkanBuffer&& other);
+	Buffer(Buffer const&) = delete;
+	Buffer(Buffer&& other);
 
-	VulkanBuffer& operator=(VulkanBuffer const&) = delete;
-	VulkanBuffer& operator=(VulkanBuffer&&)      = default;
+	Buffer& operator=(Buffer const&) = delete;
+	Buffer& operator=(Buffer&&)      = default;
 
 	vk::Buffer          getBuffer();
 	vma::AllocationInfo getInfo();
 	vma::Allocation     getAllocation();
 
 private:
-	VulkanBuffer() = default;
+	Buffer() = default;
 
 	vma::UniqueBuffer     buffer;
 	vma::AllocationInfo   info;
 	vma::UniqueAllocation allocation;
 
-	friend class VulkanAllocator;
+	friend class Allocator;
 };
 
-export class VulkanAllocator
+export class Allocator
 {
 public:
-	VulkanAllocator(Injector& injector);
+	Allocator(Injector& injector);
 
 	vma::Allocator getAllocator();
 
-	VulkanBuffer allocate();
+	Buffer allocate();
 
-	void flush(VulkanBuffer& buffer, vk::DeviceSize offset = 0, vk::DeviceSize size = vk::WholeSize);
-	vk::Result flush(std::span<VulkanBuffer> buffers, std::span<const vk::DeviceSize> offsets = {}, std::span<const vk::DeviceSize> sizes = {});
+	void flush(Buffer& buffer, vk::DeviceSize offset = 0, vk::DeviceSize size = vk::WholeSize);
+	vk::Result flush(std::span<Buffer> buffers, std::span<const vk::DeviceSize> offsets = {}, std::span<const vk::DeviceSize> sizes = {});
 
 private:
-	VulkanCore&   vulkanCore;
-	VulkanDevice& vulkanDevice;
+	Core&   core;
+	Device& device;
 
 	vma::UniqueAllocator allocator;
 

@@ -31,16 +31,16 @@ namespace fdtd::services::vulkan
 
 using namespace fdtd::utils;
 
-export class VulkanShaderLoader
+export class ShaderLoader
 {
 public:
-	VulkanShaderLoader(Injector& injector);
+	ShaderLoader(Injector& injector);
 
 	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
 
 private:
-	VulkanDevice& vulkanDevice;
-	FileReader&   fileReader;
+	Device&     device;
+	FileReader& fileReader;
 
 };
 

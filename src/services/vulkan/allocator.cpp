@@ -23,59 +23,59 @@ import vk_mem_alloc_hpp;
 namespace fdtd::services::vulkan
 {
 
-VulkanBuffer::VulkanBuffer(VulkanBuffer&& other):
+Buffer::Buffer(Buffer&& other):
 	buffer(std::exchange(other.buffer, {})),
 	info(std::exchange(other.info, {})),
 	allocation(std::exchange(other.allocation, {}))
 {}
 
-vk::Buffer VulkanBuffer::getBuffer()
+vk::Buffer Buffer::getBuffer()
 {
 	return *buffer;
 }
 
-vma::AllocationInfo VulkanBuffer::getInfo()
+vma::AllocationInfo Buffer::getInfo()
 {
 	return info;
 }
 
-vma::Allocation VulkanBuffer::getAllocation()
+vma::Allocation Buffer::getAllocation()
 {
 	return *allocation;
 }
 
-VulkanAllocator::VulkanAllocator(Injector& injector):
-	vulkanCore(injector.inject<VulkanCore>()),
-	vulkanDevice(injector.inject<VulkanDevice>())
+Allocator::Allocator(Injector& injector):
+	core(injector.inject<Core>()),
+	device(injector.inject<Device>())
 {
 	init();
 }
 
-void VulkanAllocator::init()
+void Allocator::init()
 {
 	createAllocator();
 }
 
-void VulkanAllocator::createAllocator()
+void Allocator::createAllocator()
 {
 	vma::AllocatorCreateInfo allocatorCreateInfo {
-		.physicalDevice   = vulkanCore.getPhysicalDevice(),
-		.device           = vulkanDevice.getDevice(),
-		.instance         = vulkanCore.getInstance(),
+		.physicalDevice   = core.getPhysicalDevice(),
+		.device           = device.getDevice(),
+		.instance         = core.getInstance(),
 		.vulkanApiVersion = vk::ApiVersion14
 	};
 
 	allocator = vma::createAllocatorUnique(allocatorCreateInfo);
 }
 
-vma::Allocator VulkanAllocator::getAllocator()
+vma::Allocator Allocator::getAllocator()
 {
 	return *allocator;
 }
 
-VulkanBuffer VulkanAllocator::allocate()
+Buffer Allocator::allocate()
 {
-	VulkanBuffer buffer;
+	Buffer buffer;
 
 	vk::BufferCreateInfo bufferCreateInfo {
 		//TODO
@@ -90,15 +90,15 @@ VulkanBuffer VulkanAllocator::allocate()
 	return buffer;
 }
 
-void VulkanAllocator::flush(VulkanBuffer& buffer, vk::DeviceSize offset, vk::DeviceSize size)
+void Allocator::flush(Buffer& buffer, vk::DeviceSize offset, vk::DeviceSize size)
 {
 	getAllocator().flushAllocation(buffer.getAllocation(), offset, size);
 }
 
-vk::Result VulkanAllocator::flush(std::span<VulkanBuffer> buffers, std::span<const vk::DeviceSize> offsets, std::span<const vk::DeviceSize> sizes)
+vk::Result Allocator::flush(std::span<Buffer> buffers, std::span<const vk::DeviceSize> offsets, std::span<const vk::DeviceSize> sizes)
 {
 	auto allocations = buffers |
-		std::views::transform(&VulkanBuffer::getAllocation) |
+		std::views::transform(&Buffer::getAllocation) |
 		std::ranges::to<std::vector>();
 
 	return getAllocator().flushAllocations(

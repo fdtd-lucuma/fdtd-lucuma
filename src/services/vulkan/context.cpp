@@ -21,11 +21,11 @@ module fdtd.services.vulkan;
 namespace fdtd::services::vulkan
 {
 
-VulkanContext::VulkanContext([[maybe_unused]] Injector& injector)
+Context::Context([[maybe_unused]] Injector& injector)
 {
 }
 
-vk::raii::Context& VulkanContext::getContext()
+vk::raii::Context& Context::getContext()
 {
 	return context;
 }

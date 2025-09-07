@@ -23,15 +23,15 @@ import :utils;
 namespace fdtd::services::vulkan
 {
 
-VulkanAll::VulkanAll(Injector& injector):
-	vulkanCore(injector.inject<VulkanCore>()),
-	vulkanDebug(injector.inject<VulkanDebug>()),
-	vulkanDevice(injector.inject<VulkanDevice>()),
-	vulkanAllocator(injector.inject<VulkanAllocator>())
+All::All(Injector& injector):
+	core(injector.inject<Core>()),
+	debug(injector.inject<Debug>()),
+	device(injector.inject<Device>()),
+	allocator(injector.inject<Allocator>())
 {
 
 	list_vulkan_extensions();
-	std::cout << vulkanDevice.getPhysicalDevice();
+	std::cout << device.getPhysicalDevice();
 
 }
 

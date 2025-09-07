@@ -37,10 +37,10 @@ int Simulator::run(int argc, char** argv)
 	utils::Injector injector;
 
 	injector.emplace<services::ArgumentParser>(argc, argv);
-	injector.emplace<services::vulkan::VulkanAll>(injector);
+	injector.emplace<services::vulkan::All>(injector);
 
-	auto& builder   = injector.emplace<services::vulkan::VulkanPipelineBuilder>(injector);
-	auto& allocator = injector.emplace<services::vulkan::VulkanAllocator>(injector);
+	auto& builder   = injector.emplace<services::vulkan::PipelineBuilder>(injector);
+	auto& allocator = injector.emplace<services::vulkan::Allocator>(injector);
 
 	auto pipeline = builder.createComputePipeline({
 		.shaderPath = "./share/shaders/hello_world.spv",

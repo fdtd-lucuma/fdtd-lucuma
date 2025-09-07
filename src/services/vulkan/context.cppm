@@ -26,15 +26,15 @@ namespace fdtd::services::vulkan
 
 using namespace fdtd::utils;
 
-export class VulkanContext
+export class Context
 {
 public:
-	VulkanContext(Injector& injector);
+	Context(Injector& injector);
 
-	vk::raii::Context&  getContext();
+	vk::raii::Context& getContext();
 
 private:
-	vk::raii::Context  context;
+	vk::raii::Context context;
 
 };
 

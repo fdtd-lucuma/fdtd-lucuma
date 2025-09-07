@@ -23,36 +23,36 @@ module fdtd.services.vulkan;
 namespace fdtd::services::vulkan
 {
 
-VulkanDevice::VulkanDevice([[maybe_unused]] Injector& injector):
-	vulkanCore(injector.inject<VulkanCore>())
+Device::Device([[maybe_unused]] Injector& injector):
+	core(injector.inject<Core>())
 {
 	init();
 }
 
-vk::raii::PhysicalDevice& VulkanDevice::getPhysicalDevice()
+vk::raii::PhysicalDevice& Device::getPhysicalDevice()
 {
-	return vulkanCore.getPhysicalDevice();
+	return core.getPhysicalDevice();
 }
 
-vk::raii::Device& VulkanDevice::getDevice()
+vk::raii::Device& Device::getDevice()
 {
 	return device;
 }
 
 
-vk::raii::Queue& VulkanDevice::getComputeQueue()
+vk::raii::Queue& Device::getComputeQueue()
 {
 	assert(!computeQueues.empty());
 
 	return computeQueues[0];
 }
 
-void VulkanDevice::init()
+void Device::init()
 {
 	createDevice();
 }
 
-QueueFamilyInfo VulkanDevice::selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties)
+QueueFamilyInfo Device::selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties)
 {
 	auto filter = [&](std::uint32_t i) {return (bool)(properties[i].queueFlags & vk::QueueFlagBits::eCompute); };
 
@@ -77,7 +77,7 @@ QueueFamilyInfo VulkanDevice::selectComputeQueueFamily(std::span<const vk::Queue
 	};
 }
 
-vk::DeviceQueueCreateInfo VulkanDevice::getComputeQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties)
+vk::DeviceQueueCreateInfo Device::getComputeQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties)
 {
 	computeQueueInfo = selectComputeQueueFamily(properties);
 
@@ -96,7 +96,7 @@ vk::DeviceQueueCreateInfo VulkanDevice::getComputeQueueCreateInfo(std::span<cons
 	return computeQueueCreateInfo;
 }
 
-std::vector<vk::DeviceQueueCreateInfo> VulkanDevice::getQueueCreateInfos()
+std::vector<vk::DeviceQueueCreateInfo> Device::getQueueCreateInfos()
 {
 	auto queueProperties = getPhysicalDevice().getQueueFamilyProperties();
 
@@ -105,7 +105,7 @@ std::vector<vk::DeviceQueueCreateInfo> VulkanDevice::getQueueCreateInfos()
 	};
 }
 
-void VulkanDevice::createDevice()
+void Device::createDevice()
 {
 	//auto features   = getPhysicalDevice().getFeatures();
 
@@ -127,17 +127,17 @@ void VulkanDevice::createDevice()
 	computeQueues = createQueues(computeQueueInfo);
 }
 
-std::vector<const char*> VulkanDevice::getRequiredLayers()
+std::vector<const char*> Device::getRequiredLayers()
 {
 	return {};
 }
 
-std::vector<const char*> VulkanDevice::getRequiredExtensions()
+std::vector<const char*> Device::getRequiredExtensions()
 {
 	return {};
 }
 
-std::vector<vk::raii::Queue> VulkanDevice::createQueues(const QueueFamilyInfo& info)
+std::vector<vk::raii::Queue> Device::createQueues(const QueueFamilyInfo& info)
 {
 	return
 		std::views::iota(0u, info.count) |

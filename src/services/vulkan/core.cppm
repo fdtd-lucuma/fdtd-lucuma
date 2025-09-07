@@ -31,18 +31,18 @@ namespace fdtd::services::vulkan
 
 using namespace fdtd::utils;
 
-export class VulkanCore
+export class Core
 {
 public:
-	VulkanCore(Injector& injector);
+	Core(Injector& injector);
 
 	vk::raii::Context&        getContext();
 	vk::raii::Instance&       getInstance();
 	vk::raii::PhysicalDevice& getPhysicalDevice();
 
 private:
-	VulkanContext&           vulkanContext;
-	VulkanDebugRequirements& vulkanDebugRequirements;
+	Context&           context;
+	DebugRequirements& debugRequirements;
 
 	vk::raii::Instance       instance       = nullptr;
 	vk::raii::PhysicalDevice physicalDevice = nullptr;

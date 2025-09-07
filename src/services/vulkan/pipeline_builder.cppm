@@ -31,9 +31,9 @@ namespace fdtd::services::vulkan
 
 using namespace fdtd::utils;
 
-export class VulkanPipelineBuilder;
+export class PipelineBuilder;
 
-export struct VulkanComputePipelineCreateInfo
+export struct ComputePipelineCreateInfo
 {
 	struct setLayout {
 		std::vector<vk::DescriptorSetLayoutBinding> bindings;
@@ -44,7 +44,7 @@ export struct VulkanComputePipelineCreateInfo
 	std::vector<setLayout> setLayouts;
 };
 
-export class VulkanComputePipeline
+export class ComputePipeline
 {
 public:
 	std::span<vk::raii::DescriptorSetLayout> getDescriptorSetLayouts();
@@ -59,23 +59,23 @@ private:
 	vk::raii::PipelineLayout layout   = nullptr;
 	vk::raii::Pipeline       pipeline = nullptr;
 
-	VulkanComputePipeline(VulkanPipelineBuilder& builder, const VulkanComputePipelineCreateInfo& info);
+	ComputePipeline(PipelineBuilder& builder, const ComputePipelineCreateInfo& info);
 
-	friend class VulkanPipelineBuilder;
+	friend class PipelineBuilder;
 };
 
-class VulkanPipelineBuilder
+class PipelineBuilder
 {
 public:
-	VulkanPipelineBuilder(Injector& injector);
+	PipelineBuilder(Injector& injector);
 
-	VulkanComputePipeline createComputePipeline(const VulkanComputePipelineCreateInfo& info);
+	ComputePipeline createComputePipeline(const ComputePipelineCreateInfo& info);
 
 private:
-	VulkanDevice&       vulkanDevice;
-	VulkanShaderLoader& vulkanShaderLoader;
+	Device&       device;
+	ShaderLoader& shaderLoader;
 
-	friend class VulkanComputePipeline;
+	friend class ComputePipeline;
 };
 
 }

@@ -23,35 +23,35 @@ module fdtd.services.vulkan;
 namespace fdtd::services::vulkan
 {
 
-VulkanCore::VulkanCore([[maybe_unused]] Injector& injector):
-	vulkanContext(injector.inject<VulkanContext>()),
-	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())
+Core::Core([[maybe_unused]] Injector& injector):
+	context(injector.inject<Context>()),
+	debugRequirements(injector.inject<DebugRequirements>())
 {
 	init();
 }
 
-vk::raii::Context& VulkanCore::getContext()
+vk::raii::Context& Core::getContext()
 {
-	return vulkanContext.getContext();
+	return context.getContext();
 }
 
-vk::raii::Instance& VulkanCore::getInstance()
+vk::raii::Instance& Core::getInstance()
 {
 	return instance;
 }
 
-vk::raii::PhysicalDevice& VulkanCore::getPhysicalDevice()
+vk::raii::PhysicalDevice& Core::getPhysicalDevice()
 {
 	return physicalDevice;
 }
 
-void VulkanCore::init()
+void Core::init()
 {
 	createInstance();
 	createPhysicalDevice();
 }
 
-void VulkanCore::createInstance()
+void Core::createInstance()
 {
 	constexpr vk::ApplicationInfo applicattionInfo {
 		.applicationVersion = vk::makeVersion(0, 0, 0),
@@ -74,10 +74,10 @@ void VulkanCore::createInstance()
 	instance = getContext().createInstance(instanceCreateInfo);
 }
 
-std::vector<const char*> VulkanCore::getRequiredLayers()
+std::vector<const char*> Core::getRequiredLayers()
 {
 	auto result = std::views::concat(
-		vulkanDebugRequirements.getRequiredLayers()
+		debugRequirements.getRequiredLayers()
 		) | std::ranges::to<std::vector>();
 
 	checkLayers(result);
@@ -85,11 +85,11 @@ std::vector<const char*> VulkanCore::getRequiredLayers()
 	return result;
 }
 
-std::vector<const char*> VulkanCore::getRequiredExtensions()
+std::vector<const char*> Core::getRequiredExtensions()
 {
 
 	auto result = std::views::concat(
-		vulkanDebugRequirements.getRequiredExtensions()
+		debugRequirements.getRequiredExtensions()
 		// TODO: glfw
 		) | std::ranges::to<std::vector>();
 
@@ -129,7 +129,7 @@ bool noExtensionInProperties(
 	);
 }
 
-void VulkanCore::checkLayers(std::span<const char* const> requiredLayers)
+void Core::checkLayers(std::span<const char* const> requiredLayers)
 {
 	const auto layerProperties = getContext().enumerateInstanceLayerProperties();
 
@@ -145,7 +145,7 @@ void VulkanCore::checkLayers(std::span<const char* const> requiredLayers)
 
 }
 
-void VulkanCore::checkExtensions(std::span<const char* const> requiredExtensions)
+void Core::checkExtensions(std::span<const char* const> requiredExtensions)
 {
 	const auto extensionProperties = getContext().enumerateInstanceExtensionProperties();
 
@@ -159,12 +159,12 @@ void VulkanCore::checkExtensions(std::span<const char* const> requiredExtensions
 
 }
 
-void VulkanCore::createPhysicalDevice()
+void Core::createPhysicalDevice()
 {
 	physicalDevice = selectPhysicalDevice();
 }
 
-vk::raii::PhysicalDevice VulkanCore::selectPhysicalDevice()
+vk::raii::PhysicalDevice Core::selectPhysicalDevice()
 {
 	auto filter = [this](const auto& x){return isSuitable(x);};
 
@@ -177,10 +177,10 @@ vk::raii::PhysicalDevice VulkanCore::selectPhysicalDevice()
 		return device;
 	}
 
-	throw std::runtime_error("Failed to find a Vulkan compatible GPU");
+	throw std::runtime_error("Failed to find a  compatible GPU");
 }
 
-bool VulkanCore::isSuitable(vk::PhysicalDevice physicalDevice)
+bool Core::isSuitable(vk::PhysicalDevice physicalDevice)
 {
 	auto properties = physicalDevice.getProperties();
 	//auto features   = physicalDevice.getFeatures();

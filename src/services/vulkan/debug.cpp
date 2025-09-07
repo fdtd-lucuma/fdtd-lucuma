@@ -23,30 +23,30 @@ module fdtd.services.vulkan;
 namespace fdtd::services::vulkan
 {
 
-VulkanDebug::VulkanDebug([[maybe_unused]] Injector& injector):
-	vulkanCore(injector.inject<VulkanCore>()),
-	vulkanDebugRequirements(injector.inject<VulkanDebugRequirements>())
+Debug::Debug([[maybe_unused]] Injector& injector):
+	core(injector.inject<Core>()),
+	debugRequirements(injector.inject<DebugRequirements>())
 {
 	init();
 }
 
-std::vector<const char*> VulkanDebug::getRequiredLayers()
+std::vector<const char*> Debug::getRequiredLayers()
 {
-	return vulkanDebugRequirements.getRequiredLayers();
+	return debugRequirements.getRequiredLayers();
 }
 
-std::vector<const char*> VulkanDebug::getRequiredExtensions()
+std::vector<const char*> Debug::getRequiredExtensions()
 {
-	return vulkanDebugRequirements.getRequiredExtensions();
+	return debugRequirements.getRequiredExtensions();
 }
 
-void VulkanDebug::init()
+void Debug::init()
 {
-	if constexpr(VulkanDebugRequirements::enableValidationLayers)
+	if constexpr(DebugRequirements::enableValidationLayers)
 		setupDebugMessenger();
 }
 
-void VulkanDebug::setupDebugMessenger()
+void Debug::setupDebugMessenger()
 {
 	using enum vk::DebugUtilsMessageSeverityFlagBitsEXT;
 	using enum vk::DebugUtilsMessageTypeFlagBitsEXT;
@@ -70,20 +70,20 @@ void VulkanDebug::setupDebugMessenger()
 		.pUserData = this,
 	};
 
-	debugMessenger = vulkanCore.getInstance().createDebugUtilsMessengerEXT(debugUtilsMessengerCreateInfoEXT);
+	debugMessenger = core.getInstance().createDebugUtilsMessengerEXT(debugUtilsMessengerCreateInfoEXT);
 }
 
-VKAPI_ATTR vk::Bool32 VKAPI_CALL VulkanDebug::debugCallback(
+VKAPI_ATTR vk::Bool32 VKAPI_CALL Debug::debugCallback(
 	vk::DebugUtilsMessageSeverityFlagBitsEXT      severity,
 	vk::DebugUtilsMessageTypeFlagsEXT             type,
 	const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	void*                                         pUserData
 )
 {
-	return ((VulkanDebug*)pUserData)->debugCallback(severity, type, pCallbackData);
+	return ((Debug*)pUserData)->debugCallback(severity, type, pCallbackData);
 }
 
-vk::Bool32 VulkanDebug::debugCallback(
+vk::Bool32 Debug::debugCallback(
 	vk::DebugUtilsMessageSeverityFlagBitsEXT      severity,
 	vk::DebugUtilsMessageTypeFlagsEXT             type,
 	const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData
