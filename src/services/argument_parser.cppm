@@ -18,6 +18,8 @@ module;
 
 export module fdtd.services:argument_parser;
 
+import fdtd.utils;
+
 namespace fdtd::services
 {
 
@@ -26,5 +28,13 @@ export class ArgumentParser
 public:
 	ArgumentParser(int argc, char** argv);
 };
+
+}
+
+namespace fdtd::utils
+{
+using namespace fdtd::services;
+
+template ArgumentParser& Injector::inject<ArgumentParser>();
 
 }

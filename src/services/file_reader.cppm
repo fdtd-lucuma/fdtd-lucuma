@@ -104,3 +104,11 @@ private:
 };
 
 }
+
+namespace fdtd::utils
+{
+using namespace fdtd::services;
+
+template FileReader& Injector::inject<FileReader>();
+
+}

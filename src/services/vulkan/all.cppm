@@ -43,3 +43,12 @@ private:
 };
 
 }
+
+// Explicit template instantiations for faster compilation
+namespace fdtd::utils
+{
+using namespace fdtd::services::vulkan;
+
+template All& Injector::inject<All>();
+
+}

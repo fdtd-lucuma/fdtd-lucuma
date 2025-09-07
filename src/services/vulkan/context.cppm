@@ -38,4 +38,14 @@ private:
 
 };
 
+
+}
+
+// Explicit template instantiations for faster compilation
+namespace fdtd::utils
+{
+using namespace fdtd::services::vulkan;
+
+template Context& Injector::inject<Context>();
+
 }
