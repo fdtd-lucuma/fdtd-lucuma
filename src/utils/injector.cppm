@@ -57,7 +57,7 @@ public:
 		{
 			using namespace std::literals::string_literals;
 
-			static const std::string msg = "Tried to use "s + typeid(Type).name() + " but it was not initialized\n";
+			static const std::string msg = "Tried to use "s + entt::type_id<Type>().name() + " but it was not initialized\n";
 			std::cerr << msg << '\n';
 			throw new std::runtime_error(msg);
 		}
@@ -74,13 +74,16 @@ private:
 	requires std::is_base_of_v<BaseType, Type>
 	void onCreate()
 	{
+		const auto typeId = entt::type_id<Type>();
+
 		// Ensure correct destructor order
-		deleters.emplace_back([this](){
+		// TODO: Remove this lambda
+		deleters.emplace_back([=, this](){
 			registry.ctx().erase<std::unique_ptr<BaseType>>();
-			std::cerr << "Deleted " << typeid(Type).name() << '\n';
+			std::cerr << "Deleted " << typeId.name() << '\n';
 		});
 
-		std::cerr << "Created " << typeid(Type).name() << '\n';
+		std::cerr << "Created " << typeId.name() << '\n';
 	}
 };
 

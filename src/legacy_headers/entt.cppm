@@ -24,5 +24,9 @@ import std;
 
 export namespace entt
 {
-	using entt::registry;
+
+using entt::registry;
+using entt::type_id;
+using entt::type_info;
+
 };
