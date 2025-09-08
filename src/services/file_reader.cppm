@@ -64,6 +64,9 @@ public:
 		return {(const T*)span.data(), span.size_bytes() / sizeof(T)};
 	}
 
+	template<>
+	std::span<const char> getBuffer() const;
+
 	template <typename T>
 	operator std::span<const T>() const
 	{
