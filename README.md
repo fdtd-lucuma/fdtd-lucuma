@@ -4,6 +4,10 @@
 
 # Una GUI para fdtd
 
+## Now with a pretty fast compilation (thanks to C++20 modules)
+<img width="1366" height="768" alt="imagen" src="https://github.com/user-attachments/assets/f2020b2c-6a15-4262-b4d8-fc24c8a6fcbc" />
+
+
 ## Run
 
 ```bash
