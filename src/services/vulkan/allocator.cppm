@@ -60,9 +60,9 @@ export class Allocator
 public:
 	Allocator(Injector& injector);
 
-	vma::Allocator getAllocator();
+	vma::Allocator& getAllocator();
 
-	Buffer allocate();
+	Buffer allocate(vk::DeviceSize size, vk::BufferUsageFlags usage, vma::AllocationCreateFlags flags);
 
 	void flush(Buffer& buffer, vk::DeviceSize offset = 0, vk::DeviceSize size = vk::WholeSize);
 	vk::Result flush(std::span<Buffer> buffers, std::span<const vk::DeviceSize> offsets = {}, std::span<const vk::DeviceSize> sizes = {});

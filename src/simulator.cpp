@@ -25,6 +25,7 @@ import fdtd.utils;
 import fdtd.services;
 import fdtd.services.vulkan;
 import vulkan_hpp;
+import vk_mem_alloc_hpp;
 
 namespace fdtd
 {
@@ -40,7 +41,7 @@ int Simulator::run(int argc, char** argv)
 	injector.emplace<services::vulkan::All>(injector);
 
 	auto& builder   = injector.emplace<services::vulkan::PipelineBuilder>(injector);
-	auto& allocator = injector.emplace<services::vulkan::Allocator>(injector);
+	auto& allocator = injector.inject<services::vulkan::Allocator>();
 
 	auto pipeline = builder.createComputePipeline({
 		.shaderPath = "./share/shaders/hello_world.spv",
@@ -67,7 +68,11 @@ int Simulator::run(int argc, char** argv)
 		}
 	});
 
-	auto buffer = allocator.allocate();
+	auto buffer = allocator.allocate(
+		sizeof(float)*1,
+		vk::BufferUsageFlagBits::eStorageBuffer,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+	);
 
 	//TODO: Stuff
 

@@ -31,6 +31,7 @@ public:
 	requires std::constructible_from<Type, Args...> && std::is_base_of_v<BaseType, Type>
 	Type& emplace(Args &&...args)
 	{
+		// Find out what to do when emplacing the same service twice
 		auto ptr = std::make_unique<Type>(std::forward<Args>(args)...);
 		auto& ref = *ptr;
 

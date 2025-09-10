@@ -68,21 +68,23 @@ void Allocator::createAllocator()
 	allocator = vma::createAllocatorUnique(allocatorCreateInfo);
 }
 
-vma::Allocator Allocator::getAllocator()
+vma::Allocator& Allocator::getAllocator()
 {
-	return *allocator;
+	return allocator.get();
 }
 
-Buffer Allocator::allocate()
+Buffer Allocator::allocate(vk::DeviceSize size, vk::BufferUsageFlags usage, vma::AllocationCreateFlags flags)
 {
 	Buffer buffer;
 
 	vk::BufferCreateInfo bufferCreateInfo {
-		//TODO
+		.size  = size,
+		.usage = usage,
 	};
 
 	vma::AllocationCreateInfo allocationCreateInfo {
-		//TODO
+		.flags = flags,
+		.usage = vma::MemoryUsage::eAuto,
 	};
 
 	std::tie(buffer.buffer, buffer.allocation) = getAllocator().createBufferUnique(bufferCreateInfo, allocationCreateInfo, &buffer.info);
