@@ -19,6 +19,7 @@ module;
 export module fdtd.services.basic:argument_parser;
 
 import fdtd.utils;
+import std;
 
 namespace fdtd::services::basic
 {
@@ -27,6 +28,22 @@ export class ArgumentParser
 {
 public:
 	ArgumentParser(int argc, char** argv);
+
+	std::string_view             getArgv0() const;
+	std::span<const std::string> getPositionalArguments() const;
+
+	bool isHeadless() const;
+
+private:
+	std::string              argv0;
+	std::vector<std::string> positionalArguments;
+
+	[[noreturn]]
+	void usage(int exit_code);
+
+	void parse(int argc, char** argv);
+
+	void handleOption(char shortopt);
 };
 
 }

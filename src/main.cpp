@@ -15,8 +15,11 @@
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
 import fdtd;
+import std;
 
 int main(int argc, char** argv)
 {
+	std::locale::global(std::locale(""));
+
 	return fdtd::Simulator().run(argc, argv);
 }
