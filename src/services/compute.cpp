@@ -16,26 +16,18 @@
 
 module;
 
-module fdtd.services.vulkan;
+module fdtd.services;
 
-import fdtd.services.basic;
+import fdtd.utils;
+import std;
 
-namespace fdtd::services::vulkan
+namespace fdtd::services
 {
 
-ShaderLoader::ShaderLoader(Injector& injector):
-	device(injector.inject<Device>()),
-	fileReader(injector.inject<FileReader>())
-{}
+Compute::Compute([[maybe_unused]]Injector& injector)
+{ }
 
-vk::raii::ShaderModule ShaderLoader::createShaderModule(const std::filesystem::path& path)
-{
-	auto buffer = fileReader.read(path);
-
-	vk::ShaderModuleCreateInfo createInfo {};
-	createInfo.setCode(to_proxy(buffer));
-
-	return device.getDevice().createShaderModule(createInfo);
+void Compute::compute() {
 }
 
 }

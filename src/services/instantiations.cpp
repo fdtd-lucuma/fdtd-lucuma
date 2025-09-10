@@ -23,7 +23,6 @@ namespace fdtd::utils
 {
 using namespace fdtd::services;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
+template Compute&        Injector::inject<Compute>();
 
 }

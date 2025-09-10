@@ -21,10 +21,12 @@ export module fdtd.services.vulkan:utils;
 import std;
 import vulkan_hpp;
 
-import fdtd.services;
+import fdtd.services.basic;
 
 namespace fdtd::services::vulkan
 {
+
+using namespace fdtd::services::basic;
 
 template<typename T = std::uint32_t>
 vk::ArrayProxyNoTemporaries<const T> to_proxy(const FileBuffer& buffer)

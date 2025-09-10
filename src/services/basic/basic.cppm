@@ -16,17 +16,18 @@
 
 module;
 
-export module fdtd.services:argument_parser;
+export module fdtd.services.basic;
 
 import fdtd.utils;
 
-namespace fdtd::services
-{
+export import :argument_parser;
+export import :file_reader;
 
-export class ArgumentParser
+namespace fdtd::utils
 {
-public:
-	ArgumentParser(int argc, char** argv);
-};
+using namespace fdtd::services::basic;
+
+extern template ArgumentParser& Injector::inject<ArgumentParser>();
+extern template FileReader&     Injector::inject<FileReader>();
 
 }

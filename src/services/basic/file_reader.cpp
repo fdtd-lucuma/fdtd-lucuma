@@ -21,7 +21,7 @@ module;
 #include <filesystem>
 #include <vector>
 #include <utility>
-#include "../macros.hpp"
+#include "../../macros.hpp"
 
 #if (HAS_MMAP==1)
 #    include <sys/mman.h>
@@ -33,11 +33,11 @@ module;
 #    include <cstdio>
 #endif
 
-module fdtd.services;
+module fdtd.services.basic;
 
 //import std;
 
-namespace fdtd::services
+namespace fdtd::services::basic
 {
 
 void cleanFd(int* fd)

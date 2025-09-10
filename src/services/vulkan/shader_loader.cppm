@@ -22,12 +22,13 @@ import vulkan_hpp;
 import std;
 
 import fdtd.utils;
-import fdtd.services;
+import fdtd.services.basic;
 
 namespace fdtd::services::vulkan
 {
 
 using namespace fdtd::utils;
+using namespace fdtd::services::basic;
 
 class Device;
 

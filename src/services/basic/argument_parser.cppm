@@ -16,26 +16,17 @@
 
 module;
 
-module fdtd.services.vulkan;
+export module fdtd.services.basic:argument_parser;
 
-import fdtd.services.basic;
+import fdtd.utils;
 
-namespace fdtd::services::vulkan
+namespace fdtd::services::basic
 {
 
-ShaderLoader::ShaderLoader(Injector& injector):
-	device(injector.inject<Device>()),
-	fileReader(injector.inject<FileReader>())
-{}
-
-vk::raii::ShaderModule ShaderLoader::createShaderModule(const std::filesystem::path& path)
+export class ArgumentParser
 {
-	auto buffer = fileReader.read(path);
-
-	vk::ShaderModuleCreateInfo createInfo {};
-	createInfo.setCode(to_proxy(buffer));
-
-	return device.getDevice().createShaderModule(createInfo);
-}
+public:
+	ArgumentParser(int argc, char** argv);
+};
 
 }

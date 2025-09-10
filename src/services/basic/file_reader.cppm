@@ -16,7 +16,7 @@
 
 module;
 
-#include "../macros.hpp"
+#include "../../macros.hpp"
 #include <cassert>
 
 #if (HAS_MMAP==1)
@@ -24,13 +24,13 @@ module;
 #    include <sys/stat.h>
 #endif
 
-export module fdtd.services:file_reader;
+export module fdtd.services.basic:file_reader;
 
 import fdtd.utils;
 
 import std;
 
-namespace fdtd::services
+namespace fdtd::services::basic
 {
 
 using namespace fdtd::utils;

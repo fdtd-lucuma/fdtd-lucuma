@@ -23,7 +23,6 @@ module fdtd;
 import std;
 import fdtd.utils;
 import fdtd.services;
-import fdtd.services.vulkan;
 import vulkan_hpp;
 import vk_mem_alloc_hpp;
 
@@ -37,7 +36,7 @@ int Simulator::run(int argc, char** argv)
 {
 	utils::Injector injector;
 
-	injector.emplace<services::ArgumentParser>(argc, argv);
+	injector.emplace<services::basic::ArgumentParser>(argc, argv);
 	injector.emplace<services::vulkan::All>(injector);
 
 	auto& builder   = injector.emplace<services::vulkan::PipelineBuilder>(injector);

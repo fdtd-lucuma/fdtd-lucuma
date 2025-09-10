@@ -16,16 +16,25 @@
 
 module;
 
-module fdtd.services;
+export module fdtd.services:compute;
+
+import fdtd.utils;
 
 import std;
 
 namespace fdtd::services
 {
 
-ArgumentParser::ArgumentParser(int argc, char** argv){
-	for(int i = 0; i < argc; i++)
-		std::cout << argv[i] << '\n';
-}
+using namespace fdtd::utils;
+
+export class Compute
+{
+public:
+	Compute(Injector& injector);
+
+	void compute();
+
+private:
+};
 
 }

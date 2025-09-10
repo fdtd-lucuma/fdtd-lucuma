@@ -20,14 +20,15 @@ export module fdtd.services;
 
 import fdtd.utils;
 
-export import :file_reader;
-export import :argument_parser;
+
+export import fdtd.services.vulkan;
+export import fdtd.services.basic;
+export import :compute;
 
 namespace fdtd::utils
 {
 using namespace fdtd::services;
 
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-extern template FileReader&     Injector::inject<FileReader>();
+extern template Compute&        Injector::inject<Compute>();
 
 }

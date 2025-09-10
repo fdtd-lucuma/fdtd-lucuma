@@ -16,26 +16,14 @@
 
 module;
 
-module fdtd.services.vulkan;
+module fdtd.services.basic;
 
-import fdtd.services.basic;
-
-namespace fdtd::services::vulkan
+// Explicit template instantiations for faster compilation
+namespace fdtd::utils
 {
+using namespace fdtd::services::basic;
 
-ShaderLoader::ShaderLoader(Injector& injector):
-	device(injector.inject<Device>()),
-	fileReader(injector.inject<FileReader>())
-{}
-
-vk::raii::ShaderModule ShaderLoader::createShaderModule(const std::filesystem::path& path)
-{
-	auto buffer = fileReader.read(path);
-
-	vk::ShaderModuleCreateInfo createInfo {};
-	createInfo.setCode(to_proxy(buffer));
-
-	return device.getDevice().createShaderModule(createInfo);
-}
+template ArgumentParser& Injector::inject<ArgumentParser>();
+template FileReader&     Injector::inject<FileReader>();
 
 }

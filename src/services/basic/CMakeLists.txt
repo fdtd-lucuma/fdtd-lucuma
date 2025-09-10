@@ -16,15 +16,14 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		compute.cpp
+		argument_parser.cpp
+		file_reader.cpp
 		instantiations.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			compute.cppm
-			services.cppm
+			argument_parser.cppm
+			basic.cppm
+			file_reader.cppm
 )
-
-add_subdirectory(vulkan)
-add_subdirectory(basic)
