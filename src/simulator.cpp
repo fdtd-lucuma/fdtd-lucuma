@@ -20,11 +20,8 @@ module;
 
 module fdtd;
 
-import std;
 import fdtd.utils;
 import fdtd.services;
-import vulkan_hpp;
-import vk_mem_alloc_hpp;
 
 namespace fdtd
 {
