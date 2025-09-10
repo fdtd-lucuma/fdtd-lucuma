@@ -39,43 +39,9 @@ int Simulator::run(int argc, char** argv)
 	injector.emplace<services::basic::ArgumentParser>(argc, argv);
 	injector.emplace<services::vulkan::All>(injector);
 
-	auto& builder   = injector.emplace<services::vulkan::PipelineBuilder>(injector);
-	auto& allocator = injector.inject<services::vulkan::Allocator>();
+	auto& compute = injector.emplace<services::Compute>(injector);
 
-	auto pipeline = builder.createComputePipeline({
-		.shaderPath = "./share/shaders/hello_world.spv",
-		.setLayouts = {
-			{
-				.bindings = {
-					vk::DescriptorSetLayoutBinding {
-						.binding        = 0,
-						.descriptorType = vk::DescriptorType::eStorageBuffer,
-						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
-					},
-					vk::DescriptorSetLayoutBinding {
-						.binding        = 1,
-						.descriptorType = vk::DescriptorType::eStorageBuffer,
-						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
-					},
-					vk::DescriptorSetLayoutBinding {
-						.binding        = 2,
-						.descriptorType = vk::DescriptorType::eStorageBuffer,
-						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
-					},
-				}
-			}
-		}
-	});
-
-	auto buffer = allocator.allocate(
-		sizeof(float)*1,
-		vk::BufferUsageFlagBits::eStorageBuffer,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
-	);
-
-	//TODO: Stuff
-
-	allocator.flush(buffer);
+	compute.compute();
 
 	return EXIT_SUCCESS;
 }

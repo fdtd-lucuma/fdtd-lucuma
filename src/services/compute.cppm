@@ -19,6 +19,7 @@ module;
 export module fdtd.services:compute;
 
 import fdtd.utils;
+import fdtd.services.vulkan;
 
 import std;
 
@@ -35,6 +36,9 @@ public:
 	void compute();
 
 private:
+
+	vulkan::PipelineBuilder& vulkanPipelineBuilder;
+	vulkan::Allocator&       vulkanAllocator;
 };
 
 }

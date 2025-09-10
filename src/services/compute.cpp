@@ -20,14 +20,54 @@ module fdtd.services;
 
 import fdtd.utils;
 import std;
+import vulkan_hpp;
+import vk_mem_alloc_hpp;
 
 namespace fdtd::services
 {
 
-Compute::Compute([[maybe_unused]]Injector& injector)
+Compute::Compute([[maybe_unused]]Injector& injector):
+	vulkanPipelineBuilder(injector.inject<vulkan::PipelineBuilder>()),
+	vulkanAllocator(injector.inject<vulkan::Allocator>())
 { }
 
-void Compute::compute() {
+void Compute::compute()
+{
+	auto pipeline = vulkanPipelineBuilder.createComputePipeline({
+		.shaderPath = "./share/shaders/hello_world.spv",
+		.setLayouts = {
+			{
+				.bindings = {
+					vk::DescriptorSetLayoutBinding {
+						.binding        = 0,
+						.descriptorType = vk::DescriptorType::eStorageBuffer,
+						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+					},
+					vk::DescriptorSetLayoutBinding {
+						.binding        = 1,
+						.descriptorType = vk::DescriptorType::eStorageBuffer,
+						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+					},
+					vk::DescriptorSetLayoutBinding {
+						.binding        = 2,
+						.descriptorType = vk::DescriptorType::eStorageBuffer,
+						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+					},
+				}
+			}
+		}
+	});
+
+	auto buffer = vulkanAllocator.allocate(
+		sizeof(float)*1,
+		vk::BufferUsageFlagBits::eStorageBuffer,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+	);
+
+	//TODO: Stuff
+
+	vulkanAllocator.flush(buffer);
+
 }
 
 }
