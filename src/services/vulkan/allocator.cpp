@@ -19,6 +19,7 @@ module;
 module fdtd.services.vulkan;
 
 import vk_mem_alloc_hpp;
+import std.compat;
 
 namespace fdtd::services::vulkan
 {
@@ -42,6 +43,11 @@ vma::AllocationInfo Buffer::getInfo()
 vma::Allocation Buffer::getAllocation()
 {
 	return *allocation;
+}
+
+void* Buffer::memcpy(const void* src, std::size_t n)
+{
+	return ::memcpy(getInfo().pMappedData, src, n);
 }
 
 Allocator::Allocator(Injector& injector):
