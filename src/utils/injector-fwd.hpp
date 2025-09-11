@@ -14,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-module;
-
-#include <ranges>
-
-module fdtd.utils;
+#pragma once
 
 namespace fdtd::utils
 {
 
-extern "C++" Injector::~Injector()
-{
-	for(const auto& f: deleters | std::views::reverse)
-		f();
-}
+class Injector;
 
-}
+};

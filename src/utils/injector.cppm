@@ -16,6 +16,8 @@
 
 module;
 
+#include "injector-fwd.hpp"
+
 export module fdtd.utils:injector;
 
 import std;
@@ -24,7 +26,9 @@ import fdtd.legacy_headers.entt;
 namespace fdtd::utils
 {
 
-export class Injector
+using fdtd::utils::Injector;
+
+export extern "C++" class Injector
 {
 public:
 	template<typename Type, typename BaseType = Type, typename... Args>

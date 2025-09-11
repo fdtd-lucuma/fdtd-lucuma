@@ -16,13 +16,13 @@
 
 module;
 
+#include "../../utils/injector-fwd.hpp"
+
 export module fdtd.services.vulkan:allocator;
 
 import std;
 import vk_mem_alloc_hpp;
 import vulkan_hpp;
-
-import fdtd.utils;
 
 namespace fdtd::services::vulkan
 {

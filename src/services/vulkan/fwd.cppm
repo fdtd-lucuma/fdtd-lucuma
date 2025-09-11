@@ -16,17 +16,19 @@
 
 module;
 
-#include <ranges>
+export module fdtd.services.vulkan:fwd;
 
-module fdtd.utils;
-
-namespace fdtd::utils
+namespace fdtd::services::vulkan
 {
 
-extern "C++" Injector::~Injector()
-{
-	for(const auto& f: deleters | std::views::reverse)
-		f();
-}
+export class Device;
+export class All;
+export class Allocator;
+export class Context;
+export class Core;
+export class Debug;
+export class DebugRequirements;
+export class PipelineBuilder;
+export class ShaderLoader;
 
 }
