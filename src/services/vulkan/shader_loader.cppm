@@ -28,7 +28,7 @@ namespace fdtd::services::vulkan
 {
 
 using namespace fdtd::utils;
-using namespace fdtd::services::basic;
+using namespace fdtd::services;
 
 class Device;
 
@@ -40,8 +40,8 @@ public:
 	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
 
 private:
-	Device&     device;
-	FileReader& fileReader;
+	Device&            device;
+	basic::FileReader& fileReader;
 
 };
 
