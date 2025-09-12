@@ -38,6 +38,8 @@ private:
 	std::string              argv0;
 	std::vector<std::string> positionalArguments;
 
+	bool _isHeadless = true;
+
 	[[noreturn]]
 	void usage(int exit_code);
 

@@ -45,15 +45,16 @@ std::span<const std::string> ArgumentParser::getPositionalArguments() const
 
 bool ArgumentParser::isHeadless() const
 {
-	// TODO: Add an option to disable the gui
-	return true;
+	return _isHeadless;
 }
 
 void ArgumentParser::usage(int exit_code)
 {
 	std::cout
 		<< "Usage: " << getArgv0() << " [options]...\n"
-		<< "\t-h, --help Show this help and exit.\n"
+		<< "\t-h, --help        Show this help and exit.\n"
+		<< "\t-H, --headless    Start as headless.\n"
+		<< "\t-g, --no-headless Start with gui.\n"
 	;
 
 	exit(exit_code);
@@ -62,10 +63,12 @@ void ArgumentParser::usage(int exit_code)
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "h";
+	static const char shortopts[] = "hHg";
 	static const option options[] {
-		{"help",  no_argument, nullptr, 'h'},
-		{nullptr, 0,           nullptr, 0},
+		{"help",        no_argument, nullptr, 'h'},
+		{"headless",    no_argument, nullptr, 'H'},
+		{"no-headless", no_argument, nullptr, 'g'},
+		{nullptr,       0,           nullptr, 0},
 	};
 
 	while((c = getopt_long(argc, argv, shortopts, options, nullptr)) != -1)
@@ -84,9 +87,17 @@ void ArgumentParser::handleOption(char shortopt)
 {
 	switch(shortopt)
 	{
-		case 'h':
+		case 'h': // --help
 			usage(EXIT_SUCCESS);
 			std::unreachable();
+
+		case 'H': // --headless
+			_isHeadless = true;
+			break;
+
+		case 'g': // --no-headless
+			_isHeadless = false;
+			break;
 
 		case '?':
 			usage(EXIT_FAILURE);
