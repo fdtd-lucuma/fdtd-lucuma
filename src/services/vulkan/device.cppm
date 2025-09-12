@@ -54,6 +54,7 @@ private:
 
 	QueueFamilyInfo              computeQueueInfo;
 	std::vector<vk::raii::Queue> computeQueues;
+	vk::raii::CommandPool        computeCommandPool = nullptr;
 
 	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();
@@ -68,6 +69,7 @@ private:
 	QueueFamilyInfo selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties);
 
 	std::vector<vk::raii::Queue> createQueues(const QueueFamilyInfo& info);
+	vk::raii::CommandPool createCommandPool(const QueueFamilyInfo& info);
 };
 
 }

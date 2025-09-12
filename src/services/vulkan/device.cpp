@@ -120,7 +120,8 @@ void Device::createDevice()
 
 	device = getPhysicalDevice().createDevice(deviceCreateInfo);
 
-	computeQueues = createQueues(computeQueueInfo);
+	computeQueues      = createQueues(computeQueueInfo);
+	computeCommandPool = createCommandPool(computeQueueInfo);
 }
 
 std::vector<const char*> Device::getRequiredLayers()
@@ -139,6 +140,16 @@ std::vector<vk::raii::Queue> Device::createQueues(const QueueFamilyInfo& info)
 		std::views::iota(0u, info.count) |
 		std::views::transform([&](auto i){return device.getQueue(info.index, i);}) |
 		std::ranges::to<std::vector>();
+}
+
+vk::raii::CommandPool Device::createCommandPool(const QueueFamilyInfo& info)
+{
+	vk::CommandPoolCreateInfo createInfo {
+		.flags            = vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+		.queueFamilyIndex = info.index,
+	};
+
+	return getDevice().createCommandPool(createInfo);
 }
 
 }

@@ -42,7 +42,7 @@ public:
 	vma::AllocationInfo getInfo();
 	vma::Allocation     getAllocation();
 
-	// Like memcpy(3) but into dest is the internal buffer
+	// Like memcpy(3) but dest is the internal buffer
 	void* memcpy(const void* src, std::size_t n);
 
 private:
