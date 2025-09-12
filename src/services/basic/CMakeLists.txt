@@ -19,6 +19,7 @@ target_sources(${PROJECT_NAME}
 		argument_parser.cpp
 		file_reader.cpp
 		instantiations.cpp
+		settings.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -26,4 +27,5 @@ target_sources(${PROJECT_NAME}
 			argument_parser.cppm
 			basic.cppm
 			file_reader.cppm
+			settings.cppm
 )

@@ -22,11 +22,13 @@ import vulkan_hpp;
 import std;
 
 import fdtd.utils;
+import fdtd.services.basic;
 
 namespace fdtd::services::vulkan
 {
 
 using namespace fdtd::utils;
+using namespace fdtd::services;
 
 struct QueueFamilyInfo
 {
@@ -46,9 +48,12 @@ public:
 	vk::raii::PhysicalDevice& getPhysicalDevice();
 	vk::raii::Device&         getDevice();
 	vk::raii::Queue&          getComputeQueue();
+	vk::raii::CommandPool&    getComputeCommandPool();
 
 private:
-	Core& core;
+	Core&            core;
+	basic::Settings& settings;
+	
 
 	vk::raii::Device device = nullptr;
 

@@ -18,11 +18,17 @@ module;
 
 module fdtd.services.vulkan;
 
+import fdtd.services.basic;
+
 namespace fdtd::services::vulkan
 {
 
+using namespace fdtd::services;
+
 Device::Device([[maybe_unused]] Injector& injector):
-	core(injector.inject<Core>())
+	core(injector.inject<Core>()),
+	settings(injector.inject<basic::Settings>())
+
 {
 	init();
 }
@@ -41,6 +47,11 @@ vk::raii::Device& Device::getDevice()
 vk::raii::Queue& Device::getComputeQueue()
 {
 	return computeQueues[0];
+}
+
+vk::raii::CommandPool& Device::getComputeCommandPool()
+{
+	return computeCommandPool;
 }
 
 void Device::init()
@@ -96,9 +107,16 @@ std::vector<vk::DeviceQueueCreateInfo> Device::getQueueCreateInfos()
 {
 	auto queueProperties = getPhysicalDevice().getQueueFamilyProperties();
 
-	return {
-		getComputeQueueCreateInfo(queueProperties)
-	};
+	std::vector<vk::DeviceQueueCreateInfo> createInfos;
+
+	createInfos.emplace_back(getComputeQueueCreateInfo(queueProperties));
+
+	if(!settings.isHeadless())
+	{
+		// TODO: getGraphicsQueueCreateInfo
+	}
+
+	return createInfos;
 }
 
 void Device::createDevice()
@@ -122,6 +140,11 @@ void Device::createDevice()
 
 	computeQueues      = createQueues(computeQueueInfo);
 	computeCommandPool = createCommandPool(computeQueueInfo);
+
+	if(!settings.isHeadless())
+	{
+		// TODO: Init graphics stuff
+	}
 }
 
 std::vector<const char*> Device::getRequiredLayers()

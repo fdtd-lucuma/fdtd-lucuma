@@ -16,20 +16,21 @@
 
 module;
 
-export module fdtd.services.basic;
+module fdtd.services.basic;
 
-import fdtd.utils;
+import std;
 
-export import :argument_parser;
-export import :file_reader;
-export import :settings;
-
-namespace fdtd::utils
+namespace fdtd::services::basic
 {
-using namespace fdtd::services::basic;
 
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-extern template FileReader&     Injector::inject<FileReader>();
-extern template Settings&       Injector::inject<Settings>();
+Settings::Settings([[maybe_unused]]Injector& injector):
+	argumentParser(injector.inject<ArgumentParser>())
+{ }
+
+bool Settings::isHeadless() const
+{
+	return argumentParser.isHeadless();
+}
+
 
 }

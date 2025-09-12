@@ -25,5 +25,6 @@ using namespace fdtd::services::basic;
 
 template ArgumentParser& Injector::inject<ArgumentParser>();
 template FileReader&     Injector::inject<FileReader>();
+template Settings&       Injector::inject<Settings>();
 
 }
