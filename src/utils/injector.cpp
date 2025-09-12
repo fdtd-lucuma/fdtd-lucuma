@@ -63,28 +63,33 @@ Injector::LinkerWatcher::~LinkerWatcher()
 	injector.dependenciesEdges.emplace_back(oldtop, top);
 }
 
-void Injector::printEdges(std::ostream& os) const
+const std::string_view unPreffix(const std::string_view str, const std::string_view prefix)
+{
+	return std::string_view(std::mismatch(str.begin(), str.end(), prefix.begin()).first, str.end());
+}
+
+void Injector::printEdges(std::ostream& os, const std::string_view removePrefix) const
 {
 	os << "digraph Injector {\n";
 
 	for(auto&& [l, r]: dependenciesEdges)
 	{
 		os
-			<< "\t\"" << l.name()
+			<< "\t\"" << unPreffix(l.name(), removePrefix)
 			<< "\" -> \""
-			<< r.name() << "\";\n"
+			<< unPreffix(r.name(), removePrefix) << "\";\n"
 		;
 	}
 
 	os << "}\n";
 }
 
-void Injector::printEdges(const std::filesystem::path& path) const
+void Injector::printEdges(const std::filesystem::path& path, const std::string_view removePrefix) const
 {
 	auto ofs = std::ofstream(path);
 
 	if(ofs.is_open())
-		printEdges(ofs);
+		printEdges(ofs, removePrefix);
 	else
 		perror(path.c_str());
 }

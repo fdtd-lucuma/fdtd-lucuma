@@ -70,9 +70,9 @@ public:
 	~Injector();
 
 	/// Prints a directed acyclic graph in dot format
-	void printEdges(std::ostream& os) const;
+	void printEdges(std::ostream& os, const std::string_view removePrefix = "") const;
 
-	void printEdges(const std::filesystem::path& path) const;
+	void printEdges(const std::filesystem::path& path, const std::string_view removePrefix = "") const;
 
 private:
 	class LinkerWatcher

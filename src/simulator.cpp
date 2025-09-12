@@ -53,7 +53,7 @@ int Simulator::run(int argc, char** argv)
 	auto& graphPath = arguments.graphPath();
 
 	if(graphPath.has_value())
-		injector.printEdges(*graphPath);
+		injector.printEdges(*graphPath, "fdtd::services::");
 
 	return EXIT_SUCCESS;
 }
