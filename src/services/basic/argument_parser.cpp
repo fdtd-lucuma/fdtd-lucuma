@@ -48,6 +48,11 @@ bool ArgumentParser::isHeadless() const
 	return _isHeadless;
 }
 
+const std::optional<std::filesystem::path>& ArgumentParser::graphPath() const
+{
+	return _graphPath;
+}
+
 void ArgumentParser::usage(int exit_code)
 {
 	std::cout
@@ -55,6 +60,7 @@ void ArgumentParser::usage(int exit_code)
 		<< "\t-h, --help        Show this help and exit.\n"
 		<< "\t-H, --headless    Start as headless.\n"
 		<< "\t-g, --no-headless Start with gui.\n"
+		<< "\t-G, --graph=FILE  Prints the services dependencies as a DAG in FILE.\n"
 	;
 
 	exit(exit_code);
@@ -63,12 +69,13 @@ void ArgumentParser::usage(int exit_code)
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "hHg";
+	static const char shortopts[] = "hHgG:";
 	static const option options[] {
-		{"help",        no_argument, nullptr, 'h'},
-		{"headless",    no_argument, nullptr, 'H'},
-		{"no-headless", no_argument, nullptr, 'g'},
-		{nullptr,       0,           nullptr, 0},
+		{"help",        no_argument,       nullptr, 'h'},
+		{"headless",    no_argument,       nullptr, 'H'},
+		{"no-headless", no_argument,       nullptr, 'g'},
+		{"graph",       required_argument, nullptr, 'G'},
+		{nullptr,       0,                 nullptr, 0},
 	};
 
 	while((c = getopt_long(argc, argv, shortopts, options, nullptr)) != -1)
@@ -97,6 +104,10 @@ void ArgumentParser::handleOption(char shortopt)
 
 		case 'g': // --no-headless
 			_isHeadless = false;
+			break;
+
+		case 'G': // --graph
+			_graphPath.emplace(optarg);
 			break;
 
 		case '?':

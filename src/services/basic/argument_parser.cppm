@@ -33,12 +33,14 @@ public:
 	std::span<const std::string> getPositionalArguments() const;
 
 	bool isHeadless() const;
+	const std::optional<std::filesystem::path>& graphPath() const;
 
 private:
 	std::string              argv0;
 	std::vector<std::string> positionalArguments;
 
-	bool _isHeadless = true;
+	bool                                 _isHeadless = true;
+	std::optional<std::filesystem::path> _graphPath   = std::nullopt;
 
 	[[noreturn]]
 	void usage(int exit_code);

@@ -22,6 +22,7 @@ module fdtd;
 
 import fdtd.utils;
 import fdtd.services;
+import std.compat;
 
 namespace fdtd
 {
@@ -33,7 +34,7 @@ int Simulator::run(int argc, char** argv)
 {
 	utils::Injector injector;
 
-	injector.emplace<services::basic::ArgumentParser>(argc, argv);
+	auto& arguments = injector.emplace<services::basic::ArgumentParser>(argc, argv);
 	injector.emplace<services::vulkan::All>(injector);
 
 	auto& settings = injector.inject<services::basic::Settings>();
@@ -48,6 +49,11 @@ int Simulator::run(int argc, char** argv)
 	{
 		// TODO: Init gui or headless
 	}
+
+	auto& graphPath = arguments.graphPath();
+
+	if(graphPath.has_value())
+		injector.printEdges(*graphPath);
 
 	return EXIT_SUCCESS;
 }

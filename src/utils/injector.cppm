@@ -24,6 +24,7 @@ import fdtd.legacy_headers.entt;
 namespace fdtd::utils
 {
 
+
 export class Injector
 {
 public:
@@ -32,6 +33,7 @@ public:
 	Type& emplace(Args &&...args)
 	{
 		// Find out what to do when emplacing the same service twice
+		auto watcher = preLink(entt::type_id<BaseType>());
 		auto ptr = std::make_unique<Type>(std::forward<Args>(args)...);
 		auto& ref = *ptr;
 
@@ -45,6 +47,7 @@ public:
 	requires std::is_base_of_v<BaseType, Type>
 	[[nodiscard]] BaseType& inject()
 	{
+		auto watcher = preLink(entt::type_id<BaseType>());
 		auto ptr = registry.ctx().find<std::unique_ptr<BaseType>>();
 
 		if(ptr != nullptr)
@@ -66,10 +69,33 @@ public:
 
 	~Injector();
 
+	/// Prints a directed acyclic graph in dot format
+	void printEdges(std::ostream& os) const;
+
+	void printEdges(const std::filesystem::path& path) const;
+
 private:
+	class LinkerWatcher
+	{
+	private:
+		Injector& injector;
+		bool      linked = false;
+
+	public:
+		LinkerWatcher(Injector& injector, entt::type_info type);
+		~LinkerWatcher();
+	};
+
 	entt::registry registry;
 
+	std::stack<entt::type_info>                              dependencies;
+	std::vector<std::pair<entt::type_info, entt::type_info>> dependenciesEdges;
+
 	std::vector<std::function<void()>> deleters;
+
+	LinkerWatcher preLink(entt::type_info type);
+
+	friend class LinkerWatcher;
 
 	template<typename Type, typename BaseType>
 	requires std::is_base_of_v<BaseType, Type>

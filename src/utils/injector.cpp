@@ -20,6 +20,9 @@ module;
 
 module fdtd.utils;
 
+import fdtd.legacy_headers.entt;
+import std;
+
 namespace fdtd::utils
 {
 
@@ -27,6 +30,63 @@ Injector::~Injector()
 {
 	for(const auto& f: deleters | std::views::reverse)
 		f();
+}
+
+Injector::LinkerWatcher Injector::preLink(entt::type_info type)
+{
+	return LinkerWatcher(*this, type);
+}
+
+Injector::LinkerWatcher::LinkerWatcher(Injector& injector, entt::type_info type):
+	injector(injector)
+{
+	if(injector.dependencies.empty() || injector.dependencies.top().hash() != type.hash())
+	{
+		injector.dependencies.push(type);
+		linked = true;
+	}
+}
+
+Injector::LinkerWatcher::~LinkerWatcher()
+{
+	if(!linked)
+		return;
+
+	entt::type_info top = injector.dependencies.top();
+	injector.dependencies.pop();
+
+	if(injector.dependencies.empty())
+		return;
+
+	entt::type_info oldtop = injector.dependencies.top();
+
+	injector.dependenciesEdges.emplace_back(oldtop, top);
+}
+
+void Injector::printEdges(std::ostream& os) const
+{
+	os << "digraph Injector {\n";
+
+	for(auto&& [l, r]: dependenciesEdges)
+	{
+		os
+			<< "\t\"" << l.name()
+			<< "\" -> \""
+			<< r.name() << "\";\n"
+		;
+	}
+
+	os << "}\n";
+}
+
+void Injector::printEdges(const std::filesystem::path& path) const
+{
+	auto ofs = std::ofstream(path);
+
+	if(ofs.is_open())
+		printEdges(ofs);
+	else
+		perror(path.c_str());
 }
 
 }
