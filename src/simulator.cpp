@@ -33,12 +33,14 @@ int Simulator::run(int argc, char** argv)
 {
 	utils::Injector injector;
 
-	auto& arguments = injector.emplace<services::basic::ArgumentParser>(argc, argv);
+	injector.emplace<services::basic::ArgumentParser>(argc, argv);
 	injector.emplace<services::vulkan::All>(injector);
 
-	if(arguments.isHeadless())
+	auto& settings = injector.inject<services::basic::Settings>();
+
+	if(settings.isHeadless())
 	{
-		auto& compute = injector.emplace<services::Compute>(injector);
+		auto& compute = injector.inject<services::Compute>();
 
 		compute.compute();
 	}
