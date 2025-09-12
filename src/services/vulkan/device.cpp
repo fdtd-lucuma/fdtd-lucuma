@@ -44,14 +44,14 @@ vk::raii::Device& Device::getDevice()
 }
 
 
-vk::raii::Queue& Device::getComputeQueue()
+const std::optional<QueueFamilyInfo>& Device::getGraphicsInfo() const
 {
-	return computeQueues[0];
+	return graphicsInfo;
 }
 
-vk::raii::CommandPool& Device::getComputeCommandPool()
+const std::optional<QueueFamilyInfo>& Device::getComputeInfo() const
 {
-	return computeCommandPool;
+	return computeInfo;
 }
 
 void Device::init()
@@ -86,19 +86,19 @@ QueueFamilyInfo Device::selectComputeQueueFamily(std::span<const vk::QueueFamily
 
 vk::DeviceQueueCreateInfo Device::getComputeQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties)
 {
-	computeQueueInfo = selectComputeQueueFamily(properties);
+	computeInfo.emplace(selectComputeQueueFamily(properties));
 
 	std::cout
 		<< "Selected queue family for compute:\n"
-		<< "Queue family " << computeQueueInfo.index << ":\n"
-		<< properties[computeQueueInfo.index]
+		<< "Queue family " << computeInfo->index << ":\n"
+		<< properties[computeInfo->index]
 	;
 
 	vk::DeviceQueueCreateInfo computeQueueCreateInfo {
-		.queueFamilyIndex = computeQueueInfo.index,
+		.queueFamilyIndex = computeInfo->index,
 	};
 
-	computeQueueCreateInfo.setQueuePriorities(computeQueueInfo.priorities);
+	computeQueueCreateInfo.setQueuePriorities(computeInfo->priorities);
 
 	return computeQueueCreateInfo;
 }
@@ -137,14 +137,6 @@ void Device::createDevice()
 	;
 
 	device = getPhysicalDevice().createDevice(deviceCreateInfo);
-
-	computeQueues      = createQueues(computeQueueInfo);
-	computeCommandPool = createCommandPool(computeQueueInfo);
-
-	if(!settings.isHeadless())
-	{
-		// TODO: Init graphics stuff
-	}
 }
 
 std::vector<const char*> Device::getRequiredLayers()
@@ -155,24 +147,6 @@ std::vector<const char*> Device::getRequiredLayers()
 std::vector<const char*> Device::getRequiredExtensions()
 {
 	return {};
-}
-
-std::vector<vk::raii::Queue> Device::createQueues(const QueueFamilyInfo& info)
-{
-	return
-		std::views::iota(0u, info.count) |
-		std::views::transform([&](auto i){return device.getQueue(info.index, i);}) |
-		std::ranges::to<std::vector>();
-}
-
-vk::raii::CommandPool Device::createCommandPool(const QueueFamilyInfo& info)
-{
-	vk::CommandPoolCreateInfo createInfo {
-		.flags            = vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-		.queueFamilyIndex = info.index,
-	};
-
-	return getDevice().createCommandPool(createInfo);
 }
 
 }

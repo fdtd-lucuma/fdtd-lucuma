@@ -47,8 +47,9 @@ public:
 
 	vk::raii::PhysicalDevice& getPhysicalDevice();
 	vk::raii::Device&         getDevice();
-	vk::raii::Queue&          getComputeQueue();
-	vk::raii::CommandPool&    getComputeCommandPool();
+
+	const std::optional<QueueFamilyInfo>& getGraphicsInfo() const;
+	const std::optional<QueueFamilyInfo>& getComputeInfo() const;
 
 private:
 	Core&            core;
@@ -57,9 +58,8 @@ private:
 
 	vk::raii::Device device = nullptr;
 
-	QueueFamilyInfo              computeQueueInfo;
-	std::vector<vk::raii::Queue> computeQueues;
-	vk::raii::CommandPool        computeCommandPool = nullptr;
+	std::optional<QueueFamilyInfo> computeInfo = std::nullopt;
+	std::optional<QueueFamilyInfo> graphicsInfo = std::nullopt;
 
 	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();
@@ -72,9 +72,6 @@ private:
 	void createDevice();
 
 	QueueFamilyInfo selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties);
-
-	std::vector<vk::raii::Queue> createQueues(const QueueFamilyInfo& info);
-	vk::raii::CommandPool createCommandPool(const QueueFamilyInfo& info);
 };
 
 }

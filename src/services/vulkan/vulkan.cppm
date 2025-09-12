@@ -23,13 +23,14 @@ import vulkan_hpp;
 import fdtd.utils;
 
 export import :all;
+export import :allocator;
+export import :compute;
 export import :context;
 export import :core;
 export import :debug;
 export import :debug_requirements;
 export import :device;
 export import :pipeline_builder;
-export import :allocator;
 
 import :shader_loader;
 import :utils;
@@ -41,13 +42,14 @@ using namespace fdtd::services::vulkan;
 
 //TODO: Find a way to automate this
 
-extern template Device&            Injector::inject<Device>();
 extern template All&               Injector::inject<All>();
 extern template Allocator&         Injector::inject<Allocator>();
+extern template Compute&           Injector::inject<Compute>();
 extern template Context&           Injector::inject<Context>();
 extern template Core&              Injector::inject<Core>();
 extern template Debug&             Injector::inject<Debug>();
 extern template DebugRequirements& Injector::inject<DebugRequirements>();
+extern template Device&            Injector::inject<Device>();
 extern template PipelineBuilder&   Injector::inject<PipelineBuilder>();
 extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 

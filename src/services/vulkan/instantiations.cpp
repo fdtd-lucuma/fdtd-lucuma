@@ -25,13 +25,14 @@ using namespace fdtd::services::vulkan;
 
 //TODO: Find a way to automate this
 
-template Device&            Injector::inject<Device>();
 template All&               Injector::inject<All>();
 template Allocator&         Injector::inject<Allocator>();
+template Compute&           Injector::inject<Compute>();
 template Context&           Injector::inject<Context>();
 template Core&              Injector::inject<Core>();
 template Debug&             Injector::inject<Debug>();
 template DebugRequirements& Injector::inject<DebugRequirements>();
+template Device&            Injector::inject<Device>();
 template PipelineBuilder&   Injector::inject<PipelineBuilder>();
 template ShaderLoader&      Injector::inject<ShaderLoader>();
 

@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME}
 	PRIVATE
 		all.cpp
 		allocator.cpp
+		compute.cpp
 		context.cpp
 		core.cpp
 		debug.cpp
@@ -33,6 +34,7 @@ target_sources(${PROJECT_NAME}
 		FILES
 			all.cppm
 			allocator.cppm
+			compute.cppm
 			context.cppm
 			core.cppm
 			debug.cppm

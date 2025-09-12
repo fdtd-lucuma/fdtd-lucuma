@@ -16,30 +16,39 @@
 
 module;
 
-export module fdtd.services:compute;
+export module fdtd.services.vulkan:compute;
 
-import fdtd.utils;
-import fdtd.services.vulkan;
-
+import vulkan_hpp;
 import std;
 
-namespace fdtd::services
+import fdtd.utils;
+
+namespace fdtd::services::vulkan
 {
 
 using namespace fdtd::utils;
+using namespace fdtd::services;
+
+class Device;
 
 export class Compute
 {
 public:
 	Compute(Injector& injector);
 
-	void compute();
+	vk::raii::Queue&          getQueue();
+	vk::raii::CommandPool&    getCommandPool();
 
 private:
+	Device& device;
+	
+	std::vector<vk::raii::Queue> queues;
+	vk::raii::CommandPool        commandPool = nullptr;
 
-	vulkan::PipelineBuilder& vulkanPipelineBuilder;
-	vulkan::Allocator&       vulkanAllocator;
-	vulkan::Compute&         vulkanCompute;
+	void init();
+
+	void createQueues();
+	void createCommandPool();
 };
 
 }

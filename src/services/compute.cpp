@@ -28,7 +28,8 @@ namespace fdtd::services
 
 Compute::Compute([[maybe_unused]]Injector& injector):
 	vulkanPipelineBuilder(injector.inject<vulkan::PipelineBuilder>()),
-	vulkanAllocator(injector.inject<vulkan::Allocator>())
+	vulkanAllocator(injector.inject<vulkan::Allocator>()),
+	vulkanCompute(injector.inject<vulkan::Compute>())
 { }
 
 void Compute::compute()
