@@ -29,6 +29,7 @@ class Core;
 class Debug;
 class Device;
 class Allocator;
+class ShaderLoader;
 
 export class All
 {
@@ -36,10 +37,11 @@ public:
 	All(Injector& injector);
 
 private:
-	Core&      core;
-	Debug&     debug;
-	Device&    device;
-	Allocator& allocator;
+	Core&         core;
+	Debug&        debug;
+	Device&       device;
+	Allocator&    allocator;
+	ShaderLoader& shaderLoader;
 };
 
 }

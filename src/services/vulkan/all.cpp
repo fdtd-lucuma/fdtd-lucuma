@@ -27,7 +27,8 @@ All::All(Injector& injector):
 	core(injector.inject<Core>()),
 	debug(injector.inject<Debug>()),
 	device(injector.inject<Device>()),
-	allocator(injector.inject<Allocator>())
+	allocator(injector.inject<Allocator>()),
+	shaderLoader(injector.inject<ShaderLoader>())
 {
 
 	list_vulkan_extensions();
