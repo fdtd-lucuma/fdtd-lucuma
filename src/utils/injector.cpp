@@ -70,7 +70,10 @@ constexpr const std::string_view unPreffix(const std::string_view str, const std
 
 void Injector::printEdges(std::ostream& os, const std::string_view removePrefix) const
 {
-	std::println(os, "{}", "digraph Injector {");
+	std::print(os,
+		"strict digraph \"{0}\" {{\n\tlabel=\"{0} graph\"\n",
+		entt::type_id<decltype(*this)>().name()
+	);
 
 	for(auto&& [l, r]: dependenciesEdges)
 	{
