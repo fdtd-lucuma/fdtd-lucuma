@@ -15,6 +15,7 @@ depends=(
 	'gcc-libs'
 	'glfw'
 	'vulkan-icd-loader'
+	'yaml-cpp'
 )
 makedepends=(
 	'bash-completion'

@@ -81,6 +81,7 @@ find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang
 pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET GLOBAL
 		glfw3
+		yaml-cpp
 )
 
 # set up Vulkan C++ module as a library

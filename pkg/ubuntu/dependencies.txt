@@ -7,6 +7,7 @@ libglfw3-dev
 libglm-dev
 libvulkan-dev
 libvulkan-memory-allocator-dev
+libyaml-cpp-dev
 ninja-build
 pkgconf
 vulkan-validationlayers
