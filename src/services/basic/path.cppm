@@ -59,11 +59,11 @@ public:
 
 	std::filesystem::path find(const std::filesystem::path& file) const
 	{
-		std::filesystem::path result;
+		std::filesystem::path result(file);
 
-		if(file.is_absolute())
+		if(result.is_absolute())
 		{
-			return (result = file);
+			return result;
 		}
 
 		for(const auto& pathDir: path)
