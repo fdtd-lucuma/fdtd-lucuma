@@ -35,16 +35,16 @@ class Device;
 export class ShaderLoader
 {
 public:
-	using Path = basic::Path<"shaders", {
-		.mustExist  = true,
-		.mustBeFile = true,
-	}>;
-
 	ShaderLoader(Injector& injector);
 
 	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
 
 private:
+	using Path = basic::Path<"shaders", {
+		.mustExist  = true,
+		.mustBeFile = true,
+	}>;
+
 	Device&            device;
 	basic::FileReader& fileReader;
 	Path&              shaderPath;
