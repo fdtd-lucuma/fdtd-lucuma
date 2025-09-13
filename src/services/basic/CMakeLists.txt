@@ -35,7 +35,7 @@ target_sources(${PROJECT_NAME}
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	set(FDTD_DATA_DIR "${CMAKE_BINARY_DIR}/share")
 else()
-	set(FDTD_DATA_DIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
+	set(FDTD_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 endif()
 
 target_include_directories(${PROJECT_NAME}
