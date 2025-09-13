@@ -63,7 +63,7 @@ public:
 
 		if(file.is_absolute())
 		{
-			return file;
+			return (result = file);
 		}
 
 		for(const auto& pathDir: path)
@@ -74,7 +74,7 @@ public:
 				return result;
 		}
 
-		return file;
+		return (result = file);
 	}
 
 	std::filesystem::path operator/(const std::filesystem::path& file) const
