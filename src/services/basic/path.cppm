@@ -63,7 +63,7 @@ public:
 
 		if(file.is_absolute())
 		{
-			return (result = file);
+			return file;
 		}
 
 		for(const auto& pathDir: path)
