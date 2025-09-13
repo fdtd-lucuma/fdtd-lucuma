@@ -63,6 +63,53 @@ public:
 		init();
 	}
 
+	std::filesystem::path find(const std::filesystem::path& file) const
+	{
+		std::filesystem::path result(file);
+
+		if(result.is_absolute())
+		{
+			return result;
+		}
+
+		for(const auto& pathDir: path)
+		{
+			(result = pathDir) /= file;
+
+			if(check(result))
+				return result;
+		}
+
+		return (result = file);
+	}
+
+	std::filesystem::path operator/(const std::filesystem::path& file) const
+	{
+		return find(file);
+	}
+
+	std::span<const std::filesystem::path> getPath() const
+	{
+		return path;
+	}
+
+private:
+	Settings& settings;
+
+	/// Like $PATH
+	std::vector<std::filesystem::path> path;
+
+	void init()
+	{
+		createPath();
+	}
+
+	void createPath()
+	{
+		path.emplace_back(DATA_DIR) /= (std::string_view)filePreffix;
+		// TODO: ~/.local/share
+	}
+
 	static bool check(std::filesystem::file_status status)
 	{
 		if constexpr(checks.mustExist)
@@ -98,49 +145,6 @@ public:
 
 		return check(status);
 	}
-
-	std::filesystem::path find(const std::filesystem::path& file) const
-	{
-		std::filesystem::path result(file);
-
-		if(result.is_absolute())
-		{
-			return result;
-		}
-
-		for(const auto& pathDir: path)
-		{
-			(result = pathDir) /= file;
-
-			if(check(result))
-				return result;
-		}
-
-		return (result = file);
-	}
-
-	std::filesystem::path operator/(const std::filesystem::path& file) const
-	{
-		return find(file);
-	}
-
-private:
-	Settings& settings;
-
-	/// Like $PATH
-	std::vector<std::filesystem::path> path;
-
-	void init()
-	{
-		createPath();
-	}
-
-	void createPath()
-	{
-		path.emplace_back(DATA_DIR) /= (std::string_view)filePreffix;
-		// TODO: ~/.local/share
-	}
-
 };
 
 }
