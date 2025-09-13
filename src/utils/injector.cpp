@@ -78,7 +78,7 @@ void Injector::printEdges(std::ostream& os, const std::string_view removePrefix)
 	for(auto&& [l, r]: dependenciesEdges)
 	{
 		std::println(os,
-			"\t\"{}\" -> \"{}\";",
+			"\t{:?} -> {:?};",
 			unPreffix(l.name(), removePrefix),
 			unPreffix(r.name(), removePrefix)
 		);
