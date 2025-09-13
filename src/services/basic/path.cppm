@@ -33,7 +33,7 @@ export class Path
 public:
 	Path(Injector& injector);
 
-	std::filesystem::path find(const std::filesystem::path& file) const;
+	std::optional<std::filesystem::path> find(const std::filesystem::path& file) const;
 
 private:
 	Settings& settings;

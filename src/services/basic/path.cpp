@@ -42,19 +42,19 @@ void Path::createPath()
 	// TODO: ~/.local/share
 }
 
-std::filesystem::path Path::find(const std::filesystem::path& file) const
+std::optional<std::filesystem::path> Path::find(const std::filesystem::path& file) const
 {
 	std::filesystem::path result;
 
 	for(const auto& pathDir: path)
 	{
-		result = pathDir / file;
+		(result = pathDir) /= file;
 
 		if(std::filesystem::exists(result))
 			return result;
 	}
 
-	return result;
+	return std::nullopt;
 }
 
 }
