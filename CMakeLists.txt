@@ -40,6 +40,8 @@ endif()
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_MODULE_STD 1)
 add_compile_options(-Wp,-D_FORTIFY_SOURCE=0 -Wno-macro-redefined) # Quickfix: Disable fortification on release build types
+add_compile_options($<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fno-rtti>) # No RTTI
+
 
 project(fdtd-vulkan
 	VERSION 0.0.0
