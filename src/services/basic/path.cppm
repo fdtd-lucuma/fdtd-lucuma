@@ -46,7 +46,14 @@ struct FixedString
 
 };
 
-export template<FixedString filePreffix>
+struct FileChecks
+{
+	bool mustExist       = true;
+	bool mustBeDirectory = false;
+	bool mustBeFile      = false;
+};
+
+export template<FixedString filePreffix, FileChecks checks = {}>
 class Path
 {
 public:
@@ -56,6 +63,41 @@ public:
 		init();
 	}
 
+	static bool check(std::filesystem::file_status status)
+	{
+		if constexpr(checks.mustExist)
+		{
+			if(!std::filesystem::exists(status))
+				return false;
+		}
+		if constexpr(checks.mustBeDirectory)
+		{
+			if(!std::filesystem::is_directory(status))
+				return false;
+		}
+		if constexpr(checks.mustBeFile)
+		{
+			if(!std::filesystem::is_regular_file(status))
+				return false;
+		}
+
+		return true;
+	}
+
+	static bool check(const std::filesystem::path& file)
+	{
+		std::error_code ec;
+
+		auto status = std::filesystem::is_symlink(file) ?
+			std::filesystem::symlink_status(file, ec) :
+			std::filesystem::status(file, ec)
+		;
+
+		if(ec)
+			return false;
+
+		return check(status);
+	}
 
 	std::filesystem::path find(const std::filesystem::path& file) const
 	{
@@ -70,7 +112,7 @@ public:
 		{
 			(result = pathDir) /= file;
 
-			if(std::filesystem::exists(result))
+			if(check(result))
 				return result;
 		}
 

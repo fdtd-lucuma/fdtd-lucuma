@@ -35,7 +35,10 @@ class Device;
 export class ShaderLoader
 {
 public:
-	using Path = basic::Path<"shaders">;
+	using Path = basic::Path<"shaders", {
+		.mustExist  = true,
+		.mustBeFile = true,
+	}>;
 
 	ShaderLoader(Injector& injector);
 
