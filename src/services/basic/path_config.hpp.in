@@ -14,24 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-module;
+#pragma once
 
-export module fdtd.services.basic;
-
-import fdtd.utils;
-
-export import :argument_parser;
-export import :file_reader;
-export import :settings;
-export import :path;
-
-namespace fdtd::utils
-{
-using namespace fdtd::services::basic;
-
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-extern template FileReader&     Injector::inject<FileReader>();
-extern template Path&           Injector::inject<Path>();
-extern template Settings&       Injector::inject<Settings>();
-
-}
+#define DATA_DIR "@FDTD_DATA_DIR@"

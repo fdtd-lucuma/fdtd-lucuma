@@ -16,22 +16,45 @@
 
 module;
 
-export module fdtd.services.basic;
+#include <path_config.hpp>
 
-import fdtd.utils;
+module fdtd.services.basic;
 
-export import :argument_parser;
-export import :file_reader;
-export import :settings;
-export import :path;
+import std;
 
-namespace fdtd::utils
+namespace fdtd::services::basic
 {
-using namespace fdtd::services::basic;
 
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-extern template FileReader&     Injector::inject<FileReader>();
-extern template Path&           Injector::inject<Path>();
-extern template Settings&       Injector::inject<Settings>();
+Path::Path([[maybe_unused]]Injector& injector):
+	settings(injector.inject<Settings>())
+{
+	init();
+}
+
+void Path::init()
+{
+	createPath();
+}
+
+void Path::createPath()
+{
+	path.emplace_back(DATA_DIR);
+	// TODO: ~/.local/share
+}
+
+std::filesystem::path Path::find(const std::filesystem::path& file) const
+{
+	std::filesystem::path result;
+
+	for(const auto& pathDir: path)
+	{
+		result = pathDir / file;
+
+		if(std::filesystem::exists(result))
+			return result;
+	}
+
+	return result;
+}
 
 }

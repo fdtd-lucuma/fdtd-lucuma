@@ -16,22 +16,35 @@
 
 module;
 
-export module fdtd.services.basic;
+export module fdtd.services.basic:path;
 
 import fdtd.utils;
+import std;
 
-export import :argument_parser;
-export import :file_reader;
-export import :settings;
-export import :path;
-
-namespace fdtd::utils
+namespace fdtd::services::basic
 {
-using namespace fdtd::services::basic;
 
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-extern template FileReader&     Injector::inject<FileReader>();
-extern template Path&           Injector::inject<Path>();
-extern template Settings&       Injector::inject<Settings>();
+using namespace fdtd::utils;
+
+class Settings;
+
+export class Path
+{
+public:
+	Path(Injector& injector);
+
+	std::filesystem::path find(const std::filesystem::path& file) const;
+
+private:
+	Settings& settings;
+
+	/// Like $PATH
+	std::vector<std::filesystem::path> path;
+
+	void init();
+
+	void createPath();
+
+};
 
 }

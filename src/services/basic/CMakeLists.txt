@@ -19,6 +19,7 @@ target_sources(${PROJECT_NAME}
 		argument_parser.cpp
 		file_reader.cpp
 		instantiations.cpp
+		path.cpp
 		settings.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -27,5 +28,22 @@ target_sources(${PROJECT_NAME}
 			argument_parser.cppm
 			basic.cppm
 			file_reader.cppm
+			path.cppm
 			settings.cppm
+)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	set(FDTD_DATA_DIR "${CMAKE_BINARY_DIR}/share")
+else()
+	set(FDTD_DATA_DIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
+endif()
+
+target_include_directories(${PROJECT_NAME}
+	PRIVATE
+	${CMAKE_CURRENT_BINARY_DIR}
+)
+
+configure_file(path_config.hpp.in
+	${CMAKE_CURRENT_BINARY_DIR}/path_config.hpp
+	@ONLY
 )
