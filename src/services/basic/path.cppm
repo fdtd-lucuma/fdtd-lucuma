@@ -16,8 +16,11 @@
 
 module;
 
+#include <path_config.hpp>
+
 export module fdtd.services.basic:path;
 
+import :settings;
 import fdtd.utils;
 import std;
 
@@ -26,14 +29,58 @@ namespace fdtd::services::basic
 
 using namespace fdtd::utils;
 
-class Settings;
+template<std::size_t n>
+struct FixedString
+{
+	char str[n];
 
-export class Path
+	constexpr FixedString(const char (&_str)[n])
+	{
+		std::copy_n(_str, n, str);
+	}
+
+	constexpr operator std::string_view() const
+	{
+		return {str, n-1};
+	}
+
+};
+
+export template<FixedString filePreffix>
+class Path
 {
 public:
-	Path(Injector& injector);
+	Path([[maybe_unused]]Injector& injector):
+		settings(injector.inject<Settings>())
+	{
+		init();
+	}
 
-	std::optional<std::filesystem::path> find(const std::filesystem::path& file) const;
+
+	std::filesystem::path find(const std::filesystem::path& file) const
+	{
+		std::filesystem::path result;
+
+		if(file.is_absolute())
+		{
+			return (result = file);
+		}
+
+		for(const auto& pathDir: path)
+		{
+			(result = pathDir) /= file;
+
+			if(std::filesystem::exists(result))
+				return result;
+		}
+
+		return file;
+	}
+
+	std::filesystem::path operator/(const std::filesystem::path& file) const
+	{
+		return find(file);
+	}
 
 private:
 	Settings& settings;
@@ -41,9 +88,16 @@ private:
 	/// Like $PATH
 	std::vector<std::filesystem::path> path;
 
-	void init();
+	void init()
+	{
+		createPath();
+	}
 
-	void createPath();
+	void createPath()
+	{
+		path.emplace_back(DATA_DIR) /= (std::string_view)filePreffix;
+		// TODO: ~/.local/share
+	}
 
 };
 

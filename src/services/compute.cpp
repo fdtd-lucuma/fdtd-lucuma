@@ -35,7 +35,7 @@ Compute::Compute([[maybe_unused]]Injector& injector):
 void Compute::compute()
 {
 	auto pipeline = vulkanPipelineBuilder.createComputePipeline({
-		.shaderPath = "./share/shaders/hello_world.spv",
+		.shaderPath = "hello_world.spv",
 		.setLayouts = {
 			{
 				.bindings = {

@@ -25,12 +25,13 @@ namespace fdtd::services::vulkan
 
 ShaderLoader::ShaderLoader(Injector& injector):
 	device(injector.inject<Device>()),
-	fileReader(injector.inject<FileReader>())
+	fileReader(injector.inject<FileReader>()),
+	shaderPath(injector.inject<Path>())
 {}
 
 vk::raii::ShaderModule ShaderLoader::createShaderModule(const std::filesystem::path& path)
 {
-	auto buffer = fileReader.read(path);
+	auto buffer = fileReader.read(shaderPath/path);
 
 	vk::ShaderModuleCreateInfo createInfo {};
 	createInfo.setCode(to_proxy(buffer));

@@ -35,6 +35,8 @@ class Device;
 export class ShaderLoader
 {
 public:
+	using Path = basic::Path<"shaders">;
+
 	ShaderLoader(Injector& injector);
 
 	vk::raii::ShaderModule createShaderModule(const std::filesystem::path& path);
@@ -42,6 +44,7 @@ public:
 private:
 	Device&            device;
 	basic::FileReader& fileReader;
+	Path&              shaderPath;
 
 };
 

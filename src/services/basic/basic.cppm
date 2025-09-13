@@ -31,7 +31,6 @@ using namespace fdtd::services::basic;
 
 extern template ArgumentParser& Injector::inject<ArgumentParser>();
 extern template FileReader&     Injector::inject<FileReader>();
-extern template Path&           Injector::inject<Path>();
 extern template Settings&       Injector::inject<Settings>();
 
 }
