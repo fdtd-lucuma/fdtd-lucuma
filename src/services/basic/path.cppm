@@ -53,7 +53,7 @@ struct FileChecks
 	bool mustBeFile      = false;
 };
 
-export template<FixedString filePreffix, FileChecks checks = {}>
+export template<FixedString filePreffix = {""}, FileChecks checks = {}>
 class Path
 {
 public:
