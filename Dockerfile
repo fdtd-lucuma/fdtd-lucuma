@@ -28,6 +28,6 @@ RUN --mount=type=bind,source=.,target=./source \
 	cp -r build build_copy
 
 FROM install-dependecies AS exec
-WORKDIR /fdtd-vulkan
+WORKDIR /fdtd-vulkan/build
 COPY --from=build /fdtd-vulkan/build_copy ./
 CMD ["./fdtd-vulkan"]
