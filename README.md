@@ -21,7 +21,7 @@ docker compose up
 
 Read [./pkg/ubuntu/dependencies.txt](./pkg/ubuntu/dependencies.txt)
 
-## Build (Ubuntu>=25.04) Broken
+## Build (Debian)
 ``` bash
 git clone https://github.com/fdtd-lucuma/fdtd-vulkan
 cd fdtd-vulkan

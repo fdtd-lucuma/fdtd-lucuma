@@ -7,21 +7,21 @@ on:
     branches: [ '*' ]
 
 jobs:
-  ubuntu:
+  debian:
     runs-on: ubuntu-latest
     container: debian:experimental
 
     steps:
     - name: git
       run: |
-          apt-get update
-          apt-get install -y git
+          apt update
+          apt install -y git
 
     - uses: actions/checkout@v4
     - uses: ammaraskar/gcc-problem-matcher@master
 
     - name: deps
-      run: xargs -a pkg/ubuntu/dependencies.txt -- apt-get install -y
+      run: xargs -a pkg/ubuntu/dependencies.txt -- apt install -y
 
     - name: configure
       run: cmake -B build -G Ninja
