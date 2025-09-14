@@ -25,6 +25,7 @@ jobs:
 
     - name: vcpkg deps
       run: |
+        apt install -y curl zip unzip tar
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
         export PATH="$(realpath .):$PATH"
