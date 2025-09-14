@@ -23,6 +23,13 @@ jobs:
     - name: deps
       run: xargs -a pkg/ubuntu/dependencies.txt -- apt -t experimental install -y
 
+    - name: vcpkg deps
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        cd vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
+        export PATH="$(realpath .):$PATH"
+        vcpkg install shader-slang
+
     - name: configure
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
@@ -31,6 +38,7 @@ jobs:
         -DCMAKE_INSTALL_PREFIX=/usr
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
         -DCMAKE_UNITY_BUILD=ON
+        -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
 
     - name: build
       run: |
