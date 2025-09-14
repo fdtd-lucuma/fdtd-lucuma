@@ -9,7 +9,7 @@ on:
 jobs:
   ubuntu:
     runs-on: ubuntu-latest
-    container: ubuntu:rolling
+    container: debian:experimental
 
     steps:
     - name: git
