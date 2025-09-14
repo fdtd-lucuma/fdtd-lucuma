@@ -21,7 +21,7 @@ jobs:
     - uses: ammaraskar/gcc-problem-matcher@master
 
     - name: deps
-      run: xargs -a pkg/ubuntu/dependencies.txt -- apt install -y
+      run: xargs -a pkg/ubuntu/dependencies.txt -- apt -t experimental install -y
 
     - name: configure
       run: cmake -B build -G Ninja
