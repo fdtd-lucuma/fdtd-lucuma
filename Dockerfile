@@ -3,7 +3,7 @@ ENV CCACHE_DIR=/ccache
 ENV CMAKE_C_COMPILER_LAUNCHER=ccache
 ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
 RUN echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
-RUN pacman -Syu ccache
+RUN pacman -Syu --noconfirm --needed ccache
 USER ab
 WORKDIR /var/ab/pkg/arch
 COPY --chown=ab:ab ./pkg/arch/ /var/ab/pkg/arch/
