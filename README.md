@@ -26,6 +26,7 @@ Read [./pkg/ubuntu/dependencies.txt](./pkg/ubuntu/dependencies.txt)
 git clone https://github.com/fdtd-lucuma/fdtd-vulkan
 cd fdtd-vulkan
 
+vcpkg install shader-slang glm
 xargs -oa pkg/ubuntu/dependencies.txt -- sudo apt -t experimental install
 
 cmake -B build -G Ninja
