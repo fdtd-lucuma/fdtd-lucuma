@@ -43,7 +43,7 @@ jobs:
 
   arch-linux:
     runs-on: ubuntu-latest
-    container: greyltc/archlinux-aur:paru
+    container: ghcr.io/${{ github.repository }}/arch-linux-ci:latest
 
     steps:
     - uses: ammaraskar/gcc-problem-matcher@master
