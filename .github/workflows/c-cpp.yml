@@ -29,7 +29,7 @@ jobs:
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
         export PATH="$(realpath .):$PATH"
-        vcpkg install shader-slang
+        vcpkg install shader-slang glm
 
     - name: configure
       run: cmake -B build -G Ninja

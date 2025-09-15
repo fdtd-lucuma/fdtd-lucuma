@@ -199,11 +199,13 @@ target_link_libraries(imgui
 )
 
 # set up glm C++ module as a library
+get_target_property(GLM_INCLUDE_DIR glm::glm-header-only INTERFACE_INCLUDE_DIRECTORIES)
+
 add_library(GlmModule)
 target_sources(GlmModule PUBLIC
 	FILE_SET CXX_MODULES
-	BASE_DIRS /usr/include # How can I get the glm include dir?
-	FILES /usr/include/glm/glm.cppm
+	BASE_DIRS ${GLM_INCLUDE_DIR}
+	FILES ${GLM_INCLUDE_DIR}/glm/glm.cppm
 )
 set_target_properties(GlmModule
 	PROPERTIES
