@@ -24,7 +24,7 @@ jobs:
         -DCMAKE_INSTALL_PREFIX=/usr
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
         -DCMAKE_UNITY_BUILD=ON
-        -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake
 
     - name: build
       run: |

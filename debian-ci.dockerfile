@@ -1,11 +1,14 @@
 FROM debian:experimental
 WORKDIR /fdtd-vulkan
-RUN apt update && \
-	apt install -y git
-COPY ./pkg/ubuntu/ /fdtd-vulkan/pkg/ubuntu/
-RUN xargs -a pkg/ubuntu/dependencies.txt -- apt -t experimental install -y
-RUN \
+RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
+	--mount=type=cache,target=/var/cache/apt,sharing=locked \
+	apt update && \
+	apt install -y git && \
 	apt install -y curl zip unzip tar && \
-	git clone https://github.com/microsoft/vcpkg.git && \
-	cd vcpkg && ./bootstrap-vcpkg.sh -disableMetrics && \
+	git clone https://github.com/microsoft/vcpkg.git /vcpkg && \
+	cd /vcpkg && ./bootstrap-vcpkg.sh -disableMetrics && \
 	./vcpkg install shader-slang glm
+COPY ./pkg/ubuntu/ /fdtd-vulkan/pkg/ubuntu/
+RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
+	--mount=type=cache,target=/var/cache/apt,sharing=locked \
+	xargs -a pkg/ubuntu/dependencies.txt -- apt -t experimental install -y
