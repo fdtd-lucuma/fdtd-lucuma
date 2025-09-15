@@ -12,4 +12,4 @@ paru \
 	--nocleanafter \
 	--norebuild \
 	--needed \
-	"${depends[@]}" "${makedepends[@]}"
+	"${depends[@]}" "${makedepends[@]}" "$@"
