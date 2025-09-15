@@ -3,13 +3,14 @@ ENV CCACHE_DIR=/ccache
 ENV CMAKE_C_COMPILER_LAUNCHER=ccache
 ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
 RUN echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
+RUN pacman -Syu ccache
 USER ab
 WORKDIR /var/ab/pkg/arch
 COPY --chown=ab:ab ./pkg/arch/ /var/ab/pkg/arch/
 RUN --mount=type=cache,target=/var/ab/.cache/paru,sharing=private,uid=971,gid=971 \
 	--mount=type=cache,target=/var/cache/pacman/pkg,sharing=private \
 	--mount=type=cache,target=/ccache,sharing=private,uid=971,gid=971 \
-	./build-deps.sh ccache
+	./build-deps.sh
 
 FROM archlinux:base-devel AS install-dependecies
 WORKDIR /fdtd-vulkan
