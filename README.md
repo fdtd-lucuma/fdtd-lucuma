@@ -29,7 +29,7 @@ cd fdtd-vulkan
 vcpkg install shader-slang glm
 xargs -oa pkg/ubuntu/dependencies.txt -- sudo apt -t experimental install
 
-cmake -B build -G Ninja
+cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE="$VCPKG_PATH/scripts/buildsystems/vcpkg.cmake"
 cmake --build build
 
 cd build
