@@ -5,10 +5,12 @@ on:
     paths:
       - 'deps/ubuntu/**'
       - 'debian-ci.dockerfile'
+      - '.github/workflows/docker.yml'
   pull_request:
     paths:
       - 'deps/ubuntu/**'
       - 'debian-ci.dockerfile'
+      - '.github/workflows/docker.yml'
 
 jobs:
   build-debian-ci-image:
