@@ -12,6 +12,10 @@ jobs:
     container: ghcr.io/${{ github.repository }}/debian-ci:latest
 
     steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
     - name: configure
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
