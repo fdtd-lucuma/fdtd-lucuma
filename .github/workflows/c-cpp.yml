@@ -47,35 +47,17 @@ jobs:
 
     steps:
     - uses: ammaraskar/gcc-problem-matcher@master
-    - run: pacman -Syu --noconfirm git
 
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - run: chown --recursive ab .
-
-    - name: config
-      run: sed
-        -e 's/MAKEFLAGS.*/MAKEFLAGS="-j$(nproc)"/'
-        -e '/OPTIONS/ s/\bdebug\b/!debug/'
-        -i /etc/makepkg.conf
+    - name: configure
+      run: cmake
+        -DUSE_SYSTEM_LIBS=ON
+        -B build
+        -G Ninja
+        -S source
 
     - name: build
-      working-directory: ./pkg/arch
-      run: PKGDEST=./ sudo
-        --user ab
-        --preserve-env=PKGDEST
-        --
-        paru
-          --noconfirm
-          --batchinstall
-          --skipreview
-          --nocleanafter
-          --verbose
-          --build .
-
-    - uses: actions/upload-artifact@v4
-      with:
-        name: arch_package
-        path: pkg/arch/*.pkg.tar.*
+      run: cmake --build build --parallel $(nproc)
