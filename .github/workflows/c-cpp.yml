@@ -60,8 +60,3 @@ jobs:
 
     - name: build
       run: cmake --build build --parallel $(nproc)
-
-    - uses: actions/upload-artifact@v4
-      with:
-        name: ninja_log
-        path: build/.ninja_log
