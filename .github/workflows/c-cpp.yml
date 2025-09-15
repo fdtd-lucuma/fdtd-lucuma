@@ -16,6 +16,11 @@ jobs:
       with:
         fetch-depth: 0
 
+    - uses: actions/cache/restore@v4
+      with:
+        path: build
+        key: debian-ci-build
+
     - name: configure
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
@@ -30,6 +35,11 @@ jobs:
       run: |
           export MAKEFLAGS=-j$(nproc)
           cmake --build build
+
+    - uses: actions/cache/save@v4
+      with:
+        path: build
+        key: debian-ci-build
 
     - name: deb
       run: |
@@ -52,6 +62,11 @@ jobs:
       with:
         fetch-depth: 0
 
+    - uses: actions/cache/restore@v4
+      with:
+        path: build
+        key: arch-linux-ci-build
+
     - name: configure
       run: cmake
         -DUSE_SYSTEM_LIBS=ON
@@ -60,3 +75,8 @@ jobs:
 
     - name: build
       run: cmake --build build --parallel $(nproc)
+
+    - uses: actions/cache/save@v4
+      with:
+        path: build
+        key: arch-linux-ci-build
