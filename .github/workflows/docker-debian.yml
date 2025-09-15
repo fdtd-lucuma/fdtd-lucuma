@@ -1,16 +1,16 @@
-name: Build deps images
+name: Build Debian deps images
 
 on:
   push:
     paths:
-      - 'deps/ubuntu/**'
+      - 'pkg/ubuntu/**'
       - 'debian-ci.dockerfile'
-      - '.github/workflows/docker.yml'
+      - '.github/workflows/docker-debian.yml'
   pull_request:
     paths:
-      - 'deps/ubuntu/**'
+      - 'pkg/ubuntu/**'
       - 'debian-ci.dockerfile'
-      - '.github/workflows/docker.yml'
+      - '.github/workflows/docker-debian.yml'
 
 jobs:
   build-debian-ci-image:
