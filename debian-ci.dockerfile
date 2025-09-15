@@ -11,4 +11,4 @@ RUN /vcpkg/vcpkg install shader-slang glm
 COPY ./pkg/ubuntu/ /fdtd-vulkan/pkg/ubuntu/
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	--mount=type=cache,target=/var/cache/apt,sharing=locked \
-	xargs -a pkg/ubuntu/dependencies.txt -- apt -t experimental install -y
+	xargs -a pkg/ubuntu/dependencies.txt -- apt -t experimental install -y ccache
