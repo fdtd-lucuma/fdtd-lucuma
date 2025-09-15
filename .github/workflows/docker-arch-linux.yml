@@ -5,11 +5,13 @@ on:
     paths:
       - 'pkg/arch/**'
       - 'arch-linux-ci.dockerfile'
+      - 'Dockerfile'
       - '.github/workflows/docker-arch-linux.yml'
   pull_request:
     paths:
       - 'pkg/arch/**'
       - 'arch-linux-ci.dockerfile'
+      - 'Dockerfile'
       - '.github/workflows/docker-arch-linux.yml'
 
 jobs:
