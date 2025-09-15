@@ -28,5 +28,11 @@ export namespace entt
 using entt::registry;
 using entt::type_id;
 using entt::type_info;
+using entt::operator==;
+using entt::operator!=;
+using entt::operator<;
+using entt::operator<=;
+using entt::operator>;
+using entt::operator>=;
 
 };

@@ -40,7 +40,7 @@ Injector::LinkerWatcher Injector::preLink(entt::type_info type)
 Injector::LinkerWatcher::LinkerWatcher(Injector& injector, entt::type_info type):
 	injector(injector)
 {
-	if(injector.dependencies.empty() || injector.dependencies.top().hash() != type.hash())
+	if(injector.dependencies.empty() || injector.dependencies.top() != type)
 	{
 		injector.dependencies.push(type);
 		linked = true;
