@@ -1,10 +1,11 @@
 FROM greyltc/archlinux-aur:paru AS build-dependencies
+RUN echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
+RUN --mount=type=cache,target=/ccache,sharing=private,uid=971,gid=971 \
+	pacman -Syu --noconfirm --needed ccache
+USER ab
 ENV CCACHE_DIR=/ccache
 ENV CMAKE_C_COMPILER_LAUNCHER=ccache
 ENV CMAKE_CXX_COMPILER_LAUNCHER=ccache
-RUN echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
-RUN pacman -Syu --noconfirm --needed ccache
-USER ab
 WORKDIR /var/ab/pkg/arch
 COPY --chown=ab:ab ./pkg/arch/ /var/ab/pkg/arch/
 RUN --mount=type=cache,target=/var/ab/.cache/paru,sharing=private,uid=971,gid=971 \
