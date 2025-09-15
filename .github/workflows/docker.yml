@@ -1,0 +1,34 @@
+name: Build deps images
+
+on:
+  push:
+    paths:
+      - 'deps/ubuntu/**'
+      - 'debian-ci.dockerfile'
+  pull_request:
+    paths:
+      - 'deps/ubuntu/**'
+      - 'debian-ci.dockerfile'
+
+jobs:
+  build-debian-ci-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: debian-ci.dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/debian-ci:latest
+            ghcr.io/${{ github.repository }}/debian-ci:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/debian-ci:cache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/debian-ci:cache,mode=max

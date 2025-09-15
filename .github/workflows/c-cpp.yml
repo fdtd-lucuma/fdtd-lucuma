@@ -9,28 +9,9 @@ on:
 jobs:
   debian:
     runs-on: ubuntu-latest
-    container: debian:experimental
+    container: ghcr.io/${{ github.repository }}/debian-ci:latest
 
     steps:
-    - name: git
-      run: |
-          apt update
-          apt install -y git
-
-    - uses: actions/checkout@v4
-    - uses: ammaraskar/gcc-problem-matcher@master
-
-    - name: deps
-      run: xargs -a pkg/ubuntu/dependencies.txt -- apt -t experimental install -y
-
-    - name: vcpkg deps
-      run: |
-        apt install -y curl zip unzip tar
-        git clone https://github.com/microsoft/vcpkg.git
-        cd vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
-        export PATH="$(realpath .):$PATH"
-        vcpkg install shader-slang glm
-
     - name: configure
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
