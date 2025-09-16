@@ -55,6 +55,7 @@ public:
 	std::vector<vk::DescriptorSet>     getDescriptorSetsUnraii();
 
 	vk::raii::DescriptorPool& getDescriptorPool();
+	vk::raii::CommandBuffer&  getCommandBuffer();
 	vk::raii::PipelineLayout& getLayout();
 	vk::raii::Pipeline&       getPipeline();
 

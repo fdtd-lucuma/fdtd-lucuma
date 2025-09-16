@@ -193,6 +193,11 @@ vk::raii::DescriptorPool& ComputePipeline::getDescriptorPool()
 	return descriptorPool;
 }
 
+vk::raii::CommandBuffer& ComputePipeline::getCommandBuffer()
+{
+	return commandBuffer;
+}
+
 vk::raii::PipelineLayout& ComputePipeline::getLayout()
 {
 	return layout;
