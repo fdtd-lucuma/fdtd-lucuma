@@ -40,19 +40,22 @@ void Compute::compute()
 			{
 				.bindings = {
 					vk::DescriptorSetLayoutBinding {
-						.binding        = 0,
-						.descriptorType = vk::DescriptorType::eStorageBuffer,
-						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+						.binding         = 0,
+						.descriptorType  = vk::DescriptorType::eStorageBuffer,
+						.descriptorCount = 1,
+						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
 					},
 					vk::DescriptorSetLayoutBinding {
-						.binding        = 1,
-						.descriptorType = vk::DescriptorType::eStorageBuffer,
-						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+						.binding         = 1,
+						.descriptorType  = vk::DescriptorType::eStorageBuffer,
+						.descriptorCount = 1,
+						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
 					},
 					vk::DescriptorSetLayoutBinding {
-						.binding        = 2,
-						.descriptorType = vk::DescriptorType::eStorageBuffer,
-						.stageFlags     = vk::ShaderStageFlagBits::eCompute,
+						.binding         = 2,
+						.descriptorType  = vk::DescriptorType::eStorageBuffer,
+						.descriptorCount = 1,
+						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
 					},
 				}
 			}
