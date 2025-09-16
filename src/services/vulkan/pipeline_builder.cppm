@@ -36,9 +36,9 @@ export struct ComputePipelineCreateInfo
 		std::span<const vk::DescriptorSetLayoutBinding> bindings;
 	};
 
-	std::filesystem::path  shaderPath;
-	std::string            entrypoint = "main";
-	std::vector<setLayout> setLayouts;
+	std::filesystem::path      shaderPath;
+	std::string                entrypoint = "main";
+	std::span<const setLayout> setLayouts;
 };
 
 export class ComputePipeline
