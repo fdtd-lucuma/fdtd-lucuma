@@ -34,7 +34,23 @@ Compute::Compute([[maybe_unused]]Injector& injector):
 
 void Compute::compute()
 {
-	auto pipeline = vulkanPipelineBuilder.createComputePipeline({
+	auto pipeline = createHelloWorld();
+
+	auto buffer = vulkanAllocator.allocate(
+		sizeof(float)*1,
+		vk::BufferUsageFlagBits::eStorageBuffer,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+	);
+
+	//TODO: Stuff
+
+	vulkanAllocator.flush(buffer);
+
+}
+
+vulkan::ComputePipeline Compute::createHelloWorld()
+{
+	return vulkanPipelineBuilder.createComputePipeline({
 		.shaderPath = "hello_world.spv",
 		.setLayouts = {
 			{
@@ -62,16 +78,7 @@ void Compute::compute()
 		}
 	});
 
-	auto buffer = vulkanAllocator.allocate(
-		sizeof(float)*1,
-		vk::BufferUsageFlagBits::eStorageBuffer,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
-	);
-
-	//TODO: Stuff
-
-	vulkanAllocator.flush(buffer);
-
 }
+
 
 }

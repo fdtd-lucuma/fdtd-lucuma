@@ -33,7 +33,7 @@ export class PipelineBuilder;
 export struct ComputePipelineCreateInfo
 {
 	struct setLayout {
-		std::vector<vk::DescriptorSetLayoutBinding> bindings;
+		std::span<const vk::DescriptorSetLayoutBinding> bindings;
 	};
 
 	std::filesystem::path  shaderPath;

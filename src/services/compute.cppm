@@ -36,10 +36,11 @@ public:
 	void compute();
 
 private:
-
 	vulkan::PipelineBuilder& vulkanPipelineBuilder;
 	vulkan::Allocator&       vulkanAllocator;
 	vulkan::Compute&         vulkanCompute;
+
+	vulkan::ComputePipeline createHelloWorld();
 };
 
 }
