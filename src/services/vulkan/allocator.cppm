@@ -40,7 +40,7 @@ public:
 
 	vk::Buffer          getBuffer();
 	vma::AllocationInfo getInfo();
-	vma::Allocation     getAllocation();
+	vma::Allocation     getAllocation() const;
 
 	// Like memcpy(3) but dest is the internal buffer
 	void* memcpy(const void* src, std::size_t n);
@@ -68,7 +68,11 @@ public:
 	Buffer allocate(vk::DeviceSize size, vk::BufferUsageFlags usage, vma::AllocationCreateFlags flags);
 
 	void flush(Buffer& buffer, vk::DeviceSize offset = 0, vk::DeviceSize size = vk::WholeSize);
-	vk::Result flush(std::span<Buffer> buffers, std::span<const vk::DeviceSize> offsets = {}, std::span<const vk::DeviceSize> sizes = {});
+	vk::Result flush(
+		std::span<const std::reference_wrapper<const Buffer>> buffers,
+		std::span<const vk::DeviceSize> offsets = {},
+		std::span<const vk::DeviceSize> sizes = {}
+	);
 
 private:
 	Core&   core;

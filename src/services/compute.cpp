@@ -50,9 +50,7 @@ void Compute::compute()
 
 	//TODO: Stuff
 
-	vulkanAllocator.flush(aBuffer);
-	vulkanAllocator.flush(bBuffer);
-
+	vulkanAllocator.flush({aBuffer, bBuffer});
 }
 
 vulkan::ComputePipeline Compute::createHelloWorld()

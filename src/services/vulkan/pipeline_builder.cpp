@@ -55,7 +55,7 @@ ComputePipeline::ComputePipeline(PipelineBuilder& builder, const ComputePipeline
 		std::views::transform([&](const auto& x)
 		{
 			auto poolSizes = x.bindings |
-				std::views::transform([&](const auto& y)
+				std::views::transform([](const auto& y)
 				{
 					return vk::DescriptorPoolSize {
 						.type            = y.descriptorType,

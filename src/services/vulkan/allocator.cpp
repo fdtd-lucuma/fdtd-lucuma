@@ -40,7 +40,7 @@ vma::AllocationInfo Buffer::getInfo()
 	return info;
 }
 
-vma::Allocation Buffer::getAllocation()
+vma::Allocation Buffer::getAllocation() const
 {
 	return *allocation;
 }
@@ -103,10 +103,14 @@ void Allocator::flush(Buffer& buffer, vk::DeviceSize offset, vk::DeviceSize size
 	getAllocator().flushAllocation(buffer.getAllocation(), offset, size);
 }
 
-vk::Result Allocator::flush(std::span<Buffer> buffers, std::span<const vk::DeviceSize> offsets, std::span<const vk::DeviceSize> sizes)
+vk::Result Allocator::flush(
+	std::span<const std::reference_wrapper<const Buffer>> buffers,
+	std::span<const vk::DeviceSize> offsets,
+	std::span<const vk::DeviceSize> sizes
+)
 {
 	auto allocations = buffers |
-		std::views::transform(&Buffer::getAllocation) |
+		std::views::transform([](const auto& x) {return x.get().getAllocation();}) |
 		std::ranges::to<std::vector>();
 
 	return getAllocator().flushAllocations(
