@@ -43,5 +43,6 @@ namespace fdtd::services::vulkan
 //TODO: Find a way to automate this
 
 template std::vector<vk::DescriptorSetLayout> unraii(std::span<vk::raii::DescriptorSetLayout>);
+template std::vector<vk::DescriptorPool>      unraii(std::span<vk::raii::DescriptorPool>);
 
 }

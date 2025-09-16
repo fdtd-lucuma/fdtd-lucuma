@@ -50,6 +50,31 @@ ComputePipeline::ComputePipeline(PipelineBuilder& builder, const ComputePipeline
 		std::ranges::to<std::vector>()
 	;
 
+	// Create descriptor pools
+	descriptorPools = info.setLayouts |
+		std::views::transform([&](const auto& x)
+		{
+			auto poolSizes = x.bindings |
+				std::views::transform([&](const auto& y)
+				{
+					return vk::DescriptorPoolSize {
+						.type            = y.descriptorType,
+						.descriptorCount = y.descriptorCount,
+					};
+				}) |
+				std::ranges::to<std::vector>()
+			;
+
+			vk::DescriptorPoolCreateInfo descriptorPoolCreateInfo {
+				.flags   = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet,
+				.maxSets = 1,
+			};
+
+			return device.createDescriptorPool(descriptorPoolCreateInfo);
+		}) |
+		std::ranges::to<std::vector>()
+	;
+
 	// Create pipeline layout
 	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
 	};
@@ -85,6 +110,16 @@ std::span<vk::raii::DescriptorSetLayout> ComputePipeline::getDescriptorSetLayout
 std::vector<vk::DescriptorSetLayout> ComputePipeline::getDescriptorSetLayoutsUnraii()
 {
 	return unraii(getDescriptorSetLayouts());
+}
+
+std::span<vk::raii::DescriptorPool> ComputePipeline::getDescriptorPools()
+{
+	return descriptorPools;
+}
+
+std::vector<vk::DescriptorPool> ComputePipeline::getDescriptorPoolsUnraii()
+{
+	return unraii(getDescriptorPools());
 }
 
 vk::raii::PipelineLayout& ComputePipeline::getLayout()

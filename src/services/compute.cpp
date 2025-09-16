@@ -36,7 +36,13 @@ void Compute::compute()
 {
 	auto pipeline = createHelloWorld();
 
-	auto buffer = vulkanAllocator.allocate(
+	auto aBuffer = vulkanAllocator.allocate(
+		sizeof(float)*1,
+		vk::BufferUsageFlagBits::eStorageBuffer,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+	);
+
+	auto bBuffer = vulkanAllocator.allocate(
 		sizeof(float)*1,
 		vk::BufferUsageFlagBits::eStorageBuffer,
 		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
@@ -44,7 +50,8 @@ void Compute::compute()
 
 	//TODO: Stuff
 
-	vulkanAllocator.flush(buffer);
+	vulkanAllocator.flush(aBuffer);
+	vulkanAllocator.flush(bBuffer);
 
 }
 

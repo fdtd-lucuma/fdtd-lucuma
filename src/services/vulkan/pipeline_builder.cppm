@@ -47,11 +47,15 @@ public:
 	std::span<vk::raii::DescriptorSetLayout> getDescriptorSetLayouts();
 	std::vector<vk::DescriptorSetLayout>     getDescriptorSetLayoutsUnraii();
 
+	std::span<vk::raii::DescriptorPool> getDescriptorPools();
+	std::vector<vk::DescriptorPool>     getDescriptorPoolsUnraii();
+
 	vk::raii::PipelineLayout& getLayout();
 	vk::raii::Pipeline&       getPipeline();
 
 private:
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
+	std::vector<vk::raii::DescriptorPool>      descriptorPools;
 
 	vk::raii::PipelineLayout layout   = nullptr;
 	vk::raii::Pipeline       pipeline = nullptr;
