@@ -61,8 +61,9 @@ private:
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
 	std::vector<vk::raii::DescriptorPool>      descriptorPools;
 
-	vk::raii::PipelineLayout layout   = nullptr;
-	vk::raii::Pipeline       pipeline = nullptr;
+	vk::raii::CommandBuffer  commandBuffer = nullptr;
+	vk::raii::PipelineLayout layout        = nullptr;
+	vk::raii::Pipeline       pipeline      = nullptr;
 
 	ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info);
 

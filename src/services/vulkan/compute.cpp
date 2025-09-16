@@ -85,6 +85,16 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 {
 	auto& device = builder.device.getDevice();
 
+	// Create command buffer
+	vk::CommandBufferAllocateInfo commandBufferAllocateInfo {
+		.commandPool        = builder.getCommandPool(),
+		.level              = vk::CommandBufferLevel::ePrimary,
+		.commandBufferCount = 1, // TODO: Multiple frames in flight
+	};
+
+	auto commandBuffers = device.allocateCommandBuffers(commandBufferAllocateInfo);
+	commandBuffer = std::move(commandBuffers[0]);
+
 	// Create descriptor set layouts
 	descriptorSetLayouts = info.setLayouts |
 		std::views::transform([&](const auto& x)
