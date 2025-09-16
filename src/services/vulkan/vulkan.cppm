@@ -58,7 +58,7 @@ namespace fdtd::services::vulkan
 
 //TODO: Find a way to automate this
 
+extern template std::vector<vk::DescriptorSet>      unraii(std::span<vk::raii::DescriptorSet>);
 extern template std::vector<vk::DescriptorSetLayout> unraii(std::span<vk::raii::DescriptorSetLayout>);
-extern template std::vector<vk::DescriptorPool>      unraii(std::span<vk::raii::DescriptorPool>);
 
 }

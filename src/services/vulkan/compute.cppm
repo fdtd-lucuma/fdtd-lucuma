@@ -51,19 +51,23 @@ public:
 	std::span<vk::raii::DescriptorSetLayout> getDescriptorSetLayouts();
 	std::vector<vk::DescriptorSetLayout>     getDescriptorSetLayoutsUnraii();
 
-	std::span<vk::raii::DescriptorPool> getDescriptorPools();
-	std::vector<vk::DescriptorPool>     getDescriptorPoolsUnraii();
+	std::span<vk::raii::DescriptorSet> getDescriptorSets();
+	std::vector<vk::DescriptorSet>     getDescriptorSetsUnraii();
 
+	vk::raii::DescriptorPool& getDescriptorPool();
 	vk::raii::PipelineLayout& getLayout();
 	vk::raii::Pipeline&       getPipeline();
 
 private:
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
-	std::vector<vk::raii::DescriptorPool>      descriptorPools;
 
-	vk::raii::CommandBuffer  commandBuffer = nullptr;
-	vk::raii::PipelineLayout layout        = nullptr;
-	vk::raii::Pipeline       pipeline      = nullptr;
+	vk::raii::DescriptorPool descriptorPool = nullptr;
+	vk::raii::CommandBuffer  commandBuffer  = nullptr;
+
+	std::vector<vk::raii::DescriptorSet> descriptorSets;
+
+	vk::raii::PipelineLayout layout   = nullptr;
+	vk::raii::Pipeline       pipeline = nullptr;
 
 	ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info);
 
