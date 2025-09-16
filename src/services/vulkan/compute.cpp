@@ -92,8 +92,7 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 		.commandBufferCount = 1, // TODO: Multiple frames in flight
 	};
 
-	auto commandBuffers = device.allocateCommandBuffers(commandBufferAllocateInfo);
-	commandBuffer = std::move(commandBuffers[0]);
+	commandBuffer = std::move(device.allocateCommandBuffers(commandBufferAllocateInfo)[0]);
 
 	// Create descriptor set layouts
 	descriptorSetLayouts = info.setLayouts |
