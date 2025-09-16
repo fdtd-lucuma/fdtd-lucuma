@@ -30,7 +30,6 @@ export import :core;
 export import :debug;
 export import :debug_requirements;
 export import :device;
-export import :pipeline_builder;
 
 import :shader_loader;
 import :utils;
@@ -50,7 +49,6 @@ extern template Core&              Injector::inject<Core>();
 extern template Debug&             Injector::inject<Debug>();
 extern template DebugRequirements& Injector::inject<DebugRequirements>();
 extern template Device&            Injector::inject<Device>();
-extern template PipelineBuilder&   Injector::inject<PipelineBuilder>();
 extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 }

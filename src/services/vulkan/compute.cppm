@@ -30,8 +30,47 @@ using namespace fdtd::utils;
 using namespace fdtd::services;
 
 class Device;
+class ShaderLoader;
 
-export class Compute
+export class Compute;
+
+export struct ComputePipelineCreateInfo
+{
+	struct setLayout {
+		std::span<const vk::DescriptorSetLayoutBinding> bindings;
+	};
+
+	std::filesystem::path      shaderPath;
+	std::string                entrypoint = "main";
+	std::span<const setLayout> setLayouts;
+};
+
+export class ComputePipeline
+{
+public:
+	std::span<vk::raii::DescriptorSetLayout> getDescriptorSetLayouts();
+	std::vector<vk::DescriptorSetLayout>     getDescriptorSetLayoutsUnraii();
+
+	std::span<vk::raii::DescriptorPool> getDescriptorPools();
+	std::vector<vk::DescriptorPool>     getDescriptorPoolsUnraii();
+
+	vk::raii::PipelineLayout& getLayout();
+	vk::raii::Pipeline&       getPipeline();
+
+private:
+	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
+	std::vector<vk::raii::DescriptorPool>      descriptorPools;
+
+	vk::raii::PipelineLayout layout   = nullptr;
+	vk::raii::Pipeline       pipeline = nullptr;
+
+	ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info);
+
+	friend class Compute;
+};
+
+
+class Compute
 {
 public:
 	Compute(Injector& injector);
@@ -39,9 +78,12 @@ public:
 	vk::raii::Queue&          getQueue();
 	vk::raii::CommandPool&    getCommandPool();
 
+	ComputePipeline createPipeline(const ComputePipelineCreateInfo& info);
+
 private:
-	Device& device;
-	
+	Device&       device;
+	ShaderLoader& shaderLoader;
+
 	std::vector<vk::raii::Queue> queues;
 	vk::raii::CommandPool        commandPool = nullptr;
 
@@ -49,6 +91,8 @@ private:
 
 	void createQueues();
 	void createCommandPool();
+
+	friend class ComputePipeline;
 };
 
 }

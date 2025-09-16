@@ -27,7 +27,6 @@ namespace fdtd::services
 {
 
 Compute::Compute([[maybe_unused]]Injector& injector):
-	vulkanPipelineBuilder(injector.inject<vulkan::PipelineBuilder>()),
 	vulkanAllocator(injector.inject<vulkan::Allocator>()),
 	vulkanCompute(injector.inject<vulkan::Compute>())
 { }
@@ -55,7 +54,7 @@ void Compute::compute()
 
 vulkan::ComputePipeline Compute::createHelloWorld()
 {
-	return vulkanPipelineBuilder.createComputePipeline({
+	return vulkanCompute.createPipeline({
 		.shaderPath = "hello_world.spv",
 		.setLayouts = {
 			{

@@ -25,7 +25,6 @@ target_sources(${PROJECT_NAME}
 		debug_requirements.cpp
 		device.cpp
 		instantiations.cpp
-		pipeline_builder.cpp
 		shader_loader.cpp
 		utils.cpp
 	PRIVATE
@@ -40,7 +39,6 @@ target_sources(${PROJECT_NAME}
 			debug.cppm
 			debug_requirements.cppm
 			device.cppm
-			pipeline_builder.cppm
 			shader_loader.cppm
 			utils.cppm
 			vulkan.cppm

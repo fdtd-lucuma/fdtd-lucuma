@@ -26,7 +26,8 @@ namespace fdtd::services::vulkan
 using namespace fdtd::services;
 
 Compute::Compute([[maybe_unused]] Injector& injector):
-	device(injector.inject<Device>())
+	device(injector.inject<Device>()),
+	shaderLoader(injector.inject<ShaderLoader>())
 
 {
 	if(!device.getComputeInfo().has_value())
@@ -73,6 +74,111 @@ void Compute::createCommandPool()
 	};
 
 	commandPool = device.getDevice().createCommandPool(createInfo);
+}
+
+ComputePipeline Compute::createPipeline(const ComputePipelineCreateInfo& info)
+{
+	return {*this, info};
+}
+
+ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info)
+{
+	auto& device = builder.device.getDevice();
+
+	// Create descriptor set layouts
+	descriptorSetLayouts = info.setLayouts |
+		std::views::transform([&](const auto& x)
+		{
+			vk::DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo {
+			};
+
+			descriptorSetLayoutCreateInfo.setBindings(x.bindings);
+
+			return device.createDescriptorSetLayout(descriptorSetLayoutCreateInfo);
+		}) |
+		std::ranges::to<std::vector>()
+	;
+
+	// Create descriptor pools
+	descriptorPools = info.setLayouts |
+		std::views::transform([&](const auto& x)
+		{
+			auto poolSizes = x.bindings |
+				std::views::transform([](const auto& y)
+				{
+					return vk::DescriptorPoolSize {
+						.type            = y.descriptorType,
+						.descriptorCount = y.descriptorCount,
+					};
+				}) |
+				std::ranges::to<std::vector>()
+			;
+
+			vk::DescriptorPoolCreateInfo descriptorPoolCreateInfo {
+				.flags   = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet,
+				.maxSets = 1,
+			};
+
+			return device.createDescriptorPool(descriptorPoolCreateInfo);
+		}) |
+		std::ranges::to<std::vector>()
+	;
+
+	// Create pipeline layout
+	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
+	};
+
+	auto setLayouts = getDescriptorSetLayoutsUnraii();
+
+	pipelineLayoutCreateInfo.setSetLayouts(setLayouts);
+
+	layout = device.createPipelineLayout(pipelineLayoutCreateInfo);
+
+	// Create pipeline
+	auto shaderModule = builder.shaderLoader.createShaderModule(info.shaderPath);
+
+	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
+		.stage  = vk::ShaderStageFlagBits::eCompute,
+		.module = shaderModule,
+		.pName  = info.entrypoint.c_str(),
+	};
+
+	vk::ComputePipelineCreateInfo computePipelineCreateInfo {
+		.stage  = pipelineShaderStageCreateInfo,
+		.layout = layout,
+	};
+
+	pipeline = device.createComputePipeline(nullptr, computePipelineCreateInfo);
+}
+
+std::span<vk::raii::DescriptorSetLayout> ComputePipeline::getDescriptorSetLayouts()
+{
+	return descriptorSetLayouts;
+}
+
+std::vector<vk::DescriptorSetLayout> ComputePipeline::getDescriptorSetLayoutsUnraii()
+{
+	return unraii(getDescriptorSetLayouts());
+}
+
+std::span<vk::raii::DescriptorPool> ComputePipeline::getDescriptorPools()
+{
+	return descriptorPools;
+}
+
+std::vector<vk::DescriptorPool> ComputePipeline::getDescriptorPoolsUnraii()
+{
+	return unraii(getDescriptorPools());
+}
+
+vk::raii::PipelineLayout& ComputePipeline::getLayout()
+{
+	return layout;
+}
+
+vk::raii::Pipeline& ComputePipeline::getPipeline()
+{
+	return pipeline;
 }
 
 }

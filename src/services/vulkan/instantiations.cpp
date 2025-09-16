@@ -33,7 +33,6 @@ template Core&              Injector::inject<Core>();
 template Debug&             Injector::inject<Debug>();
 template DebugRequirements& Injector::inject<DebugRequirements>();
 template Device&            Injector::inject<Device>();
-template PipelineBuilder&   Injector::inject<PipelineBuilder>();
 template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 }
