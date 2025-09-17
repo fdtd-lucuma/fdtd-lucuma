@@ -177,7 +177,7 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 
 			return std::views::cartesian_product(
 				bindings,
-				std::ranges::single_view<std::reference_wrapper<const vk::raii::DescriptorSet>>(descriptorSet)
+				std::views::single(std::ref(descriptorSet))
 			);
 		}) |
 		std::views::join
