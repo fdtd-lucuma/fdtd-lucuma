@@ -38,7 +38,7 @@ public:
 private:
 	struct HelloWorldData
 	{
-		vulkan::ComputePipeline Pipeline;
+		vulkan::ComputePipeline pipeline;
 
 		vulkan::Buffer aBuffer;
 		vulkan::Buffer bBuffer;

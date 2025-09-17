@@ -96,6 +96,8 @@ public:
 
 	ComputePipeline createPipeline(const ComputePipelineCreateInfo& info);
 
+	void submit(const vk::CommandBuffer& commandBuffer);
+
 private:
 	Device&       device;
 	ShaderLoader& shaderLoader;

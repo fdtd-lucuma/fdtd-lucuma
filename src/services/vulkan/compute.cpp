@@ -81,6 +81,19 @@ ComputePipeline Compute::createPipeline(const ComputePipelineCreateInfo& info)
 	return {*this, info};
 }
 
+void Compute::submit(const vk::CommandBuffer& commandBuffer)
+{
+	vk::SubmitInfo submitInfo {
+	};
+
+	submitInfo.setCommandBuffers(commandBuffer);
+
+	auto& queue = getQueue();
+
+	queue.submit(submitInfo);
+	queue.waitIdle();
+}
+
 ComputePipeline::ComputePipeline(ComputePipeline&& other):
 	descriptorSetLayouts(std::exchange(other.descriptorSetLayouts, {})),
 	descriptorPool(std::exchange(other.descriptorPool, nullptr)),

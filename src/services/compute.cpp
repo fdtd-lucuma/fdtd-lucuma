@@ -35,8 +35,21 @@ void Compute::compute()
 {
 	auto pipeline = createHelloWorld();
 
+	// TODO: Map input buffers and copy data
 
-	//TODO: Stuff
+	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
+
+	vk::CommandBufferBeginInfo beginInfo{};
+
+	commandBuffer.begin(beginInfo);
+	commandBuffer.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline.getPipeline());
+	commandBuffer.bindDescriptorSets(vk::PipelineBindPoint::eCompute, pipeline.pipeline.getLayout(), 0, pipeline.pipeline.getDescriptorSetsUnraii(), nullptr);
+
+	// TODO: Dispatch
+
+	commandBuffer.end();
+
+	//TODO: Get output buffer data
 
 	//vulkanAllocator.flush({aBuffer, bBuffer});
 }
@@ -63,7 +76,7 @@ Compute::HelloWorldData Compute::createHelloWorld()
 		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
 	);
 
-	result.Pipeline = vulkanCompute.createPipeline({
+	result.pipeline = vulkanCompute.createPipeline({
 		.shaderPath = "hello_world.spv",
 		.setLayouts = {
 			{
