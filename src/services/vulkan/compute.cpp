@@ -105,7 +105,7 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 
 	// Create descriptor set layouts
 	descriptorSetLayouts = info.setLayouts |
-		std::views::transform([&](const auto& x)
+		std::views::transform([&](auto&& x)
 		{
 			vk::DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo {
 			};
@@ -119,9 +119,9 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 
 	// Create descriptor pool
 	auto poolSizes = info.setLayouts |
-		std::views::transform([](const auto& x) { return x.bindings; }) |
+		std::views::transform([](auto&& x) { return x.bindings; }) |
 		std::views::join |
-		std::views::transform([](const auto& x)
+		std::views::transform([](auto&& x)
 		{
 			return vk::DescriptorPoolSize {
 				.type            = x.descriptorType,
@@ -152,9 +152,9 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 
 	// Update descriptor sets
 	auto bufferInfos = info.setLayouts |
-		std::views::transform([](const auto& x) { return x.buffers; }) |
+		std::views::transform([](auto&& x) { return x.buffers; }) |
 		std::views::join |
-		std::views::transform([](const auto& x)
+		std::views::transform([](auto&& x)
 		{
 			return vk::DescriptorBufferInfo {
 				.buffer = x.get().getBuffer(),
@@ -166,14 +166,14 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 	;
 
 	auto bindingDescriptors = std::views::zip(
-		info.setLayouts | std::views::transform([](const auto& x) { return x.bindings; }),
+		info.setLayouts | std::views::transform([](auto&& x) { return x.bindings; }),
 		getDescriptorSets() | std::views::as_const
 	);
 
 	auto cartesianDescriptors = bindingDescriptors |
-		std::views::transform([](const auto& t)
+		std::views::transform([](auto&& t)
 		{
-			const auto& [bindings, descriptorSet] = t;
+			auto&& [bindings, descriptorSet] = t;
 
 			return std::views::cartesian_product(
 				bindings,
@@ -184,10 +184,10 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 	;
 
 	auto descriptorWrite = std::views::zip(cartesianDescriptors, bufferInfos) |
-		std::views::transform([](const auto& t)
+		std::views::transform([](auto&& t)
 		{
-			const auto& [t2, bufferInfo] = t;
-			const auto& [binding, descriptorSet] = t2;
+			auto&& [t2, bufferInfo] = t;
+			auto&& [binding, descriptorSet] = t2;
 
 			vk::WriteDescriptorSet result{
 				.dstSet          = descriptorSet.get(),
