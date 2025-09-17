@@ -16,8 +16,6 @@
 
 module;
 
-#include <cassert>
-
 module fdtd.services.vulkan;
 
 import fdtd.services.basic;
