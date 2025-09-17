@@ -78,13 +78,21 @@ void Injector::printEdges(std::ostream& os, const std::string_view removePrefix)
 		std::format("{}{}", name, " graph")
 	);
 
-	for(auto&& [l, r]: dependenciesEdges)
+	auto edgeNames = dependenciesEdges |
+		std::views::transform([=](auto&& x)
+		{
+			auto&& [l, r] = x;
+
+			return std::tuple{
+				unPreffix(l.name(), removePrefix),
+				unPreffix(r.name(), removePrefix),
+			};
+		})
+	;
+
+	for(auto&& [l, r]: edgeNames)
 	{
-		std::println(os,
-			"\t{:?} -> {:?};",
-			unPreffix(l.name(), removePrefix),
-			unPreffix(r.name(), removePrefix)
-		);
+		std::println(os, "\t{:?} -> {:?};", l, r);
 	}
 
 	std::println(os, "{}", "}");
