@@ -110,7 +110,7 @@ vk::Result Allocator::flush(
 )
 {
 	auto allocations = buffers |
-		std::views::transform([](const auto& x) {return x.get().getAllocation();}) |
+		std::views::transform([](auto&& x) {return x.get().getAllocation();}) |
 		std::ranges::to<std::vector>();
 
 	return getAllocator().flushAllocations(
