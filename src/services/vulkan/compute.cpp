@@ -158,12 +158,10 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 		std::views::join |
 		std::views::transform([](const auto& x)
 		{
-			const auto& info = x.get().getInfo();
-
 			return vk::DescriptorBufferInfo {
 				.buffer = x.get().getBuffer(),
-				.offset = info.offset,
-				.range  = info.size,
+				.offset = 0,
+				.range  = vk::WholeSize,
 			};
 		}) |
 		std::ranges::to<std::vector>()
