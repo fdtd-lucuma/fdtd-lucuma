@@ -16,19 +16,17 @@
 
 module;
 
-#include <ranges>
-
 module fdtd.utils;
 
 import fdtd.legacy_headers.entt;
-import std;
+import std.compat;
 
 namespace fdtd::utils
 {
 
 Injector::~Injector()
 {
-	for(const auto& f: deleters | std::views::reverse)
+	for(const auto& f: std::ranges::reverse_view(deleters))
 		f();
 }
 

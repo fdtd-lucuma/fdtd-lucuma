@@ -61,12 +61,12 @@ void Device::init()
 
 QueueFamilyInfo Device::selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties)
 {
-	auto filter = [&](std::uint32_t i) {return (bool)(properties[i].queueFlags & vk::QueueFlagBits::eCompute); };
+	auto filter = [&](auto&& i) {return (bool)(properties[i].queueFlags & vk::QueueFlagBits::eCompute); };
 
 	std::uint32_t maxCount = std::numeric_limits<std::uint32_t>::lowest();
 	std::uint32_t maxIndex;
 
-	for(std::uint32_t i: std::views::iota(0u, (std::uint32_t)properties.size()) | std::views::filter(filter))
+	for(std::uint32_t i: std::views::iota(0zu, properties.size()) | std::views::filter(filter))
 	{
 		if(properties[i].queueCount > maxCount)
 		{
