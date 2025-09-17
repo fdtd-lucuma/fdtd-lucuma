@@ -36,10 +36,20 @@ public:
 	void compute();
 
 private:
+	struct HelloWorldData
+	{
+		vulkan::ComputePipeline Pipeline;
+
+		vulkan::Buffer aBuffer;
+		vulkan::Buffer bBuffer;
+		vulkan::Buffer cBuffer;
+	};
+
 	vulkan::Allocator&       vulkanAllocator;
 	vulkan::Compute&         vulkanCompute;
 
-	vulkan::ComputePipeline createHelloWorld();
+	HelloWorldData createHelloWorld();
+
 };
 
 }

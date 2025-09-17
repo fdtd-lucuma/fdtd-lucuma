@@ -35,26 +35,35 @@ void Compute::compute()
 {
 	auto pipeline = createHelloWorld();
 
-	auto aBuffer = vulkanAllocator.allocate(
-		sizeof(float)*1,
-		vk::BufferUsageFlagBits::eStorageBuffer,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
-	);
-
-	auto bBuffer = vulkanAllocator.allocate(
-		sizeof(float)*1,
-		vk::BufferUsageFlagBits::eStorageBuffer,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
-	);
 
 	//TODO: Stuff
 
-	vulkanAllocator.flush({aBuffer, bBuffer});
+	//vulkanAllocator.flush({aBuffer, bBuffer});
 }
 
-vulkan::ComputePipeline Compute::createHelloWorld()
+Compute::HelloWorldData Compute::createHelloWorld()
 {
-	return vulkanCompute.createPipeline({
+	HelloWorldData result;
+
+	result.aBuffer = vulkanAllocator.allocate(
+		sizeof(float)*1,
+		vk::BufferUsageFlagBits::eStorageBuffer,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+	);
+
+	result.bBuffer = vulkanAllocator.allocate(
+		sizeof(float)*1,
+		vk::BufferUsageFlagBits::eStorageBuffer,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+	);
+
+	result.cBuffer = vulkanAllocator.allocate(
+		sizeof(float)*1,
+		vk::BufferUsageFlagBits::eStorageBuffer,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+	);
+
+	result.Pipeline = vulkanCompute.createPipeline({
 		.shaderPath = "hello_world.spv",
 		.setLayouts = {
 			{
@@ -77,10 +86,17 @@ vulkan::ComputePipeline Compute::createHelloWorld()
 						.descriptorCount = 1,
 						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
 					},
+				},
+				.buffers = {
+					result.aBuffer,
+					result.bBuffer,
+					result.cBuffer,
 				}
 			}
-		}
+		},
 	});
+
+	return result;
 
 }
 

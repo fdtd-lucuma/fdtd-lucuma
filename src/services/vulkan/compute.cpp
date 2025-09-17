@@ -16,6 +16,8 @@
 
 module;
 
+#include <cassert>
+
 module fdtd.services.vulkan;
 
 import fdtd.services.basic;
@@ -81,6 +83,15 @@ ComputePipeline Compute::createPipeline(const ComputePipelineCreateInfo& info)
 	return {*this, info};
 }
 
+ComputePipeline::ComputePipeline(ComputePipeline&& other):
+	descriptorSetLayouts(std::exchange(other.descriptorSetLayouts, {})),
+	descriptorPool(std::exchange(other.descriptorPool, nullptr)),
+	commandBuffer(std::exchange(other.commandBuffer, nullptr)),
+	descriptorSets(std::exchange(other.descriptorSets, {})),
+	layout(std::exchange(other.layout, nullptr)),
+	pipeline(std::exchange(other.pipeline, nullptr))
+{}
+
 ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info)
 {
 	auto& device = builder.device.getDevice();
@@ -140,6 +151,64 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 	descriptorSetAllocateInfo.setSetLayouts(layouts);
 
 	descriptorSets = device.allocateDescriptorSets(descriptorSetAllocateInfo);
+
+	// Update descriptor sets
+	auto bufferInfos = info.setLayouts |
+		std::views::transform([](const auto& x) { return x.buffers; }) |
+		std::views::join |
+		std::views::transform([](const auto& x)
+		{
+			const auto& info = x.get().getInfo();
+
+			return vk::DescriptorBufferInfo {
+				.buffer = x.get().getBuffer(),
+				.offset = info.offset,
+				.range  = info.size,
+			};
+		}) |
+		std::ranges::to<std::vector>()
+	;
+
+	auto bindingDescriptors = std::views::zip(
+		info.setLayouts | std::views::transform([](const auto& x) { return x.bindings; }),
+		getDescriptorSets() | std::views::as_const
+	);
+
+	auto cartesianDescriptors = bindingDescriptors |
+		std::views::transform([](const auto& t)
+		{
+			const auto& [bindings, descriptorSet] = t;
+
+			return std::views::cartesian_product(
+				bindings,
+				std::ranges::single_view<std::reference_wrapper<const vk::raii::DescriptorSet>>(descriptorSet)
+			);
+		}) |
+		std::views::join
+	;
+
+	auto descriptorWrite = std::views::zip(cartesianDescriptors, bufferInfos) |
+		std::views::transform([](const auto& t)
+		{
+			const auto& [t2, bufferInfo] = t;
+			const auto& [binding, descriptorSet] = t2;
+
+			vk::WriteDescriptorSet result{
+				.dstSet          = descriptorSet.get(),
+				.dstBinding      = binding.binding,
+				.dstArrayElement = 0,
+				.descriptorCount = binding.descriptorCount,
+				.descriptorType  = binding.descriptorType,
+			};
+
+			result.setBufferInfo(bufferInfo);
+
+			return result;
+		}) |
+		std::ranges::to<std::vector>()
+	;
+
+	device.updateDescriptorSets(descriptorWrite, nullptr);
 
 	// Create pipeline layout
 	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {

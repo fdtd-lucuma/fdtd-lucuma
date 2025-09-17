@@ -30,12 +30,12 @@ Buffer::Buffer(Buffer&& other):
 	allocation(std::exchange(other.allocation, {}))
 {}
 
-vk::Buffer Buffer::getBuffer()
+vk::Buffer Buffer::getBuffer() const
 {
 	return *buffer;
 }
 
-vma::AllocationInfo Buffer::getInfo()
+vma::AllocationInfo Buffer::getInfo() const
 {
 	return info;
 }

@@ -32,21 +32,22 @@ using namespace fdtd::utils;
 export class Buffer
 {
 public:
+	Buffer() = default;
+
 	Buffer(Buffer const&) = delete;
 	Buffer(Buffer&& other);
 
 	Buffer& operator=(Buffer const&) = delete;
 	Buffer& operator=(Buffer&&)      = default;
 
-	vk::Buffer          getBuffer();
-	vma::AllocationInfo getInfo();
+	vk::Buffer          getBuffer() const;
+	vma::AllocationInfo getInfo() const;
 	vma::Allocation     getAllocation() const;
 
 	// Like memcpy(3) but dest is the internal buffer
 	void* memcpy(const void* src, std::size_t n);
 
 private:
-	Buffer() = default;
 
 	vma::UniqueBuffer     buffer;
 	vma::AllocationInfo   info;

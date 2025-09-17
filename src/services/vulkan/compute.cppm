@@ -31,13 +31,15 @@ using namespace fdtd::services;
 
 class Device;
 class ShaderLoader;
+class Buffer;
 
 export class Compute;
 
 export struct ComputePipelineCreateInfo
 {
 	struct setLayout {
-		std::span<const vk::DescriptorSetLayoutBinding> bindings;
+		std::span<const vk::DescriptorSetLayoutBinding>       bindings;
+		std::span<const std::reference_wrapper<const Buffer>> buffers;
 	};
 
 	std::filesystem::path      shaderPath;
@@ -58,6 +60,14 @@ public:
 	vk::raii::CommandBuffer&  getCommandBuffer();
 	vk::raii::PipelineLayout& getLayout();
 	vk::raii::Pipeline&       getPipeline();
+
+	ComputePipeline() = default;
+
+	ComputePipeline(ComputePipeline const&) = delete;
+	ComputePipeline(ComputePipeline&& other);
+
+	ComputePipeline& operator=(ComputePipeline const&) = delete;
+	ComputePipeline& operator=(ComputePipeline&&)      = default;
 
 private:
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
