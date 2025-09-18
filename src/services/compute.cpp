@@ -33,8 +33,10 @@ Compute::Compute([[maybe_unused]]Injector& injector):
 
 void Compute::compute()
 {
-	std::vector<float> a = {1.0f, 2.0f, 3.0f, 1.0f, 1.0f};
-	std::vector<float> b = {2.0f, 2.0f, -10.f, -20.f, -40.f};
+	auto generator = std::views::iota(0, 10);
+
+	std::vector<float> a{std::from_range, generator};
+	std::vector<float> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
 
 	auto pipeline = createHelloWorld(a.size());
 
