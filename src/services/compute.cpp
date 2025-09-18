@@ -33,9 +33,14 @@ Compute::Compute([[maybe_unused]]Injector& injector):
 
 void Compute::compute()
 {
+	float a = 1.0f;
+	float b = 2.0f;
+	float c;
+
 	auto pipeline = createHelloWorld();
 
-	// TODO: Map input buffers and copy data
+	pipeline.aBuffer.memcpy(&a, sizeof(float)*1);
+	pipeline.bBuffer.memcpy(&b, sizeof(float)*1);
 
 	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
 
@@ -50,9 +55,9 @@ void Compute::compute()
 
 	vulkanCompute.submit(commandBuffer);
 
-	//TODO: Get output buffer data
+	c = *(float*)pipeline.cBuffer.getInfo().pMappedData;
 
-	//vulkanAllocator.flush({aBuffer, bBuffer});
+	std::println("{} + {} = {}", a, b, c);
 }
 
 Compute::HelloWorldData Compute::createHelloWorld()
