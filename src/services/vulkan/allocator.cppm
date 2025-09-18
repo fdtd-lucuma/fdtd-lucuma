@@ -47,6 +47,19 @@ public:
 	// Like memcpy(3) but dest is the internal buffer
 	void* memcpy(const void* src, std::size_t n);
 
+	template<typename T>
+	void setData(std::span<const T> data)
+	{
+		memcpy(data.data(), data.size_bytes());
+	}
+
+	template<typename T>
+	std::span<T> getData() const
+	{
+		const auto info = getInfo();
+		return {(T*)info.pMappedData, info.size/sizeof(T)};
+	}
+
 private:
 
 	vma::UniqueBuffer     buffer;

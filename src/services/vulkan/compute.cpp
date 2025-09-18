@@ -108,6 +108,7 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 	auto& device = builder.device.getDevice();
 
 	// Create command buffer
+	// TODO: Move this outside
 	vk::CommandBufferAllocateInfo commandBufferAllocateInfo {
 		.commandPool        = builder.getCommandPool(),
 		.level              = vk::CommandBufferLevel::ePrimary,

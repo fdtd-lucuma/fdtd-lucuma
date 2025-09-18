@@ -39,8 +39,8 @@ void Compute::compute()
 
 	auto pipeline = createHelloWorld();
 
-	pipeline.aBuffer.memcpy(&a, sizeof(float)*1);
-	pipeline.bBuffer.memcpy(&b, sizeof(float)*1);
+	pipeline.aBuffer.setData<float>({a});
+	pipeline.bBuffer.setData<float>({b});
 
 	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
 
@@ -55,7 +55,7 @@ void Compute::compute()
 
 	vulkanCompute.submit(commandBuffer);
 
-	c = *(float*)pipeline.cBuffer.getInfo().pMappedData;
+	c = pipeline.cBuffer.getData<float>()[0];
 
 	std::println("{} + {} = {}", a, b, c);
 }
