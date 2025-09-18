@@ -69,6 +69,8 @@ public:
 	ComputePipeline& operator=(ComputePipeline const&) = delete;
 	ComputePipeline& operator=(ComputePipeline&&)      = default;
 
+	void bind(vk::CommandBuffer commandBuffer);
+
 private:
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
 

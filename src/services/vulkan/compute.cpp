@@ -286,4 +286,12 @@ vk::raii::Pipeline& ComputePipeline::getPipeline()
 	return pipeline;
 }
 
+void ComputePipeline::bind(vk::CommandBuffer commandBuffer)
+{
+	constexpr auto bindPoint = vk::PipelineBindPoint::eCompute;
+
+	commandBuffer.bindPipeline(bindPoint, getPipeline());
+	commandBuffer.bindDescriptorSets(bindPoint, getLayout(), 0, getDescriptorSetsUnraii(), nullptr);
+}
+
 }

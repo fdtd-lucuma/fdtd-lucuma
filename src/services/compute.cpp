@@ -42,8 +42,8 @@ void Compute::compute()
 	vk::CommandBufferBeginInfo beginInfo{};
 
 	commandBuffer.begin(beginInfo);
-	commandBuffer.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline.getPipeline());
-	commandBuffer.bindDescriptorSets(vk::PipelineBindPoint::eCompute, pipeline.pipeline.getLayout(), 0, pipeline.pipeline.getDescriptorSetsUnraii(), nullptr);
+
+	pipeline.pipeline.bind(commandBuffer);
 
 	// TODO: Dispatch
 
