@@ -74,7 +74,7 @@ Compute::HelloWorldData Compute::createHelloWorld()
 	result.cBuffer = vulkanAllocator.allocate(
 		sizeof(float)*1,
 		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
+		vma::AllocationCreateFlagBits::eHostAccessRandom | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.pipeline = vulkanCompute.createPipeline({
