@@ -54,7 +54,7 @@ public:
 	}
 
 	template<typename T>
-	std::span<T> getData() const
+	std::span<T> getData()
 	{
 		const auto info = getInfo();
 		return {(T*)info.pMappedData, info.size/sizeof(T)};
