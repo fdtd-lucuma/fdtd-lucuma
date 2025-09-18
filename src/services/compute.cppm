@@ -45,8 +45,8 @@ private:
 		vulkan::Buffer cBuffer;
 	};
 
-	vulkan::Allocator&       vulkanAllocator;
-	vulkan::Compute&         vulkanCompute;
+	vulkan::Allocator& vulkanAllocator;
+	vulkan::Compute&   vulkanCompute;
 
 	HelloWorldData createHelloWorld();
 

@@ -44,10 +44,11 @@ void Compute::compute()
 	commandBuffer.begin(beginInfo);
 
 	pipeline.pipeline.bind(commandBuffer);
-
-	// TODO: Dispatch
+	commandBuffer.dispatch(1, 1, 1);
 
 	commandBuffer.end();
+
+	vulkanCompute.submit(commandBuffer);
 
 	//TODO: Get output buffer data
 
