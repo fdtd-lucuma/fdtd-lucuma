@@ -33,14 +33,13 @@ Compute::Compute([[maybe_unused]]Injector& injector):
 
 void Compute::compute()
 {
-	float a = 1.0f;
-	float b = 2.0f;
-	float c;
+	std::vector<float> a = {1.0f, 2.0f, 3.0f, 1.0f, 1.0f};
+	std::vector<float> b = {2.0f, 2.0f, -10.f, -20.f, -40.f};
 
-	auto pipeline = createHelloWorld();
+	auto pipeline = createHelloWorld(a.size());
 
-	pipeline.aBuffer.setData<float>({a});
-	pipeline.bBuffer.setData<float>({b});
+	pipeline.aBuffer.setData<float>(a);
+	pipeline.bBuffer.setData<float>(b);
 
 	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
 
@@ -49,35 +48,35 @@ void Compute::compute()
 	commandBuffer.begin(beginInfo);
 
 	pipeline.pipeline.bind(commandBuffer);
-	commandBuffer.dispatch(1, 1, 1);
+	commandBuffer.dispatch(a.size(), 1, 1);
 
 	commandBuffer.end();
 
 	vulkanCompute.submit(commandBuffer);
 
-	c = pipeline.cBuffer.getData<float>()[0];
+	auto c = pipeline.cBuffer.getData<float>().subspan(0, a.size());
 
 	std::println("{} + {} = {}", a, b, c);
 }
 
-Compute::HelloWorldData Compute::createHelloWorld()
+Compute::HelloWorldData Compute::createHelloWorld(std::size_t n)
 {
 	HelloWorldData result;
 
 	result.aBuffer = vulkanAllocator.allocate(
-		sizeof(float)*1,
+		sizeof(float)*n,
 		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
 		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.bBuffer = vulkanAllocator.allocate(
-		sizeof(float)*1,
+		sizeof(float)*n,
 		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
 		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.cBuffer = vulkanAllocator.allocate(
-		sizeof(float)*1,
+		sizeof(float)*n,
 		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
 		vma::AllocationCreateFlagBits::eHostAccessRandom | vma::AllocationCreateFlagBits::eMapped
 	);

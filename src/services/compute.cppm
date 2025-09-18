@@ -48,7 +48,7 @@ private:
 	vulkan::Allocator& vulkanAllocator;
 	vulkan::Compute&   vulkanCompute;
 
-	HelloWorldData createHelloWorld();
+	HelloWorldData createHelloWorld(std::size_t n);
 
 };
 
