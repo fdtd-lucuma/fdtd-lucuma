@@ -61,20 +61,20 @@ Compute::HelloWorldData Compute::createHelloWorld()
 
 	result.aBuffer = vulkanAllocator.allocate(
 		sizeof(float)*1,
-		vk::BufferUsageFlagBits::eStorageBuffer,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.bBuffer = vulkanAllocator.allocate(
 		sizeof(float)*1,
-		vk::BufferUsageFlagBits::eStorageBuffer,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.cBuffer = vulkanAllocator.allocate(
 		sizeof(float)*1,
-		vk::BufferUsageFlagBits::eStorageBuffer,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite
+		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
+		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.pipeline = vulkanCompute.createPipeline({
