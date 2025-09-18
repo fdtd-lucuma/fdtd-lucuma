@@ -44,7 +44,7 @@ add_compile_options($<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fno-rtti>) # No RTTI
 
 
 project(fdtd-vulkan
-	VERSION 0.0.0
+	VERSION 0.1.1
 	DESCRIPTION "Una GUI para fdtd"
 	HOMEPAGE_URL "https://github.com/fdtd-lucuma/fdtd-vulkan"
 )
