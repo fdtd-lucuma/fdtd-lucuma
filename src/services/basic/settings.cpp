@@ -19,6 +19,7 @@ module;
 module fdtd.services.basic;
 
 import std;
+import glm;
 
 namespace fdtd::services::basic
 {
@@ -30,6 +31,26 @@ Settings::Settings([[maybe_unused]]Injector& injector):
 bool Settings::isHeadless() const
 {
 	return argumentParser.isHeadless();
+}
+
+std::size_t Settings::sizeX() const
+{
+	return argumentParser.sizeX().value_or(defaultSizeX);
+}
+
+std::size_t Settings::sizeY() const
+{
+	return argumentParser.sizeY().value_or(defaultSizeY);
+}
+
+std::size_t Settings::sizeZ() const
+{
+	return argumentParser.sizeZ().value_or(defaultSizeZ);
+}
+
+glm::vec3 Settings::size() const
+{
+	return glm::vec3{sizeX(), sizeY(), sizeZ()};
 }
 
 

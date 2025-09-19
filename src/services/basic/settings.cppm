@@ -20,6 +20,7 @@ export module fdtd.services.basic:settings;
 
 import fdtd.utils;
 import std;
+import glm;
 
 namespace fdtd::services::basic
 {
@@ -34,6 +35,16 @@ public:
 	Settings(Injector& injector);
 
 	bool isHeadless() const;
+
+	static constexpr std::size_t defaultSizeX = 128;
+	static constexpr std::size_t defaultSizeY = 128;
+	static constexpr std::size_t defaultSizeZ = 128;
+
+	std::size_t sizeX() const;
+	std::size_t sizeY() const;
+	std::size_t sizeZ() const;
+
+	glm::vec3 size() const;
 
 private:
 	ArgumentParser& argumentParser;

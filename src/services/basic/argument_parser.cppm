@@ -16,6 +16,9 @@
 
 module;
 
+#include <cstdlib>
+#include <cstdio>
+
 export module fdtd.services.basic:argument_parser;
 
 import fdtd.utils;
@@ -29,18 +32,26 @@ export class ArgumentParser
 public:
 	ArgumentParser(int argc, char** argv);
 
-	std::string_view             getArgv0() const;
-	std::span<const std::string> getPositionalArguments() const;
+	std::string_view             argv0() const;
+	std::span<const std::string> positionalArguments() const;
 
 	bool isHeadless() const;
 	const std::optional<std::filesystem::path>& graphPath() const;
 
+	const std::optional<std::size_t>& sizeX() const;
+	const std::optional<std::size_t>& sizeY() const;
+	const std::optional<std::size_t>& sizeZ() const;
+
 private:
-	std::string              argv0;
-	std::vector<std::string> positionalArguments;
+	std::string              _argv0;
+	std::vector<std::string> _positionalArguments;
 
 	bool                                 _isHeadless = true;
 	std::optional<std::filesystem::path> _graphPath   = std::nullopt;
+
+	std::optional<std::size_t> _sizeX = std::nullopt;
+	std::optional<std::size_t> _sizeY = std::nullopt;
+	std::optional<std::size_t> _sizeZ = std::nullopt;
 
 	[[noreturn]]
 	void usage(int exit_code);
@@ -48,6 +59,22 @@ private:
 	void parse(int argc, char** argv);
 
 	void handleOption(char shortopt);
+
+	template<typename T>
+	static T fromString(std::string_view str)
+	{
+		T result{};
+
+		auto [ptr, ec] = std::from_chars(str.begin(), str.begin()+str.size(), result);
+
+		if(ec == std::errc())
+			return result;
+
+		std::println(stderr, "{}: {}", str, std::make_error_code(ec).message());
+
+		exit(EXIT_FAILURE);
+		std::unreachable();
+	}
 };
 
 }

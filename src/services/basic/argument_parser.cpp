@@ -27,19 +27,19 @@ namespace fdtd::services::basic
 {
 
 ArgumentParser::ArgumentParser(int argc, char** argv):
-	argv0(argv[0])
+	_argv0(argv[0])
 {
 	parse(argc, argv);
 }
 
-std::string_view ArgumentParser::getArgv0() const
+std::string_view ArgumentParser::argv0() const
 {
-	return argv0;
+	return _argv0;
 }
 
-std::span<const std::string> ArgumentParser::getPositionalArguments() const
+std::span<const std::string> ArgumentParser::positionalArguments() const
 {
-	return positionalArguments;
+	return _positionalArguments;
 }
 
 
@@ -53,15 +53,37 @@ const std::optional<std::filesystem::path>& ArgumentParser::graphPath() const
 	return _graphPath;
 }
 
+const std::optional<std::size_t>& ArgumentParser::sizeX() const
+{
+	return _sizeX;
+}
+
+const std::optional<std::size_t>& ArgumentParser::sizeY() const
+{
+	return _sizeY;
+}
+
+const std::optional<std::size_t>& ArgumentParser::sizeZ() const
+{
+	return _sizeZ;
+}
+
 void ArgumentParser::usage(int exit_code)
 {
-	std::cout
-		<< "Usage: " << getArgv0() << " [options]...\n"
-		<< "\t-h, --help        Show this help and exit.\n"
-		<< "\t-H, --headless    Start as headless.\n"
-		<< "\t-g, --no-headless Start with gui.\n"
-		<< "\t-G, --graph=FILE  Prints the services dependencies as a DAG in FILE.\n"
-	;
+	std::print(
+		"Usage: {} [options]...\n"
+		"\t-h, --help        Show this help and exit.\n"
+		"\t-H, --headless    Start as headless.\n"
+		"\t-g, --no-headless Start with gui.\n"
+		"\t-G, --graph=FILE  Prints the services dependencies as a DAG in FILE.\n"
+		"\t-x, --size-x=N    Set size x [default={}].\n"
+		"\t-y, --size-y=N    Set size y [default={}].\n"
+		"\t-z, --size-z=N    Set size z [default={}].\n",
+		argv0(),
+		Settings::defaultSizeX,
+		Settings::defaultSizeY,
+		Settings::defaultSizeZ
+	);
 
 	exit(exit_code);
 }
@@ -69,12 +91,15 @@ void ArgumentParser::usage(int exit_code)
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "hHgG:";
+	static const char shortopts[] = "hHgG:x:y:z:";
 	static const option options[] {
 		{"help",        no_argument,       nullptr, 'h'},
 		{"headless",    no_argument,       nullptr, 'H'},
 		{"no-headless", no_argument,       nullptr, 'g'},
 		{"graph",       required_argument, nullptr, 'G'},
+		{"size-x",      required_argument, nullptr, 'x'},
+		{"size-y",      required_argument, nullptr, 'y'},
+		{"size-z",      required_argument, nullptr, 'z'},
 		{nullptr,       0,                 nullptr, 0},
 	};
 
@@ -85,7 +110,7 @@ void ArgumentParser::parse(int argc, char** argv)
 
 	for(int i = optind; i < argc; i++)
 	{
-		positionalArguments.emplace_back(argv[i]);
+		_positionalArguments.emplace_back(argv[i]);
 	}
 
 }
@@ -108,6 +133,18 @@ void ArgumentParser::handleOption(char shortopt)
 
 		case 'G': // --graph
 			_graphPath.emplace(optarg);
+			break;
+
+		case 'x': // --size-x
+			_sizeX.emplace(fromString<std::size_t>(optarg));
+			break;
+
+		case 'y': // --size-y
+			_sizeY.emplace(fromString<std::size_t>(optarg));
+			break;
+
+		case 'z': // --size-z
+			_sizeZ.emplace(fromString<std::size_t>(optarg));
 			break;
 
 		case '?':

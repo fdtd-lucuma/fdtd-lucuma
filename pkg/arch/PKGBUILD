@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-vulkan-git
-pkgver=0.1.0.r0.g53fc40c
+pkgver=0.1.1.r12.gc40cc1f
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -72,7 +72,9 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI="$srcdir/imgui-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI-MODULE="$srcdir/imgui-module-git" \
 		-DFETCHCONTENT_SOURCE_DIR_VULKANMEMORYALLOCATOR-HPP="$srcdir/vma-hpp-git" \
-		-DFETCHCONTENT_SOURCE_DIR_VKFW="$srcdir/vkfw-git"
+		-DFETCHCONTENT_SOURCE_DIR_VKFW="$srcdir/vkfw-git" \
+		-DCMAKE_CXX_VISIBILITY_PRESET=hidden \
+		-DCMAKE_C_VISIBILITY_PRESET=hidden \
 
 	cmake --build build
 }
