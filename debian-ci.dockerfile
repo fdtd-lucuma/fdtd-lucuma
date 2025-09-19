@@ -1,10 +1,11 @@
 FROM debian:experimental
 WORKDIR /fdtd-vulkan
 RUN echo 'APT::Default-Release "experimental";' >> /etc/apt/apt.conf
-ENV VCPKG_DEFAULT_BINARY_CACHE=/vcpkg_cache
+ENV VCPKG_DEFAULT_BINARY_CACHE=/vcpkg_cache/
+ENV VCPKG_FORCE_SYSTEM_BINARIES=1
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	--mount=type=cache,target=/var/cache/apt,sharing=locked \
-	--mount=type=cache,target=/vcpkg_cache,sharing=locked \
+	--mount=type=cache,target=/vcpkg_cache/,sharing=locked \
 	apt update && \
 	apt install -y git && \
 	apt install -y curl zip unzip tar cmake ninja-build build-essential && \
