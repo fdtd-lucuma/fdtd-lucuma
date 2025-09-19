@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 4.1)
+cmake_minimum_required(VERSION 4.0.3)
 
 # Change this each version
 # Read Help/dev/experimental.rst at CMake's repo for more info
@@ -51,6 +51,7 @@ project(fdtd-vulkan
 
 include(FetchContent)
 include(GNUInstallDirs)
+include(FindPkgConfig)
 include(CPack)
 
 # ./cmake

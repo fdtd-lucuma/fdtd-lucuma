@@ -77,8 +77,12 @@ find_package(Vulkan REQUIRED)
 find_package(vkfw REQUIRED)
 find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang/issues/8334
 
-cmake_pkg_config(IMPORT glfw3 REQUIRED)
-cmake_pkg_config(IMPORT yaml-cpp REQUIRED)
+# Shared libraries
+pkg_check_modules(libraries
+	REQUIRED IMPORTED_TARGET GLOBAL
+		glfw3
+		yaml-cpp
+)
 
 # set up Vulkan C++ module as a library
 add_library(VulkanHppModule)
@@ -252,12 +256,11 @@ target_link_libraries(VulkanMemoryAllocator-HppModule
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
-		EnTT::EnTT
-		GlmModule
-		PkgConfig::glfw3
-		PkgConfig::yaml-cpp
-		VkfwModule
-		VulkanMemoryAllocator-HppModule
+		PkgConfig::libraries
 		imgui
+		EnTT::EnTT
+		VulkanMemoryAllocator-HppModule
+		GlmModule
+		VkfwModule
 )
 

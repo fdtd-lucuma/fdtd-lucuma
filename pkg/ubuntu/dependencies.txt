@@ -9,4 +9,5 @@ libvulkan-dev
 libvulkan-memory-allocator-dev
 libyaml-cpp-dev
 ninja-build
+pkgconf
 vulkan-validationlayers
