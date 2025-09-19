@@ -1,6 +1,6 @@
 FROM debian:experimental
 WORKDIR /fdtd-vulkan
-RUN echo 'APT::Default-Release "experimental"' > /etc/apt/preferences
+RUN echo 'APT::Default-Release "experimental";' >> /etc/apt/preferences
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	--mount=type=cache,target=/var/cache/apt,sharing=locked \
 	apt update && \
