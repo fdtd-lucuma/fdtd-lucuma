@@ -38,9 +38,9 @@ public:
 	bool isHeadless() const;
 	const std::optional<std::filesystem::path>& graphPath() const;
 
-	const std::optional<std::size_t>& sizeX() const;
-	const std::optional<std::size_t>& sizeY() const;
-	const std::optional<std::size_t>& sizeZ() const;
+	std::optional<std::size_t> sizeX() const;
+	std::optional<std::size_t> sizeY() const;
+	std::optional<std::size_t> sizeZ() const;
 
 private:
 	std::string              _argv0;

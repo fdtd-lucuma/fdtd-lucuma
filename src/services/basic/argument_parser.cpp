@@ -53,17 +53,17 @@ const std::optional<std::filesystem::path>& ArgumentParser::graphPath() const
 	return _graphPath;
 }
 
-const std::optional<std::size_t>& ArgumentParser::sizeX() const
+std::optional<std::size_t> ArgumentParser::sizeX() const
 {
 	return _sizeX;
 }
 
-const std::optional<std::size_t>& ArgumentParser::sizeY() const
+std::optional<std::size_t> ArgumentParser::sizeY() const
 {
 	return _sizeY;
 }
 
-const std::optional<std::size_t>& ArgumentParser::sizeZ() const
+std::optional<std::size_t> ArgumentParser::sizeZ() const
 {
 	return _sizeZ;
 }
