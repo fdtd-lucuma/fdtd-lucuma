@@ -40,9 +40,13 @@ public:
 	static constexpr std::size_t defaultSizeY = 128;
 	static constexpr std::size_t defaultSizeZ = 128;
 
+	static constexpr unsigned int defaultTime = 300;
+
 	std::size_t sizeX() const;
 	std::size_t sizeY() const;
 	std::size_t sizeZ() const;
+
+	unsigned int time() const;
 
 	glm::vec3 size() const;
 

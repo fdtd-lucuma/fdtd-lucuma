@@ -39,6 +39,8 @@ public:
 	std::optional<std::size_t> sizeY() const;
 	std::optional<std::size_t> sizeZ() const;
 
+	std::optional<unsigned int> time() const;
+
 private:
 	std::string              _argv0;
 	std::vector<std::string> _positionalArguments;
@@ -49,6 +51,8 @@ private:
 	std::optional<std::size_t> _sizeX = std::nullopt;
 	std::optional<std::size_t> _sizeY = std::nullopt;
 	std::optional<std::size_t> _sizeZ = std::nullopt;
+
+	std::optional<unsigned int> _time = std::nullopt;
 
 	[[noreturn]]
 	void usage(int exit_code);

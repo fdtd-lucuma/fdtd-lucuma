@@ -68,6 +68,11 @@ std::optional<std::size_t> ArgumentParser::sizeZ() const
 	return _sizeZ;
 }
 
+std::optional<unsigned int> ArgumentParser::time() const
+{
+	return _time;
+}
+
 void ArgumentParser::usage(int exit_code)
 {
 	std::print(
@@ -78,11 +83,13 @@ void ArgumentParser::usage(int exit_code)
 		"\t-G, --graph=FILE  Prints the services dependencies as a DAG in FILE.\n"
 		"\t-x, --size-x=N    Set size x [default={}].\n"
 		"\t-y, --size-y=N    Set size y [default={}].\n"
-		"\t-z, --size-z=N    Set size z [default={}].\n",
+		"\t-z, --size-z=N    Set size z [default={}].\n"
+		"\t-t, --time=N      Set simulation time steps [default={}].\n",
 		argv0(),
 		Settings::defaultSizeX,
 		Settings::defaultSizeY,
-		Settings::defaultSizeZ
+		Settings::defaultSizeZ,
+		Settings::defaultTime
 	);
 
 	exit(exit_code);
@@ -91,7 +98,7 @@ void ArgumentParser::usage(int exit_code)
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "hHgG:x:y:z:";
+	static const char shortopts[] = "hHgG:x:y:z:t:";
 	static const option options[] {
 		{"help",        no_argument,       nullptr, 'h'},
 		{"headless",    no_argument,       nullptr, 'H'},
@@ -100,6 +107,7 @@ void ArgumentParser::parse(int argc, char** argv)
 		{"size-x",      required_argument, nullptr, 'x'},
 		{"size-y",      required_argument, nullptr, 'y'},
 		{"size-z",      required_argument, nullptr, 'z'},
+		{"time",        required_argument, nullptr, 't'},
 		{nullptr,       0,                 nullptr, 0},
 	};
 
@@ -145,6 +153,10 @@ void ArgumentParser::handleOption(char shortopt)
 
 		case 'z': // --size-z
 			_sizeZ.emplace(fromString<std::size_t>(optarg));
+			break;
+
+		case 't': // --time
+			_time.emplace(fromString<unsigned int>(optarg));
 			break;
 
 		case '?':

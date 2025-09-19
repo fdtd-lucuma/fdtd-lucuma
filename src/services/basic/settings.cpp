@@ -48,6 +48,11 @@ std::size_t Settings::sizeZ() const
 	return argumentParser.sizeZ().value_or(defaultSizeZ);
 }
 
+unsigned int Settings::time() const
+{
+	return argumentParser.time().value_or(defaultTime);
+}
+
 glm::vec3 Settings::size() const
 {
 	return glm::vec3{sizeX(), sizeY(), sizeZ()};
