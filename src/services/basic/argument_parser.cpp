@@ -156,4 +156,11 @@ void ArgumentParser::handleOption(char shortopt)
 	}
 }
 
+void ArgumentParser::fail(std::string_view str, std::errc ec)
+{
+	std::println(std::cerr, "{}: {}", str, std::make_error_code(ec).message());
+
+	exit(EXIT_FAILURE);
+}
+
 }

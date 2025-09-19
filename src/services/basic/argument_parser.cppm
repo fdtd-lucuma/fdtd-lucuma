@@ -16,9 +16,6 @@
 
 module;
 
-#include <cstdlib>
-#include <cstdio>
-
 export module fdtd.services.basic:argument_parser;
 
 import fdtd.utils;
@@ -60,6 +57,9 @@ private:
 
 	void handleOption(char shortopt);
 
+	[[noreturn]]
+	static void fail(std::string_view str, std::errc e);
+
 	template<typename T>
 	static T fromString(std::string_view str)
 	{
@@ -70,9 +70,7 @@ private:
 		if(ec == std::errc())
 			return result;
 
-		std::println(stderr, "{}: {}", str, std::make_error_code(ec).message());
-
-		exit(EXIT_FAILURE);
+		fail(str, ec);
 		std::unreachable();
 	}
 };
