@@ -48,7 +48,7 @@ public:
 
 	unsigned int time() const;
 
-	glm::vec3 size() const;
+	glm::vec<3, std::size_t> size() const;
 
 private:
 	ArgumentParser& argumentParser;
