@@ -2,13 +2,13 @@
 
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
-pkgname=fdtd-vulkan-git
+pkgname=fdtd-lucuma-git
 pkgver=0.1.1.r12.gc40cc1f
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
 arch=('x86_64')
-url="https://github.com/fdtd-lucuma/fdtd-vulkan"
+url="https://github.com/fdtd-lucuma/fdtd-lucuma"
 license=('GPL-3.0-or-later')
 groups=()
 depends=(

@@ -8,15 +8,15 @@ RUN --mount=type=cache,target=/var/ab/.cache/paru,sharing=private,uid=971,gid=97
 	./build-deps.sh
 
 FROM archlinux:base-devel AS install-dependecies
-WORKDIR /fdtd-vulkan
+WORKDIR /fdtd-lucuma
 RUN \
-	--mount=type=bind,from=build-dependencies,source=/var/ab/pkg/arch,target=/fdtd-vulkan \
+	--mount=type=bind,from=build-dependencies,source=/var/ab/pkg/arch,target=/fdtd-lucuma \
 	--mount=type=bind,from=build-dependencies,source=/var/cache/makepkg/pkg/,target=/var/cache/makepkg/pkg/ \
 	--mount=type=cache,target=/var/cache/pacman/pkg,sharing=private \
 	./install-deps.sh vulkan-validation-layers vulkan-radeon #TODO: Change driver by target
 
 FROM install-dependecies AS build
-WORKDIR /fdtd-vulkan
+WORKDIR /fdtd-lucuma
 RUN --mount=type=bind,source=.,target=./source \
 	--mount=type=cache,target=./build,sharing=private \
 	cmake \
@@ -28,6 +28,6 @@ RUN --mount=type=bind,source=.,target=./source \
 	cp -r build build_copy
 
 FROM install-dependecies AS exec
-WORKDIR /fdtd-vulkan/build
-COPY --from=build /fdtd-vulkan/build_copy ./
-CMD ["./fdtd-vulkan"]
+WORKDIR /fdtd-lucuma/build
+COPY --from=build /fdtd-lucuma/build_copy ./
+CMD ["./fdtd-lucuma"]

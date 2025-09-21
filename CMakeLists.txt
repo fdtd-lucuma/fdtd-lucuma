@@ -1,18 +1,18 @@
 # Una GUI para fdtd
 # Copyright © 2025 Otreblan
 #
-# fdtd-vulkan is free software: you can redistribute it and/or modify
+# fdtd-lucuma is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# fdtd-vulkan is distributed in the hope that it will be useful,
+# fdtd-lucuma is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with fdtd-vulkan.  If not, see <http://www.gnu.org/licenses/>.
+# along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 4.0.3)
 
@@ -43,10 +43,10 @@ add_compile_options(-Wp,-D_FORTIFY_SOURCE=0 -Wno-macro-redefined) # Quickfix: Di
 add_compile_options($<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fno-rtti>) # No RTTI
 
 
-project(fdtd-vulkan
+project(fdtd-lucuma
 	VERSION 0.1.1
 	DESCRIPTION "Una GUI para fdtd"
-	HOMEPAGE_URL "https://github.com/fdtd-lucuma/fdtd-vulkan"
+	HOMEPAGE_URL "https://github.com/fdtd-lucuma/fdtd-lucuma"
 )
 
 include(FetchContent)

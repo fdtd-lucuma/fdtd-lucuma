@@ -1,5 +1,5 @@
 FROM debian:experimental
-WORKDIR /fdtd-vulkan
+WORKDIR /fdtd-lucuma
 RUN echo 'APT::Default-Release "experimental";' >> /etc/apt/apt.conf
 ENV VCPKG_DEFAULT_BINARY_CACHE=/vcpkg_cache
 ENV VCPKG_FORCE_SYSTEM_BINARIES=1
@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	cd /vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
 RUN  --mount=type=cache,target=/vcpkg_cache,sharing=locked \
 	/vcpkg/vcpkg install shader-slang glm
-COPY ./pkg/ubuntu/ /fdtd-vulkan/pkg/ubuntu/
+COPY ./pkg/ubuntu/ /fdtd-lucuma/pkg/ubuntu/
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	--mount=type=cache,target=/var/cache/apt,sharing=locked \
 	xargs -a pkg/ubuntu/dependencies.txt -- apt install -y

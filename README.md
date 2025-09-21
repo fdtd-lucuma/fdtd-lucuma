@@ -1,6 +1,6 @@
-[![C/C++ CI](https://github.com/fdtd-lucuma/fdtd-vulkan/workflows/C/C++%20CI/badge.svg)](https://github.com/fdtd-lucuma/fdtd-vulkan/actions?query=workflow%3A%22C%2FC%2B%2B+CI%22)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/fdtd-lucuma/fdtd-vulkan?logo=github)
-![GitHub](https://img.shields.io/github/license/fdtd-lucuma/fdtd-vulkan?logo=gnu)
+[![C/C++ CI](https://github.com/fdtd-lucuma/fdtd-lucuma/workflows/C/C++%20CI/badge.svg)](https://github.com/fdtd-lucuma/fdtd-lucuma/actions?query=workflow%3A%22C%2FC%2B%2B+CI%22)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/fdtd-lucuma/fdtd-lucuma?logo=github)
+![GitHub](https://img.shields.io/github/license/fdtd-lucuma/fdtd-lucuma?logo=gnu)
 
 # Una GUI para fdtd
 
@@ -11,8 +11,8 @@
 ## Run
 
 ```bash
-git clone https://github.com/fdtd-lucuma/fdtd-vulkan
-cd fdtd-vulkan
+git clone https://github.com/fdtd-lucuma/fdtd-lucuma
+cd fdtd-lucuma
 
 docker compose up
 ```
@@ -23,8 +23,8 @@ Read [./pkg/ubuntu/dependencies.txt](./pkg/ubuntu/dependencies.txt)
 
 ## Build (Debian experimental)
 ``` bash
-git clone https://github.com/fdtd-lucuma/fdtd-vulkan
-cd fdtd-vulkan
+git clone https://github.com/fdtd-lucuma/fdtd-lucuma
+cd fdtd-lucuma
 
 vcpkg install shader-slang glm
 xargs -oa pkg/ubuntu/dependencies.txt -- sudo apt -t experimental install
@@ -33,15 +33,15 @@ cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE="$VCPKG_PATH/scripts/buildsystems
 cmake --build build
 
 cd build
-./fdtd-vulkan
+./fdtd-lucuma
 ```
 
 ## Build (Arch Linux)
 ``` bash
-git clone https://github.com/fdtd-lucuma/fdtd-vulkan
-cd fdtd-vulkan
+git clone https://github.com/fdtd-lucuma/fdtd-lucuma
+cd fdtd-lucuma
 
 paru -Bi pkg/arch/
 
-fdtd-vulkan
+fdtd-lucuma
 ```
