@@ -25,5 +25,6 @@ using namespace lucuma::services::backends;
 
 template Base&       Injector::inject<Base>();
 template Sequential& Injector::inject<Sequential>();
+template Vulkan&     Injector::inject<Vulkan>();
 
 }

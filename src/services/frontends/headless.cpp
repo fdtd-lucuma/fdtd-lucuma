@@ -19,18 +19,13 @@ module;
 module lucuma.services.frontends;
 
 import lucuma.utils;
-import lucuma.services.vulkan;
 import lucuma.services.backends;
 import std;
-import vulkan_hpp;
-import vk_mem_alloc_hpp;
 
 namespace lucuma::services::frontends
 {
 
 Headless::Headless([[maybe_unused]]Injector& injector):
-	vulkanAllocator(injector.inject<vulkan::Allocator>()),
-	vulkanCompute(injector.inject<vulkan::Compute>()),
 	backend(injector.inject<backends::Base>())
 { }
 
@@ -42,95 +37,5 @@ void Headless::compute()
 		backend.saveFiles();
 	}
 }
-
-Headless::HelloWorldData Headless::createHelloWorld(std::size_t n)
-{
-	HelloWorldData result;
-
-	result.aBuffer = vulkanAllocator.allocate(
-		sizeof(float)*n,
-		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
-	);
-
-	result.bBuffer = vulkanAllocator.allocate(
-		sizeof(float)*n,
-		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
-	);
-
-	result.cBuffer = vulkanAllocator.allocate(
-		sizeof(float)*n,
-		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
-		vma::AllocationCreateFlagBits::eHostAccessRandom | vma::AllocationCreateFlagBits::eMapped
-	);
-
-	result.pipeline = vulkanCompute.createPipeline({
-		.shaderPath = "hello_world.spv",
-		.setLayouts = {
-			{
-				.bindings = {
-					vk::DescriptorSetLayoutBinding {
-						.binding         = 0,
-						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-						.descriptorCount = 1,
-						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-					},
-					vk::DescriptorSetLayoutBinding {
-						.binding         = 1,
-						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-						.descriptorCount = 1,
-						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-					},
-					vk::DescriptorSetLayoutBinding {
-						.binding         = 2,
-						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-						.descriptorCount = 1,
-						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-					},
-				},
-				.buffers = {
-					result.aBuffer,
-					result.bBuffer,
-					result.cBuffer,
-				}
-			}
-		},
-	});
-
-	return result;
-
-}
-
-void Headless::helloWorld()
-{
-	auto generator = std::views::iota(0, 10);
-
-	std::vector<float> a{std::from_range, generator};
-	std::vector<float> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
-
-	auto pipeline = createHelloWorld(a.size());
-
-	pipeline.aBuffer.setData<float>(a);
-	pipeline.bBuffer.setData<float>(b);
-
-	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
-
-	vk::CommandBufferBeginInfo beginInfo{};
-
-	commandBuffer.begin(beginInfo);
-
-	pipeline.pipeline.bind(commandBuffer);
-	commandBuffer.dispatch(a.size(), 1, 1);
-
-	commandBuffer.end();
-
-	vulkanCompute.submit(commandBuffer);
-
-	auto c = pipeline.cBuffer.getData<float>().subspan(0, a.size());
-
-	std::println("{} + {} = {}", a, b, c);
-}
-
 
 }

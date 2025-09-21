@@ -16,27 +16,50 @@
 
 module;
 
-export module lucuma.services.frontends:headless;
+export module lucuma.services.backends:vulkan;
 
 import lucuma.utils;
-import lucuma.services.backends;
+import lucuma.services.basic;
+import lucuma.services.vulkan;
+
+import :base;
 
 import std;
 
-namespace lucuma::services::frontends
+namespace lucuma::services::backends
 {
 
 using namespace lucuma::utils;
 
-export class Headless
+export class Vulkan: public Base
 {
 public:
-	Headless(Injector& injector);
+	Vulkan(Injector& injector);
 
-	void compute();
+	virtual void init();
+	virtual bool step();
+	virtual void saveFiles();
+
+	virtual ~Vulkan() = default;
 
 private:
-	backends::Base&    backend;
+	struct HelloWorldData
+	{
+		vulkan::ComputePipeline pipeline;
+
+		vulkan::Buffer aBuffer;
+		vulkan::Buffer bBuffer;
+		vulkan::Buffer cBuffer;
+	};
+
+	vulkan::Allocator& vulkanAllocator;
+	vulkan::Compute&   vulkanCompute;
+	vulkan::All&       vulkanAll;
+	basic::Settings&   settings;
+
+	HelloWorldData createHelloWorld(std::size_t n);
+
+	void helloWorld();
 
 };
 

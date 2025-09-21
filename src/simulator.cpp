@@ -49,7 +49,8 @@ void Simulator::selectBackend()
 {
 	using namespace services::backends;
 
-	injector.emplace<Sequential, Base>(injector);
+	//injector.emplace<Sequential, Base>(injector);
+	injector.emplace<Vulkan, Base>(injector);
 	//TODO: Select a single backend
 }
 

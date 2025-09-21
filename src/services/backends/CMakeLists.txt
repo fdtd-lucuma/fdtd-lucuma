@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME}
 	PRIVATE
 		instantiations.cpp
 		sequential.cpp
+		vulkan.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -25,4 +26,5 @@ target_sources(${PROJECT_NAME}
 			backends.cppm
 			base.cppm
 			sequential.cppm
+			vulkan.cppm
 )
