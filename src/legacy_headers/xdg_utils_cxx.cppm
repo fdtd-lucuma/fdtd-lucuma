@@ -16,16 +16,18 @@
 
 module;
 
-module lucuma.services.basic;
+#include <XdgUtils/BaseDir/BaseDir.h>
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+export module lucuma.legacy_headers.xdg_utils_cxx;
+
+import std;
+
+export namespace XdgUtils::BaseDir
 {
-using namespace lucuma::services::basic;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
-template PathCommon&     Injector::inject<PathCommon>();
-template Settings&       Injector::inject<Settings>();
+using XdgUtils::BaseDir::Home;
+using XdgUtils::BaseDir::XdgDataHome;
+using XdgUtils::BaseDir::XdgConfigHome;
+using XdgUtils::BaseDir::XdgCacheHome;
 
-}
+};

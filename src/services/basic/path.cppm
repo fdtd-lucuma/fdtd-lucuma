@@ -16,11 +16,9 @@
 
 module;
 
-#include <path_config.hpp>
-
 export module lucuma.services.basic:path;
 
-import :settings;
+import :path_common;
 import lucuma.utils;
 import std;
 
@@ -58,7 +56,7 @@ class Path
 {
 public:
 	Path([[maybe_unused]]Injector& injector):
-		settings(injector.inject<Settings>())
+		common(injector.inject<PathCommon>())
 	{
 		init();
 	}
@@ -94,7 +92,7 @@ public:
 	}
 
 private:
-	Settings& settings;
+	PathCommon& common;
 
 	/// Like $PATH
 	std::vector<std::filesystem::path> path;
@@ -106,8 +104,7 @@ private:
 
 	void createPath()
 	{
-		path.emplace_back(DATA_DIR) /= (std::string_view)filePreffix;
-		// TODO: ~/.local/share
+		path = common.createPath(filePreffix);
 	}
 
 	static bool check(std::filesystem::file_status status)

@@ -19,6 +19,7 @@ target_sources(${PROJECT_NAME}
 		argument_parser.cpp
 		file_reader.cpp
 		instantiations.cpp
+		path_common.cpp
 		settings.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -28,6 +29,7 @@ target_sources(${PROJECT_NAME}
 			basic.cppm
 			file_reader.cppm
 			path.cppm
+			path_common.cppm
 			settings.cppm
 			settings_enums.cppm
 )

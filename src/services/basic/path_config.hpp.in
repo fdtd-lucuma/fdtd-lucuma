@@ -16,4 +16,5 @@
 
 #pragma once
 
-#define DATA_DIR "@FDTD_DATA_DIR@"
+#define DATA_DIR     "@FDTD_DATA_DIR@"
+#define PROJECT_NAME "@PROJECT_NAME@"

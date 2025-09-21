@@ -16,16 +16,33 @@
 
 module;
 
-module lucuma.services.basic;
+#include <path_config.hpp>
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+export module lucuma.services.basic:path_common;
+
+import lucuma.utils;
+
+import std;
+import :settings;
+
+namespace lucuma::services::basic
 {
-using namespace lucuma::services::basic;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
-template PathCommon&     Injector::inject<PathCommon>();
-template Settings&       Injector::inject<Settings>();
+using namespace lucuma::utils;
+
+export class PathCommon
+{
+public:
+	PathCommon(Injector& injector);
+
+	std::vector<std::filesystem::path> createPath(std::string_view filePreffix) const;
+
+private:
+	Settings& settings;
+
+	std::vector<std::filesystem::path> basePath;
+	void init();
+	void createPath();
+};
 
 }

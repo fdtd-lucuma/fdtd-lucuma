@@ -23,6 +23,7 @@ import lucuma.utils;
 export import :argument_parser;
 export import :file_reader;
 export import :path;
+export import :path_common;
 export import :settings;
 export import :settings_enums;
 
@@ -32,6 +33,7 @@ using namespace lucuma::services::basic;
 
 extern template ArgumentParser& Injector::inject<ArgumentParser>();
 extern template FileReader&     Injector::inject<FileReader>();
+extern template PathCommon&     Injector::inject<PathCommon>();
 extern template Settings&       Injector::inject<Settings>();
 
 }
