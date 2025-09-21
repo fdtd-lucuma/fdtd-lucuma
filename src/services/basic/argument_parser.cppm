@@ -22,6 +22,7 @@ import :settings_enums;
 
 import lucuma.utils;
 import std;
+import magic_enum;
 
 namespace lucuma::services::basic
 {
@@ -71,6 +72,7 @@ private:
 	static void fail(std::string_view str, std::errc e);
 
 	template<typename T>
+	requires std::is_arithmetic_v<T>
 	static T fromString(std::string_view str)
 	{
 		T result{};
@@ -81,6 +83,19 @@ private:
 			return result;
 
 		fail(str, ec);
+		std::unreachable();
+	}
+
+	template<typename T>
+	requires std::is_enum_v<T>
+	static T fromString(std::string str)
+	{
+		auto value = magic_enum::enum_cast<T>(str);
+
+		if(value.has_value())
+			return value.value();
+
+		fail(str, std::errc::invalid_argument);
 		std::unreachable();
 	}
 };

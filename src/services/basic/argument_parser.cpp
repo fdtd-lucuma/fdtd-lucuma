@@ -22,6 +22,7 @@ module;
 module lucuma.services.basic;
 
 import std;
+import magic_enum;
 
 namespace lucuma::services::basic
 {
@@ -82,19 +83,23 @@ void ArgumentParser::usage(int exit_code)
 {
 	std::print(
 		"Usage: {} [options]...\n"
-		"\t-h, --help        Show this help and exit.\n"
-		"\t-H, --headless    Start as headless.\n"
-		"\t-g, --no-headless Start with gui.\n"
-		"\t-G, --graph=FILE  Prints the services dependencies as a DAG in FILE.\n"
-		"\t-x, --size-x=N    Set size x [default={}].\n"
-		"\t-y, --size-y=N    Set size y [default={}].\n"
-		"\t-z, --size-z=N    Set size z [default={}].\n"
-		"\t-t, --time=N      Set simulation time steps [default={}].\n",
+		"\t-h, --help         Show this help and exit.\n"
+		"\t-H, --headless     Start as headless.\n"
+		"\t-g, --no-headless  Start with gui.\n"
+		"\t-G, --graph=FILE   Prints the services dependencies as a DAG in FILE.\n"
+		"\t-x, --size-x=N     Set size x [default={}].\n"
+		"\t-y, --size-y=N     Set size y [default={}].\n"
+		"\t-z, --size-z=N     Set size z [default={}].\n"
+		"\t-t, --time=N       Set simulation time steps [default={}].\n"
+		"\t-b, --backend=NAME When running in headless mode use this backend [default={:?}].\n"
+		"\t                   Values: {}.\n",
 		argv0(),
 		Settings::defaultSizeX,
 		Settings::defaultSizeY,
 		Settings::defaultSizeZ,
-		Settings::defaultTime
+		Settings::defaultTime,
+		Settings::defaultBackend,
+		magic_enum::enum_values<Backend>()
 	);
 
 	exit(exit_code);
@@ -103,7 +108,7 @@ void ArgumentParser::usage(int exit_code)
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "hHgG:x:y:z:t:";
+	static const char shortopts[] = "hHgG:x:y:z:t:b:";
 	static const option options[] {
 		{"help",        no_argument,       nullptr, 'h'},
 		{"headless",    no_argument,       nullptr, 'H'},
@@ -113,6 +118,7 @@ void ArgumentParser::parse(int argc, char** argv)
 		{"size-y",      required_argument, nullptr, 'y'},
 		{"size-z",      required_argument, nullptr, 'z'},
 		{"time",        required_argument, nullptr, 't'},
+		{"backend",     required_argument, nullptr, 'b'},
 		{nullptr,       0,                 nullptr, 0},
 	};
 
@@ -162,6 +168,10 @@ void ArgumentParser::handleOption(char shortopt)
 
 		case 't': // --time
 			_time.emplace(fromString<unsigned int>(optarg));
+			break;
+
+		case 'b': // --backend
+			_backend.emplace(fromString<Backend>(optarg));
 			break;
 
 		case '?':
