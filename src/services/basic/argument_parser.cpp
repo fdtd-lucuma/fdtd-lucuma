@@ -170,23 +170,23 @@ void ArgumentParser::handleOption(int shortopt)
 			break;
 
 		case Argument::size_x:
-			_sizeX.emplace(fromString<std::size_t>(optarg));
+			fromString(_sizeX, optarg);
 			break;
 
 		case Argument::size_y:
-			_sizeY.emplace(fromString<std::size_t>(optarg));
+			fromString(_sizeY, optarg);
 			break;
 
 		case Argument::size_z:
-			_sizeZ.emplace(fromString<std::size_t>(optarg));
+			fromString(_sizeZ, optarg);
 			break;
 
 		case Argument::time:
-			_time.emplace(fromString<unsigned int>(optarg));
+			fromString(_time, optarg);
 			break;
 
 		case Argument::backend:
-			_backend.emplace(fromString<Backend>(optarg));
+			fromString(_backend, optarg);
 			break;
 
 		case Argument::failure:
