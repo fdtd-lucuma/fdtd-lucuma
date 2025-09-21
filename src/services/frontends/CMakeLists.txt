@@ -16,14 +16,12 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		headless.cpp
 		instantiations.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			services.cppm
+			frontends.cppm
+			headless.cppm
 )
-
-add_subdirectory(basic)
-add_subdirectory(frontends)
-add_subdirectory(vulkan)

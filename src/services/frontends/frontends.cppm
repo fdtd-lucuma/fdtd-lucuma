@@ -16,46 +16,17 @@
 
 module;
 
-#include <cstdlib>
-
-module lucuma;
+export module lucuma.services.frontends;
 
 import lucuma.utils;
-import lucuma.services;
-import std.compat;
 
-namespace lucuma
+export import :headless;
+
+namespace lucuma::utils
 {
+using namespace lucuma::services::frontends;
 
-Simulator::Simulator()
-{}
+extern template Headless& Injector::inject<Headless>();
 
-int Simulator::run(int argc, char** argv)
-{
-	utils::Injector injector;
-
-	auto& arguments = injector.emplace<services::basic::ArgumentParser>(argc, argv);
-	injector.emplace<services::vulkan::All>(injector);
-
-	auto& settings = injector.inject<services::basic::Settings>();
-
-	if(settings.isHeadless())
-	{
-		auto& headless = injector.inject<services::frontends::Headless>();
-
-		headless.compute();
-	}
-	else // Gui
-	{
-		// TODO: Init gui or headless
-	}
-
-	auto& graphPath = arguments.graphPath();
-
-	if(graphPath.has_value())
-		injector.printEdges(*graphPath, "lucuma::services::");
-
-	return EXIT_SUCCESS;
 }
 
-}

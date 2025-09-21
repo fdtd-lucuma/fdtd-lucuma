@@ -23,6 +23,4 @@ namespace lucuma::utils
 {
 using namespace lucuma::services;
 
-template Compute&        Injector::inject<Compute>();
-
 }

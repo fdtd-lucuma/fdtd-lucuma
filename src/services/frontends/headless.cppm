@@ -16,46 +16,40 @@
 
 module;
 
-#include <cstdlib>
-
-module lucuma;
+export module lucuma.services.frontends:headless;
 
 import lucuma.utils;
-import lucuma.services;
-import std.compat;
+import lucuma.services.vulkan;
 
-namespace lucuma
+import std;
+
+namespace lucuma::services::frontends
 {
 
-Simulator::Simulator()
-{}
+using namespace lucuma::utils;
 
-int Simulator::run(int argc, char** argv)
+export class Headless
 {
-	utils::Injector injector;
+public:
+	Headless(Injector& injector);
 
-	auto& arguments = injector.emplace<services::basic::ArgumentParser>(argc, argv);
-	injector.emplace<services::vulkan::All>(injector);
+	void compute();
 
-	auto& settings = injector.inject<services::basic::Settings>();
-
-	if(settings.isHeadless())
+private:
+	struct HelloWorldData
 	{
-		auto& headless = injector.inject<services::frontends::Headless>();
+		vulkan::ComputePipeline pipeline;
 
-		headless.compute();
-	}
-	else // Gui
-	{
-		// TODO: Init gui or headless
-	}
+		vulkan::Buffer aBuffer;
+		vulkan::Buffer bBuffer;
+		vulkan::Buffer cBuffer;
+	};
 
-	auto& graphPath = arguments.graphPath();
+	vulkan::Allocator& vulkanAllocator;
+	vulkan::Compute&   vulkanCompute;
 
-	if(graphPath.has_value())
-		injector.printEdges(*graphPath, "lucuma::services::");
+	HelloWorldData createHelloWorld(std::size_t n);
 
-	return EXIT_SUCCESS;
-}
+};
 
 }

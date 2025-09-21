@@ -16,22 +16,23 @@
 
 module;
 
-module lucuma.services;
+module lucuma.services.frontends;
 
 import lucuma.utils;
+import lucuma.services.vulkan;
 import std;
 import vulkan_hpp;
 import vk_mem_alloc_hpp;
 
-namespace lucuma::services
+namespace lucuma::services::frontends
 {
 
-Compute::Compute([[maybe_unused]]Injector& injector):
+Headless::Headless([[maybe_unused]]Injector& injector):
 	vulkanAllocator(injector.inject<vulkan::Allocator>()),
 	vulkanCompute(injector.inject<vulkan::Compute>())
 { }
 
-void Compute::compute()
+void Headless::compute()
 {
 	auto generator = std::views::iota(0, 10);
 
@@ -61,7 +62,7 @@ void Compute::compute()
 	std::println("{} + {} = {}", a, b, c);
 }
 
-Compute::HelloWorldData Compute::createHelloWorld(std::size_t n)
+Headless::HelloWorldData Headless::createHelloWorld(std::size_t n)
 {
 	HelloWorldData result;
 

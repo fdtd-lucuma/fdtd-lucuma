@@ -20,15 +20,13 @@ export module lucuma.services;
 
 import lucuma.utils;
 
-
-export import lucuma.services.vulkan;
 export import lucuma.services.basic;
-export import :compute;
+export import lucuma.services.frontends;
+export import lucuma.services.vulkan;
 
 namespace lucuma::utils
 {
 using namespace lucuma::services;
 
-extern template Compute&        Injector::inject<Compute>();
 
 }

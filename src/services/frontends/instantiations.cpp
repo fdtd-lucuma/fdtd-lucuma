@@ -16,40 +16,13 @@
 
 module;
 
-export module lucuma.services:compute;
+module lucuma.services.frontends;
 
-import lucuma.utils;
-import lucuma.services.vulkan;
-
-import std;
-
-namespace lucuma::services
+// Explicit template instantiations for faster compilation
+namespace lucuma::utils
 {
+using namespace lucuma::services::frontends;
 
-using namespace lucuma::utils;
-
-export class Compute
-{
-public:
-	Compute(Injector& injector);
-
-	void compute();
-
-private:
-	struct HelloWorldData
-	{
-		vulkan::ComputePipeline pipeline;
-
-		vulkan::Buffer aBuffer;
-		vulkan::Buffer bBuffer;
-		vulkan::Buffer cBuffer;
-	};
-
-	vulkan::Allocator& vulkanAllocator;
-	vulkan::Compute&   vulkanCompute;
-
-	HelloWorldData createHelloWorld(std::size_t n);
-
-};
+template Headless& Injector::inject<Headless>();
 
 }
