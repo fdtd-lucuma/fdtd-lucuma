@@ -86,6 +86,7 @@ find_package(Vulkan REQUIRED)
 find_package(vkfw REQUIRED)
 find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang/issues/8334
 find_package(magic_enum REQUIRED)
+find_package(XdgUtils REQUIRED COMPONENTS BaseDir)
 
 # Shared libraries
 pkg_check_modules(libraries
@@ -295,5 +296,6 @@ target_link_libraries(${PROJECT_NAME}
 		GlmModule
 		VkfwModule
 		magic_enumModule
+		XdgUtils::BaseDir
 )
 

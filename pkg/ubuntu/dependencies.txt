@@ -11,3 +11,4 @@ libyaml-cpp-dev
 ninja-build
 pkgconf
 vulkan-validationlayers
+xdg-utils-cxx-dev

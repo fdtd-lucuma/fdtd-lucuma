@@ -31,6 +31,7 @@ makedepends=(
 	'vulkan-headers'
 	'vulkan-memory-allocator'
 	'vulkan-validation-layers'
+	'xdg-utils-cxx'
 )
 checkdepends=()
 optdepends=()
