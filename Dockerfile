@@ -3,7 +3,7 @@ RUN echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
 USER ab
 WORKDIR /var/ab/pkg/arch
 COPY --chown=ab:ab ./pkg/arch/ /var/ab/pkg/arch/
-RUN --mount=type=cache,target=/var/ab/.cache/paru,sharing=private,uid=971,gid=971 \
+RUN --mount=type=cache,target=/var/ab/.cache/paru,sharing=private,uid=970,gid=970 \
 	--mount=type=cache,target=/var/cache/pacman/pkg,sharing=private \
 	./build-deps.sh
 
