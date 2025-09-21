@@ -16,19 +16,18 @@
 
 module;
 
-#include <path_config.hpp>
-
 export module lucuma.services.basic:path_common;
 
 import lucuma.utils;
 
 import std;
-import :settings;
 
 namespace lucuma::services::basic
 {
 
 using namespace lucuma::utils;
+
+class Settings;
 
 export class PathCommon
 {
