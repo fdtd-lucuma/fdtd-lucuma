@@ -20,6 +20,7 @@ export module lucuma.services;
 
 import lucuma.utils;
 
+export import lucuma.services.backends;
 export import lucuma.services.basic;
 export import lucuma.services.frontends;
 export import lucuma.services.vulkan;
