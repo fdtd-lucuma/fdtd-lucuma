@@ -33,11 +33,11 @@ module;
 #    include <cstdio>
 #endif
 
-module fdtd.services.basic;
+module lucuma.services.basic;
 
 //import std;
 
-namespace fdtd::services::basic
+namespace lucuma::services::basic
 {
 
 void cleanFd(int* fd)

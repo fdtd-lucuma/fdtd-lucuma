@@ -16,12 +16,12 @@
 
 module;
 
-export module fdtd.services.basic:argument_parser;
+export module lucuma.services.basic:argument_parser;
 
-import fdtd.utils;
+import lucuma.utils;
 import std;
 
-namespace fdtd::services::basic
+namespace lucuma::services::basic
 {
 
 export class ArgumentParser

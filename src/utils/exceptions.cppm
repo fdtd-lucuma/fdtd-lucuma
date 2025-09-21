@@ -16,11 +16,11 @@
 
 module;
 
-export module fdtd.utils:exceptions;
+export module lucuma.utils:exceptions;
 
 import std;
 
-namespace fdtd::utils
+namespace lucuma::utils
 {
 
 export void throwFile(const std::filesystem::path& path);

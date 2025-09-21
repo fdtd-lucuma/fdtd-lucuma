@@ -16,17 +16,17 @@
 
 module;
 
-export module fdtd.services.vulkan:core;
+export module lucuma.services.vulkan:core;
 
 import vulkan_hpp;
 import std;
 
-import fdtd.utils;
+import lucuma.utils;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 class Context;
 class DebugRequirements;

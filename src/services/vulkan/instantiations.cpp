@@ -16,12 +16,12 @@
 
 module;
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
 // Explicit template instantiations for faster compilation
-namespace fdtd::utils
+namespace lucuma::utils
 {
-using namespace fdtd::services::vulkan;
+using namespace lucuma::services::vulkan;
 
 //TODO: Find a way to automate this
 
@@ -37,7 +37,7 @@ template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 }
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 //TODO: Find a way to automate this
 

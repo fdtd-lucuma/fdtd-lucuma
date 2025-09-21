@@ -16,12 +16,12 @@
 
 module;
 
-module fdtd.services.basic;
+module lucuma.services.basic;
 
 import std;
 import glm;
 
-namespace fdtd::services::basic
+namespace lucuma::services::basic
 {
 
 Settings::Settings([[maybe_unused]]Injector& injector):

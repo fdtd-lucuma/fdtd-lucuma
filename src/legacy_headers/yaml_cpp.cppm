@@ -18,7 +18,7 @@ module;
 
 #include <yaml-cpp/yaml.h>
 
-export module fdtd.legacy_headers.yaml_cpp;
+export module lucuma.legacy_headers.yaml_cpp;
 
 export namespace YAML
 {

@@ -16,18 +16,18 @@
 
 module;
 
-export module fdtd.services.vulkan:debug_requirements;
+export module lucuma.services.vulkan:debug_requirements;
 
 import std;
 
-import fdtd.utils;
+import lucuma.utils;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 export class DebugRequirements
 {

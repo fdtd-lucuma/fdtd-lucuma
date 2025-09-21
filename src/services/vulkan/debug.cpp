@@ -18,9 +18,9 @@ module;
 
 #include <vulkan/vk_platform.h>
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
 Debug::Debug([[maybe_unused]] Injector& injector):

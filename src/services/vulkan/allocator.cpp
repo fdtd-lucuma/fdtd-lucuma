@@ -16,12 +16,12 @@
 
 module;
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
 import vk_mem_alloc_hpp;
 import std.compat;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
 Buffer::Buffer(Buffer&& other):

@@ -16,12 +16,12 @@
 
 module;
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
 import vulkan_hpp;
 import std;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
 void list_vulkan_extensions()

@@ -19,11 +19,11 @@ module;
 #include <getopt.h>
 #include <cstdlib>
 
-module fdtd.services.basic;
+module lucuma.services.basic;
 
 import std;
 
-namespace fdtd::services::basic
+namespace lucuma::services::basic
 {
 
 ArgumentParser::ArgumentParser(int argc, char** argv):

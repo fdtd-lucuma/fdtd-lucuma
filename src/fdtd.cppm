@@ -16,6 +16,6 @@
 
 module;
 
-export module fdtd;
+export module lucuma;
 
 export import :simulator;

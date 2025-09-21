@@ -16,9 +16,9 @@
 
 module;
 
-export module fdtd:simulator;
+export module lucuma:simulator;
 
-namespace fdtd
+namespace lucuma
 {
 
 export class Simulator

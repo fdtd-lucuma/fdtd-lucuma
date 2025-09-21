@@ -18,13 +18,13 @@ module;
 
 #include <cstdlib>
 
-module fdtd;
+module lucuma;
 
-import fdtd.utils;
-import fdtd.services;
+import lucuma.utils;
+import lucuma.services;
 import std.compat;
 
-namespace fdtd
+namespace lucuma
 {
 
 Simulator::Simulator()
@@ -53,7 +53,7 @@ int Simulator::run(int argc, char** argv)
 	auto& graphPath = arguments.graphPath();
 
 	if(graphPath.has_value())
-		injector.printEdges(*graphPath, "fdtd::services::");
+		injector.printEdges(*graphPath, "lucuma::services::");
 
 	return EXIT_SUCCESS;
 }

@@ -16,18 +16,18 @@
 
 module;
 
-export module fdtd.services.vulkan:allocator;
+export module lucuma.services.vulkan:allocator;
 
 import std;
 import vk_mem_alloc_hpp;
 import vulkan_hpp;
 
-import fdtd.utils;
+import lucuma.utils;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 export class Buffer
 {

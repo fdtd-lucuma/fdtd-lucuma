@@ -16,14 +16,14 @@
 
 module;
 
-export module fdtd.services.vulkan:all;
+export module lucuma.services.vulkan:all;
 
-import fdtd.utils;
+import lucuma.utils;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 class Core;
 class Debug;

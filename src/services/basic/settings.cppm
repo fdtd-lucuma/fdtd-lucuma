@@ -16,16 +16,16 @@
 
 module;
 
-export module fdtd.services.basic:settings;
+export module lucuma.services.basic:settings;
 
-import fdtd.utils;
+import lucuma.utils;
 import std;
 import glm;
 
-namespace fdtd::services::basic
+namespace lucuma::services::basic
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 class ArgumentParser;
 

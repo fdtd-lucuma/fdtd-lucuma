@@ -16,12 +16,12 @@
 
 module;
 
-module fdtd.services.basic;
+module lucuma.services.basic;
 
 // Explicit template instantiations for faster compilation
-namespace fdtd::utils
+namespace lucuma::utils
 {
-using namespace fdtd::services::basic;
+using namespace lucuma::services::basic;
 
 template ArgumentParser& Injector::inject<ArgumentParser>();
 template FileReader&     Injector::inject<FileReader>();

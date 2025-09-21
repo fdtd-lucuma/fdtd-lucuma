@@ -18,17 +18,17 @@ module;
 
 #include <vulkan/vk_platform.h>
 
-export module fdtd.services.vulkan:debug;
+export module lucuma.services.vulkan:debug;
 
 import vulkan_hpp;
 import std;
 
-import fdtd.utils;
+import lucuma.utils;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 class Core;
 class DebugRequirements;

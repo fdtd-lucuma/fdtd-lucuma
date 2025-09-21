@@ -16,7 +16,7 @@
 
 module;
 
-export module fdtd.utils;
+export module lucuma.utils;
 
 export import :injector;
 export import :exceptions;

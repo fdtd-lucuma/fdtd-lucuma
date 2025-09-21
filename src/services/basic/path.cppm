@@ -18,16 +18,16 @@ module;
 
 #include <path_config.hpp>
 
-export module fdtd.services.basic:path;
+export module lucuma.services.basic:path;
 
 import :settings;
-import fdtd.utils;
+import lucuma.utils;
 import std;
 
-namespace fdtd::services::basic
+namespace lucuma::services::basic
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 template<std::size_t n>
 struct FixedString

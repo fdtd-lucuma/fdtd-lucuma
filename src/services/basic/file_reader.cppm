@@ -24,16 +24,16 @@ module;
 #    include <sys/stat.h>
 #endif
 
-export module fdtd.services.basic:file_reader;
+export module lucuma.services.basic:file_reader;
 
-import fdtd.utils;
+import lucuma.utils;
 
 import std;
 
-namespace fdtd::services::basic
+namespace lucuma::services::basic
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 template <typename T>
 void assertAligned([[maybe_unused]] const void* ptr) {

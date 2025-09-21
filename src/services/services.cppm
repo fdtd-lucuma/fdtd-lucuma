@@ -16,18 +16,18 @@
 
 module;
 
-export module fdtd.services;
+export module lucuma.services;
 
-import fdtd.utils;
+import lucuma.utils;
 
 
-export import fdtd.services.vulkan;
-export import fdtd.services.basic;
+export import lucuma.services.vulkan;
+export import lucuma.services.basic;
 export import :compute;
 
-namespace fdtd::utils
+namespace lucuma::utils
 {
-using namespace fdtd::services;
+using namespace lucuma::services;
 
 extern template Compute&        Injector::inject<Compute>();
 

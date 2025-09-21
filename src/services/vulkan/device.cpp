@@ -16,14 +16,14 @@
 
 module;
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
-import fdtd.services.basic;
+import lucuma.services.basic;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
-using namespace fdtd::services;
+using namespace lucuma::services;
 
 Device::Device([[maybe_unused]] Injector& injector):
 	core(injector.inject<Core>()),

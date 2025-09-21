@@ -16,14 +16,14 @@
 
 module;
 
-module fdtd.services;
+module lucuma.services;
 
-import fdtd.utils;
+import lucuma.utils;
 import std;
 import vulkan_hpp;
 import vk_mem_alloc_hpp;
 
-namespace fdtd::services
+namespace lucuma::services
 {
 
 Compute::Compute([[maybe_unused]]Injector& injector):

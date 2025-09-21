@@ -16,18 +16,18 @@
 
 module;
 
-export module fdtd.services.vulkan:compute;
+export module lucuma.services.vulkan:compute;
 
 import vulkan_hpp;
 import std;
 
-import fdtd.utils;
+import lucuma.utils;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
-using namespace fdtd::utils;
-using namespace fdtd::services;
+using namespace lucuma::utils;
+using namespace lucuma::services;
 
 class Device;
 class ShaderLoader;

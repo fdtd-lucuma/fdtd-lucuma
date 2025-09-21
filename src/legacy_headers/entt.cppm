@@ -18,7 +18,7 @@ module;
 
 #include <entt/entity/registry.hpp>
 
-export module fdtd.legacy_headers.entt;
+export module lucuma.legacy_headers.entt;
 
 import std;
 

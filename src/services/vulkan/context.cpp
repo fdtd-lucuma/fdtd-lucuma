@@ -16,9 +16,9 @@
 
 module;
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
 Context::Context([[maybe_unused]] Injector& injector)

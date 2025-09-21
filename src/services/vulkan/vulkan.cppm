@@ -16,11 +16,11 @@
 
 module;
 
-export module fdtd.services.vulkan;
+export module lucuma.services.vulkan;
 
 import std;
 import vulkan_hpp;
-import fdtd.utils;
+import lucuma.utils;
 
 export import :all;
 export import :allocator;
@@ -35,9 +35,9 @@ import :shader_loader;
 import :utils;
 
 // Explicit template instantiations for faster compilation
-namespace fdtd::utils
+namespace lucuma::utils
 {
-using namespace fdtd::services::vulkan;
+using namespace lucuma::services::vulkan;
 
 //TODO: Find a way to automate this
 
@@ -53,7 +53,7 @@ extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 
 }
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
 //TODO: Find a way to automate this

@@ -18,11 +18,11 @@ module;
 #include <cerrno>
 #include <cstring>
 
-module fdtd.utils;
+module lucuma.utils;
 
 import std;
 
-namespace fdtd::utils
+namespace lucuma::utils
 {
 
 void throwFile(const std::filesystem::path& path)

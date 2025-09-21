@@ -16,12 +16,12 @@
 
 module;
 
-module fdtd.services;
+module lucuma.services;
 
 // Explicit template instantiations for faster compilation
-namespace fdtd::utils
+namespace lucuma::utils
 {
-using namespace fdtd::services;
+using namespace lucuma::services;
 
 template Compute&        Injector::inject<Compute>();
 

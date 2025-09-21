@@ -16,17 +16,17 @@
 
 module;
 
-export module fdtd.services:compute;
+export module lucuma.services:compute;
 
-import fdtd.utils;
-import fdtd.services.vulkan;
+import lucuma.utils;
+import lucuma.services.vulkan;
 
 import std;
 
-namespace fdtd::services
+namespace lucuma::services
 {
 
-using namespace fdtd::utils;
+using namespace lucuma::utils;
 
 export class Compute
 {

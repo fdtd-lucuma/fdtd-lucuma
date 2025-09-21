@@ -16,11 +16,11 @@
 
 module;
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
 import :utils;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
 All::All(Injector& injector):

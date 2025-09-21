@@ -16,12 +16,12 @@
 
 module;
 
-module fdtd.utils;
+module lucuma.utils;
 
-import fdtd.legacy_headers.entt;
+import lucuma.legacy_headers.entt;
 import std.compat;
 
-namespace fdtd::utils
+namespace lucuma::utils
 {
 
 Injector::~Injector()

@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
-import fdtd;
+import lucuma;
 import std;
 
 int main(int argc, char** argv)
 {
 	std::locale::global(std::locale(""));
 
-	return fdtd::Simulator().run(argc, argv);
+	return lucuma::Simulator().run(argc, argv);
 }

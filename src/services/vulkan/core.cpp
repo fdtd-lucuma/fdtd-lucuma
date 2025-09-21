@@ -18,9 +18,9 @@ module;
 
 #include <ranges>
 
-module fdtd.services.vulkan;
+module lucuma.services.vulkan;
 
-namespace fdtd::services::vulkan
+namespace lucuma::services::vulkan
 {
 
 Core::Core([[maybe_unused]] Injector& injector):

@@ -16,18 +16,18 @@
 
 module;
 
-export module fdtd.services.basic;
+export module lucuma.services.basic;
 
-import fdtd.utils;
+import lucuma.utils;
 
 export import :argument_parser;
 export import :file_reader;
 export import :settings;
 export import :path;
 
-namespace fdtd::utils
+namespace lucuma::utils
 {
-using namespace fdtd::services::basic;
+using namespace lucuma::services::basic;
 
 extern template ArgumentParser& Injector::inject<ArgumentParser>();
 extern template FileReader&     Injector::inject<FileReader>();
