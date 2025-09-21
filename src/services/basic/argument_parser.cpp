@@ -73,6 +73,11 @@ std::optional<unsigned int> ArgumentParser::time() const
 	return _time;
 }
 
+std::optional<Backend> ArgumentParser::backend() const
+{
+	return _backend;
+}
+
 void ArgumentParser::usage(int exit_code)
 {
 	std::print(

@@ -48,10 +48,20 @@ void Simulator::initBasic(int argc, char** argv)
 void Simulator::selectBackend()
 {
 	using namespace services::backends;
+	using enum services::basic::Backend;
 
-	//injector.emplace<Sequential, Base>(injector);
-	injector.emplace<Vulkan, Base>(injector);
-	//TODO: Select a single backend
+	auto& settings = injector.inject<services::basic::Settings>();
+
+	switch(settings.backend())
+	{
+		case sequential:
+			injector.emplace<Sequential, Base>(injector);
+			break;
+
+		case vulkan:
+			injector.emplace<Vulkan, Base>(injector);
+			break;
+	}
 }
 
 void Simulator::selectFrontend()

@@ -18,6 +18,8 @@ module;
 
 export module lucuma.services.basic:settings;
 
+import :settings_enums;
+
 import lucuma.utils;
 import std;
 import glm;
@@ -42,6 +44,8 @@ public:
 
 	static constexpr unsigned int defaultTime = 300;
 
+	static constexpr Backend defaultBackend = Backend::sequential;
+
 	std::size_t sizeX() const;
 	std::size_t sizeY() const;
 	std::size_t sizeZ() const;
@@ -49,6 +53,8 @@ public:
 	unsigned int time() const;
 
 	glm::vec<3, std::size_t> size() const;
+
+	Backend backend() const;
 
 private:
 	ArgumentParser& argumentParser;

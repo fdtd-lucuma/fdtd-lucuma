@@ -16,22 +16,16 @@
 
 module;
 
-export module lucuma.services.basic;
+export module lucuma.services.basic:settings_enums;
 
-import lucuma.utils;
-
-export import :argument_parser;
-export import :file_reader;
-export import :path;
-export import :settings;
-export import :settings_enums;
-
-namespace lucuma::utils
+namespace lucuma::services::basic
 {
-using namespace lucuma::services::basic;
 
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-extern template FileReader&     Injector::inject<FileReader>();
-extern template Settings&       Injector::inject<Settings>();
+export enum class Backend
+{
+	sequential,
+	//TODO: Multithread openmp? taskflow?
+	vulkan,
+};
 
 }

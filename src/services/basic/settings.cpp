@@ -58,5 +58,10 @@ glm::vec<3, std::size_t> Settings::size() const
 	return {sizeX(), sizeY(), sizeZ()};
 }
 
+Backend Settings::backend() const
+{
+	return argumentParser.backend().value_or(defaultBackend);
+}
+
 
 }

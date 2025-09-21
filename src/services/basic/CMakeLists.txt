@@ -29,6 +29,7 @@ target_sources(${PROJECT_NAME}
 			file_reader.cppm
 			path.cppm
 			settings.cppm
+			settings_enums.cppm
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

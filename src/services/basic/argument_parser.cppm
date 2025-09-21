@@ -18,6 +18,8 @@ module;
 
 export module lucuma.services.basic:argument_parser;
 
+import :settings_enums;
+
 import lucuma.utils;
 import std;
 
@@ -41,6 +43,8 @@ public:
 
 	std::optional<unsigned int> time() const;
 
+	std::optional<Backend> backend() const;
+
 private:
 	std::string              _argv0;
 	std::vector<std::string> _positionalArguments;
@@ -53,6 +57,8 @@ private:
 	std::optional<std::size_t> _sizeZ = std::nullopt;
 
 	std::optional<unsigned int> _time = std::nullopt;
+
+	std::optional<Backend> _backend = std::nullopt;
 
 	[[noreturn]]
 	void usage(int exit_code);
