@@ -52,6 +52,8 @@ private:
 
 	HelloWorldData createHelloWorld(std::size_t n);
 
+	void helloWorld();
+
 };
 
 }

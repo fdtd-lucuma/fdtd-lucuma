@@ -42,7 +42,7 @@ int Simulator::run(int argc, char** argv)
 void Simulator::initBasic(int argc, char** argv)
 {
 	injector.emplace<services::basic::ArgumentParser>(argc, argv);
-	injector.emplace<services::vulkan::All>(injector);
+	//TODO: Yaml?
 }
 
 void Simulator::selectBackend()

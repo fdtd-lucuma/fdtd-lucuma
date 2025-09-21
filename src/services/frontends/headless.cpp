@@ -36,32 +36,11 @@ Headless::Headless([[maybe_unused]]Injector& injector):
 
 void Headless::compute()
 {
-	auto generator = std::views::iota(0, 10);
-
-	std::vector<float> a{std::from_range, generator};
-	std::vector<float> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
-
-	auto pipeline = createHelloWorld(a.size());
-
-	pipeline.aBuffer.setData<float>(a);
-	pipeline.bBuffer.setData<float>(b);
-
-	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
-
-	vk::CommandBufferBeginInfo beginInfo{};
-
-	commandBuffer.begin(beginInfo);
-
-	pipeline.pipeline.bind(commandBuffer);
-	commandBuffer.dispatch(a.size(), 1, 1);
-
-	commandBuffer.end();
-
-	vulkanCompute.submit(commandBuffer);
-
-	auto c = pipeline.cBuffer.getData<float>().subspan(0, a.size());
-
-	std::println("{} + {} = {}", a, b, c);
+	backend.init();
+	while(backend.step())
+	{
+		backend.saveFiles();
+	}
 }
 
 Headless::HelloWorldData Headless::createHelloWorld(std::size_t n)
@@ -121,6 +100,36 @@ Headless::HelloWorldData Headless::createHelloWorld(std::size_t n)
 
 	return result;
 
+}
+
+void Headless::helloWorld()
+{
+	auto generator = std::views::iota(0, 10);
+
+	std::vector<float> a{std::from_range, generator};
+	std::vector<float> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
+
+	auto pipeline = createHelloWorld(a.size());
+
+	pipeline.aBuffer.setData<float>(a);
+	pipeline.bBuffer.setData<float>(b);
+
+	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
+
+	vk::CommandBufferBeginInfo beginInfo{};
+
+	commandBuffer.begin(beginInfo);
+
+	pipeline.pipeline.bind(commandBuffer);
+	commandBuffer.dispatch(a.size(), 1, 1);
+
+	commandBuffer.end();
+
+	vulkanCompute.submit(commandBuffer);
+
+	auto c = pipeline.cBuffer.getData<float>().subspan(0, a.size());
+
+	std::println("{} + {} = {}", a, b, c);
 }
 
 

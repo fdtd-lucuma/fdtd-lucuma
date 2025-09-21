@@ -28,6 +28,21 @@ Sequential::Sequential([[maybe_unused]]Injector& injector):
 	settings(injector.inject<basic::Settings>())
 { }
 
+void Sequential::init()
+{
+	//TODO
+}
+
+bool Sequential::step()
+{
+	//TODO
+	return false;
+}
+
+void Sequential::saveFiles()
+{
+	//TODO
+}
 
 
 }

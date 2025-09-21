@@ -35,6 +35,10 @@ export class Sequential: public Base
 public:
 	Sequential(Injector& injector);
 
+	virtual void init();
+	virtual bool step();
+	virtual void saveFiles();
+
 	virtual ~Sequential() = default;
 
 private:

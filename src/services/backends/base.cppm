@@ -18,6 +18,8 @@ module;
 
 export module lucuma.services.backends:base;
 
+import std;
+
 namespace lucuma::services::backends
 {
 
@@ -26,6 +28,10 @@ export class Base
 public:
 	Base() = default;
 	virtual ~Base() = default;
+
+	virtual void init() = 0;
+	virtual bool step() = 0;
+	virtual void saveFiles() = 0;
 
 private:
 
