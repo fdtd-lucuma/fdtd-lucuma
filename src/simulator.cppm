@@ -18,6 +18,8 @@ module;
 
 export module lucuma:simulator;
 
+import lucuma.utils;
+
 namespace lucuma
 {
 
@@ -29,6 +31,13 @@ public:
 	int run(int argc, char** argv);
 
 private:
+	utils::Injector injector;
+
+	void initBasic(int argc, char** argv);
+	void selectBackend();
+	void selectFrontend();
+	void printGraph();
+
 };
 
 }

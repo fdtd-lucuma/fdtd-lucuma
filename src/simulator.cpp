@@ -32,15 +32,31 @@ Simulator::Simulator()
 
 int Simulator::run(int argc, char** argv)
 {
-	utils::Injector injector;
+	initBasic(argc, argv);
+	selectFrontend();
+	printGraph();
 
-	auto& arguments = injector.emplace<services::basic::ArgumentParser>(argc, argv);
+	return EXIT_SUCCESS;
+}
+
+void Simulator::initBasic(int argc, char** argv)
+{
+	injector.emplace<services::basic::ArgumentParser>(argc, argv);
 	injector.emplace<services::vulkan::All>(injector);
+}
 
+void Simulator::selectBackend()
+{
+	//TODO
+}
+
+void Simulator::selectFrontend()
+{
 	auto& settings = injector.inject<services::basic::Settings>();
 
 	if(settings.isHeadless())
 	{
+		selectBackend();
 		auto& headless = injector.inject<services::frontends::Headless>();
 
 		headless.compute();
@@ -48,14 +64,16 @@ int Simulator::run(int argc, char** argv)
 	else // Gui
 	{
 		// TODO: Init gui or headless
+		// TODO: Multiple backends maybe
 	}
+}
 
-	auto& graphPath = arguments.graphPath();
+void Simulator::printGraph()
+{
+	auto& graphPath = injector.inject<services::basic::ArgumentParser>().graphPath();
 
 	if(graphPath.has_value())
 		injector.printEdges(*graphPath, "lucuma::services::");
-
-	return EXIT_SUCCESS;
 }
 
 }
