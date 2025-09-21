@@ -31,7 +31,7 @@ class PathCommon;
 class PathBase
 {
 public:
-	PathBase([[maybe_unused]]Injector& injector, std::string_view filePreffix);
+	PathBase(Injector& injector, std::string_view filePreffix);
 
 	std::span<const std::filesystem::path> getPath() const;
 
@@ -71,7 +71,7 @@ export template<FixedString filePreffix = {""}, FileChecks checks = {}>
 class Path: public PathBase
 {
 public:
-	Path([[maybe_unused]]Injector& injector):
+	Path(Injector& injector):
 		PathBase(injector, filePreffix)
 	{ }
 
