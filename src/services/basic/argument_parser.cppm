@@ -93,9 +93,7 @@ private:
 		auto value = magic_enum::enum_cast<T>(str);
 
 		if(value.has_value())
-		{
 			return value.value();
-		}
 
 		fail(str, std::errc::invalid_argument);
 		std::unreachable();

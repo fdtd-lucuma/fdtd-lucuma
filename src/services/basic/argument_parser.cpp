@@ -142,11 +142,7 @@ void ArgumentParser::parse(int argc, char** argv)
 		handleOption(c);
 	}
 
-	for(int i = optind; i < argc; i++)
-	{
-		_positionalArguments.emplace_back(argv[i]);
-	}
-
+	_positionalArguments.append_range(std::span(argv, argc).subspan(optind));
 }
 
 void ArgumentParser::handleOption(int shortopt)
