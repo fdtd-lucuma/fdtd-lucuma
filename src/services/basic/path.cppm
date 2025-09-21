@@ -18,7 +18,6 @@ module;
 
 export module lucuma.services.basic:path;
 
-import :path_common;
 import lucuma.utils;
 import std;
 
@@ -26,6 +25,23 @@ namespace lucuma::services::basic
 {
 
 using namespace lucuma::utils;
+
+class PathCommon;
+
+class PathBase
+{
+public:
+	PathBase([[maybe_unused]]Injector& injector, std::string_view filePreffix);
+
+	std::span<const std::filesystem::path> getPath() const;
+
+protected:
+	PathCommon& common;
+
+	/// Like $PATH
+	std::vector<std::filesystem::path> path;
+
+};
 
 template<std::size_t n>
 struct FixedString
@@ -52,14 +68,12 @@ struct FileChecks
 };
 
 export template<FixedString filePreffix = {""}, FileChecks checks = {}>
-class Path
+class Path: public PathBase
 {
 public:
 	Path([[maybe_unused]]Injector& injector):
-		common(injector.inject<PathCommon>())
-	{
-		init();
-	}
+		PathBase(injector, filePreffix)
+	{ }
 
 	std::filesystem::path find(const std::filesystem::path& file) const
 	{
@@ -86,27 +100,7 @@ public:
 		return find(file);
 	}
 
-	std::span<const std::filesystem::path> getPath() const
-	{
-		return path;
-	}
-
 private:
-	PathCommon& common;
-
-	/// Like $PATH
-	std::vector<std::filesystem::path> path;
-
-	void init()
-	{
-		createPath();
-	}
-
-	void createPath()
-	{
-		path = common.createPath(filePreffix);
-	}
-
 	static bool check(std::filesystem::file_status status)
 	{
 		if constexpr(checks.mustExist)
