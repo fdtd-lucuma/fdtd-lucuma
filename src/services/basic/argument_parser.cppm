@@ -73,17 +73,14 @@ private:
 
 	template<typename T>
 	requires std::is_arithmetic_v<T>
-	static void fromString(std::optional<T>& result, std::string_view str)
+	static T fromString(std::string_view str)
 	{
 		T value{};
 
 		auto [ptr, ec] = std::from_chars(str.begin(), str.begin()+str.size(), value);
 
 		if(ec == std::errc())
-		{
-			result.emplace(value);
-			return;
-		}
+			return value;
 
 		fail(str, ec);
 		std::unreachable();
@@ -91,19 +88,25 @@ private:
 
 	template<typename T>
 	requires std::is_enum_v<T>
-	static void fromString(std::optional<T>& result, std::string str)
+	static T fromString(std::string_view str)
 	{
 		auto value = magic_enum::enum_cast<T>(str);
 
 		if(value.has_value())
 		{
-			result.emplace(value.value());
-			return;
+			return value.value();
 		}
 
 		fail(str, std::errc::invalid_argument);
 		std::unreachable();
 	}
+
+	template<typename T>
+	static void fromString(std::optional<T>& result, std::string_view str)
+	{
+		result.emplace(fromString<T>(str));
+	}
+
 };
 
 }
