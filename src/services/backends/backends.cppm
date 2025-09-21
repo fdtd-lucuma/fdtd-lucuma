@@ -19,6 +19,7 @@ module;
 export module lucuma.services.backends;
 
 import lucuma.utils;
+import lucuma.services.basic;
 
 export import :sequential;
 export import :base;

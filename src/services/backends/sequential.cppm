@@ -19,6 +19,7 @@ module;
 export module lucuma.services.backends:sequential;
 
 import lucuma.utils;
+import lucuma.services.basic;
 
 import :base;
 
@@ -37,6 +38,7 @@ public:
 	virtual ~Sequential() = default;
 
 private:
+	basic::Settings& settings;
 
 };
 

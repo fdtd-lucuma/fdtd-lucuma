@@ -24,7 +24,8 @@ import std;
 namespace lucuma::services::backends
 {
 
-Sequential::Sequential([[maybe_unused]]Injector& injector)
+Sequential::Sequential([[maybe_unused]]Injector& injector):
+	settings(injector.inject<basic::Settings>())
 { }
 
 
