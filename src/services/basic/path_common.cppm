@@ -42,7 +42,7 @@ private:
 
 	std::vector<std::filesystem::path> basePath;
 	void init();
-	void createPath();
+	void createBasePath();
 };
 
 }

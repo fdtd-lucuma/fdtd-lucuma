@@ -44,10 +44,10 @@ std::vector<std::filesystem::path> PathCommon::createPath(std::string_view fileP
 
 void PathCommon::init()
 {
-	createPath();
+	createBasePath();
 }
 
-void PathCommon::createPath()
+void PathCommon::createBasePath()
 {
 	//TODO: Override by config or something. Or maybe only by envars to avoid
 	//dependency loops.
