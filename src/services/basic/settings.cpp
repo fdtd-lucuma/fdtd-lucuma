@@ -53,7 +53,7 @@ unsigned int Settings::time() const
 	return argumentParser.time().value_or(defaultTime);
 }
 
-glm::vec<3, std::size_t> Settings::size() const
+svec3 Settings::size() const
 {
 	return {sizeX(), sizeY(), sizeZ()};
 }

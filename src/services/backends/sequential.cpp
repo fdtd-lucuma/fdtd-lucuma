@@ -20,6 +20,7 @@ module lucuma.services.backends;
 
 import lucuma.utils;
 import std;
+import glm;
 
 namespace lucuma::services::backends
 {
@@ -30,6 +31,30 @@ Sequential::Sequential([[maybe_unused]]Injector& injector):
 
 void Sequential::init()
 {
+	auto size = settings.size();
+
+	// Magnetic dims
+
+	auto Hxdims = size + svec3(0, -1, -1);
+	auto Hydims = size + svec3(-1, 0, -1);
+	auto Hzdims = size + svec3(-1, -1, 0);
+
+	// Electric dims
+
+	auto Exdims = size + svec3(-1, 0, 0);
+	auto Eydims = size + svec3(0, -1, 0);
+	auto Ezdims = size + svec3(0, 0, -1);
+
+	// ABC dims
+
+	auto eyxdims = Exdims.yz();
+	auto ezxdims = Ezdims.yz();
+
+	auto exydims = Exdims.xz();
+	auto ezydims = Ezdims.xz();
+
+	auto exzdims = Exdims.xy();
+	auto eyzdims = Eydims.xy();
 	//TODO
 }
 

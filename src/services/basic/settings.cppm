@@ -52,7 +52,7 @@ public:
 
 	unsigned int time() const;
 
-	glm::vec<3, std::size_t> size() const;
+	svec3 size() const;
 
 	Backend backend() const;
 

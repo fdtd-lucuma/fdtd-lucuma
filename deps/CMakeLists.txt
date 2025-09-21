@@ -229,6 +229,7 @@ target_compile_definitions(GlmModule
 	PUBLIC
 		GLM_FORCE_DEPTH_ZERO_TO_ONE
 		GLM_FORCE_RADIANS
+		GLM_SWIZZLE
 )
 
 target_link_libraries(GlmModule PUBLIC glm::glm-header-only)

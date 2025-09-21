@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
+			alias.cppm
 			exceptions.cppm
 			injector.cppm
 			utils.cppm
