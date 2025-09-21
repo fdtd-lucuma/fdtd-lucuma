@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.1.1.r12.gc40cc1f
+pkgver=0.1.1.r29.g6af2783
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -44,8 +44,10 @@ source=(
 	"imgui-module-git::git+https://github.com/stripe2933/imgui-module#branch=docking"
 	"vma-hpp-git::git+https://github.com/YaaZ/VulkanMemoryAllocator-Hpp#tag=v3.2.1"
 	"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"
+	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
 )
 sha256sums=(
+	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -73,6 +75,7 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI-MODULE="$srcdir/imgui-module-git" \
 		-DFETCHCONTENT_SOURCE_DIR_VULKANMEMORYALLOCATOR-HPP="$srcdir/vma-hpp-git" \
 		-DFETCHCONTENT_SOURCE_DIR_VKFW="$srcdir/vkfw-git" \
+		-DFETCHCONTENT_SOURCE_DIR_MAGIC_ENUM="$srcdir/magic-enum-git" \
 		-DCMAKE_CXX_VISIBILITY_PRESET=hidden \
 		-DCMAKE_C_VISIBILITY_PRESET=hidden \
 
