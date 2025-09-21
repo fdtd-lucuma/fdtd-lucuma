@@ -17,14 +17,11 @@
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		instantiations.cpp
+		sequential.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			services.cppm
+			backends.cppm
+			sequential.cppm
 )
-
-add_subdirectory(backends)
-add_subdirectory(basic)
-add_subdirectory(frontends)
-add_subdirectory(vulkan)
