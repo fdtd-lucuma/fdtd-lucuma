@@ -20,6 +20,7 @@ export module lucuma.services.frontends:headless;
 
 import lucuma.utils;
 import lucuma.services.vulkan;
+import lucuma.services.backends;
 
 import std;
 
@@ -47,6 +48,7 @@ private:
 
 	vulkan::Allocator& vulkanAllocator;
 	vulkan::Compute&   vulkanCompute;
+	backends::Base&    backend;
 
 	HelloWorldData createHelloWorld(std::size_t n);
 

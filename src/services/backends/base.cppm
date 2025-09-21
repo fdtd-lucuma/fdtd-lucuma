@@ -16,14 +16,19 @@
 
 module;
 
-module lucuma.services.backends;
+export module lucuma.services.backends:base;
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+namespace lucuma::services::backends
 {
-using namespace lucuma::services::backends;
 
-template Base&       Injector::inject<Base>();
-template Sequential& Injector::inject<Sequential>();
+export class Base
+{
+public:
+	Base() = default;
+	virtual ~Base() = default;
+
+private:
+
+};
 
 }

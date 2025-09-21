@@ -20,6 +20,8 @@ export module lucuma.services.backends:sequential;
 
 import lucuma.utils;
 
+import :base;
+
 import std;
 
 namespace lucuma::services::backends
@@ -27,10 +29,12 @@ namespace lucuma::services::backends
 
 using namespace lucuma::utils;
 
-export class Sequential
+export class Sequential: public Base
 {
 public:
 	Sequential(Injector& injector);
+
+	virtual ~Sequential() = default;
 
 private:
 

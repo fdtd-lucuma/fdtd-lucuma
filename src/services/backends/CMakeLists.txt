@@ -23,5 +23,6 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			backends.cppm
+			base.cppm
 			sequential.cppm
 )

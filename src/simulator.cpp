@@ -47,7 +47,10 @@ void Simulator::initBasic(int argc, char** argv)
 
 void Simulator::selectBackend()
 {
-	//TODO
+	using namespace services::backends;
+
+	injector.emplace<Sequential, Base>(injector);
+	//TODO: Select a single backend
 }
 
 void Simulator::selectFrontend()

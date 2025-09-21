@@ -21,11 +21,13 @@ export module lucuma.services.backends;
 import lucuma.utils;
 
 export import :sequential;
+export import :base;
 
 namespace lucuma::utils
 {
 using namespace lucuma::services::backends;
 
+extern template Base&       Injector::inject<Base>();
 extern template Sequential& Injector::inject<Sequential>();
 
 }

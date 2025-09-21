@@ -20,6 +20,7 @@ module lucuma.services.frontends;
 
 import lucuma.utils;
 import lucuma.services.vulkan;
+import lucuma.services.backends;
 import std;
 import vulkan_hpp;
 import vk_mem_alloc_hpp;
@@ -29,7 +30,8 @@ namespace lucuma::services::frontends
 
 Headless::Headless([[maybe_unused]]Injector& injector):
 	vulkanAllocator(injector.inject<vulkan::Allocator>()),
-	vulkanCompute(injector.inject<vulkan::Compute>())
+	vulkanCompute(injector.inject<vulkan::Compute>()),
+	backend(injector.inject<backends::Base>())
 { }
 
 void Headless::compute()
