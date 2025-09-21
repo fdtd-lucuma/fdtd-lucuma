@@ -66,7 +66,7 @@ private:
 
 	void parse(int argc, char** argv);
 
-	void handleOption(char shortopt);
+	void handleOption(int shortopt);
 
 	[[noreturn]]
 	static void fail(std::string_view str, std::errc e);

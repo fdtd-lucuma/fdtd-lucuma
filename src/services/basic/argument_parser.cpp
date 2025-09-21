@@ -105,20 +105,35 @@ void ArgumentParser::usage(int exit_code)
 	exit(exit_code);
 }
 
+enum class Argument: int
+{
+	failure = '?',
+
+	help        = 'h',
+	headless    = 'H',
+	no_headless = 'g',
+	graph       = 'G',
+	size_x      = 'x',
+	size_y      = 'y',
+	size_z      = 'z',
+	time        = 't',
+	backend     = 'b',
+};
+
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
 	static const char shortopts[] = "hHgG:x:y:z:t:b:";
 	static const option options[] {
-		{"help",        no_argument,       nullptr, 'h'},
-		{"headless",    no_argument,       nullptr, 'H'},
-		{"no-headless", no_argument,       nullptr, 'g'},
-		{"graph",       required_argument, nullptr, 'G'},
-		{"size-x",      required_argument, nullptr, 'x'},
-		{"size-y",      required_argument, nullptr, 'y'},
-		{"size-z",      required_argument, nullptr, 'z'},
-		{"time",        required_argument, nullptr, 't'},
-		{"backend",     required_argument, nullptr, 'b'},
+		{"help",        no_argument,       nullptr, (int)Argument::help},
+		{"headless",    no_argument,       nullptr, (int)Argument::headless},
+		{"no-headless", no_argument,       nullptr, (int)Argument::no_headless},
+		{"graph",       required_argument, nullptr, (int)Argument::graph},
+		{"size-x",      required_argument, nullptr, (int)Argument::size_x},
+		{"size-y",      required_argument, nullptr, (int)Argument::size_y},
+		{"size-z",      required_argument, nullptr, (int)Argument::size_z},
+		{"time",        required_argument, nullptr, (int)Argument::time},
+		{"backend",     required_argument, nullptr, (int)Argument::backend},
 		{nullptr,       0,                 nullptr, 0},
 	};
 
@@ -134,47 +149,47 @@ void ArgumentParser::parse(int argc, char** argv)
 
 }
 
-void ArgumentParser::handleOption(char shortopt)
+void ArgumentParser::handleOption(int shortopt)
 {
-	switch(shortopt)
+	switch((Argument)shortopt)
 	{
-		case 'h': // --help
+		case Argument::help:
 			usage(EXIT_SUCCESS);
 			std::unreachable();
 
-		case 'H': // --headless
+		case Argument::headless:
 			_isHeadless = true;
 			break;
 
-		case 'g': // --no-headless
+		case Argument::no_headless:
 			_isHeadless = false;
 			break;
 
-		case 'G': // --graph
+		case Argument::graph:
 			_graphPath.emplace(optarg);
 			break;
 
-		case 'x': // --size-x
+		case Argument::size_x:
 			_sizeX.emplace(fromString<std::size_t>(optarg));
 			break;
 
-		case 'y': // --size-y
+		case Argument::size_y:
 			_sizeY.emplace(fromString<std::size_t>(optarg));
 			break;
 
-		case 'z': // --size-z
+		case Argument::size_z:
 			_sizeZ.emplace(fromString<std::size_t>(optarg));
 			break;
 
-		case 't': // --time
+		case Argument::time:
 			_time.emplace(fromString<unsigned int>(optarg));
 			break;
 
-		case 'b': // --backend
+		case Argument::backend:
 			_backend.emplace(fromString<Backend>(optarg));
 			break;
 
-		case '?':
+		case Argument::failure:
 			usage(EXIT_FAILURE);
 			std::unreachable();
 
