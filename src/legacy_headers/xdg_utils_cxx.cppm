@@ -20,8 +20,6 @@ module;
 
 export module lucuma.legacy_headers.xdg_utils_cxx;
 
-import std;
-
 export namespace XdgUtils::BaseDir
 {
 
