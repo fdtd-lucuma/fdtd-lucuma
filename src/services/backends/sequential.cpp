@@ -47,7 +47,7 @@ void Sequential::init()
 
 	// ABC dimentions
 
-	auto eyxDims = ExDims.yz();
+	auto eyxDims = EyDims.yz();
 	auto ezxDims = EzDims.yz();
 
 	auto exyDims = ExDims.xz();
