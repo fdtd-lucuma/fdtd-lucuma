@@ -33,28 +33,28 @@ void Sequential::init()
 {
 	auto size = settings.size();
 
-	// Magnetic dims
+	// Magnetic field dimentions
 
-	auto Hxdims = size + svec3(0, -1, -1);
-	auto Hydims = size + svec3(-1, 0, -1);
-	auto Hzdims = size + svec3(-1, -1, 0);
+	auto HxDims = size + HxDimsDelta;
+	auto HyDims = size + HyDimsDelta;
+	auto HzDims = size + HzDimsDelta;
 
-	// Electric dims
+	// Electric field dimentions
 
-	auto Exdims = size + svec3(-1, 0, 0);
-	auto Eydims = size + svec3(0, -1, 0);
-	auto Ezdims = size + svec3(0, 0, -1);
+	auto ExDims = size + ExDimsDelta;
+	auto EyDims = size + EyDimsDelta;
+	auto EzDims = size + EzDimsDelta;
 
-	// ABC dims
+	// ABC dimentions
 
-	auto eyxdims = Exdims.yz();
-	auto ezxdims = Ezdims.yz();
+	auto eyxDims = ExDims.yz();
+	auto ezxDims = EzDims.yz();
 
-	auto exydims = Exdims.xz();
-	auto ezydims = Ezdims.xz();
+	auto exyDims = ExDims.xz();
+	auto ezyDims = EzDims.xz();
 
-	auto exzdims = Exdims.xy();
-	auto eyzdims = Eydims.xy();
+	auto exzDims = ExDims.xy();
+	auto eyzDims = EyDims.xy();
 	//TODO
 }
 

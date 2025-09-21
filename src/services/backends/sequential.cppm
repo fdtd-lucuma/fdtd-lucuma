@@ -41,6 +41,14 @@ public:
 
 	virtual ~Sequential() = default;
 
+	constexpr static auto HxDimsDelta = svec3(0, -1, -1);
+	constexpr static auto HyDimsDelta = svec3(-1, 0, -1);
+	constexpr static auto HzDimsDelta = svec3(-1, -1, 0);
+
+	constexpr static auto ExDimsDelta = svec3(-1, 0, 0);
+	constexpr static auto EyDimsDelta = svec3(0, -1, 0);
+	constexpr static auto EzDimsDelta = svec3(0, 0, -1);
+
 private:
 	basic::Settings& settings;
 
