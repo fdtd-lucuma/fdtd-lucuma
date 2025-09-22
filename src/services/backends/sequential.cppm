@@ -32,29 +32,25 @@ namespace lucuma::services::backends
 using namespace lucuma::utils;
 
 template <typename T>
-requires std::is_arithmetic_v<T>
+//requires std::is_arithmetic_v<T>
 std::vector<T> initMat(svec3 dims, T defaultValue = 0)
 {
 	return std::vector<T>(dims.x*dims.y*dims.z, defaultValue);
 }
 
 template <typename T>
-requires std::is_arithmetic_v<T>
+//requires std::is_arithmetic_v<T>
 std::vector<T> initMat(svec2 dims, T defaultValue = 0)
 {
 	return std::vector<T>(dims.x*dims.y, defaultValue);
 }
 
-export class Sequential: public Base
+class SequentialBase
 {
-public:
-	Sequential(Injector& injector);
+protected:
+	SequentialBase(Injector& injector);
 
-	virtual void init();
-	virtual bool step();
-	virtual void saveFiles();
-
-	virtual ~Sequential() = default;
+	basic::Settings& settings;
 
 	constexpr static auto HxDimsDelta = svec3(0, -1, -1);
 	constexpr static auto HyDimsDelta = svec3(-1, 0, -1);
@@ -64,11 +60,37 @@ public:
 	constexpr static auto EyDimsDelta = svec3(0, -1, 0);
 	constexpr static auto EzDimsDelta = svec3(0, 0, -1);
 
-private:
-	basic::Settings& settings;
+};
 
-	template <typename T>
-	requires std::is_arithmetic_v<T>
+export template<Precision precision>
+class Sequential: public Base, public SequentialBase
+{
+public:
+	using T = PrecisionTraits<precision>::type;
+
+	Sequential(Injector& injector):
+		SequentialBase(injector)
+	{ }
+
+	virtual void init()
+	{
+		FdtdData data(settings.size());
+	}
+
+	virtual bool step()
+	{
+		//TODO
+		return false;
+	}
+
+	virtual void saveFiles()
+	{
+		//TODO
+	}
+
+	virtual ~Sequential() = default;
+private:
+
 	struct FdtdData
 	{
 	public:

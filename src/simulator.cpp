@@ -55,19 +55,19 @@ void Simulator::selectBackend()
 
 	auto& settings = injector.inject<services::basic::Settings>();
 
-	switch(settings.backend())
+	magic_enum::enum_switch([&, this](auto val)
 	{
-		case sequential:
-			injector.emplace<Sequential, Base>(injector);
-			break;
+		switch(settings.backend())
+		{
+			case sequential:
+				injector.emplace<Sequential<val>, Base>(injector);
+				break;
 
-		case vulkan:
-			magic_enum::enum_switch([this](auto val)
-				{
-					injector.emplace<Vulkan<val>, Base>(injector);
-				}, settings.precision());
-			break;
-	}
+			case vulkan:
+				injector.emplace<Vulkan<val>, Base>(injector);
+				break;
+		}
+	}, settings.precision());
 }
 
 void Simulator::selectFrontend()

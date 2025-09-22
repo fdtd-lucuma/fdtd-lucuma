@@ -20,32 +20,13 @@ module lucuma.services.backends;
 
 import lucuma.utils;
 import std;
-import glm;
 
 namespace lucuma::services::backends
 {
 
-Sequential::Sequential([[maybe_unused]]Injector& injector):
+SequentialBase::SequentialBase([[maybe_unused]]Injector& injector):
 	settings(injector.inject<basic::Settings>())
 { }
-
-void Sequential::init()
-{
-	FdtdData<float> data(settings.size());
-
-	//TODO
-}
-
-bool Sequential::step()
-{
-	//TODO
-	return false;
-}
-
-void Sequential::saveFiles()
-{
-	//TODO
-}
 
 
 }
