@@ -74,7 +74,7 @@ Vulkan::HelloWorldData Vulkan::createHelloWorld(std::size_t n)
 	);
 
 	result.pipeline = vulkanCompute.createPipeline({
-		.shaderPath = "hello_world.spv",
+		.shaderPath = "hello_world_float.spv",
 		.setLayouts = {
 			{
 				.bindings = {
