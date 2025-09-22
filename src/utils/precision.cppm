@@ -18,8 +18,6 @@ module;
 
 export module lucuma.utils:precision;
 
-import std;
-
 namespace lucuma::utils
 {
 
@@ -28,8 +26,28 @@ export enum class Precision
 	f16,
 	f32,
 	f64,
-	f128,
-	bf16,
+	//f128,
+	//bf16,
+};
+
+export template<Precision p> struct PrecisionTraits;
+
+export template<>
+struct PrecisionTraits<Precision::f16>
+{
+	using type = _Float16;
+};
+
+export template<>
+struct PrecisionTraits<Precision::f32>
+{
+	using type = float;
+};
+
+export template<>
+struct PrecisionTraits<Precision::f64>
+{
+	using type = double;
 };
 
 }
