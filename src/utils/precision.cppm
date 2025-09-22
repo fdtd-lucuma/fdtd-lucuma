@@ -16,9 +16,20 @@
 
 module;
 
-export module lucuma.utils;
+export module lucuma.utils:precision;
 
-export import :alias;
-export import :exceptions;
-export import :injector;
-export import :precision;
+import std;
+
+namespace lucuma::utils
+{
+
+export enum class Precision
+{
+	f16,
+	f32,
+	f64,
+	f128,
+	bf16,
+};
+
+}

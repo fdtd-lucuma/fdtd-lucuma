@@ -25,5 +25,6 @@ target_sources(${PROJECT_NAME}
 			alias.cppm
 			exceptions.cppm
 			injector.cppm
+			precision.cppm
 			utils.cppm
 )
