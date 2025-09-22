@@ -23,6 +23,7 @@ module lucuma;
 import lucuma.utils;
 import lucuma.services;
 import std.compat;
+import magic_enum;
 
 namespace lucuma
 {
@@ -48,6 +49,8 @@ void Simulator::initBasic(int argc, char** argv)
 void Simulator::selectBackend()
 {
 	using namespace services::backends;
+	using namespace utils;
+
 	using enum services::basic::Backend;
 
 	auto& settings = injector.inject<services::basic::Settings>();
@@ -59,7 +62,10 @@ void Simulator::selectBackend()
 			break;
 
 		case vulkan:
-			injector.emplace<Vulkan, Base>(injector);
+			magic_enum::enum_switch([this](auto val)
+				{
+					injector.emplace<Vulkan<val>, Base>(injector);
+				}, settings.precision());
 			break;
 	}
 }

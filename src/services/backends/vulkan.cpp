@@ -27,42 +27,14 @@ import vk_mem_alloc_hpp;
 namespace lucuma::services::backends
 {
 
-Vulkan::Vulkan([[maybe_unused]]Injector& injector):
+VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	vulkanAllocator(injector.inject<vulkan::Allocator>()),
 	vulkanCompute(injector.inject<vulkan::Compute>()),
 	vulkanAll(injector.inject<vulkan::All>()),
 	settings(injector.inject<basic::Settings>())
 { }
 
-void Vulkan::init()
-{
-	helloWorld();
-	//TODO
-}
-
-bool Vulkan::step()
-{
-	//TODO
-	return false;
-}
-
-void Vulkan::saveFiles()
-{
-	//TODO
-}
-
-template<Precision precision>
-constexpr std::string_view shaderPath()
-{
-	if constexpr(precision == Precision::f16)
-		return "hello_world_half.spv";
-	if constexpr(precision == Precision::f32)
-		return "hello_world_float.spv";
-	if constexpr(precision == Precision::f64)
-		return "hello_world_double.spv";
-}
-
-Vulkan::HelloWorldData Vulkan::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
+VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
 {
 	HelloWorldData result;
 
@@ -120,36 +92,5 @@ Vulkan::HelloWorldData Vulkan::createHelloWorld(std::size_t bytes, std::string_v
 	return result;
 
 }
-
-void Vulkan::helloWorld()
-{
-	auto generator = std::views::iota(0, 10);
-
-	std::vector<float> a{std::from_range, generator};
-	std::vector<float> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
-
-	auto pipeline = createHelloWorld(std::span(a).size_bytes(), shaderPath<Precision::f32>());
-
-	pipeline.aBuffer.setData<float>(a);
-	pipeline.bBuffer.setData<float>(b);
-
-	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
-
-	vk::CommandBufferBeginInfo beginInfo{};
-
-	commandBuffer.begin(beginInfo);
-
-	pipeline.pipeline.bind(commandBuffer);
-	commandBuffer.dispatch(a.size(), 1, 1);
-
-	commandBuffer.end();
-
-	vulkanCompute.submit(commandBuffer);
-
-	auto c = pipeline.cBuffer.getData<float>().subspan(0, a.size());
-
-	std::println("{} + {} = {}", a, b, c);
-}
-
 
 }

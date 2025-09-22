@@ -31,6 +31,6 @@ using namespace lucuma::services::backends;
 
 extern template Base&       Injector::inject<Base>();
 extern template Sequential& Injector::inject<Sequential>();
-extern template Vulkan&     Injector::inject<Vulkan>();
+//extern template Vulkan&     Injector::inject<Vulkan>();
 
 }

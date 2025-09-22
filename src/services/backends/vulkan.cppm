@@ -21,6 +21,7 @@ export module lucuma.services.backends:vulkan;
 import lucuma.utils;
 import lucuma.services.basic;
 import lucuma.services.vulkan;
+import vulkan_hpp;
 
 import :base;
 
@@ -31,18 +32,16 @@ namespace lucuma::services::backends
 
 using namespace lucuma::utils;
 
-export class Vulkan: public Base
+export class VulkanBase
 {
-public:
-	Vulkan(Injector& injector);
+protected:
+	VulkanBase(Injector& injector);
 
-	virtual void init();
-	virtual bool step();
-	virtual void saveFiles();
+	vulkan::Allocator& vulkanAllocator;
+	vulkan::Compute&   vulkanCompute;
+	vulkan::All&       vulkanAll;
+	basic::Settings&   settings;
 
-	virtual ~Vulkan() = default;
-
-private:
 	struct HelloWorldData
 	{
 		vulkan::ComputePipeline pipeline;
@@ -52,15 +51,96 @@ private:
 		vulkan::Buffer cBuffer;
 	};
 
-	vulkan::Allocator& vulkanAllocator;
-	vulkan::Compute&   vulkanCompute;
-	vulkan::All&       vulkanAll;
-	basic::Settings&   settings;
-
 	HelloWorldData createHelloWorld(std::size_t bytes, std::string_view shaderPath);
 
-	void helloWorld();
+};
+
+template<Precision precision = Precision::f32>
+constexpr std::string_view shaderPath()
+{
+	if constexpr(precision == Precision::f16)
+		return "hello_world_half.spv";
+	if constexpr(precision == Precision::f32)
+		return "hello_world_float.spv";
+	if constexpr(precision == Precision::f64)
+		return "hello_world_double.spv";
+}
+
+export template<Precision precision>
+class Vulkan: public Base, public VulkanBase
+{
+public:
+	using T = PrecisionTraits<precision>::type;
+
+	Vulkan(Injector& injector):
+		VulkanBase(injector)
+	{ }
+
+
+	virtual void init()
+	{
+		helloWorld();
+		//TODO
+	}
+
+	virtual bool step()
+	{
+		//TODO
+		return false;
+	}
+
+	virtual void saveFiles()
+	{
+		//TODO
+	}
+
+	virtual ~Vulkan() = default;
+
+private:
+
+	void helloWorld()
+	{
+		auto generator = std::views::iota(0, 10);
+
+		std::vector<T> a{std::from_range, generator};
+		std::vector<T> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
+
+		auto pipeline = createHelloWorld(std::span(a).size_bytes(), shaderPath<precision>());
+
+		pipeline.aBuffer.template setData<T>(a);
+		pipeline.bBuffer.template setData<T>(b);
+
+		auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
+
+		vk::CommandBufferBeginInfo beginInfo{};
+
+		commandBuffer.begin(beginInfo);
+
+		pipeline.pipeline.bind(commandBuffer);
+		commandBuffer.dispatch(a.size(), 1, 1);
+
+		commandBuffer.end();
+
+		vulkanCompute.submit(commandBuffer);
+
+		auto c = pipeline.cBuffer.template getData<T>().subspan(0, a.size());
+
+		if constexpr(std::is_default_constructible_v<std::formatter<std::vector<T>>>)
+			std::println("{} + {} = {}", a, b, c);
+		else
+		{
+			auto toFloat = std::views::transform([](auto&& x){return (float)x;});
+
+			std::println("{} + {} = {}",
+				a | toFloat,
+				b | toFloat,
+				c | toFloat
+			);
+		}
+	}
+
 
 };
+
 
 }
