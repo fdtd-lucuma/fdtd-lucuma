@@ -57,7 +57,7 @@ private:
 	vulkan::All&       vulkanAll;
 	basic::Settings&   settings;
 
-	HelloWorldData createHelloWorld(std::size_t n);
+	HelloWorldData createHelloWorld(std::size_t bytes, std::string_view shaderPath);
 
 	void helloWorld();
 

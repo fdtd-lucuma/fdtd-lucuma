@@ -51,30 +51,41 @@ void Vulkan::saveFiles()
 	//TODO
 }
 
-Vulkan::HelloWorldData Vulkan::createHelloWorld(std::size_t n)
+template<Precision precision>
+constexpr std::string_view shaderPath()
+{
+	if constexpr(precision == Precision::f16)
+		return "hello_world_half.spv";
+	if constexpr(precision == Precision::f32)
+		return "hello_world_float.spv";
+	if constexpr(precision == Precision::f64)
+		return "hello_world_double.spv";
+}
+
+Vulkan::HelloWorldData Vulkan::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
 {
 	HelloWorldData result;
 
 	result.aBuffer = vulkanAllocator.allocate(
-		sizeof(float)*n,
+		bytes,
 		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
 		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.bBuffer = vulkanAllocator.allocate(
-		sizeof(float)*n,
+		bytes,
 		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
 		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.cBuffer = vulkanAllocator.allocate(
-		sizeof(float)*n,
+		bytes,
 		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
 		vma::AllocationCreateFlagBits::eHostAccessRandom | vma::AllocationCreateFlagBits::eMapped
 	);
 
 	result.pipeline = vulkanCompute.createPipeline({
-		.shaderPath = "hello_world_float.spv",
+		.shaderPath = shaderPath,
 		.setLayouts = {
 			{
 				.bindings = {
@@ -117,7 +128,7 @@ void Vulkan::helloWorld()
 	std::vector<float> a{std::from_range, generator};
 	std::vector<float> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
 
-	auto pipeline = createHelloWorld(a.size());
+	auto pipeline = createHelloWorld(std::span(a).size_bytes(), shaderPath<Precision::f32>());
 
 	pipeline.aBuffer.setData<float>(a);
 	pipeline.bBuffer.setData<float>(b);
