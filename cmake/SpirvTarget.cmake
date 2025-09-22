@@ -51,12 +51,12 @@ function(add_spirv_target)
 	endforeach()
 
 	install(
-		FILES "${BINARIES}"
+		FILES ${BINARIES}
 		DESTINATION "${ARG_DESTINATION}"
 	)
 
 	add_custom_target("${ARG_TARGET}" ALL
-		DEPENDS "${BINARIES}"
+		DEPENDS ${BINARIES}
 	)
 
 endfunction()
