@@ -16,11 +16,9 @@
 
 module;
 
-#include <entt/entity/registry.hpp>
+#include <entt/entt.hpp>
 
 export module lucuma.legacy_headers.entt;
-
-import std;
 
 export namespace entt
 {
@@ -28,6 +26,8 @@ export namespace entt
 using entt::registry;
 using entt::type_id;
 using entt::type_info;
+using entt::dense_map;
+using entt::dense_set;
 using entt::operator==;
 using entt::operator!=;
 using entt::operator<;
