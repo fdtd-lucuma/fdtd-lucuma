@@ -63,5 +63,10 @@ Backend Settings::backend() const
 	return argumentParser.backend().value_or(defaultBackend);
 }
 
+Precision Settings::precision() const
+{
+	return argumentParser.precision().value_or(defaultPrecision);
+}
+
 
 }

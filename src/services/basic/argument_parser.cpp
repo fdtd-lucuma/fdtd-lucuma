@@ -79,6 +79,11 @@ std::optional<Backend> ArgumentParser::backend() const
 	return _backend;
 }
 
+std::optional<Precision> ArgumentParser::precision() const
+{
+	return _precision;
+}
+
 void ArgumentParser::usage(int exit_code)
 {
 	std::print(
@@ -92,6 +97,8 @@ void ArgumentParser::usage(int exit_code)
 		"\t-z, --size-z=N     Set size z [default={}].\n"
 		"\t-t, --time=N       Set simulation time steps [default={}].\n"
 		"\t-b, --backend=NAME When running in headless mode use this backend [default={:?}].\n"
+		"\t                   Values: {}.\n"
+		"\t-p, --precision=fN Floating point precision as N bits [default={:?}].\n"
 		"\t                   Values: {}.\n",
 		argv0(),
 		Settings::defaultSizeX,
@@ -99,7 +106,9 @@ void ArgumentParser::usage(int exit_code)
 		Settings::defaultSizeZ,
 		Settings::defaultTime,
 		Settings::defaultBackend,
-		magic_enum::enum_values<Backend>()
+		magic_enum::enum_values<Backend>(),
+		Settings::defaultPrecision,
+		magic_enum::enum_values<Precision>()
 	);
 
 	exit(exit_code);
@@ -118,12 +127,13 @@ enum class Argument: int
 	size_z      = 'z',
 	time        = 't',
 	backend     = 'b',
+	precision   = 'p',
 };
 
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "hHgG:x:y:z:t:b:";
+	static const char shortopts[] = "hHgG:x:y:z:t:b:p:";
 	static const option options[] {
 		{"help",        no_argument,       nullptr, (int)Argument::help},
 		{"headless",    no_argument,       nullptr, (int)Argument::headless},
@@ -134,6 +144,7 @@ void ArgumentParser::parse(int argc, char** argv)
 		{"size-z",      required_argument, nullptr, (int)Argument::size_z},
 		{"time",        required_argument, nullptr, (int)Argument::time},
 		{"backend",     required_argument, nullptr, (int)Argument::backend},
+		{"precision",   required_argument, nullptr, (int)Argument::precision},
 		{nullptr,       0,                 nullptr, 0},
 	};
 
@@ -183,6 +194,10 @@ void ArgumentParser::handleOption(int shortopt)
 
 		case Argument::backend:
 			fromString(_backend, optarg);
+			break;
+
+		case Argument::precision:
+			fromString(_precision, optarg);
 			break;
 
 		case Argument::failure:

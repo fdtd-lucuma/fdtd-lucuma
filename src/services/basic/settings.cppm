@@ -46,6 +46,8 @@ public:
 
 	static constexpr Backend defaultBackend = Backend::sequential;
 
+	static constexpr Precision defaultPrecision = Precision::f32;
+
 	std::size_t sizeX() const;
 	std::size_t sizeY() const;
 	std::size_t sizeZ() const;
@@ -55,6 +57,7 @@ public:
 	svec3 size() const;
 
 	Backend backend() const;
+	Precision precision() const;
 
 private:
 	ArgumentParser& argumentParser;

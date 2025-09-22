@@ -27,6 +27,8 @@ import magic_enum;
 namespace lucuma::services::basic
 {
 
+using namespace utils;
+
 export class ArgumentParser
 {
 public:
@@ -44,7 +46,8 @@ public:
 
 	std::optional<unsigned int> time() const;
 
-	std::optional<Backend> backend() const;
+	std::optional<Backend>   backend()   const;
+	std::optional<Precision> precision() const;
 
 private:
 	std::string              _argv0;
@@ -59,7 +62,8 @@ private:
 
 	std::optional<unsigned int> _time = std::nullopt;
 
-	std::optional<Backend> _backend = std::nullopt;
+	std::optional<Backend>   _backend   = std::nullopt;
+	std::optional<Precision> _precision = std::nullopt;
 
 	[[noreturn]]
 	void usage(int exit_code);
