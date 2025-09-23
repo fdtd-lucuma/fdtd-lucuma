@@ -308,6 +308,6 @@ target_link_libraries(${PROJECT_NAME}
 		VkfwModule
 		magic_enumModule
 		XdgUtils::BaseDir
-		mdspan
+		mdspan::mdspan
 )
 
