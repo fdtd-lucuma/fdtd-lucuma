@@ -145,7 +145,7 @@ public:
 	virtual ~Sequential() = default;
 private:
 
-	struct FdtdData
+	class FdtdData
 	{
 	public:
 		FdtdData(svec3 _size):
