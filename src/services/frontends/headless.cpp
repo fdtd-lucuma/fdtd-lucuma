@@ -32,6 +32,7 @@ Headless::Headless([[maybe_unused]]Injector& injector):
 void Headless::compute()
 {
 	auto id = backend.init();
+
 	while(backend.step(id))
 	{
 		backend.saveFiles(id);

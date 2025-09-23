@@ -128,7 +128,7 @@ public:
 	{
 		auto id = _registry.create();
 
-		_registry.emplace<FdtdData>(id, settings.size());
+		auto& data = _registry.emplace<FdtdData>(id, settings.time(), settings.size());
 
 		return id;
 	}
@@ -137,16 +137,15 @@ public:
 	{
 		auto& data = _registry.get<FdtdData>(id);
 
-		auto Hx = data.Hx();
-
-		debugPrint(data.Hx());
-
-		return false;
+		return data.step();
 	}
 
 	virtual void saveFiles(entt::entity id)
 	{
+		auto& data = _registry.get<FdtdData>(id);
+
 		//TODO
+		debugPrint(data.Hx());
 	}
 
 	virtual ~Sequential() = default;
@@ -155,7 +154,8 @@ private:
 	class FdtdData
 	{
 	public:
-		FdtdData(svec3 _size):
+		FdtdData(unsigned int time, svec3 _size):
+			maxTime(time),
 			size(_size),
 			HxDims(size + HxDimsDelta),
 			HyDims(size + HyDimsDelta),
@@ -317,31 +317,43 @@ private:
 		cmdspan_2d_t exz1()  const { return toMdspan(_exz1,  exzDims); }
 		cmdspan_2d_t eyz1()  const { return toMdspan(_eyz1,  eyzDims); }
 
+		/// Returns true and increments the counter by +1 if it can still continue.
+		bool step() {
+			if(time >= maxTime)
+				return false;
+
+			time++;
+			return true;
+		}
+
 	private:
-		svec3 size;
+		unsigned int time = 0;
+		const unsigned int maxTime;
+
+		const svec3 size;
 
 		// Magnetic field dimentions
 
-		svec3 HxDims;
-		svec3 HyDims;
-		svec3 HzDims;
+		const svec3 HxDims;
+		const svec3 HyDims;
+		const svec3 HzDims;
 
 		// Electric field dimentions
 
-		svec3 ExDims;
-		svec3 EyDims;
-		svec3 EzDims;
+		const svec3 ExDims;
+		const svec3 EyDims;
+		const svec3 EzDims;
 
 		// ABC dimentions
 
-		svec2 eyxDims;
-		svec2 ezxDims;
+		const svec2 eyxDims;
+		const svec2 ezxDims;
 
-		svec2 exyDims;
-		svec2 ezyDims;
+		const svec2 exyDims;
+		const svec2 ezyDims;
 
-		svec2 exzDims;
-		svec2 eyzDims;
+		const svec2 exzDims;
+		const svec2 eyzDims;
 
 		// Magnetic fields
 
