@@ -70,30 +70,65 @@ class Sequential: public Base, public SequentialBase
 public:
 	using T = PrecisionTraits<precision>::type;
 
+	using extents_2d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent>;
+	using extents_3d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent, std::dynamic_extent>;
+
+	using mdspan_2d_t = Kokkos::mdspan<T, extents_2d_t>;
+	using mdspan_3d_t = Kokkos::mdspan<T, extents_3d_t>;
+
+	using cmdspan_2d_t = Kokkos::mdspan<const T, extents_2d_t>;
+	using cmdspan_3d_t = Kokkos::mdspan<const T, extents_3d_t>;
+
+	static inline mdspan_3d_t toMdspan(std::vector<T>& v, svec3 dims)
+	{
+		return mdspan_3d_t(v.data(), dims.x, dims.y, dims.z);
+	}
+
+	static inline mdspan_2d_t toMdspan(std::vector<T>& v, svec2 dims)
+	{
+		return mdspan_2d_t(v.data(), dims.x, dims.y);
+	}
+
+	static inline cmdspan_3d_t toMdspan(const std::vector<T>& v, svec3 dims)
+	{
+		return cmdspan_3d_t(v.data(), dims.x, dims.y, dims.z);
+	}
+
+	static inline cmdspan_2d_t toMdspan(const std::vector<T>& v, svec2 dims)
+	{
+		return cmdspan_2d_t(v.data(), dims.x, dims.y);
+	}
+
 	Sequential(Injector& injector):
 		SequentialBase(injector)
 	{ }
 
-	virtual void init()
+	void debugPrint(cmdspan_3d_t mat)
 	{
-		FdtdData data(settings.size());
-
-		for(std::size_t i = 0; i < data.Hx().extent(0); i++)
+		for(std::size_t i = 0; i < mat.extent(0); i++)
 		{
-			for(std::size_t j = 0; j < data.Hx().extent(1); j++)
+			for(std::size_t j = 0; j < mat.extent(1); j++)
 			{
-				for(std::size_t k = 0; k < data.Hx().extent(2); k++)
+				for(std::size_t k = 0; k < mat.extent(2); k++)
 				{
 					if constexpr(std::is_default_constructible_v<std::formatter<T>>)
-						std::print("{} ", data.Hx()[i,j,k]);
+						std::print("{} ", mat[i,j,k]);
 					else
-						std::print("{} ", (float)data.Hx()[i,j,k]);
+						std::print("{} ", (float)mat[i,j,k]);
 				}
 				std::println("{}","");
 			}
+			std::println("{}","");
 		}
 
-		std::println("{}", entt::type_id<typeof(data.Hx())>().name());
+		std::println("{}", entt::type_id<typeof(mat)>().name());
+	}
+
+	virtual void init()
+	{
+		FdtdData data(settings.size());
+		debugPrint(data.Hx());
+
 	}
 
 	virtual bool step()
@@ -177,16 +212,13 @@ private:
 			_eyz1(initMat<T>(eyzDims))
 		{}
 
-		using extents_2d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent>;
-		using extents_3d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent, std::dynamic_extent>;
+		mdspan_3d_t Hx() { return toMdspan(_Hx, HxDims); }
+		mdspan_3d_t Hy() { return toMdspan(_Hy, HyDims); }
+		mdspan_3d_t Hz() { return toMdspan(_Hz, HzDims); }
 
-		using mdspan_2d_t = Kokkos::mdspan<T, extents_2d_t>;
-		using mdspan_3d_t = Kokkos::mdspan<T, extents_3d_t>;
-
-		mdspan_3d_t Hx()
-		{
-			return mdspan_3d_t(_Hx.data(), HxDims.x, HxDims.y, HxDims.z);
-		}
+		cmdspan_3d_t Hx() const { return toMdspan(_Hx, HxDims); }
+		cmdspan_3d_t Hy() const { return toMdspan(_Hy, HyDims); }
+		cmdspan_3d_t Hz() const { return toMdspan(_Hz, HzDims); }
 
 	private:
 		svec3 size;
