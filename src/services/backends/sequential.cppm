@@ -103,16 +103,6 @@ public:
 		SequentialBase(injector)
 	{ }
 
-	void debugPrint(std::span<const T> mat)
-	{
-		for(auto&& d: mat)
-		{
-			if constexpr(std::is_default_constructible_v<std::formatter<T>>)
-				std::print("{} ", d);
-			else
-				std::print("{} ", (float)d);
-		}
-	}
 	void debugPrint(cmdspan_3d_t mat)
 	{
 		for(std::size_t i = 0; i < mat.extent(0); i++)
@@ -149,8 +139,7 @@ public:
 
 		auto Hx = data.Hx();
 
-		//debugPrint(data.Hx());
-		debugPrint(std::span(Hx.data_handle(), Hx.size()));
+		debugPrint(data.Hx());
 
 		return false;
 	}
