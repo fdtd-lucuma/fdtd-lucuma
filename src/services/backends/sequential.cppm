@@ -124,20 +124,25 @@ public:
 		std::println("{}", entt::type_id<typeof(mat)>().name());
 	}
 
-	virtual void init()
+	virtual entt::entity init()
 	{
-		FdtdData data(settings.size());
-		debugPrint(data.Hx());
+		auto id = registry.create();
 
+		auto& data = registry.emplace<FdtdData>(id, settings.size());
+
+		return id;
 	}
 
-	virtual bool step()
+	virtual bool step(entt::entity id)
 	{
-		//TODO
+		auto& data = registry.get<FdtdData>(id);
+
+		debugPrint(data.Hx());
+
 		return false;
 	}
 
-	virtual void saveFiles()
+	virtual void saveFiles(entt::entity id)
 	{
 		//TODO
 	}

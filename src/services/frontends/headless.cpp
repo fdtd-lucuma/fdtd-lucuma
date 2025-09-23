@@ -31,10 +31,10 @@ Headless::Headless([[maybe_unused]]Injector& injector):
 
 void Headless::compute()
 {
-	backend.init();
-	while(backend.step())
+	auto id = backend.init();
+	while(backend.step(id))
 	{
-		backend.saveFiles();
+		backend.saveFiles(id);
 	}
 }
 

@@ -78,19 +78,20 @@ public:
 	{ }
 
 
-	virtual void init()
+	virtual entt::entity init()
 	{
 		helloWorld();
 		//TODO
+		return entt::null;
 	}
 
-	virtual bool step()
+	virtual bool step(entt::entity id)
 	{
 		//TODO
 		return false;
 	}
 
-	virtual void saveFiles()
+	virtual void saveFiles(entt::entity id)
 	{
 		//TODO
 	}

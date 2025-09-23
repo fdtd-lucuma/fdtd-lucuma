@@ -19,6 +19,7 @@ module;
 export module lucuma.services.backends:base;
 
 import std;
+import lucuma.legacy_headers.entt;
 
 namespace lucuma::services::backends
 {
@@ -29,11 +30,12 @@ public:
 	Base() = default;
 	virtual ~Base() = default;
 
-	virtual void init() = 0;
-	virtual bool step() = 0;
-	virtual void saveFiles() = 0;
+	virtual entt::entity init() = 0;
+	virtual bool step(entt::entity id) = 0;
+	virtual void saveFiles(entt::entity id) = 0;
 
-private:
+protected:
+	entt::registry registry;
 
 };
 
