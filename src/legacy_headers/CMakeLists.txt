@@ -20,6 +20,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			entt.cppm
+			mdspan.cppm
 			xdg_utils_cxx.cppm
 			yaml_cpp.cppm
 )
