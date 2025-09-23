@@ -33,4 +33,19 @@ extern template Base&       Injector::inject<Base>();
 //extern template Sequential& Injector::inject<Sequential>();
 //extern template Vulkan&     Injector::inject<Vulkan>();
 
+export template<>
+struct BackendTraits<Backend::sequential>
+{
+	template<Precision p>
+	using type = Sequential<p>;
+};
+
+export template<>
+struct BackendTraits<Backend::vulkan>
+{
+	template<Precision p>
+	using type = Vulkan<p>;
+};
+
+
 }

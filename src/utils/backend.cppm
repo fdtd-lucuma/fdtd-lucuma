@@ -28,4 +28,6 @@ export enum class Backend
 	vulkan,
 };
 
+export template<Backend b> struct BackendTraits;
+
 }

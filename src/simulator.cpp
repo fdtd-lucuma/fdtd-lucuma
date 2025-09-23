@@ -24,6 +24,7 @@ import lucuma.utils;
 import lucuma.services;
 import std.compat;
 import magic_enum;
+import lucuma.legacy_headers.entt;
 
 namespace lucuma
 {
@@ -46,27 +47,44 @@ void Simulator::initBasic(int argc, char** argv)
 	//TODO: Yaml?
 }
 
+template <class AlwaysVoid, template <auto> class Template, auto Arg>
+struct is_instantiable_helper : std::false_type {};
+
+template <template <auto> class Template, auto Arg>
+struct is_instantiable_helper<std::void_t<Template<Arg>>, Template, Arg>
+	: std::true_type {};
+
+template <template <auto> class Template, auto Arg>
+inline constexpr bool is_instantiable_v =
+	is_instantiable_helper<void, Template, Arg>::value;
+
 void Simulator::selectBackend()
 {
-	using namespace services::backends;
 	using namespace utils;
-
-	using enum utils::Backend;
 
 	auto& settings = injector.inject<services::basic::Settings>();
 
-	magic_enum::enum_switch([&, this](auto val)
+	magic_enum::enum_switch([&, this](auto precision)
 	{
-		switch(settings.backend())
+		magic_enum::enum_switch([&, precision](auto backend)
 		{
-			case sequential:
-				injector.emplace<Sequential<val>, Base>(injector);
-				break;
+			using traits_t = BackendTraits<backend>;
 
-			case vulkan:
-				injector.emplace<Vulkan<val>, Base>(injector);
-				break;
-		}
+			if constexpr(is_instantiable_v<traits_t::template type, precision>)
+			{
+				using backend_t = typename traits_t::template type<precision>;
+
+				if constexpr(std::is_constructible_v<backend_t, Injector&>)
+				{
+					injector.emplace<backend_t, services::backends::Base>(injector);
+					return;
+				}
+			}
+
+			std::println(std::cerr, "The {} backend doesn't support precision={}", (Backend)backend, (Precision)precision);
+			exit(EXIT_FAILURE);
+
+		}, settings.backend());
 	}, settings.precision());
 }
 
