@@ -66,7 +66,7 @@ void Simulator::selectBackend()
 
 	magic_enum::enum_switch([&, this](auto precision)
 	{
-		magic_enum::enum_switch([&, precision](auto backend)
+		magic_enum::enum_switch([this, precision](auto backend)
 		{
 			using traits_t = BackendTraits<backend>;
 
@@ -78,7 +78,7 @@ void Simulator::selectBackend()
 			}
 			else
 			{
-				std::println(std::cerr, "The {} backend doesn't support precision={}", (Backend)backend, (Precision)precision);
+				std::println(std::cerr, "The {} backend doesn't support precision={}.", (Backend)backend, (Precision)precision);
 				exit(EXIT_FAILURE);
 			}
 
