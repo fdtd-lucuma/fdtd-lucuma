@@ -18,8 +18,6 @@ module;
 
 export module lucuma.services.basic:argument_parser;
 
-import :settings_enums;
-
 import lucuma.utils;
 import std;
 import magic_enum;

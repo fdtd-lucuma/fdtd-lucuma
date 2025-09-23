@@ -16,9 +16,9 @@
 
 module;
 
-export module lucuma.services.basic:settings_enums;
+export module lucuma.utils:backend;
 
-namespace lucuma::services::basic
+namespace lucuma::utils
 {
 
 export enum class Backend

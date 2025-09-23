@@ -19,6 +19,7 @@ module;
 export module lucuma.utils;
 
 export import :alias;
+export import :backend;
 export import :exceptions;
 export import :injector;
 export import :precision;

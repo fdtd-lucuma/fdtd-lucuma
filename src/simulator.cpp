@@ -51,7 +51,7 @@ void Simulator::selectBackend()
 	using namespace services::backends;
 	using namespace utils;
 
-	using enum services::basic::Backend;
+	using enum utils::Backend;
 
 	auto& settings = injector.inject<services::basic::Settings>();
 

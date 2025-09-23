@@ -25,7 +25,6 @@ export import :file_reader;
 export import :path;
 export import :path_common;
 export import :settings;
-export import :settings_enums;
 
 namespace lucuma::utils
 {

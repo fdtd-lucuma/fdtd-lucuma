@@ -23,6 +23,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			alias.cppm
+			backend.cppm
 			exceptions.cppm
 			injector.cppm
 			precision.cppm
