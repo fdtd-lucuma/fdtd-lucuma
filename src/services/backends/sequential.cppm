@@ -212,13 +212,103 @@ private:
 			_eyz1(initMat<T>(eyzDims))
 		{}
 
-		mdspan_3d_t Hx() { return toMdspan(_Hx, HxDims); }
-		mdspan_3d_t Hy() { return toMdspan(_Hy, HyDims); }
-		mdspan_3d_t Hz() { return toMdspan(_Hz, HzDims); }
+		mdspan_3d_t Hx()    { return toMdspan(_Hx,    HxDims);  }
+		mdspan_3d_t Hy()    { return toMdspan(_Hy,    HyDims);  }
+		mdspan_3d_t Hz()    { return toMdspan(_Hz,    HzDims);  }
+		mdspan_3d_t Chxh()  { return toMdspan(_Chxh,  HxDims);  }
+		mdspan_3d_t Chyh()  { return toMdspan(_Chyh,  HyDims);  }
+		mdspan_3d_t Chzh()  { return toMdspan(_Chzh,  HzDims);  }
+		mdspan_3d_t Chxe()  { return toMdspan(_Chxe,  HxDims);  }
+		mdspan_3d_t Chye()  { return toMdspan(_Chye,  HyDims);  }
+		mdspan_3d_t Chze()  { return toMdspan(_Chze,  HzDims);  }
+		mdspan_3d_t CMhx()  { return toMdspan(_CMhx,  HxDims);  }
+		mdspan_3d_t CMhy()  { return toMdspan(_CMhy,  HyDims);  }
+		mdspan_3d_t CMhz()  { return toMdspan(_CMhz,  HzDims);  }
+		mdspan_3d_t mux()   { return toMdspan(_mux,   HxDims);  }
+		mdspan_3d_t muy()   { return toMdspan(_muy,   HyDims);  }
+		mdspan_3d_t muz()   { return toMdspan(_muz,   HzDims);  }
+		mdspan_3d_t muxR()  { return toMdspan(_muxR,  HxDims);  }
+		mdspan_3d_t muyR()  { return toMdspan(_muyR,  HyDims);  }
+		mdspan_3d_t muzR()  { return toMdspan(_muzR,  HzDims);  }
+		mdspan_3d_t Ex()    { return toMdspan(_Ex,    ExDims);  }
+		mdspan_3d_t Ey()    { return toMdspan(_Ey,    EyDims);  }
+		mdspan_3d_t Ez()    { return toMdspan(_Ez,    EzDims);  }
+		mdspan_3d_t Cexe()  { return toMdspan(_Cexe,  ExDims);  }
+		mdspan_3d_t Ceye()  { return toMdspan(_Ceye,  EyDims);  }
+		mdspan_3d_t Ceze()  { return toMdspan(_Ceze,  EzDims);  }
+		mdspan_3d_t Cexh()  { return toMdspan(_Cexh,  ExDims);  }
+		mdspan_3d_t Ceyh()  { return toMdspan(_Ceyh,  EyDims);  }
+		mdspan_3d_t Cezh()  { return toMdspan(_Cezh,  EzDims);  }
+		mdspan_3d_t CEEx()  { return toMdspan(_CEEx,  ExDims);  }
+		mdspan_3d_t CEEy()  { return toMdspan(_CEEy,  EyDims);  }
+		mdspan_3d_t CEEz()  { return toMdspan(_CEEz,  EzDims);  }
+		mdspan_3d_t epsx()  { return toMdspan(_epsx,  ExDims);  }
+		mdspan_3d_t epsy()  { return toMdspan(_epsy,  EyDims);  }
+		mdspan_3d_t epsz()  { return toMdspan(_epsz,  EzDims);  }
+		mdspan_3d_t epsxR() { return toMdspan(_epsxR, ExDims);  }
+		mdspan_3d_t epsyR() { return toMdspan(_epsyR, EyDims);  }
+		mdspan_3d_t epszR() { return toMdspan(_epszR, EzDims);  }
+		mdspan_2d_t eyx0()  { return toMdspan(_eyx0,  eyxDims); }
+		mdspan_2d_t ezx0()  { return toMdspan(_ezx0,  ezxDims); }
+		mdspan_2d_t eyx1()  { return toMdspan(_eyx1,  eyxDims); }
+		mdspan_2d_t ezx1()  { return toMdspan(_ezx1,  ezxDims); }
+		mdspan_2d_t exy0()  { return toMdspan(_exy0,  exyDims); }
+		mdspan_2d_t ezy0()  { return toMdspan(_ezy0,  ezyDims); }
+		mdspan_2d_t exy1()  { return toMdspan(_exy1,  exyDims); }
+		mdspan_2d_t ezy1()  { return toMdspan(_ezy1,  ezyDims); }
+		mdspan_2d_t exz0()  { return toMdspan(_exz0,  exzDims); }
+		mdspan_2d_t eyz0()  { return toMdspan(_eyz0,  eyzDims); }
+		mdspan_2d_t exz1()  { return toMdspan(_exz1,  exzDims); }
+		mdspan_2d_t eyz1()  { return toMdspan(_eyz1,  eyzDims); }
 
-		cmdspan_3d_t Hx() const { return toMdspan(_Hx, HxDims); }
-		cmdspan_3d_t Hy() const { return toMdspan(_Hy, HyDims); }
-		cmdspan_3d_t Hz() const { return toMdspan(_Hz, HzDims); }
+		cmdspan_3d_t Hx()    const { return toMdspan(_Hx,    HxDims);  }
+		cmdspan_3d_t Hy()    const { return toMdspan(_Hy,    HyDims);  }
+		cmdspan_3d_t Hz()    const { return toMdspan(_Hz,    HzDims);  }
+		cmdspan_3d_t Chxh()  const { return toMdspan(_Chxh,  HxDims);  }
+		cmdspan_3d_t Chyh()  const { return toMdspan(_Chyh,  HyDims);  }
+		cmdspan_3d_t Chzh()  const { return toMdspan(_Chzh,  HzDims);  }
+		cmdspan_3d_t Chxe()  const { return toMdspan(_Chxe,  HxDims);  }
+		cmdspan_3d_t Chye()  const { return toMdspan(_Chye,  HyDims);  }
+		cmdspan_3d_t Chze()  const { return toMdspan(_Chze,  HzDims);  }
+		cmdspan_3d_t CMhx()  const { return toMdspan(_CMhx,  HxDims);  }
+		cmdspan_3d_t CMhy()  const { return toMdspan(_CMhy,  HyDims);  }
+		cmdspan_3d_t CMhz()  const { return toMdspan(_CMhz,  HzDims);  }
+		cmdspan_3d_t mux()   const { return toMdspan(_mux,   HxDims);  }
+		cmdspan_3d_t muy()   const { return toMdspan(_muy,   HyDims);  }
+		cmdspan_3d_t muz()   const { return toMdspan(_muz,   HzDims);  }
+		cmdspan_3d_t muxR()  const { return toMdspan(_muxR,  HxDims);  }
+		cmdspan_3d_t muyR()  const { return toMdspan(_muyR,  HyDims);  }
+		cmdspan_3d_t muzR()  const { return toMdspan(_muzR,  HzDims);  }
+		cmdspan_3d_t Ex()    const { return toMdspan(_Ex,    ExDims);  }
+		cmdspan_3d_t Ey()    const { return toMdspan(_Ey,    EyDims);  }
+		cmdspan_3d_t Ez()    const { return toMdspan(_Ez,    EzDims);  }
+		cmdspan_3d_t Cexe()  const { return toMdspan(_Cexe,  ExDims);  }
+		cmdspan_3d_t Ceye()  const { return toMdspan(_Ceye,  EyDims);  }
+		cmdspan_3d_t Ceze()  const { return toMdspan(_Ceze,  EzDims);  }
+		cmdspan_3d_t Cexh()  const { return toMdspan(_Cexh,  ExDims);  }
+		cmdspan_3d_t Ceyh()  const { return toMdspan(_Ceyh,  EyDims);  }
+		cmdspan_3d_t Cezh()  const { return toMdspan(_Cezh,  EzDims);  }
+		cmdspan_3d_t CEEx()  const { return toMdspan(_CEEx,  ExDims);  }
+		cmdspan_3d_t CEEy()  const { return toMdspan(_CEEy,  EyDims);  }
+		cmdspan_3d_t CEEz()  const { return toMdspan(_CEEz,  EzDims);  }
+		cmdspan_3d_t epsx()  const { return toMdspan(_epsx,  ExDims);  }
+		cmdspan_3d_t epsy()  const { return toMdspan(_epsy,  EyDims);  }
+		cmdspan_3d_t epsz()  const { return toMdspan(_epsz,  EzDims);  }
+		cmdspan_3d_t epsxR() const { return toMdspan(_epsxR, ExDims);  }
+		cmdspan_3d_t epsyR() const { return toMdspan(_epsyR, EyDims);  }
+		cmdspan_3d_t epszR() const { return toMdspan(_epszR, EzDims);  }
+		cmdspan_2d_t eyx0()  const { return toMdspan(_eyx0,  eyxDims); }
+		cmdspan_2d_t ezx0()  const { return toMdspan(_ezx0,  ezxDims); }
+		cmdspan_2d_t eyx1()  const { return toMdspan(_eyx1,  eyxDims); }
+		cmdspan_2d_t ezx1()  const { return toMdspan(_ezx1,  ezxDims); }
+		cmdspan_2d_t exy0()  const { return toMdspan(_exy0,  exyDims); }
+		cmdspan_2d_t ezy0()  const { return toMdspan(_ezy0,  ezyDims); }
+		cmdspan_2d_t exy1()  const { return toMdspan(_exy1,  exyDims); }
+		cmdspan_2d_t ezy1()  const { return toMdspan(_ezy1,  ezyDims); }
+		cmdspan_2d_t exz0()  const { return toMdspan(_exz0,  exzDims); }
+		cmdspan_2d_t eyz0()  const { return toMdspan(_eyz0,  eyzDims); }
+		cmdspan_2d_t exz1()  const { return toMdspan(_exz1,  exzDims); }
+		cmdspan_2d_t eyz1()  const { return toMdspan(_eyz1,  eyzDims); }
 
 	private:
 		svec3 size;
