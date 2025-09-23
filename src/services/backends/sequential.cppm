@@ -70,8 +70,8 @@ class Sequential: public Base, public SequentialBase
 public:
 	using T = PrecisionTraits<precision>::type;
 
-	using extents_2d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent>;
-	using extents_3d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent, std::dynamic_extent>;
+	using extents_2d_t = Kokkos::dextents<std::size_t, 2>;
+	using extents_3d_t = Kokkos::dextents<std::size_t, 3>;
 
 	using mdspan_2d_t = Kokkos::mdspan<T, extents_2d_t>;
 	using mdspan_3d_t = Kokkos::mdspan<T, extents_3d_t>;
@@ -116,9 +116,9 @@ public:
 					else
 						std::print("{} ", (float)mat[i,j,k]);
 				}
-				std::println("{}","");
+				std::println();
 			}
-			std::println("{}","");
+			std::println();
 		}
 
 		std::println("{}", entt::type_id<typeof(mat)>().name());
