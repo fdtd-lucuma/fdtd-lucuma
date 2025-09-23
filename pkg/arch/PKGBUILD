@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.1.1.r52.gd75b708
+pkgver=0.1.1.r72.g2525fb4
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -46,7 +46,7 @@ source=(
 	"vma-hpp-git::git+https://github.com/YaaZ/VulkanMemoryAllocator-Hpp#tag=v3.2.1"
 	"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
-	"mdspan-git::https://github.com/kokkos/mdspan#branch=stable"
+	"mdspan-git::git+https://github.com/kokkos/mdspan#branch=stable"
 )
 sha256sums=(
 	'SKIP'
