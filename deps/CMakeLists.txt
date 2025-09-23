@@ -77,11 +77,11 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	mdspan
+	EXCLUDE_FROM_ALL
 	GIT_REPOSITORY https://github.com/kokkos/mdspan
 	GIT_TAG        stable
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
-	OVERRIDE_FIND_PACKAGE
 )
 
 FetchContent_MakeAvailable(imgui imgui-module VulkanMemoryAllocator-Hpp vkfw magic_enum mdspan)
@@ -96,7 +96,6 @@ find_package(vkfw REQUIRED)
 find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang/issues/8334
 find_package(magic_enum REQUIRED)
 find_package(XdgUtils REQUIRED COMPONENTS BaseDir)
-find_package(mdspan REQUIRED)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
@@ -184,11 +183,6 @@ set_target_properties(imgui
 		UNITY_BUILD OFF
 )
 
-target_compile_definitions(imgui
-	PRIVATE
-		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
-)
-
 target_sources(imgui
 	PUBLIC
 	FILE_SET CXX_MODULES
@@ -216,6 +210,8 @@ target_include_directories(imgui
 )
 
 target_compile_definitions(imgui
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
 		IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 )
@@ -303,6 +299,25 @@ target_include_directories(magic_enumModule
 		${magic_enum_SOURCE_DIR}/include
 )
 
+
+add_library(mdspanNoInstall)
+
+# C++ version
+set_target_properties(mdspanNoInstall
+	PROPERTIES
+		CXX_STANDARD 26
+)
+
+target_compile_definitions(mdspanNoInstall
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+)
+
+target_include_directories(mdspanNoInstall
+	INTERFACE
+		${mdspan_SOURCE_DIR}/include
+)
+
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
@@ -314,6 +329,6 @@ target_link_libraries(${PROJECT_NAME}
 		VkfwModule
 		magic_enumModule
 		XdgUtils::BaseDir
-		mdspan
+		mdspanNoInstall
 )
 
