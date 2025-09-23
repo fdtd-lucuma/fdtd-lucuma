@@ -20,6 +20,7 @@ export module lucuma.services.backends;
 
 import lucuma.utils;
 import lucuma.services.basic;
+import magic_enum;
 
 export import :sequential;
 export import :base;
@@ -32,20 +33,5 @@ using namespace lucuma::services::backends;
 extern template Base&       Injector::inject<Base>();
 //extern template Sequential& Injector::inject<Sequential>();
 //extern template Vulkan&     Injector::inject<Vulkan>();
-
-export template<>
-struct BackendTraits<Backend::sequential>
-{
-	template<Precision p>
-	using type = Sequential<p>;
-};
-
-export template<>
-struct BackendTraits<Backend::vulkan>
-{
-	template<Precision p>
-	using type = Vulkan<p>;
-};
-
 
 }

@@ -27,4 +27,5 @@ target_sources(${PROJECT_NAME}
 			base.cppm
 			sequential.cppm
 			vulkan.cppm
+			utils.cppm
 )

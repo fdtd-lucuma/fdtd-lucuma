@@ -47,34 +47,22 @@ void Simulator::initBasic(int argc, char** argv)
 	//TODO: Yaml?
 }
 
-template <class AlwaysVoid, template <auto> class Template, auto Arg>
-struct is_instantiable_helper : std::false_type {};
-
-template <template <auto> class Template, auto Arg>
-struct is_instantiable_helper<std::void_t<Template<Arg>>, Template, Arg>
-	: std::true_type {};
-
-template <template <auto> class Template, auto Arg>
-inline constexpr bool is_instantiable_v =
-	is_instantiable_helper<void, Template, Arg>::value;
-
 void Simulator::selectBackend()
 {
 	using namespace utils;
+	using namespace services;
 
-	auto& settings = injector.inject<services::basic::Settings>();
+	auto& settings = injector.inject<basic::Settings>();
 
 	magic_enum::enum_switch([&, this](auto precision)
 	{
 		magic_enum::enum_switch([this, precision](auto backend)
 		{
-			using traits_t = BackendTraits<backend>;
-
-			if constexpr(is_instantiable_v<traits_t::template type, precision>)
+			if constexpr(backends::utils::isInstantiable(backend, precision))
 			{
-				using backend_t = typename traits_t::template type<precision>;
+				using backend_t = typename BackendTraits<backend>::template type<precision>;
 
-				injector.emplace<backend_t, services::backends::Base>(injector);
+				injector.emplace<backend_t, backends::Base>(injector);
 			}
 			else
 			{
