@@ -34,8 +34,13 @@ public:
 	virtual bool step(entt::entity id) = 0;
 	virtual void saveFiles(entt::entity id) = 0;
 
+	entt::registry& registry()
+	{
+		return _registry;
+	}
+
 protected:
-	entt::registry registry;
+	entt::registry _registry;
 
 };
 

@@ -126,16 +126,16 @@ public:
 
 	virtual entt::entity init()
 	{
-		auto id = registry.create();
+		auto id = _registry.create();
 
-		auto& data = registry.emplace<FdtdData>(id, settings.size());
+		_registry.emplace<FdtdData>(id, settings.size());
 
 		return id;
 	}
 
 	virtual bool step(entt::entity id)
 	{
-		auto& data = registry.get<FdtdData>(id);
+		auto& data = _registry.get<FdtdData>(id);
 
 		debugPrint(data.Hx());
 
