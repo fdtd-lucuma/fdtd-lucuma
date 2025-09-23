@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.1.1.r74.gc657143
+pkgver=0.1.1.r75.gdc2d5a4
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"

@@ -98,6 +98,12 @@ find_package(magic_enum REQUIRED)
 find_package(XdgUtils REQUIRED COMPONENTS BaseDir)
 find_package(mdspan REQUIRED)
 
+# For some readon mdspan install even if it's not at top level
+set_target_properties(mdspan
+	PROPERTIES
+		EXCLUDE_FROM_ALL TRUE
+)
+
 # Shared libraries
 pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET GLOBAL
@@ -308,6 +314,6 @@ target_link_libraries(${PROJECT_NAME}
 		VkfwModule
 		magic_enumModule
 		XdgUtils::BaseDir
-		mdspan::mdspan
+		mdspan
 )
 
