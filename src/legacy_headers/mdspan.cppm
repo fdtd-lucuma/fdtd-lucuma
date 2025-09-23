@@ -24,5 +24,6 @@ export namespace Kokkos
 {
 
 using Kokkos::mdspan;
+using Kokkos::extents;
 
 };

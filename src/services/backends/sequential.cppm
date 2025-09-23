@@ -20,6 +20,8 @@ export module lucuma.services.backends:sequential;
 
 import lucuma.utils;
 import lucuma.services.basic;
+import lucuma.legacy_headers.mdspan;
+import lucuma.legacy_headers.entt;
 
 import :base;
 
@@ -75,6 +77,23 @@ public:
 	virtual void init()
 	{
 		FdtdData data(settings.size());
+
+		for(std::size_t i = 0; i < data.Hx().extent(0); i++)
+		{
+			for(std::size_t j = 0; j < data.Hx().extent(1); j++)
+			{
+				for(std::size_t k = 0; k < data.Hx().extent(2); k++)
+				{
+					if constexpr(std::is_default_constructible_v<std::formatter<T>>)
+						std::print("{} ", data.Hx()[i,j,k]);
+					else
+						std::print("{} ", (float)data.Hx()[i,j,k]);
+				}
+				std::println("{}","");
+			}
+		}
+
+		std::println("{}", entt::type_id<typeof(data.Hx())>().name());
 	}
 
 	virtual bool step()
@@ -157,6 +176,17 @@ private:
 			_exz1(initMat<T>(exzDims)),
 			_eyz1(initMat<T>(eyzDims))
 		{}
+
+		using extents_2d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent>;
+		using extents_3d_t = Kokkos::extents<std::size_t, std::dynamic_extent, std::dynamic_extent, std::dynamic_extent>;
+
+		using mdspan_2d_t = Kokkos::mdspan<T, extents_2d_t>;
+		using mdspan_3d_t = Kokkos::mdspan<T, extents_3d_t>;
+
+		mdspan_3d_t Hx()
+		{
+			return mdspan_3d_t(_Hx.data(), HxDims.x, HxDims.y, HxDims.z);
+		}
 
 	private:
 		svec3 size;
