@@ -128,7 +128,14 @@ public:
 	{
 		auto id = _registry.create();
 
-		auto& data = _registry.emplace<FdtdData>(id, settings.time(), settings.size());
+		FdtdDataCreateInfo createInfo {
+			.size    = settings.size(),
+			.maxTime = settings.time(),
+		};
+
+		auto& data = _registry.emplace<FdtdData>(id, createInfo);
+
+		initCoefs(data);
 
 		return id;
 	}
@@ -151,12 +158,18 @@ public:
 	virtual ~Sequential() = default;
 private:
 
+	struct FdtdDataCreateInfo
+	{
+		unsigned int maxTime;
+		svec3 size;
+	};
+
 	class FdtdData
 	{
 	public:
-		FdtdData(unsigned int time, svec3 _size):
-			maxTime(time),
-			size(_size),
+		FdtdData(const FdtdDataCreateInfo& createInfo):
+			maxTime(createInfo.maxTime),
+			size(createInfo.size),
 			HxDims(size + HxDimsDelta),
 			HyDims(size + HyDimsDelta),
 			HzDims(size + HzDimsDelta),
@@ -424,6 +437,49 @@ private:
 		std::vector<T> _exz1;
 		std::vector<T> _eyz1;
 	};
+
+	void initCoefHx(FdtdData& data)
+	{
+		cmdspan_3d_t CMhx = data.CMhx();
+		cmdspan_3d_t mux  = data.mux();
+
+	}
+
+	void initCoefHy(FdtdData& data)
+	{
+
+	}
+
+	void initCoefHz(FdtdData& data)
+	{
+
+	}
+
+	void initCoefEx(FdtdData& data)
+	{
+
+	}
+
+	void initCoefEy(FdtdData& data)
+	{
+
+	}
+
+	void initCoefEz(FdtdData& data)
+	{
+
+	}
+
+	void initCoefs(FdtdData& data)
+	{
+		initCoefHx(data);
+		initCoefHy(data);
+		initCoefHz(data);
+		initCoefEx(data);
+		initCoefEy(data);
+		initCoefEz(data);
+	}
+
 
 };
 
