@@ -63,10 +63,7 @@ using namespace lucuma::utils;
 export template<Backend backend, Precision precision>
 constexpr bool isInstantiable()
 {
-	if constexpr(is_instantiable_v<BackendTraits<backend>::template type, precision>)
-		return true;
-	else
-		return false;
+	return is_instantiable_v<BackendTraits<backend>::template type, precision>;
 }
 
 export constexpr bool isInstantiable(Backend backend, Precision precision)
