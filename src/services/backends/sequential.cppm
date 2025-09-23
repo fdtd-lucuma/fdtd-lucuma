@@ -16,6 +16,8 @@
 
 module;
 
+#include <cassert>
+
 export module lucuma.services.backends:sequential;
 
 import lucuma.utils;
@@ -131,6 +133,11 @@ public:
 		FdtdDataCreateInfo createInfo {
 			.size    = settings.size(),
 			.maxTime = settings.time(),
+
+			//TODO: Get from settings
+			.deltaT = (T)1,
+			.imp0 = (T)377,
+			.Cr = (T)(1.f/std::sqrt(3.f)),
 		};
 
 		auto& data = _registry.emplace<FdtdData>(id, createInfo);
@@ -160,16 +167,22 @@ private:
 
 	struct FdtdDataCreateInfo
 	{
-		unsigned int maxTime;
 		svec3 size;
+		T deltaT;
+		T imp0;
+		T Cr;
+		unsigned int maxTime;
 	};
 
 	class FdtdData
 	{
 	public:
 		FdtdData(const FdtdDataCreateInfo& createInfo):
-			maxTime(createInfo.maxTime),
 			size(createInfo.size),
+			deltaT(createInfo.deltaT),
+			imp0(createInfo.imp0),
+			Cr(createInfo.Cr),
+			maxTime(createInfo.maxTime),
 			HxDims(size + HxDimsDelta),
 			HyDims(size + HyDimsDelta),
 			HzDims(size + HzDimsDelta),
@@ -339,11 +352,15 @@ private:
 			return true;
 		}
 
-	private:
-		unsigned int time = 0;
+		const svec3 size;
+		const T deltaT;
+		const T imp0;
+		const T Cr;
+
 		const unsigned int maxTime;
 
-		const svec3 size;
+	private:
+		unsigned int time = 0;
 
 		// Magnetic field dimentions
 
@@ -442,6 +459,32 @@ private:
 	{
 		cmdspan_3d_t CMhx = data.CMhx();
 		cmdspan_3d_t mux  = data.mux();
+
+		mdspan_3d_t Chxh = data.Chxh();
+		mdspan_3d_t Chxe = data.Chxe();
+
+		assert(CMhx.extents() == mux.extents());
+		assert(mux.extents()  == Chxh.extents());
+		assert(Chxh.extents() == Chxe.extents());
+
+		const std::size_t x = CMhx.extent(0);
+		const std::size_t y = CMhx.extent(1);
+		const std::size_t z = CMhx.extent(2);
+
+		for(std::size_t i = 0; i < x; i++)
+		{
+			for(std::size_t j = 0; j < y; j++)
+			{
+				for(std::size_t k = 0; k < z; k++)
+				{
+					Chxh[i,j,k] = ((T)1 - (CMhx[i,j,k]*(T)1) / ((T)2*mux[i,j,k]) ) /
+						((T)1 + (CMhx[i,j,k]*(T)1) / ((T)2*mux[i,j,k]));
+
+					Chxe[i,j,k] = ((T)1 / ((T)1 + (CMhx[i,j,k]*data.deltaT) / ((T)2 * mux[i,j,k]))) *
+						(data.Cr/data.imp0);
+				}
+			}
+		}
 
 	}
 
