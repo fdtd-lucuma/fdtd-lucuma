@@ -74,15 +74,13 @@ void Simulator::selectBackend()
 			{
 				using backend_t = typename traits_t::template type<precision>;
 
-				if constexpr(std::is_constructible_v<backend_t, Injector&>)
-				{
-					injector.emplace<backend_t, services::backends::Base>(injector);
-					return;
-				}
+				injector.emplace<backend_t, services::backends::Base>(injector);
 			}
-
-			std::println(std::cerr, "The {} backend doesn't support precision={}", (Backend)backend, (Precision)precision);
-			exit(EXIT_FAILURE);
+			else
+			{
+				std::println(std::cerr, "The {} backend doesn't support precision={}", (Backend)backend, (Precision)precision);
+				exit(EXIT_FAILURE);
+			}
 
 		}, settings.backend());
 	}, settings.precision());
