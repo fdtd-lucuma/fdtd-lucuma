@@ -46,8 +46,10 @@ source=(
 	"vma-hpp-git::git+https://github.com/YaaZ/VulkanMemoryAllocator-Hpp#tag=v3.2.1"
 	"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
+	"mdspan-git::https://github.com/kokkos/mdspan#branch=stable"
 )
 sha256sums=(
+	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -77,6 +79,7 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_VULKANMEMORYALLOCATOR-HPP="$srcdir/vma-hpp-git" \
 		-DFETCHCONTENT_SOURCE_DIR_VKFW="$srcdir/vkfw-git" \
 		-DFETCHCONTENT_SOURCE_DIR_MAGIC_ENUM="$srcdir/magic-enum-git" \
+		-DFETCHCONTENT_SOURCE_DIR_MDSPAN="$srcdir/mdspan-git" \
 		-DCMAKE_CXX_VISIBILITY_PRESET=hidden \
 		-DCMAKE_C_VISIBILITY_PRESET=hidden \
 

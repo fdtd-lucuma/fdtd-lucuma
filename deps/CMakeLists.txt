@@ -75,7 +75,16 @@ FetchContent_Declare(
 	OVERRIDE_FIND_PACKAGE
 )
 
-FetchContent_MakeAvailable(imgui imgui-module VulkanMemoryAllocator-Hpp vkfw magic_enum)
+FetchContent_Declare(
+	mdspan
+	GIT_REPOSITORY https://github.com/kokkos/mdspan
+	GIT_TAG        stable
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+	OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_MakeAvailable(imgui imgui-module VulkanMemoryAllocator-Hpp vkfw magic_enum mdspan)
 
 # Packages
 find_package(VulkanMemoryAllocator REQUIRED)
@@ -87,6 +96,7 @@ find_package(vkfw REQUIRED)
 find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang/issues/8334
 find_package(magic_enum REQUIRED)
 find_package(XdgUtils REQUIRED COMPONENTS BaseDir)
+find_package(mdspan REQUIRED)
 
 # Shared libraries
 pkg_check_modules(libraries
@@ -298,5 +308,6 @@ target_link_libraries(${PROJECT_NAME}
 		VkfwModule
 		magic_enumModule
 		XdgUtils::BaseDir
+		mdspan
 )
 
