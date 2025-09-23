@@ -299,25 +299,6 @@ target_include_directories(magic_enumModule
 		${magic_enum_SOURCE_DIR}/include
 )
 
-
-add_library(mdspanNoInstall)
-
-# C++ version
-set_target_properties(mdspanNoInstall
-	PROPERTIES
-		CXX_STANDARD 26
-)
-
-target_compile_definitions(mdspanNoInstall
-	PRIVATE
-		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
-)
-
-target_include_directories(mdspanNoInstall
-	INTERFACE
-		${mdspan_SOURCE_DIR}/include
-)
-
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
@@ -329,6 +310,9 @@ target_link_libraries(${PROJECT_NAME}
 		VkfwModule
 		magic_enumModule
 		XdgUtils::BaseDir
-		mdspanNoInstall
 )
 
+target_include_directories(${PROJECT_NAME}
+	PRIVATE
+		${mdspan_SOURCE_DIR}/include
+)
