@@ -23,7 +23,7 @@ namespace lucuma::utils
 {
 using namespace lucuma::services::backends;
 
-template Base&               Injector::inject<Base>();
-template SingleInstantiator& Injector::inject<SingleInstantiator>();
+template Base&         Injector::inject<Base>();
+template Instantiator& Injector::inject<Instantiator>();
 
 }

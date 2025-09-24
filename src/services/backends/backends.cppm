@@ -23,14 +23,13 @@ import lucuma.services.basic;
 import magic_enum;
 
 export import :base;
-export import :single_instantiator;
+export import :instantiator;
 
 namespace lucuma::utils
 {
 using namespace lucuma::services::backends;
 
-extern template Base&               Injector::inject<Base>();
-extern template SingleInstantiator& Injector::inject<SingleInstantiator>();
-//extern template Vulkan&     Injector::inject<Vulkan>();
+extern template Base&         Injector::inject<Base>();
+extern template Instantiator& Injector::inject<Instantiator>();
 
 }

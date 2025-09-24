@@ -33,12 +33,12 @@ namespace lucuma::services::backends
 
 using namespace utils;
 
-SingleInstantiator::SingleInstantiator(Injector& injector):
-	settings(injector.inject<basic::Settings>()),
-	instance(instantiate(injector))
+Instantiator::Instantiator(Injector& injector):
+	injector(injector),
+	settings(injector.inject<basic::Settings>())
 { }
 
-Base& SingleInstantiator::instantiate(Injector& injector)
+Base& Instantiator::instantiate()
 {
 	Base* ptr = nullptr;
 

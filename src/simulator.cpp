@@ -47,18 +47,14 @@ void Simulator::initBasic(int argc, char** argv)
 	//TODO: Yaml?
 }
 
-void Simulator::selectBackend()
-{
-	auto& _ = injector.inject<services::backends::SingleInstantiator>();
-}
-
 void Simulator::selectFrontend()
 {
-	auto& settings = injector.inject<services::basic::Settings>();
+	auto& settings     = injector.inject<services::basic::Settings>();
+	auto& instantiator = injector.inject<services::backends::Instantiator>();
 
 	if(settings.isHeadless())
 	{
-		selectBackend();
+		instantiator.instantiate();
 		auto& headless = injector.inject<services::frontends::Headless>();
 
 		headless.compute();

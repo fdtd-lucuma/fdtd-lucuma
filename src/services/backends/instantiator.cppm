@@ -16,7 +16,7 @@
 
 module;
 
-export module lucuma.services.backends:all_instantiator;
+export module lucuma.services.backends:instantiator;
 
 import std;
 import lucuma.utils;
@@ -29,13 +29,15 @@ namespace lucuma::services::backends
 
 using namespace utils;
 
-export class AllInstantiator
+export class Instantiator
 {
 public:
-	AllInstantiator(Injector& injector);
+	Instantiator(Injector& injector);
 
+	Base& instantiate();
 
 private:
+	Injector&        injector;
 	basic::Settings& settings;
 
 };

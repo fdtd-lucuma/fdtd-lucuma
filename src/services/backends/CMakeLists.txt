@@ -16,21 +16,19 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		all_instantiator.cpp
 		instantiations.cpp
+		instantiator.cpp
 		sequential.cpp
-		single_instantiator.cpp
 		vulkan.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			all_instantiator.cppm
 			backends.cppm
 			base.cppm
+			instantiator.cppm
 			sequential.cppm
 			sequential_fdtd_data.cppm
-			single_instantiator.cppm
 			utils.cppm
 			vulkan.cppm
 )
