@@ -477,12 +477,98 @@ public:
 		initCoefEz();
 	}
 
+	template<svec3 Ec1Delta, svec3 Ec2Delta>
+	void updateHComponent(
+		mdspan_3d_t Hc,
+		cmdspan_3d_t Ch,
+		cmdspan_3d_t Ce,
+		cmdspan_3d_t Ec1,
+		cmdspan_3d_t Ec2
+	)
+	{
+		const std::size_t x = Hc.extent(0);
+		const std::size_t y = Hc.extent(1);
+		const std::size_t z = Hc.extent(2);
+
+		for(std::size_t i = 0; i < x; i++)
+		{
+			for(std::size_t j = 0; j < y; j++)
+			{
+				for(std::size_t k = 0; k < z; k++)
+				{
+					const auto Ec1i = i + Ec1Delta.x;
+					const auto Ec1j = j + Ec1Delta.y;
+					const auto Ec1k = k + Ec1Delta.z;
+
+					const auto Ec2i = i + Ec2Delta.x;
+					const auto Ec2j = j + Ec2Delta.y;
+					const auto Ec2k = k + Ec2Delta.z;
+
+					Hc[i,j,k] = Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
+						((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k]) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k]))
+					;
+				}
+			}
+		}
+	}
+
+	void updateEx()
+	{
+	}
+
+	void updateEy()
+	{
+	}
+
+	void updateEz()
+	{
+	}
+
+	void updateHx()
+	{
+		updateHComponent<-EzDimsDelta,-EyDimsDelta>(
+			Hx(),
+			Chxh(),
+			Chxe(),
+			Ey(),
+			Ez()
+		);
+	}
+
+	void updateHy()
+	{
+		updateHComponent<-ExDimsDelta,-EzDimsDelta>(
+			Hy(),
+			Chyh(),
+			Chye(),
+			Ez(),
+			Ex()
+		);
+	}
+
+	void updateHz()
+	{
+		updateHComponent<-EyDimsDelta,-ExDimsDelta>(
+			Hz(),
+			Chzh(),
+			Chze(),
+			Ez(),
+			Ex()
+		);
+	}
+
 	void updateH()
 	{
+		updateHx();
+		updateHy();
+		updateHz();
 	}
 
 	void updateE()
 	{
+		updateEx();
+		updateEy();
+		updateEz();
 	}
 };
 
