@@ -54,6 +54,7 @@ struct FdtdDataCreateInfo
 	T imp0;
 	T Cr;
 	unsigned int maxTime;
+	T gaussSigma;
 };
 
 template <class T>
@@ -106,6 +107,7 @@ public:
 		imp0(createInfo.imp0),
 		Cr(createInfo.Cr),
 		maxTime(createInfo.maxTime),
+		gaussSigma(createInfo.gaussSigma),
 		HxDims(size + HxDimsDelta),
 		HyDims(size + HyDimsDelta),
 		HzDims(size + HzDimsDelta),
@@ -285,6 +287,7 @@ public:
 
 private:
 	unsigned int time = 0;
+	T gaussSigma;
 
 	// Magnetic field dimentions
 
@@ -648,6 +651,22 @@ public:
 		updateEx();
 		updateEy();
 		updateEz();
+	}
+
+	static T gauss(T time, T sigma, T x0 = 0)
+	{
+		T x = (time-x0)/sigma;
+
+		if constexpr(std::is_arithmetic_v<T>)
+			return std::exp(-(x*x));
+		else
+			return std::exp((float)-(x*x));
+	}
+
+	void gauss()
+	{
+		Ex()[gaussPosition.x, gaussPosition.y, gaussPosition.z] +=
+			gauss(time, gaussSigma);
 	}
 };
 

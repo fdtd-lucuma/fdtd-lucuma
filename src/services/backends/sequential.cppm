@@ -78,6 +78,7 @@ public:
 			.Cr = (T)(1.f/std::sqrt(3.f)),
 
 			.maxTime = settings.time(),
+			.gaussSigma = 10,
 		};
 
 		data_t& data = _registry.emplace<data_t>(id, createInfo);
@@ -93,6 +94,7 @@ public:
 
 		data.updateH();
 		data.updateE();
+		data.gauss();
 
 		return data.step();
 	}
