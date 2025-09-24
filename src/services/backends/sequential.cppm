@@ -455,21 +455,24 @@ private:
 		std::vector<T> _eyz1;
 	};
 
-	void initCoefHx(FdtdData& data)
+	// Parameters are named for H.
+	static void initCoef(
+		mdspan_3d_t Ch,
+		mdspan_3d_t Ce,
+		cmdspan_3d_t CM,
+		cmdspan_3d_t mu,
+		const T deltaT,
+		const T Cr,
+		const T imp0
+	)
 	{
-		cmdspan_3d_t CMhx = data.CMhx();
-		cmdspan_3d_t mux  = data.mux();
+		assert(Ch.extents() == Ce.extents());
+		assert(Ce.extents() == CM.extents());
+		assert(CM.extents() == mu.extents());
 
-		mdspan_3d_t Chxh = data.Chxh();
-		mdspan_3d_t Chxe = data.Chxe();
-
-		assert(CMhx.extents() == mux.extents());
-		assert(mux.extents()  == Chxh.extents());
-		assert(Chxh.extents() == Chxe.extents());
-
-		const std::size_t x = CMhx.extent(0);
-		const std::size_t y = CMhx.extent(1);
-		const std::size_t z = CMhx.extent(2);
+		const std::size_t x = Ch.extent(0);
+		const std::size_t y = Ch.extent(1);
+		const std::size_t z = Ch.extent(2);
 
 		for(std::size_t i = 0; i < x; i++)
 		{
@@ -477,66 +480,91 @@ private:
 			{
 				for(std::size_t k = 0; k < z; k++)
 				{
-					const T c = (CMhx[i,j,k]*data.deltaT)/((T)2*mux[i,j,k]);
+					const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
 
-					Chxh[i,j,k] = ((T)1-c)/((T)1+c);
-					Chxe[i,j,k] = ((T)1/((T)1+c))*(data.Cr/data.imp0);
+					Ch[i,j,k] = ((T)1-c)/((T)1+c);
+					Ce[i,j,k] = ((T)1/((T)1+c))*(Cr/imp0);
 				}
 			}
 		}
+	}
 
+	void initCoefHx(FdtdData& data)
+	{
+		initCoef(
+			data.Chxh(),
+			data.Chxe(),
+			data.CMhx(),
+			data.mux(),
+			data.deltaT,
+			data.Cr,
+			data.imp0
+		);
 	}
 
 	void initCoefHy(FdtdData& data)
 	{
-		cmdspan_3d_t CMhy = data.CMhy();
-		cmdspan_3d_t muy  = data.muy();
-
-		mdspan_3d_t Chyh = data.Chyh();
-		mdspan_3d_t Chye = data.Chye();
-
-		assert(CMhy.extents() == muy.extents());
-		assert(muy.extents()  == Chyh.extents());
-		assert(Chyh.extents() == Chye.extents());
-
-		const std::size_t x = CMhy.extent(0);
-		const std::size_t y = CMhy.extent(1);
-		const std::size_t z = CMhy.extent(2);
-
-		for(std::size_t i = 0; i < x; i++)
-		{
-			for(std::size_t j = 0; j < y; j++)
-			{
-				for(std::size_t k = 0; k < z; k++)
-				{
-					const T c = (CMhy[i,j,k]*data.deltaT)/((T)2*muy[i,j,k]);
-
-					Chyh[i,j,k] = ((T)1-c)/((T)1+c);
-					Chye[i,j,k] = ((T)1/((T)1+c))*(data.Cr/data.imp0);
-				}
-			}
-		}
-
+		initCoef(
+			data.Chyh(),
+			data.Chye(),
+			data.CMhy(),
+			data.muy(),
+			data.deltaT,
+			data.Cr,
+			data.imp0
+		);
 	}
 
 	void initCoefHz(FdtdData& data)
 	{
-
+		initCoef(
+			data.Chzh(),
+			data.Chze(),
+			data.CMhz(),
+			data.muz(),
+			data.deltaT,
+			data.Cr,
+			data.imp0
+		);
 	}
 
 	void initCoefEx(FdtdData& data)
 	{
-
+		initCoef(
+			data.Cexe(),
+			data.Cexh(),
+			data.CEEx(),
+			data.epsx(),
+			data.deltaT,
+			data.Cr,
+			data.imp0
+		);
 	}
 
 	void initCoefEy(FdtdData& data)
 	{
-
+		initCoef(
+			data.Ceye(),
+			data.Ceyh(),
+			data.CEEy(),
+			data.epsy(),
+			data.deltaT,
+			data.Cr,
+			data.imp0
+		);
 	}
 
 	void initCoefEz(FdtdData& data)
 	{
-
+		initCoef(
+			data.Ceze(),
+			data.Cezh(),
+			data.CEEz(),
+			data.epsz(),
+			data.deltaT,
+			data.Cr,
+			data.imp0
+		);
 	}
 
 	void initCoefs(FdtdData& data)
