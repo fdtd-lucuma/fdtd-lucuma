@@ -28,8 +28,64 @@ import :sequential;
 import :vulkan;
 import :utils;
 
+namespace lucuma::utils
+{
+using namespace lucuma::services::backends;
+
+template<>
+struct BackendTraits<Backend::sequential>
+{
+	template<Precision p>
+	using type = Sequential<p>;
+};
+
+template<>
+struct BackendTraits<Backend::vulkan>
+{
+	template<Precision p>
+	using type = Vulkan<p>;
+};
+
+
+}
+
+
 namespace lucuma::services::backends
 {
+
+template <class AlwaysVoid, template <auto> class Template, auto Arg>
+struct is_instantiable_helper : std::false_type {};
+
+template <template <auto> class Template, auto Arg>
+struct is_instantiable_helper<std::void_t<Template<Arg>>, Template, Arg>
+	: std::true_type {};
+
+template <template <auto> class Template, auto Arg>
+inline constexpr bool is_instantiable_v =
+	is_instantiable_helper<void, Template, Arg>::value;
+
+using namespace lucuma::utils;
+
+template<Backend backend, Precision precision>
+constexpr bool isInstantiable()
+{
+	return is_instantiable_v<BackendTraits<backend>::template type, precision>;
+}
+
+constexpr bool isInstantiable(Backend backend, Precision precision)
+{
+	bool result;
+	magic_enum::enum_switch([&](auto precision)
+	{
+		magic_enum::enum_switch([&](auto backend)
+		{
+			result = isInstantiable<backend, precision>();
+
+		}, backend);
+	}, precision);
+
+	return result;
+}
 
 using namespace utils;
 

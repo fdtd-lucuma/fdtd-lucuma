@@ -61,7 +61,7 @@ struct FdtdDataCreateInfo
 template <class T>
 class FdtdData
 {
-private:
+public:
 	constexpr static auto HxDimsDelta = svec3(0, -1, -1);
 	constexpr static auto HyDimsDelta = svec3(-1, 0, -1);
 	constexpr static auto HzDimsDelta = svec3(-1, -1, 0);
@@ -94,6 +94,8 @@ private:
 
 	using cmdspan_2d_t = _cmdspan_2d_t<>;
 	using cmdspan_3d_t = _cmdspan_3d_t<>;
+
+private:
 
 	static inline mdspan_3d_t toMdspan(std::vector<T>& v, svec3 dims)
 	{

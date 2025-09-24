@@ -25,6 +25,8 @@ import lucuma.legacy_headers.entt;
 
 import :base;
 import :sequential_fdtd_data;
+import :saver;
+import :utils;
 
 import std;
 import glm;
@@ -49,7 +51,8 @@ class Sequential: public Base, public SequentialBase
 public:
 	using T = PrecisionTraits<precision>::type;
 
-	using data_t = FdtdData<T>;
+	using data_t  = FdtdData<T>;
+	using saver_t = Saver<T>;
 
 	using extents_2d_t = Kokkos::dextents<std::size_t, 2>;
 	using extents_3d_t = Kokkos::dextents<std::size_t, 3>;
@@ -81,9 +84,16 @@ public:
 			.gaussSigma = 10,
 		};
 
-		data_t& data = _registry.emplace<data_t>(id, createInfo);
+		SaverCreateInfo saverCreateInfo {
+			.basePath = ".",
+		};
+
+		data_t& data   = _registry.emplace<data_t>(id, createInfo);
+		saver_t& saver = _registry.emplace<saver_t>(id, saverCreateInfo);
 
 		data.initCoefs();
+		saver.start(data);
+
 
 		return id;
 	}
@@ -94,9 +104,10 @@ public:
 
 		bool canContinue = data.step();
 
-
 		if(canContinue)
 		{
+			std::println("Step #{}", data.getTime());
+
 			data.updateH();
 			data.updateE();
 			data.gauss();
@@ -108,10 +119,10 @@ public:
 
 	virtual void saveFiles(entt::entity id)
 	{
-		data_t& data = _registry.get<data_t>(id);
+		auto [data, saver] = _registry.get<data_t, saver_t>(id);
 
-		//TODO
-		std::println("Step #{}", data.getTime());
+		saver.snapshot(data);
+
 #ifndef NDEBUG
 		debugPrint(data.Ex());
 #endif
@@ -119,13 +130,6 @@ public:
 
 	virtual ~Sequential() = default;
 private:
-	static inline auto toPrintable(T x)
-	{
-		if constexpr(std::is_default_constructible_v<std::formatter<T>>)
-			return x;
-		else
-			return (float)x;
-	}
 
 #ifndef NDEBUG
 	void debugPrint(cmdspan_3d_t mat)
