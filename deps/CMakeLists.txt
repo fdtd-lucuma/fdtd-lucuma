@@ -96,6 +96,10 @@ find_package(vkfw REQUIRED)
 find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang/issues/8334
 find_package(magic_enum REQUIRED)
 find_package(XdgUtils REQUIRED COMPONENTS BaseDir)
+find_package(OpenMP REQUIRED)
+
+# Quick hack to make openmp work with std module.
+target_link_libraries(__cmake_cxx26 PUBLIC OpenMP::OpenMP_CXX)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
