@@ -143,7 +143,7 @@ public:
 
 		auto& data = _registry.emplace<FdtdData>(id, createInfo);
 
-		initCoefs(data);
+		data.initCoefs();
 
 		return id;
 	}
@@ -454,129 +454,110 @@ private:
 		std::vector<T> _eyz0;
 		std::vector<T> _exz1;
 		std::vector<T> _eyz1;
-	};
 
-	// Parameters are named for H.
-	static void initCoef(
-		mdspan_3d_t Ch,
-		mdspan_3d_t Ce,
-		cmdspan_3d_t CM,
-		cmdspan_3d_t mu,
-		const T deltaT,
-		const T Cr,
-		const T imp0
-	)
-	{
-		assert(Ch.extents() == Ce.extents());
-		assert(Ce.extents() == CM.extents());
-		assert(CM.extents() == mu.extents());
-
-		const std::size_t x = Ch.extent(0);
-		const std::size_t y = Ch.extent(1);
-		const std::size_t z = Ch.extent(2);
-
-		for(std::size_t i = 0; i < x; i++)
+	public:
+		// Parameters are named for H.
+		void initCoef(
+			mdspan_3d_t Ch,
+			mdspan_3d_t Ce,
+			cmdspan_3d_t CM,
+			cmdspan_3d_t mu
+		)
 		{
-			for(std::size_t j = 0; j < y; j++)
-			{
-				for(std::size_t k = 0; k < z; k++)
-				{
-					const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
+			assert(Ch.extents() == Ce.extents());
+			assert(Ce.extents() == CM.extents());
+			assert(CM.extents() == mu.extents());
 
-					Ch[i,j,k] = ((T)1-c)/((T)1+c);
-					Ce[i,j,k] = ((T)1/((T)1+c))*(Cr/imp0);
+			const std::size_t x = Ch.extent(0);
+			const std::size_t y = Ch.extent(1);
+			const std::size_t z = Ch.extent(2);
+
+			for(std::size_t i = 0; i < x; i++)
+			{
+				for(std::size_t j = 0; j < y; j++)
+				{
+					for(std::size_t k = 0; k < z; k++)
+					{
+						const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
+
+						Ch[i,j,k] = ((T)1-c)/((T)1+c);
+						Ce[i,j,k] = ((T)1/((T)1+c))*(Cr/imp0);
+					}
 				}
 			}
 		}
-	}
 
-	void initCoefHx(FdtdData& data)
-	{
-		initCoef(
-			data.Chxh(),
-			data.Chxe(),
-			data.CMhx(),
-			data.mux(),
-			data.deltaT,
-			data.Cr,
-			data.imp0
-		);
-	}
+		void initCoefHx()
+		{
+			initCoef(
+				Chxh(),
+				Chxe(),
+				CMhx(),
+				mux()
+			);
+		}
 
-	void initCoefHy(FdtdData& data)
-	{
-		initCoef(
-			data.Chyh(),
-			data.Chye(),
-			data.CMhy(),
-			data.muy(),
-			data.deltaT,
-			data.Cr,
-			data.imp0
-		);
-	}
+		void initCoefHy()
+		{
+			initCoef(
+				Chyh(),
+				Chye(),
+				CMhy(),
+				muy()
+			);
+		}
 
-	void initCoefHz(FdtdData& data)
-	{
-		initCoef(
-			data.Chzh(),
-			data.Chze(),
-			data.CMhz(),
-			data.muz(),
-			data.deltaT,
-			data.Cr,
-			data.imp0
-		);
-	}
+		void initCoefHz()
+		{
+			initCoef(
+				Chzh(),
+				Chze(),
+				CMhz(),
+				muz()
+			);
+		}
 
-	void initCoefEx(FdtdData& data)
-	{
-		initCoef(
-			data.Cexe(),
-			data.Cexh(),
-			data.CEEx(),
-			data.epsx(),
-			data.deltaT,
-			data.Cr,
-			data.imp0
-		);
-	}
+		void initCoefEx()
+		{
+			initCoef(
+				Cexe(),
+				Cexh(),
+				CEEx(),
+				epsx()
+			);
+		}
 
-	void initCoefEy(FdtdData& data)
-	{
-		initCoef(
-			data.Ceye(),
-			data.Ceyh(),
-			data.CEEy(),
-			data.epsy(),
-			data.deltaT,
-			data.Cr,
-			data.imp0
-		);
-	}
+		void initCoefEy()
+		{
+			initCoef(
+				Ceye(),
+				Ceyh(),
+				CEEy(),
+				epsy()
+			);
+		}
 
-	void initCoefEz(FdtdData& data)
-	{
-		initCoef(
-			data.Ceze(),
-			data.Cezh(),
-			data.CEEz(),
-			data.epsz(),
-			data.deltaT,
-			data.Cr,
-			data.imp0
-		);
-	}
+		void initCoefEz()
+		{
+			initCoef(
+				Ceze(),
+				Cezh(),
+				CEEz(),
+				epsz()
+			);
+		}
 
-	void initCoefs(FdtdData& data)
-	{
-		initCoefHx(data);
-		initCoefHy(data);
-		initCoefHz(data);
-		initCoefEx(data);
-		initCoefEy(data);
-		initCoefEz(data);
-	}
+		void initCoefs()
+		{
+			initCoefHx();
+			initCoefHy();
+			initCoefHz();
+			initCoefEx();
+			initCoefEy();
+			initCoefEz();
+		}
+	};
+
 
 
 };
