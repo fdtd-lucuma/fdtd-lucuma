@@ -25,12 +25,12 @@ namespace lucuma::utils
 {
 
 /// Size vector 1 for fdtd matrices
-export using svec1 = glm::vec<1, std::size_t>;
+export using svec1 = glm::vec<1, std::ptrdiff_t>;
 
 /// Size vector 2 for fdtd matrices
-export using svec2 = glm::vec<2, std::size_t>;
+export using svec2 = glm::vec<2, std::ptrdiff_t>;
 
 /// Size vector 3 for fdtd matrices
-export using svec3 = glm::vec<3, std::size_t>;
+export using svec3 = glm::vec<3, std::ptrdiff_t>;
 
 }

@@ -70,7 +70,7 @@ public:
 
 		FdtdDataCreateInfo<T> createInfo {
 			.size          = settings.size(),
-			.gaussPosition = settings.size()/2zu,
+			.gaussPosition = settings.size()/(std::ptrdiff_t)2,
 
 			//TODO: Get from settings
 			.deltaT = (T)1,

@@ -537,6 +537,14 @@ public:
 		const std::size_t y = size.y-1;
 		const std::size_t z = size.z-1;
 
+		assert(start.x + Hc1Delta.x >= 0);
+		assert(start.y + Hc1Delta.y >= 0);
+		assert(start.z + Hc1Delta.z >= 0);
+
+		assert(start.x + Hc2Delta.x >= 0);
+		assert(start.y + Hc2Delta.y >= 0);
+		assert(start.z + Hc2Delta.z >= 0);
+
 		for(std::size_t i = start.x; i < x; i++)
 		{
 			for(std::size_t j = start.y; j < y; j++)
