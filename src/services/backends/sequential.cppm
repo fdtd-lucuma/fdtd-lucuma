@@ -477,11 +477,10 @@ private:
 			{
 				for(std::size_t k = 0; k < z; k++)
 				{
-					Chxh[i,j,k] = ((T)1 - (CMhx[i,j,k]*(T)1) / ((T)2*mux[i,j,k]) ) /
-						((T)1 + (CMhx[i,j,k]*(T)1) / ((T)2*mux[i,j,k]));
+					const T c = (CMhx[i,j,k]*data.deltaT)/((T)2*mux[i,j,k]);
 
-					Chxe[i,j,k] = ((T)1 / ((T)1 + (CMhx[i,j,k]*data.deltaT) / ((T)2 * mux[i,j,k]))) *
-						(data.Cr/data.imp0);
+					Chxh[i,j,k] = ((T)1-c)/((T)1+c);
+					Chxe[i,j,k] = ((T)1/((T)1+c))*(data.Cr/data.imp0);
 				}
 			}
 		}
