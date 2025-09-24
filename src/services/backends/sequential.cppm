@@ -104,7 +104,8 @@ public:
 		data_t& data = _registry.get<data_t>(id);
 
 		//TODO
-		debugPrint(data.Hx());
+		//debugPrint(data.Hx());
+		std::println("Step #{}", data.getTime());
 	}
 
 	virtual ~Sequential() = default;

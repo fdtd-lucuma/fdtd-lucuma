@@ -382,6 +382,11 @@ private:
 	std::vector<T> _eyz1;
 
 public:
+	unsigned int getTime() const
+	{
+		return time;
+	}
+
 	// Parameters are named for H.
 	void initCoef(
 		mdspan_3d_t Ch,
@@ -667,6 +672,10 @@ public:
 	{
 		Ex()[gaussPosition.x, gaussPosition.y, gaussPosition.z] +=
 			gauss(time, gaussSigma);
+	}
+
+	void abc()
+	{
 	}
 };
 
