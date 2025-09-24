@@ -61,6 +61,7 @@ void Simulator::selectFrontend()
 	}
 	else // Gui
 	{
+		instantiator.instantiateAll();
 		// TODO: Init gui or headless
 		// TODO: Multiple backends maybe
 	}

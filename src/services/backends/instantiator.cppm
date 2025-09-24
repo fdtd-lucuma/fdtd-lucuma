@@ -35,6 +35,7 @@ public:
 	Instantiator(Injector& injector);
 
 	Base& instantiate();
+	void instantiateAll();
 
 private:
 	Injector&        injector;

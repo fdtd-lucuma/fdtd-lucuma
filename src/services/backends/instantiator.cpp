@@ -64,4 +64,22 @@ Base& Instantiator::instantiate()
 	return *ptr;
 }
 
+void Instantiator::instantiateAll()
+{
+	// TODO: Map which where instantiated
+	magic_enum::enum_for_each<Precision>([&](auto precision)
+	{
+		magic_enum::enum_for_each<Backend>([&](auto backend)
+		{
+			if constexpr(isInstantiable(backend, precision))
+			{
+				using backend_t = typename BackendTraits<backend>::template type<precision>;
+
+				injector.emplace<backend_t, backends::Base>(injector);
+			}
+		});
+	});
+
+}
+
 }
