@@ -489,6 +489,33 @@ private:
 
 	void initCoefHy(FdtdData& data)
 	{
+		cmdspan_3d_t CMhy = data.CMhy();
+		cmdspan_3d_t muy  = data.muy();
+
+		mdspan_3d_t Chyh = data.Chyh();
+		mdspan_3d_t Chye = data.Chye();
+
+		assert(CMhy.extents() == muy.extents());
+		assert(muy.extents()  == Chyh.extents());
+		assert(Chyh.extents() == Chye.extents());
+
+		const std::size_t x = CMhy.extent(0);
+		const std::size_t y = CMhy.extent(1);
+		const std::size_t z = CMhy.extent(2);
+
+		for(std::size_t i = 0; i < x; i++)
+		{
+			for(std::size_t j = 0; j < y; j++)
+			{
+				for(std::size_t k = 0; k < z; k++)
+				{
+					const T c = (CMhy[i,j,k]*data.deltaT)/((T)2*muy[i,j,k]);
+
+					Chyh[i,j,k] = ((T)1-c)/((T)1+c);
+					Chye[i,j,k] = ((T)1/((T)1+c))*(data.Cr/data.imp0);
+				}
+			}
+		}
 
 	}
 
