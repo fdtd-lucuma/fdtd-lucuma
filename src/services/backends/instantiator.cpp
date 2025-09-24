@@ -75,7 +75,7 @@ void Instantiator::instantiateAll()
 			{
 				using backend_t = typename BackendTraits<backend>::template type<precision>;
 
-				injector.emplace<backend_t, backends::Base>(injector);
+				injector.emplace<backend_t>(injector);
 			}
 		});
 	});
