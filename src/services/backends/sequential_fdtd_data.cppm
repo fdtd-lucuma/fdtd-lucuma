@@ -22,6 +22,7 @@ export module lucuma.services.backends:sequential_fdtd_data;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
+import lucuma.legacy_headers.entt;
 
 import std;
 import glm;
@@ -69,14 +70,30 @@ private:
 	constexpr static auto EyDimsDelta = svec3(0, -1, 0);
 	constexpr static auto EzDimsDelta = svec3(0, 0, -1);
 
+	template <typename extents, typename layout = Kokkos::layout_right>
+	using mdspan_t = Kokkos::mdspan<T, extents, layout>;
+
+	template <typename extents, typename layout = Kokkos::layout_right>
+	using cmdspan_t = Kokkos::mdspan<const T, extents, layout>;
+
 	using extents_2d_t = Kokkos::dextents<std::size_t, 2>;
 	using extents_3d_t = Kokkos::dextents<std::size_t, 3>;
 
-	using mdspan_2d_t = Kokkos::mdspan<T, extents_2d_t>;
-	using mdspan_3d_t = Kokkos::mdspan<T, extents_3d_t>;
+	template <typename layout = Kokkos::layout_right>
+	using _mdspan_2d_t = mdspan_t<extents_2d_t, layout>;
+	template <typename layout = Kokkos::layout_right>
+	using _mdspan_3d_t = mdspan_t<extents_3d_t, layout>;
 
-	using cmdspan_2d_t = Kokkos::mdspan<const T, extents_2d_t>;
-	using cmdspan_3d_t = Kokkos::mdspan<const T, extents_3d_t>;
+	template <typename layout = Kokkos::layout_right>
+	using _cmdspan_2d_t = cmdspan_t<extents_2d_t, layout>;
+	template <typename layout = Kokkos::layout_right>
+	using _cmdspan_3d_t = cmdspan_t<extents_3d_t, layout>;
+
+	using mdspan_2d_t = _mdspan_2d_t<>;
+	using mdspan_3d_t = _mdspan_3d_t<>;
+
+	using cmdspan_2d_t = _cmdspan_2d_t<>;
+	using cmdspan_3d_t = _cmdspan_3d_t<>;
 
 	static inline mdspan_3d_t toMdspan(std::vector<T>& v, svec3 dims)
 	{
@@ -135,9 +152,9 @@ public:
 		_mux(initMat<T>(HxDims, 1)),
 		_muy(initMat<T>(HyDims, 1)),
 		_muz(initMat<T>(HzDims, 1)),
-		_muxR(initMat<T>(HxDims, 1)),
-		_muyR(initMat<T>(HyDims, 1)),
-		_muzR(initMat<T>(HzDims, 1)),
+		_muxR(initMat<T>(size, 1)),
+		_muyR(initMat<T>(size, 1)),
+		_muzR(initMat<T>(size, 1)),
 		_Ex(initMat<T>(ExDims)),
 		_Ey(initMat<T>(EyDims)),
 		_Ez(initMat<T>(EzDims)),
@@ -153,9 +170,9 @@ public:
 		_epsx(initMat<T>(ExDims, 1)),
 		_epsy(initMat<T>(EyDims, 1)),
 		_epsz(initMat<T>(EzDims, 1)),
-		_epsxR(initMat<T>(ExDims, 1)),
-		_epsyR(initMat<T>(EyDims, 1)),
-		_epszR(initMat<T>(EzDims, 1)),
+		_epsxR(initMat<T>(size, 1)),
+		_epsyR(initMat<T>(size, 1)),
+		_epszR(initMat<T>(size, 1)),
 		_eyx0(initMat<T>(eyxDims)),
 		_ezx0(initMat<T>(ezxDims)),
 		_eyx1(initMat<T>(eyxDims)),
@@ -185,9 +202,9 @@ public:
 	mdspan_3d_t mux()   { return toMdspan(_mux,   HxDims);  }
 	mdspan_3d_t muy()   { return toMdspan(_muy,   HyDims);  }
 	mdspan_3d_t muz()   { return toMdspan(_muz,   HzDims);  }
-	mdspan_3d_t muxR()  { return toMdspan(_muxR,  HxDims);  }
-	mdspan_3d_t muyR()  { return toMdspan(_muyR,  HyDims);  }
-	mdspan_3d_t muzR()  { return toMdspan(_muzR,  HzDims);  }
+	mdspan_3d_t muxR()  { return toMdspan(_muxR,  size);    }
+	mdspan_3d_t muyR()  { return toMdspan(_muyR,  size);    }
+	mdspan_3d_t muzR()  { return toMdspan(_muzR,  size);    }
 	mdspan_3d_t Ex()    { return toMdspan(_Ex,    ExDims);  }
 	mdspan_3d_t Ey()    { return toMdspan(_Ey,    EyDims);  }
 	mdspan_3d_t Ez()    { return toMdspan(_Ez,    EzDims);  }
@@ -203,9 +220,9 @@ public:
 	mdspan_3d_t epsx()  { return toMdspan(_epsx,  ExDims);  }
 	mdspan_3d_t epsy()  { return toMdspan(_epsy,  EyDims);  }
 	mdspan_3d_t epsz()  { return toMdspan(_epsz,  EzDims);  }
-	mdspan_3d_t epsxR() { return toMdspan(_epsxR, ExDims);  }
-	mdspan_3d_t epsyR() { return toMdspan(_epsyR, EyDims);  }
-	mdspan_3d_t epszR() { return toMdspan(_epszR, EzDims);  }
+	mdspan_3d_t epsxR() { return toMdspan(_epsxR, size);    }
+	mdspan_3d_t epsyR() { return toMdspan(_epsyR, size);    }
+	mdspan_3d_t epszR() { return toMdspan(_epszR, size);    }
 	mdspan_2d_t eyx0()  { return toMdspan(_eyx0,  eyxDims); }
 	mdspan_2d_t ezx0()  { return toMdspan(_ezx0,  ezxDims); }
 	mdspan_2d_t eyx1()  { return toMdspan(_eyx1,  eyxDims); }
@@ -234,9 +251,9 @@ public:
 	cmdspan_3d_t mux()   const { return toMdspan(_mux,   HxDims);  }
 	cmdspan_3d_t muy()   const { return toMdspan(_muy,   HyDims);  }
 	cmdspan_3d_t muz()   const { return toMdspan(_muz,   HzDims);  }
-	cmdspan_3d_t muxR()  const { return toMdspan(_muxR,  HxDims);  }
-	cmdspan_3d_t muyR()  const { return toMdspan(_muyR,  HyDims);  }
-	cmdspan_3d_t muzR()  const { return toMdspan(_muzR,  HzDims);  }
+	cmdspan_3d_t muxR()  const { return toMdspan(_muxR,  size);    }
+	cmdspan_3d_t muyR()  const { return toMdspan(_muyR,  size);    }
+	cmdspan_3d_t muzR()  const { return toMdspan(_muzR,  size);    }
 	cmdspan_3d_t Ex()    const { return toMdspan(_Ex,    ExDims);  }
 	cmdspan_3d_t Ey()    const { return toMdspan(_Ey,    EyDims);  }
 	cmdspan_3d_t Ez()    const { return toMdspan(_Ez,    EzDims);  }
@@ -252,9 +269,9 @@ public:
 	cmdspan_3d_t epsx()  const { return toMdspan(_epsx,  ExDims);  }
 	cmdspan_3d_t epsy()  const { return toMdspan(_epsy,  EyDims);  }
 	cmdspan_3d_t epsz()  const { return toMdspan(_epsz,  EzDims);  }
-	cmdspan_3d_t epsxR() const { return toMdspan(_epsxR, ExDims);  }
-	cmdspan_3d_t epsyR() const { return toMdspan(_epsyR, EyDims);  }
-	cmdspan_3d_t epszR() const { return toMdspan(_epszR, EzDims);  }
+	cmdspan_3d_t epsxR() const { return toMdspan(_epsxR, size);    }
+	cmdspan_3d_t epsyR() const { return toMdspan(_epsyR, size);    }
+	cmdspan_3d_t epszR() const { return toMdspan(_epszR, size);    }
 	cmdspan_2d_t eyx0()  const { return toMdspan(_eyx0,  eyxDims); }
 	cmdspan_2d_t ezx0()  const { return toMdspan(_ezx0,  ezxDims); }
 	cmdspan_2d_t eyx1()  const { return toMdspan(_eyx1,  eyxDims); }
@@ -674,28 +691,130 @@ public:
 			gauss(time, gaussSigma);
 	}
 
+	enum class Dim
+	{
+		X,
+		Y,
+		Z
+	};
+
+	template <Dim dim, typename T2, typename E, typename L, typename A>
+	static auto slice(Kokkos::mdspan<T2, E, L, A> mat, std::size_t index = 0)
+	{
+		if constexpr(dim == Dim::X)
+			return Kokkos::submdspan(mat, index, Kokkos::full_extent, Kokkos::full_extent);
+		if constexpr(dim == Dim::Y)
+			return Kokkos::submdspan(mat, Kokkos::full_extent, index, Kokkos::full_extent);
+		if constexpr(dim == Dim::Z)
+			return Kokkos::submdspan(mat, Kokkos::full_extent, Kokkos::full_extent, index);
+	}
+
+	template <typename T2, typename E, typename L, typename A>
+	void debugPrint(std::string_view name, Kokkos::mdspan<T2, E, L, A> mat)
+	{
+		static_assert(mat.rank() == 2);
+
+		std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
+
+	}
+
+	inline static T calculateSc(T Cr, T mu, T eps)
+	{
+		if constexpr(std::is_arithmetic_v<T>)
+			return Cr/std::sqrt(mu*eps);
+		else
+			return Cr/std::sqrt((float)(mu*eps));
+	}
+
+	template <typename L1, typename L2, typename L3>
+	void abcCommon(
+		_mdspan_2d_t<L1> Ec,
+		_cmdspan_2d_t<L1> Ecd,
+		_cmdspan_2d_t<L2> mu,
+		_cmdspan_2d_t<L3> eps,
+		mdspan_2d_t ec
+	)
+	{
+		assert(Ec.extents() == Ecd.extents());
+
+		assert(Ec.extent(0) <= mu.extent(0));
+		assert(Ec.extent(1) <= mu.extent(1));
+
+		assert(Ec.extent(0) <= eps.extent(0));
+		assert(Ec.extent(1) <= eps.extent(1));
+
+		assert(Ec.extent(0) <= ec.extent(0));
+		assert(Ec.extent(1) <= ec.extent(1));
+
+#ifndef NDEBUG
+		debugPrint("Ec", Ec);
+		debugPrint("Ecd", Ecd);
+		debugPrint("eps", eps);
+		debugPrint("mu", mu);
+		debugPrint("ec", ec);
+		std::println();
+#endif
+
+		for(std::size_t i = 0; i < Ec.extent(0); i++)
+		{
+			for(std::size_t j = 0; j < Ec.extent(1); j++)
+			{
+				const T Sc      = calculateSc(Cr, mu[i,j], eps[i,j]);
+				const T abcCoef = (Sc-1)/(Sc+1);
+
+				Ec[i,j] = ec[i,j] + abcCoef*(Ecd[i,j]-Ec[i,j]);
+				ec[i,j] = Ecd[i,j];
+			}
+		}
+	}
+
+	template <Dim dim>
+	void abcSlicer(
+		mdspan_3d_t Ec1,
+		mdspan_3d_t Ec2,
+		cmdspan_3d_t mu,
+		cmdspan_3d_t eps,
+		mdspan_2d_t e1,
+		mdspan_2d_t e2,
+		std::size_t sliceIndex,
+		std::ptrdiff_t sliceDelta
+	)
+	{
+		auto muSliced(slice<dim>(mu, sliceIndex));
+		auto epsSliced(slice<dim>(eps, sliceIndex));
+
+		abcCommon(slice<dim>(Ec1, sliceIndex), slice<dim>((cmdspan_3d_t)Ec1, sliceIndex+sliceDelta), muSliced, epsSliced, e1);
+		abcCommon(slice<dim>(Ec2, sliceIndex), slice<dim>((cmdspan_3d_t)Ec2, sliceIndex+sliceDelta), muSliced, epsSliced, e2);
+	}
+
 	void abcX0()
 	{
+		abcSlicer<Dim::X>(Ey(), Ez(), muxR(), epsxR(), eyx0(), ezx0(), 1, 1);
 	}
 
 	void abcX1()
 	{
+		abcSlicer<Dim::X>(Ey(), Ez(), muxR(), epsxR(), eyx1(), ezx1(), size.x-1, -1);
 	}
 
 	void abcY0()
 	{
+		abcSlicer<Dim::Y>(Ex(), Ez(), muyR(), epsyR(), exy0(), ezy0(), 1, 1);
 	}
 
 	void abcY1()
 	{
+		abcSlicer<Dim::Y>(Ex(), Ez(), muyR(), epsyR(), exy1(), ezy1(), size.y-1, -1);
 	}
 
 	void abcZ0()
 	{
+		abcSlicer<Dim::Z>(Ex(), Ey(), muzR(), epszR(), exz0(), eyz0(), 1, 1);
 	}
 
 	void abcZ1()
 	{
+		abcSlicer<Dim::Z>(Ex(), Ey(), muzR(), epszR(), exz1(), eyz1(), size.z-1, -1);
 	}
 
 	void abcX()

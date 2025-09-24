@@ -92,11 +92,18 @@ public:
 	{
 		data_t& data = _registry.get<data_t>(id);
 
-		data.updateH();
-		data.updateE();
-		data.gauss();
+		bool canContinue = data.step();
 
-		return data.step();
+
+		if(canContinue)
+		{
+			data.updateH();
+			data.updateE();
+			data.gauss();
+			data.abc();
+		}
+
+		return canContinue;
 	}
 
 	virtual void saveFiles(entt::entity id)
@@ -104,12 +111,21 @@ public:
 		data_t& data = _registry.get<data_t>(id);
 
 		//TODO
-		//debugPrint(data.Hx());
 		std::println("Step #{}", data.getTime());
+#ifndef NDEBUG
+		debugPrint(data.Ex());
+#endif
 	}
 
 	virtual ~Sequential() = default;
 private:
+	static inline auto toPrintable(T x)
+	{
+		if constexpr(std::is_default_constructible_v<std::formatter<T>>)
+			return x;
+		else
+			return (float)x;
+	}
 
 	void debugPrint(cmdspan_3d_t mat)
 	{
@@ -119,10 +135,7 @@ private:
 			{
 				for(std::size_t k = 0; k < mat.extent(2); k++)
 				{
-					if constexpr(std::is_default_constructible_v<std::formatter<T>>)
-						std::print("{} ", mat[i,j,k]);
-					else
-						std::print("{} ", (float)mat[i,j,k]);
+					std::print("{:.2f} ", toPrintable(mat[i,j,k]));
 				}
 				std::println();
 			}
