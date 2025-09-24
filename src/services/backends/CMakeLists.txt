@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME}
 			backends.cppm
 			base.cppm
 			sequential.cppm
+			sequential_fdtd_data.cppm
 			vulkan.cppm
 			utils.cppm
 )
