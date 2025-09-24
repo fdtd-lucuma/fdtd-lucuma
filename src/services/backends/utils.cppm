@@ -16,7 +16,10 @@
 
 module;
 
-export module lucuma.services.backends.utils;
+export module lucuma.services.backends:utils;
+
+import :sequential;
+import :vulkan;
 
 import lucuma.services.backends;
 import lucuma.utils;
@@ -44,8 +47,10 @@ struct BackendTraits<Backend::vulkan>
 
 }
 
-namespace lucuma::services::backends::utils
+namespace lucuma::services::backends
 {
+
+using namespace lucuma::utils;
 
 template <class AlwaysVoid, template <auto> class Template, auto Arg>
 struct is_instantiable_helper : std::false_type {};

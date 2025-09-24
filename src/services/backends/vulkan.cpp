@@ -24,6 +24,8 @@ import std;
 import vulkan_hpp;
 import vk_mem_alloc_hpp;
 
+import :vulkan;
+
 namespace lucuma::services::backends
 {
 

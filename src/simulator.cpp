@@ -49,29 +49,7 @@ void Simulator::initBasic(int argc, char** argv)
 
 void Simulator::selectBackend()
 {
-	using namespace utils;
-	using namespace services;
-
-	auto& settings = injector.inject<basic::Settings>();
-
-	magic_enum::enum_switch([&, this](auto precision)
-	{
-		magic_enum::enum_switch([this, precision](auto backend)
-		{
-			if constexpr(backends::utils::isInstantiable(backend, precision))
-			{
-				using backend_t = typename BackendTraits<backend>::template type<precision>;
-
-				injector.emplace<backend_t, backends::Base>(injector);
-			}
-			else
-			{
-				std::println(std::cerr, "The {} backend doesn't support precision={}.", (Backend)backend, (Precision)precision);
-				exit(EXIT_FAILURE);
-			}
-
-		}, settings.backend());
-	}, settings.precision());
+	auto& _ = injector.inject<services::backends::SingleInstantiator>();
 }
 
 void Simulator::selectFrontend()

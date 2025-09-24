@@ -21,6 +21,8 @@ module lucuma.services.backends;
 import lucuma.utils;
 import std;
 
+import :sequential;
+
 namespace lucuma::services::backends
 {
 

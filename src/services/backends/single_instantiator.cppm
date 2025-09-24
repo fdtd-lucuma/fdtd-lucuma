@@ -16,21 +16,31 @@
 
 module;
 
-export module lucuma.services.backends;
+export module lucuma.services.backends:single_instantiator;
 
+import std;
 import lucuma.utils;
 import lucuma.services.basic;
-import magic_enum;
 
-export import :base;
-export import :single_instantiator;
+import :base;
 
-namespace lucuma::utils
+namespace lucuma::services::backends
 {
-using namespace lucuma::services::backends;
 
-extern template Base&               Injector::inject<Base>();
-extern template SingleInstantiator& Injector::inject<SingleInstantiator>();
-//extern template Vulkan&     Injector::inject<Vulkan>();
+using namespace utils;
+
+export class SingleInstantiator
+{
+public:
+	SingleInstantiator(Injector& injector);
+
+
+private:
+	basic::Settings& settings;
+	Base& instance;
+
+	Base& instantiate(Injector& injector);
+
+};
 
 }
