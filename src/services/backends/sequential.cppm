@@ -27,6 +27,7 @@ import :base;
 import :sequential_fdtd_data;
 
 import std;
+import glm;
 
 namespace lucuma::services::backends
 {
@@ -68,7 +69,8 @@ public:
 		auto id = _registry.create();
 
 		FdtdDataCreateInfo<T> createInfo {
-			.size    = settings.size(),
+			.size          = settings.size(),
+			.gaussPosition = settings.size()/2zu,
 
 			//TODO: Get from settings
 			.deltaT = (T)1,

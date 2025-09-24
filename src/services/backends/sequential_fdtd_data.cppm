@@ -49,6 +49,7 @@ template <class T>
 struct FdtdDataCreateInfo
 {
 	svec3 size;
+	svec3 gaussPosition;
 	T deltaT;
 	T imp0;
 	T Cr;
@@ -100,6 +101,7 @@ private:
 public:
 	FdtdData(const FdtdDataCreateInfo<T>& createInfo):
 		size(createInfo.size),
+		gaussPosition(createInfo.gaussPosition),
 		deltaT(createInfo.deltaT),
 		imp0(createInfo.imp0),
 		Cr(createInfo.Cr),
@@ -274,6 +276,7 @@ public:
 	}
 
 	const svec3 size;
+	const svec3 gaussPosition;
 	const T deltaT;
 	const T imp0;
 	const T Cr;
