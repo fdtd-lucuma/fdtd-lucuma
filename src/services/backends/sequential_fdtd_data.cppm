@@ -709,6 +709,7 @@ public:
 			return Kokkos::submdspan(mat, Kokkos::full_extent, Kokkos::full_extent, index);
 	}
 
+#ifndef NDEBUG
 	template <typename T2, typename E, typename L, typename A>
 	void debugPrint(std::string_view name, Kokkos::mdspan<T2, E, L, A> mat)
 	{
@@ -717,6 +718,7 @@ public:
 		std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
 
 	}
+#endif
 
 	inline static T calculateSc(T Cr, T mu, T eps)
 	{

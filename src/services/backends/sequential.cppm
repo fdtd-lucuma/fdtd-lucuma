@@ -127,6 +127,7 @@ private:
 			return (float)x;
 	}
 
+#ifndef NDEBUG
 	void debugPrint(cmdspan_3d_t mat)
 	{
 		for(std::size_t i = 0; i < mat.extent(0); i++)
@@ -144,6 +145,7 @@ private:
 
 		std::println("{}", entt::type_id<typeof(mat)>().name());
 	}
+#endif
 
 };
 
