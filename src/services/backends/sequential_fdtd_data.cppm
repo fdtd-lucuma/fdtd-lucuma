@@ -674,9 +674,55 @@ public:
 			gauss(time, gaussSigma);
 	}
 
-	void abc()
+	void abcX0()
 	{
 	}
+
+	void abcX1()
+	{
+	}
+
+	void abcY0()
+	{
+	}
+
+	void abcY1()
+	{
+	}
+
+	void abcZ0()
+	{
+	}
+
+	void abcZ1()
+	{
+	}
+
+	void abcX()
+	{
+		abcX0();
+		abcX1();
+	}
+
+	void abcY()
+	{
+		abcY0();
+		abcY1();
+	}
+
+	void abcZ()
+	{
+		abcZ0();
+		abcZ1();
+	}
+
+	void abc()
+	{
+		abcX();
+		abcY();
+		abcZ();
+	}
+
 };
 
 }
