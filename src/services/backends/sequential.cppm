@@ -132,12 +132,13 @@ public:
 
 		FdtdDataCreateInfo createInfo {
 			.size    = settings.size(),
-			.maxTime = settings.time(),
 
 			//TODO: Get from settings
 			.deltaT = (T)1,
 			.imp0 = (T)377,
 			.Cr = (T)(1.f/std::sqrt(3.f)),
+
+			.maxTime = settings.time(),
 		};
 
 		auto& data = _registry.emplace<FdtdData>(id, createInfo);
