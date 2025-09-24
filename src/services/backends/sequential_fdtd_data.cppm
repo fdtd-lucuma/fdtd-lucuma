@@ -493,6 +493,14 @@ public:
 		const std::size_t y = Hc.extent(1);
 		const std::size_t z = Hc.extent(2);
 
+		assert(x-1+Ec1Delta.x < Ec1.extent(0));
+		assert(y-1+Ec1Delta.y < Ec1.extent(1));
+		assert(z-1+Ec1Delta.z < Ec1.extent(2));
+
+		assert(x-1+Ec2Delta.x < Ec2.extent(0));
+		assert(y-1+Ec2Delta.y < Ec2.extent(1));
+		assert(z-1+Ec2Delta.z < Ec2.extent(2));
+
 		for(std::size_t i = 0; i < x; i++)
 		{
 			for(std::size_t j = 0; j < y; j++)
@@ -579,8 +587,8 @@ public:
 			Hz(),
 			Chzh(),
 			Chze(),
-			Ez(),
-			Ex()
+			Ex(),
+			Ey()
 		);
 	}
 
