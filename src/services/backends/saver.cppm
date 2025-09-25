@@ -106,6 +106,10 @@ private:
 			return;
 		}
 
+		char buffer[1024*1024];
+
+		ofs.rdbuf()->pubsetbuf(buffer, sizeof(buffer));
+
 		// Why is locale so slow?
 		ofs.imbue(std::locale::classic());
 		f(ofs);
