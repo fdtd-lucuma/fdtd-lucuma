@@ -22,6 +22,7 @@ export module lucuma.services.backends:saver;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
+import lucuma.legacy_headers.taskflow;
 
 import :sequential_fdtd_data;
 import :utils;
@@ -58,13 +59,22 @@ public:
 
 	void snapshot(const data_t& data)
 	{
-		writeMatrix("Hx", data.getTime(), data.Hx());
-		writeMatrix("Hy", data.getTime(), data.Hy());
-		writeMatrix("Hz", data.getTime(), data.Hz());
+		tf::Executor executor;
+		tf::Taskflow taskflow;
 
-		writeMatrix("Ex", data.getTime(), data.Ex());
-		writeMatrix("Ey", data.getTime(), data.Ey());
-		writeMatrix("Ez", data.getTime(), data.Ez());
+		taskflow.name("File saver");
+
+		const auto time = data.getTime();
+
+		for(auto&& [name, mat]: data.zippedFields())
+		{
+			taskflow.emplace([=, this](){writeMatrix(name, time, mat);}).name(name);
+		}
+
+		executor.run(taskflow).wait();
+
+		std::ofstream ofs("taskflow.dot");
+		taskflow.dump(ofs);
 	}
 
 private:

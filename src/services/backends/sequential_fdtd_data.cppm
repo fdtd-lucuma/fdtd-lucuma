@@ -287,6 +287,29 @@ public:
 	cmdspan_2d_t exz1()  const { return toMdspan(_exz1,  exzDims); }
 	cmdspan_2d_t eyz1()  const { return toMdspan(_eyz1,  eyzDims); }
 
+	std::generator<std::tuple<const char*, cmdspan_3d_t>> zippedFields() const {
+		static constexpr std::array names {
+			"Hx",
+			"Hy",
+			"Hz",
+			"Ex",
+			"Ey",
+			"Ez",
+		};
+
+		std::array mats {
+			Hx(),
+			Hy(),
+			Hz(),
+			Ex(),
+			Ey(),
+			Ez(),
+		};
+
+		for(auto&& p: std::views::zip(names, mats))
+			co_yield p;
+	}
+
 	/// Returns true and increments the counter by +1 if it can still continue.
 	bool step() {
 		if(time >= maxTime)

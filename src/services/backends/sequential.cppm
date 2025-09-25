@@ -124,7 +124,7 @@ public:
 		saver.snapshot(data);
 
 #ifndef NDEBUG
-		debugPrint(data.Ex());
+		//debugPrint(data.Ex());
 #endif
 	}
 
