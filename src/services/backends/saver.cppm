@@ -54,25 +54,19 @@ public:
 	{
 		createBaseDir();
 
-		#pragma omp taskgroup
-		{
-			writeInfo(data);
-			writeMorfo(data);
-		}
+		writeInfo(data);
+		writeMorfo(data);
 	}
 
 	void snapshot(const data_t& data)
 	{
-		#pragma omp taskgroup
-		{
-			writeMatrix("Hx", data.getTime(), data.Hx());
-			writeMatrix("Hy", data.getTime(), data.Hy());
-			writeMatrix("Hz", data.getTime(), data.Hz());
+		writeMatrix("Hx", data.getTime(), data.Hx());
+		writeMatrix("Hy", data.getTime(), data.Hy());
+		writeMatrix("Hz", data.getTime(), data.Hz());
 
-			writeMatrix("Ex", data.getTime(), data.Ex());
-			writeMatrix("Ey", data.getTime(), data.Ey());
-			writeMatrix("Ez", data.getTime(), data.Ez());
-		}
+		writeMatrix("Ex", data.getTime(), data.Ex());
+		writeMatrix("Ey", data.getTime(), data.Ey());
+		writeMatrix("Ez", data.getTime(), data.Ez());
 	}
 
 private:
@@ -94,24 +88,21 @@ private:
 	template <typename F>
 	void writeToFile(const std::filesystem::path& fileName, F f)
 	{
-		#pragma omp task
+		std::println("Start Thread {}", omp_get_thread_num());
+
+		const auto morfoPath = basePath/fileName;
+		auto ofs = std::ofstream(morfoPath);
+
+		if(!ofs.is_open())
 		{
-			std::println("Start Thread {}", omp_get_thread_num());
-
-			const auto morfoPath = basePath/fileName;
-			auto ofs = std::ofstream(morfoPath);
-
-			if(!ofs.is_open())
-			{
-				perror(morfoPath.c_str());
-			}
-			else
-			{
-				f(ofs);
-			}
-
-			std::println("Finish Thread {}", omp_get_thread_num());
+			perror(morfoPath.c_str());
 		}
+		else
+		{
+			f(ofs);
+		}
+
+		std::println("Finish Thread {}", omp_get_thread_num());
 
 	}
 
