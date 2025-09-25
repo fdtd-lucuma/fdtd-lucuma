@@ -73,9 +73,6 @@ public:
 		}
 
 		executor.run(taskflow).wait();
-
-		std::ofstream ofs("taskflow.dot");
-		taskflow.dump(ofs);
 	}
 
 private:
