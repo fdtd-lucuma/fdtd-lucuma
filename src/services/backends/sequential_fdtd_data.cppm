@@ -816,7 +816,7 @@ public:
 
 	void abcX0()
 	{
-		abcSlicer<Dim::X>(Ey(), Ez(), muxR(), epsxR(), eyx0(), ezx0(), 1, 1);
+		abcSlicer<Dim::X>(Ey(), Ez(), muxR(), epsxR(), eyx0(), ezx0(), 0, 1);
 	}
 
 	void abcX1()
@@ -826,7 +826,7 @@ public:
 
 	void abcY0()
 	{
-		abcSlicer<Dim::Y>(Ex(), Ez(), muyR(), epsyR(), exy0(), ezy0(), 1, 1);
+		abcSlicer<Dim::Y>(Ex(), Ez(), muyR(), epsyR(), exy0(), ezy0(), 0, 1);
 	}
 
 	void abcY1()
@@ -836,7 +836,7 @@ public:
 
 	void abcZ0()
 	{
-		abcSlicer<Dim::Z>(Ex(), Ey(), muzR(), epszR(), exz0(), eyz0(), 1, 1);
+		abcSlicer<Dim::Z>(Ex(), Ey(), muzR(), epszR(), exz0(), eyz0(), 0, 1);
 	}
 
 	void abcZ1()
