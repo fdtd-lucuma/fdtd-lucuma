@@ -287,6 +287,29 @@ public:
 	cmdspan_2d_t exz1()  const { return toMdspan(_exz1,  exzDims); }
 	cmdspan_2d_t eyz1()  const { return toMdspan(_eyz1,  eyzDims); }
 
+	std::generator<std::tuple<const char*, cmdspan_3d_t>> zippedFields() const {
+		static constexpr std::array names {
+			"Hx",
+			"Hy",
+			"Hz",
+			"Ex",
+			"Ey",
+			"Ez",
+		};
+
+		std::array mats {
+			Hx(),
+			Hy(),
+			Hz(),
+			Ex(),
+			Ey(),
+			Ez(),
+		};
+
+		for(auto&& p: std::views::zip(names, mats))
+			co_yield p;
+	}
+
 	/// Returns true and increments the counter by +1 if it can still continue.
 	bool step() {
 		if(time >= maxTime)
@@ -422,7 +445,7 @@ public:
 		const std::size_t y = Ch.extent(1);
 		const std::size_t z = Ch.extent(2);
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z,Cr,imp0,deltaT)
+		#pragma omp parallel for default(private) firstprivate(x,y,z,Cr,imp0,deltaT)
 		for(std::size_t i = 0; i < x; i++)
 		{
 			for(std::size_t j = 0; j < y; j++)
@@ -529,7 +552,7 @@ public:
 		assert(y-1+Ec2Delta.y < Ec2.extent(1));
 		assert(z-1+Ec2Delta.z < Ec2.extent(2));
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z)
+		#pragma omp parallel for default(private) firstprivate(x,y,z)
 		for(std::size_t i = 0; i < x; i++)
 		{
 			for(std::size_t j = 0; j < y; j++)
@@ -574,7 +597,7 @@ public:
 		assert(start.y + Hc2Delta.y >= 0);
 		assert(start.z + Hc2Delta.z >= 0);
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z)
+		#pragma omp parallel for default(private) firstprivate(x,y,z)
 		for(std::size_t i = start.x; i < x; i++)
 		{
 			for(std::size_t j = start.y; j < y; j++)

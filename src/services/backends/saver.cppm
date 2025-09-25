@@ -60,13 +60,16 @@ public:
 
 	void snapshot(const data_t& data)
 	{
-		writeMatrix("Hx", data.getTime(), data.Hx());
-		writeMatrix("Hy", data.getTime(), data.Hy());
-		writeMatrix("Hz", data.getTime(), data.Hz());
+		const auto time = data.getTime();
+		const auto zipped = std::ranges::to<std::vector>(data.zippedFields());
 
-		writeMatrix("Ex", data.getTime(), data.Ex());
-		writeMatrix("Ey", data.getTime(), data.Ey());
-		writeMatrix("Ez", data.getTime(), data.Ez());
+		#pragma omp parallel for default(firstprivate) shared(zipped) schedule(static)
+		for(std::size_t i = 0; i < zipped.size(); i++)
+		{
+			auto&& [name, mat] = zipped[i];
+
+			writeMatrix(name, time, mat);
+		}
 	}
 
 private:
