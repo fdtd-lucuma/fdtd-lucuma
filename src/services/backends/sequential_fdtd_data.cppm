@@ -441,7 +441,7 @@ public:
 		assert(Ce.extents() == CM.extents());
 		assert(CM.extents() == mu.extents());
 
-		#pragma omp parallel for simd firstprivate(deltaT,Cr,imp0) collapse(3) schedule(static, 4096)
+		#pragma omp for simd collapse(3) schedule(static)
 		for(std::size_t i = 0; i < Ch.extent(0); i++)
 		{
 			for(std::size_t j = 0; j < Ch.extent(1); j++)
@@ -550,7 +550,7 @@ public:
 		assert(z-1+Ec2Delta.z < Ec2.extent(2));
 #endif
 
-		#pragma omp parallel for simd collapse(3) schedule(static, 4096)
+		#pragma omp for simd collapse(3) schedule(static)
 		for(std::size_t i = 0; i < Hc.extent(0); i++)
 		{
 			for(std::size_t j = 0; j < Hc.extent(1); j++)
@@ -591,7 +591,7 @@ public:
 		assert(start.y + Hc2Delta.y >= 0);
 		assert(start.z + Hc2Delta.z >= 0);
 
-		#pragma omp parallel for collapse(3) schedule(static, 4096)
+		#pragma omp for collapse(3) schedule(static)
 		for(std::ptrdiff_t i = start.x; i < size.x-1; i++)
 		{
 			for(std::ptrdiff_t j = start.y; j < size.y-1; j++)
@@ -685,16 +685,22 @@ public:
 
 	void updateH()
 	{
-		updateHx();
-		updateHy();
-		updateHz();
+		#pragma omp parallel
+		{
+			updateHx();
+			updateHy();
+			updateHz();
+		}
 	}
 
 	void updateE()
 	{
-		updateEx();
-		updateEy();
-		updateEz();
+		#pragma omp parallel
+		{
+			updateEx();
+			updateEy();
+			updateEz();
+		}
 	}
 
 	static T gauss(T time, T sigma, T x0 = 0)
@@ -779,7 +785,7 @@ public:
 		std::println();
 #endif
 
-		#pragma omp parallel for simd firstprivate(Cr) collapse(2) schedule(static, 4096)
+		#pragma omp for simd collapse(2) schedule(static)
 		for(std::size_t i = 0; i < Ec.extent(0); i++)
 		{
 			for(std::size_t j = 0; j < Ec.extent(1); j++)
@@ -862,9 +868,12 @@ public:
 
 	void abc()
 	{
-		abcX();
-		abcY();
-		abcZ();
+		#pragma omp parallel
+		{
+			abcX();
+			abcY();
+			abcZ();
+		}
 	}
 
 };
