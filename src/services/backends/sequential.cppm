@@ -121,7 +121,7 @@ public:
 	{
 		auto [data, saver] = _registry.get<data_t, saver_t>(id);
 
-		//saver.snapshot(data);
+		saver.snapshot(data);
 
 #ifndef NDEBUG
 		//debugPrint(data.Ex());
