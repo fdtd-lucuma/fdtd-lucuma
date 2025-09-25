@@ -433,8 +433,8 @@ public:
 	void initCoef(
 		mdspan_3d_t Ch,
 		mdspan_3d_t Ce,
-		cmdspan_3d_t CM,
-		cmdspan_3d_t mu
+		const cmdspan_3d_t CM,
+		const cmdspan_3d_t mu
 	)
 	{
 		assert(Ch.extents() == Ce.extents());
@@ -530,10 +530,10 @@ public:
 	template<svec3 Ec1Delta, svec3 Ec2Delta>
 	void updateHComponent(
 		mdspan_3d_t Hc,
-		cmdspan_3d_t Ch,
-		cmdspan_3d_t Ce,
-		cmdspan_3d_t Ec1,
-		cmdspan_3d_t Ec2
+		const cmdspan_3d_t Ch,
+		const cmdspan_3d_t Ce,
+		const cmdspan_3d_t Ec1,
+		const cmdspan_3d_t Ec2
 	)
 	{
 #ifndef NDEBUG
@@ -576,11 +576,11 @@ public:
 	template<svec3 Hc1Delta, svec3 Hc2Delta>
 	void updateEComponent(
 		mdspan_3d_t Ec,
-		cmdspan_3d_t Ce,
-		cmdspan_3d_t Ch,
-		cmdspan_3d_t Hc1,
-		cmdspan_3d_t Hc2,
-		svec3 start
+		const cmdspan_3d_t Ce,
+		const cmdspan_3d_t Ch,
+		const cmdspan_3d_t Hc1,
+		const cmdspan_3d_t Hc2,
+		const svec3 start
 	)
 	{
 		assert(start.x + Hc1Delta.x >= 0);
@@ -591,7 +591,7 @@ public:
 		assert(start.y + Hc2Delta.y >= 0);
 		assert(start.z + Hc2Delta.z >= 0);
 
-		#pragma omp parallel for default(shared) firstprivate(Ec,Ce,Ch,Hc1,Hc2) collapse(3)
+		#pragma omp parallel for default(shared) collapse(3)
 		for(std::ptrdiff_t i = start.x; i < size.x-1; i++)
 		{
 			for(std::ptrdiff_t j = start.y; j < size.y-1; j++)
@@ -753,9 +753,9 @@ public:
 	template <typename L1, typename L2, typename L3>
 	void abcCommon(
 		_mdspan_2d_t<L1> Ec,
-		_cmdspan_2d_t<L1> Ecd,
-		_cmdspan_2d_t<L2> mu,
-		_cmdspan_2d_t<L3> eps,
+		const _cmdspan_2d_t<L1> Ecd,
+		const _cmdspan_2d_t<L2> mu,
+		const _cmdspan_2d_t<L3> eps,
 		mdspan_2d_t ec
 	)
 	{
