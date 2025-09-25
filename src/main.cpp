@@ -14,12 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <omp.h>
+
 import lucuma;
 import std;
 
 int main(int argc, char** argv)
 {
 	std::locale::global(std::locale(""));
+	int exitCode;
 
-	return lucuma::Simulator().run(argc, argv);
+	#pragma omp parallel
+	#pragma omp single
+	{
+		exitCode = lucuma::Simulator().run(argc, argv);
+	}
+
+	return exitCode;
 }

@@ -414,24 +414,27 @@ public:
 		cmdspan_3d_t mu
 	)
 	{
-		assert(Ch.extents() == Ce.extents());
-		assert(Ce.extents() == CM.extents());
-		assert(CM.extents() == mu.extents());
-
-		const std::size_t x = Ch.extent(0);
-		const std::size_t y = Ch.extent(1);
-		const std::size_t z = Ch.extent(2);
-
-		for(std::size_t i = 0; i < x; i++)
+		#pragma omp task
 		{
-			for(std::size_t j = 0; j < y; j++)
-			{
-				for(std::size_t k = 0; k < z; k++)
-				{
-					const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
+			assert(Ch.extents() == Ce.extents());
+			assert(Ce.extents() == CM.extents());
+			assert(CM.extents() == mu.extents());
 
-					Ch[i,j,k] = ((T)1-c)/((T)1+c);
-					Ce[i,j,k] = ((T)1/((T)1+c))*(Cr/imp0);
+			const std::size_t x = Ch.extent(0);
+			const std::size_t y = Ch.extent(1);
+			const std::size_t z = Ch.extent(2);
+
+			for(std::size_t i = 0; i < x; i++)
+			{
+				for(std::size_t j = 0; j < y; j++)
+				{
+					for(std::size_t k = 0; k < z; k++)
+					{
+						const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
+
+						Ch[i,j,k] = ((T)1-c)/((T)1+c);
+						Ce[i,j,k] = ((T)1/((T)1+c))*(Cr/imp0);
+					}
 				}
 			}
 		}
@@ -516,35 +519,39 @@ public:
 		cmdspan_3d_t Ec2
 	)
 	{
-		const std::size_t x = Hc.extent(0);
-		const std::size_t y = Hc.extent(1);
-		const std::size_t z = Hc.extent(2);
-
-		assert(x-1+Ec1Delta.x < Ec1.extent(0));
-		assert(y-1+Ec1Delta.y < Ec1.extent(1));
-		assert(z-1+Ec1Delta.z < Ec1.extent(2));
-
-		assert(x-1+Ec2Delta.x < Ec2.extent(0));
-		assert(y-1+Ec2Delta.y < Ec2.extent(1));
-		assert(z-1+Ec2Delta.z < Ec2.extent(2));
-
-		for(std::size_t i = 0; i < x; i++)
+		#pragma omp task
 		{
-			for(std::size_t j = 0; j < y; j++)
+			const std::size_t x = Hc.extent(0);
+			const std::size_t y = Hc.extent(1);
+			const std::size_t z = Hc.extent(2);
+
+			assert(x-1+Ec1Delta.x < Ec1.extent(0));
+			assert(y-1+Ec1Delta.y < Ec1.extent(1));
+			assert(z-1+Ec1Delta.z < Ec1.extent(2));
+
+			assert(x-1+Ec2Delta.x < Ec2.extent(0));
+			assert(y-1+Ec2Delta.y < Ec2.extent(1));
+			assert(z-1+Ec2Delta.z < Ec2.extent(2));
+
+			#pragma omp parallel
+			for(std::size_t i = 0; i < x; i++)
 			{
-				for(std::size_t k = 0; k < z; k++)
+				for(std::size_t j = 0; j < y; j++)
 				{
-					const auto Ec1i = i + Ec1Delta.x;
-					const auto Ec1j = j + Ec1Delta.y;
-					const auto Ec1k = k + Ec1Delta.z;
+					for(std::size_t k = 0; k < z; k++)
+					{
+						const auto Ec1i = i + Ec1Delta.x;
+						const auto Ec1j = j + Ec1Delta.y;
+						const auto Ec1k = k + Ec1Delta.z;
 
-					const auto Ec2i = i + Ec2Delta.x;
-					const auto Ec2j = j + Ec2Delta.y;
-					const auto Ec2k = k + Ec2Delta.z;
+						const auto Ec2i = i + Ec2Delta.x;
+						const auto Ec2j = j + Ec2Delta.y;
+						const auto Ec2k = k + Ec2Delta.z;
 
-					Hc[i,j,k] = Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
-						((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k]) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k]))
-					;
+						Hc[i,j,k] = Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
+							((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k]) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k]))
+						;
+					}
 				}
 			}
 		}
@@ -560,35 +567,39 @@ public:
 		svec3 start
 	)
 	{
-		const std::size_t x = size.x-1;
-		const std::size_t y = size.y-1;
-		const std::size_t z = size.z-1;
-
-		assert(start.x + Hc1Delta.x >= 0);
-		assert(start.y + Hc1Delta.y >= 0);
-		assert(start.z + Hc1Delta.z >= 0);
-
-		assert(start.x + Hc2Delta.x >= 0);
-		assert(start.y + Hc2Delta.y >= 0);
-		assert(start.z + Hc2Delta.z >= 0);
-
-		for(std::size_t i = start.x; i < x; i++)
+		#pragma omp task
 		{
-			for(std::size_t j = start.y; j < y; j++)
+			const std::size_t x = size.x-1;
+			const std::size_t y = size.y-1;
+			const std::size_t z = size.z-1;
+
+			assert(start.x + Hc1Delta.x >= 0);
+			assert(start.y + Hc1Delta.y >= 0);
+			assert(start.z + Hc1Delta.z >= 0);
+
+			assert(start.x + Hc2Delta.x >= 0);
+			assert(start.y + Hc2Delta.y >= 0);
+			assert(start.z + Hc2Delta.z >= 0);
+
+			#pragma omp parallel
+			for(std::size_t i = start.x; i < x; i++)
 			{
-				for(std::size_t k = start.z; k < z; k++)
+				for(std::size_t j = start.y; j < y; j++)
 				{
-					const auto Hc1i = i + Hc1Delta.x;
-					const auto Hc1j = j + Hc1Delta.y;
-					const auto Hc1k = k + Hc1Delta.z;
+					for(std::size_t k = start.z; k < z; k++)
+					{
+						const auto Hc1i = i + Hc1Delta.x;
+						const auto Hc1j = j + Hc1Delta.y;
+						const auto Hc1k = k + Hc1Delta.z;
 
-					const auto Hc2i = i + Hc2Delta.x;
-					const auto Hc2j = j + Hc2Delta.y;
-					const auto Hc2k = k + Hc2Delta.z;
+						const auto Hc2i = i + Hc2Delta.x;
+						const auto Hc2j = j + Hc2Delta.y;
+						const auto Hc2k = k + Hc2Delta.z;
 
-					Ec[i,j,k] = Ce[i,j,k]*Ec[i,j,k] + Ch[i,j,k] *
-						((Hc1[i,j,k]-Hc1[Hc1i,Hc1j,Hc1k]) - (Hc2[i,j,k]-Hc2[Hc2i,Hc2j,Hc2k]))
-					;
+						Ec[i,j,k] = Ce[i,j,k]*Ec[i,j,k] + Ch[i,j,k] *
+							((Hc1[i,j,k]-Hc1[Hc1i,Hc1j,Hc1k]) - (Hc2[i,j,k]-Hc2[Hc2i,Hc2j,Hc2k]))
+						;
+					}
 				}
 			}
 		}
@@ -665,16 +676,22 @@ public:
 
 	void updateH()
 	{
-		updateHx();
-		updateHy();
-		updateHz();
+		#pragma omp taskgroup
+		{
+			updateHx();
+			updateHy();
+			updateHz();
+		}
 	}
 
 	void updateE()
 	{
-		updateEx();
-		updateEy();
-		updateEz();
+		#pragma omp taskgroup
+		{
+			updateEx();
+			updateEy();
+			updateEz();
+		}
 	}
 
 	static T gauss(T time, T sigma, T x0 = 0)
@@ -739,35 +756,39 @@ public:
 		mdspan_2d_t ec
 	)
 	{
-		assert(Ec.extents() == Ecd.extents());
+		#pragma omp task
+		{
+			assert(Ec.extents() == Ecd.extents());
 
-		assert(Ec.extent(0) <= mu.extent(0));
-		assert(Ec.extent(1) <= mu.extent(1));
+			assert(Ec.extent(0) <= mu.extent(0));
+			assert(Ec.extent(1) <= mu.extent(1));
 
-		assert(Ec.extent(0) <= eps.extent(0));
-		assert(Ec.extent(1) <= eps.extent(1));
+			assert(Ec.extent(0) <= eps.extent(0));
+			assert(Ec.extent(1) <= eps.extent(1));
 
-		assert(Ec.extent(0) <= ec.extent(0));
-		assert(Ec.extent(1) <= ec.extent(1));
+			assert(Ec.extent(0) <= ec.extent(0));
+			assert(Ec.extent(1) <= ec.extent(1));
 
 #ifndef NDEBUG
-		debugPrint("Ec", Ec);
-		debugPrint("Ecd", Ecd);
-		debugPrint("eps", eps);
-		debugPrint("mu", mu);
-		debugPrint("ec", ec);
-		std::println();
+			debugPrint("Ec", Ec);
+			debugPrint("Ecd", Ecd);
+			debugPrint("eps", eps);
+			debugPrint("mu", mu);
+			debugPrint("ec", ec);
+			std::println();
 #endif
 
-		for(std::size_t i = 0; i < Ec.extent(0); i++)
-		{
-			for(std::size_t j = 0; j < Ec.extent(1); j++)
+			#pragma omp parallel
+			for(std::size_t i = 0; i < Ec.extent(0); i++)
 			{
-				const T Sc      = calculateSc(Cr, mu[i,j], eps[i,j]);
-				const T abcCoef = (Sc-1)/(Sc+1);
+				for(std::size_t j = 0; j < Ec.extent(1); j++)
+				{
+					const T Sc      = calculateSc(Cr, mu[i,j], eps[i,j]);
+					const T abcCoef = (Sc-1)/(Sc+1);
 
-				Ec[i,j] = ec[i,j] + abcCoef*(Ecd[i,j]-Ec[i,j]);
-				ec[i,j] = Ecd[i,j];
+					Ec[i,j] = ec[i,j] + abcCoef*(Ecd[i,j]-Ec[i,j]);
+					ec[i,j] = Ecd[i,j];
+				}
 			}
 		}
 	}
@@ -841,9 +862,12 @@ public:
 
 	void abc()
 	{
-		abcX();
-		abcY();
-		abcZ();
+		#pragma omp taskgroup
+		{
+			abcX();
+			abcY();
+			abcZ();
+		}
 	}
 
 };

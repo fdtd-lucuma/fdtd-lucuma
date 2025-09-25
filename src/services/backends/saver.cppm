@@ -17,6 +17,7 @@
 module;
 
 #include <cassert>
+#include <omp.h>
 
 export module lucuma.services.backends:saver;
 
@@ -52,19 +53,26 @@ public:
 	void start(const data_t& data)
 	{
 		createBaseDir();
-		writeInfo(data);
-		writeMorfo(data);
+
+		#pragma omp taskgroup
+		{
+			writeInfo(data);
+			writeMorfo(data);
+		}
 	}
 
 	void snapshot(const data_t& data)
 	{
-		writeMatrix("Hx", data.getTime(), data.Hx());
-		writeMatrix("Hy", data.getTime(), data.Hy());
-		writeMatrix("Hz", data.getTime(), data.Hz());
+		#pragma omp taskgroup
+		{
+			writeMatrix("Hx", data.getTime(), data.Hx());
+			writeMatrix("Hy", data.getTime(), data.Hy());
+			writeMatrix("Hz", data.getTime(), data.Hz());
 
-		writeMatrix("Ex", data.getTime(), data.Ex());
-		writeMatrix("Ey", data.getTime(), data.Ey());
-		writeMatrix("Ez", data.getTime(), data.Ez());
+			writeMatrix("Ex", data.getTime(), data.Ex());
+			writeMatrix("Ey", data.getTime(), data.Ey());
+			writeMatrix("Ez", data.getTime(), data.Ez());
+		}
 	}
 
 private:
@@ -86,16 +94,24 @@ private:
 	template <typename F>
 	void writeToFile(const std::filesystem::path& fileName, F f)
 	{
-		const auto morfoPath = basePath/fileName;
-		auto ofs = std::ofstream(morfoPath);
-
-		if(!ofs.is_open())
+		#pragma omp task
 		{
-			perror(morfoPath.c_str());
-			return;
-		}
+			std::println("Start Thread {}", omp_get_thread_num());
 
-		f(ofs);
+			const auto morfoPath = basePath/fileName;
+			auto ofs = std::ofstream(morfoPath);
+
+			if(!ofs.is_open())
+			{
+				perror(morfoPath.c_str());
+			}
+			else
+			{
+				f(ofs);
+			}
+
+			std::println("Finish Thread {}", omp_get_thread_num());
+		}
 
 	}
 
