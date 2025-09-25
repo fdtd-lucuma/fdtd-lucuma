@@ -106,6 +106,8 @@ private:
 			return;
 		}
 
+		// Why is locale so slow?
+		ofs.imbue(std::locale::classic());
 		f(ofs);
 
 	}
