@@ -422,7 +422,7 @@ public:
 		const std::size_t y = Ch.extent(1);
 		const std::size_t z = Ch.extent(2);
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z,Cr,imp0,deltaT)
+		#pragma omp parallel for default(private) firstprivate(x,y,z,Cr,imp0,deltaT) nowait
 		for(std::size_t i = 0; i < x; i++)
 		{
 			for(std::size_t j = 0; j < y; j++)
@@ -506,6 +506,7 @@ public:
 		initCoefEx();
 		initCoefEy();
 		initCoefEz();
+		#pragma omp barrier
 	}
 
 	template<svec3 Ec1Delta, svec3 Ec2Delta>
@@ -529,7 +530,7 @@ public:
 		assert(y-1+Ec2Delta.y < Ec2.extent(1));
 		assert(z-1+Ec2Delta.z < Ec2.extent(2));
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z)
+		#pragma omp parallel for default(private) firstprivate(x,y,z) nowait
 		for(std::size_t i = 0; i < x; i++)
 		{
 			for(std::size_t j = 0; j < y; j++)
@@ -574,7 +575,7 @@ public:
 		assert(start.y + Hc2Delta.y >= 0);
 		assert(start.z + Hc2Delta.z >= 0);
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z)
+		#pragma omp parallel for default(private) firstprivate(x,y,z) nowait
 		for(std::size_t i = start.x; i < x; i++)
 		{
 			for(std::size_t j = start.y; j < y; j++)
@@ -671,6 +672,7 @@ public:
 		updateHx();
 		updateHy();
 		updateHz();
+		#pragma omp barrier
 	}
 
 	void updateE()
@@ -678,6 +680,7 @@ public:
 		updateEx();
 		updateEy();
 		updateEz();
+		#pragma omp barrier
 	}
 
 	static T gauss(T time, T sigma, T x0 = 0)
@@ -847,6 +850,7 @@ public:
 		abcX();
 		abcY();
 		abcZ();
+		#pragma omp barrier
 	}
 
 };
