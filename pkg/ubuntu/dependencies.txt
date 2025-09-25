@@ -5,6 +5,7 @@ cmake
 file
 libglfw3-dev
 libglm-dev
+libtaskflow-cpp-dev
 libvulkan-dev
 libvulkan-memory-allocator-dev
 libyaml-cpp-dev

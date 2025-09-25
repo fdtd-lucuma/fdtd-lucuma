@@ -96,6 +96,7 @@ find_package(vkfw REQUIRED)
 find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang/issues/8334
 find_package(magic_enum REQUIRED)
 find_package(XdgUtils REQUIRED COMPONENTS BaseDir)
+find_package(Taskflow REQUIRED)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
@@ -310,6 +311,7 @@ target_link_libraries(${PROJECT_NAME}
 		VkfwModule
 		magic_enumModule
 		XdgUtils::BaseDir
+		Taskflow::Taskflow
 )
 
 target_include_directories(${PROJECT_NAME}
