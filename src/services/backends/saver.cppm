@@ -59,7 +59,8 @@ public:
 
 	void snapshot(const data_t& data)
 	{
-		tf::Executor executor;
+		// TODO: Move this to its own service
+		static tf::Executor executor;
 		tf::Taskflow taskflow;
 
 		taskflow.name("File saver");
