@@ -63,7 +63,7 @@ public:
 		const auto time = data.getTime();
 		const auto zipped = std::ranges::to<std::vector>(data.zippedFields());
 
-		#pragma omp parallel for default(firstprivate) shared(zipped) schedule(static)
+		#pragma omp parallel for default(shared) firstprivate(time) schedule(static)
 		for(std::size_t i = 0; i < zipped.size(); i++)
 		{
 			auto&& [name, mat] = zipped[i];

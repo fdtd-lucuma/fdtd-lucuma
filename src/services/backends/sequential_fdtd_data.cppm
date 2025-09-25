@@ -441,16 +441,12 @@ public:
 		assert(Ce.extents() == CM.extents());
 		assert(CM.extents() == mu.extents());
 
-		const std::size_t x = Ch.extent(0);
-		const std::size_t y = Ch.extent(1);
-		const std::size_t z = Ch.extent(2);
-
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z,Cr,imp0,deltaT) collapse(3)
-		for(std::size_t i = 0; i < x; i++)
+		#pragma omp parallel for default(shared) firstprivate(Cr,imp0,deltaT) collapse(3)
+		for(std::size_t i = 0; i < Ch.extent(0); i++)
 		{
-			for(std::size_t j = 0; j < y; j++)
+			for(std::size_t j = 0; j < Ch.extent(1); j++)
 			{
-				for(std::size_t k = 0; k < z; k++)
+				for(std::size_t k = 0; k < Ch.extent(2); k++)
 				{
 					const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
 
@@ -540,6 +536,7 @@ public:
 		cmdspan_3d_t Ec2
 	)
 	{
+#ifndef NDEBUG
 		const std::size_t x = Hc.extent(0);
 		const std::size_t y = Hc.extent(1);
 		const std::size_t z = Hc.extent(2);
@@ -551,13 +548,14 @@ public:
 		assert(x-1+Ec2Delta.x < Ec2.extent(0));
 		assert(y-1+Ec2Delta.y < Ec2.extent(1));
 		assert(z-1+Ec2Delta.z < Ec2.extent(2));
+#endif
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z) collapse(3)
-		for(std::size_t i = 0; i < x; i++)
+		#pragma omp parallel for default(shared) collapse(3)
+		for(std::size_t i = 0; i < Hc.extent(0); i++)
 		{
-			for(std::size_t j = 0; j < y; j++)
+			for(std::size_t j = 0; j < Hc.extent(1); j++)
 			{
-				for(std::size_t k = 0; k < z; k++)
+				for(std::size_t k = 0; k < Hc.extent(2); k++)
 				{
 					const auto Ec1i = i + Ec1Delta.x;
 					const auto Ec1j = j + Ec1Delta.y;
@@ -585,10 +583,6 @@ public:
 		svec3 start
 	)
 	{
-		const std::size_t x = size.x-1;
-		const std::size_t y = size.y-1;
-		const std::size_t z = size.z-1;
-
 		assert(start.x + Hc1Delta.x >= 0);
 		assert(start.y + Hc1Delta.y >= 0);
 		assert(start.z + Hc1Delta.z >= 0);
@@ -597,12 +591,12 @@ public:
 		assert(start.y + Hc2Delta.y >= 0);
 		assert(start.z + Hc2Delta.z >= 0);
 
-		#pragma omp parallel for simd default(private) firstprivate(x,y,z) collapse(3)
-		for(std::size_t i = start.x; i < x; i++)
+		#pragma omp parallel for default(shared) firstprivate(Ec,Ce,Ch,Hc1,Hc2) collapse(3)
+		for(std::ptrdiff_t i = start.x; i < size.x-1; i++)
 		{
-			for(std::size_t j = start.y; j < y; j++)
+			for(std::ptrdiff_t j = start.y; j < size.y-1; j++)
 			{
-				for(std::size_t k = start.z; k < z; k++)
+				for(std::ptrdiff_t k = start.z; k < size.z-1; k++)
 				{
 					const auto Hc1i = i + Hc1Delta.x;
 					const auto Hc1j = j + Hc1Delta.y;
@@ -785,6 +779,7 @@ public:
 		std::println();
 #endif
 
+		#pragma omp parallel for default(shared) firstprivate(Cr) collapse(2)
 		for(std::size_t i = 0; i < Ec.extent(0); i++)
 		{
 			for(std::size_t j = 0; j < Ec.extent(1); j++)
