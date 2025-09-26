@@ -92,7 +92,7 @@ private:
 	}
 
 	template <typename F>
-	void writeToFile(const std::filesystem::path& fileName, F f)
+	void writeToFile(const std::filesystem::path& fileName, F&& f)
 	{
 		const auto morfoPath = basePath/fileName;
 		auto ofs = std::ofstream(morfoPath);
