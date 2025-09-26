@@ -77,6 +77,16 @@ void debugPrint(Kokkos::mdspan<T,E,L,A> mat)
 
 	std::println("{}", entt::type_id<typeof(mat)>().name());
 }
+
+export template <typename T, typename E, typename L, typename A>
+void debugPrint(std::string_view name, Kokkos::mdspan<T, E, L, A> mat)
+{
+	static_assert(mat.rank() == 2);
+
+	std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
+
+}
+
 #endif
 
 

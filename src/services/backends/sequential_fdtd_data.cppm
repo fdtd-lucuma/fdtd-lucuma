@@ -22,7 +22,6 @@ export module lucuma.services.backends:sequential_fdtd_data;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
-import lucuma.legacy_headers.entt;
 
 import std;
 import glm;
@@ -733,17 +732,6 @@ public:
 		if constexpr(dim == Dim::Z)
 			return Kokkos::submdspan(mat, Kokkos::full_extent, Kokkos::full_extent, index);
 	}
-
-#ifndef NDEBUG
-	template <typename T2, typename E, typename L, typename A>
-	void debugPrint(std::string_view name, Kokkos::mdspan<T2, E, L, A> mat)
-	{
-		static_assert(mat.rank() == 2);
-
-		std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
-
-	}
-#endif
 
 	inline static T calculateSc(T Cr, T mu, T eps)
 	{
