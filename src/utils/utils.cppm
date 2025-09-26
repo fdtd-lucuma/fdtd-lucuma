@@ -23,3 +23,21 @@ export import :backend;
 export import :exceptions;
 export import :injector;
 export import :precision;
+export import :print;
+
+import magic_enum;
+
+namespace lucuma::utils
+{
+
+template <typename T>
+requires std::is_enum_v<T>
+struct MagicInstantiator
+{
+	constexpr static auto values = magic_enum::enum_values<T>();
+};
+
+extern template struct MagicInstantiator<Backend>;
+extern template struct MagicInstantiator<Precision>;
+
+}

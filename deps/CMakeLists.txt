@@ -17,7 +17,7 @@
 if(NOT USE_SYSTEM_LIBS)
 	FetchContent_Declare(
 		EnTT
-		GIT_REPOSITORY https://github.com/skypjack/entt
+		GIT_REPOSITORY https://github.com/skypjack/entt.git
 		GIT_TAG        v3.15.0
 		GIT_SHALLOW    ON
 		GIT_PROGRESS   ON
@@ -29,15 +29,16 @@ endif()
 
 FetchContent_Declare(
 	imgui
-	GIT_REPOSITORY https://github.com/ocornut/imgui
-	GIT_TAG        origin/docking
-	GIT_SHALLOW    ON
+	GIT_REPOSITORY https://github.com/ocornut/imgui.git
+	GIT_TAG        3d937beb628ac1f39d32fde21f35c730cbfe6dcf
+	#GIT_TAG        origin/docking # Wait until https://github.com/stripe2933/imgui-module/issues/1
+	#GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
 )
 
 FetchContent_Declare(
 	imgui-module
-	GIT_REPOSITORY         https://github.com/stripe2933/imgui-module
+	GIT_REPOSITORY         https://github.com/stripe2933/imgui-module.git
 	GIT_TAG                origin/docking
 	GIT_SHALLOW            ON
 	GIT_PROGRESS           ON
@@ -48,7 +49,7 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	VulkanMemoryAllocator-Hpp
-	GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp
+	GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git
 	GIT_TAG                v3.2.1
 	GIT_SHALLOW            ON
 	GIT_PROGRESS           ON
@@ -59,7 +60,7 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	vkfw
-	GIT_REPOSITORY https://github.com/Cvelth/vkfw
+	GIT_REPOSITORY https://github.com/Cvelth/vkfw.git
 	GIT_TAG        origin/main
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
@@ -68,7 +69,7 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	magic_enum
-	GIT_REPOSITORY https://github.com/Neargye/magic_enum
+	GIT_REPOSITORY https://github.com/Neargye/magic_enum.git
 	GIT_TAG        v0.9.7
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
@@ -78,7 +79,7 @@ FetchContent_Declare(
 FetchContent_Declare(
 	mdspan
 	EXCLUDE_FROM_ALL
-	GIT_REPOSITORY https://github.com/kokkos/mdspan
+	GIT_REPOSITORY https://github.com/kokkos/mdspan.git
 	GIT_TAG        stable
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON

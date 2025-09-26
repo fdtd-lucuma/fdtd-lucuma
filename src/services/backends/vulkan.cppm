@@ -144,5 +144,9 @@ private:
 
 };
 
+// Add one line for each new precision
+//extern template class Vulkan<Precision::f16>;
+extern template class Vulkan<Precision::f32>;
+extern template class Vulkan<Precision::f64>;
 
 }

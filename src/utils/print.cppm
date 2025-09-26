@@ -16,26 +16,34 @@
 
 module;
 
-export module lucuma.services.backends:base;
+export module lucuma.utils:print;
 
-import std;
-import lucuma.legacy_headers.entt;
+import std.compat;
 
-namespace lucuma::services::backends
+namespace lucuma::utils
 {
 
-export class Base
+export template <typename... Args>
+void printAll(std::ostream& os, Args&&... args) {
+	(std::println(os, "{}", std::forward<Args>(args)), ...);
+}
+
+export template <typename F>
+void writeToFile(const std::filesystem::path& path, F&& f)
 {
-public:
-	Base() = default;
-	virtual ~Base() = default;
+	auto ofs = std::ofstream(path);
 
-	virtual entt::entity init() = 0;
-	virtual bool step(entt::entity id) = 0;
-	virtual void saveFiles(entt::entity id) = 0;
+	if(!ofs.is_open())
+	{
+		perror(path.c_str());
+		return;
+	}
 
-protected:
+	// Why is locale so slow?
+	ofs.imbue(std::locale::classic());
+	f(ofs);
 
-};
+}
+
 
 }

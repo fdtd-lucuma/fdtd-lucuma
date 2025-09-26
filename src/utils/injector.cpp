@@ -106,4 +106,10 @@ void Injector::printEdges(const std::filesystem::path& path, const std::string_v
 		perror(path.c_str());
 }
 
+template<>
+entt::registry& Injector::inject<entt::registry>()
+{
+	return registry;
+}
+
 }

@@ -16,26 +16,16 @@
 
 module;
 
-export module lucuma.services.backends:base;
+module lucuma.services.backends;
 
-import std;
-import lucuma.legacy_headers.entt;
+import :saver;
 
-namespace lucuma::services::backends
+// Explicit template instantiations for faster compilation
+namespace  lucuma::services::backends
 {
 
-export class Base
-{
-public:
-	Base() = default;
-	virtual ~Base() = default;
-
-	virtual entt::entity init() = 0;
-	virtual bool step(entt::entity id) = 0;
-	virtual void saveFiles(entt::entity id) = 0;
-
-protected:
-
-};
+template class Saver<PrecisionTraits<Precision::f16>::type>;
+template class Saver<PrecisionTraits<Precision::f32>::type>;
+template class Saver<PrecisionTraits<Precision::f64>::type>;
 
 }

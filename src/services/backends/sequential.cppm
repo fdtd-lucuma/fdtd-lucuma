@@ -42,6 +42,7 @@ protected:
 	SequentialBase(Injector& injector);
 
 	basic::Settings& settings;
+	entt::registry& registry;
 
 };
 
@@ -69,7 +70,7 @@ public:
 
 	virtual entt::entity init()
 	{
-		auto id = _registry.create();
+		auto id = registry.create();
 
 		FdtdDataCreateInfo<T> createInfo {
 			.size          = settings.size(),
@@ -88,8 +89,8 @@ public:
 			.basePath = ".",
 		};
 
-		data_t& data   = _registry.emplace<data_t>(id, createInfo);
-		saver_t& saver = _registry.emplace<saver_t>(id, saverCreateInfo);
+		data_t& data   = registry.emplace<data_t>(id, createInfo);
+		saver_t& saver = registry.emplace<saver_t>(id, saverCreateInfo);
 
 		data.initCoefs();
 		saver.start(data);
@@ -100,7 +101,7 @@ public:
 
 	virtual bool step(entt::entity id)
 	{
-		data_t& data = _registry.get<data_t>(id);
+		data_t& data = registry.get<data_t>(id);
 
 		bool canContinue = data.step();
 
@@ -119,7 +120,7 @@ public:
 
 	virtual void saveFiles(entt::entity id)
 	{
-		auto [data, saver] = _registry.get<data_t, saver_t>(id);
+		auto [data, saver] = registry.get<data_t, saver_t>(id);
 
 		saver.snapshot(data);
 
@@ -152,5 +153,10 @@ private:
 #endif
 
 };
+
+// Add one line for each new precision
+extern template class Sequential<Precision::f16>;
+extern template class Sequential<Precision::f32>;
+extern template class Sequential<Precision::f64>;
 
 }
