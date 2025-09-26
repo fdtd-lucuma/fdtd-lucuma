@@ -55,15 +55,6 @@ public:
 	using data_t  = FdtdData<T>;
 	using saver_t = Saver<T>;
 
-	using extents_2d_t = Kokkos::dextents<std::size_t, 2>;
-	using extents_3d_t = Kokkos::dextents<std::size_t, 3>;
-
-	using mdspan_2d_t = Kokkos::mdspan<T, extents_2d_t>;
-	using mdspan_3d_t = Kokkos::mdspan<T, extents_3d_t>;
-
-	using cmdspan_2d_t = Kokkos::mdspan<const T, extents_2d_t>;
-	using cmdspan_3d_t = Kokkos::mdspan<const T, extents_3d_t>;
-
 	Sequential(Injector& injector):
 		SequentialBase(injector)
 	{ }
@@ -131,26 +122,6 @@ public:
 
 	virtual ~Sequential() = default;
 private:
-
-#ifndef NDEBUG
-	void debugPrint(cmdspan_3d_t mat)
-	{
-		for(std::size_t i = 0; i < mat.extent(0); i++)
-		{
-			for(std::size_t j = 0; j < mat.extent(1); j++)
-			{
-				for(std::size_t k = 0; k < mat.extent(2); k++)
-				{
-					std::print("{:.2f} ", toPrintable(mat[i,j,k]));
-				}
-				std::println();
-			}
-			std::println();
-		}
-
-		std::println("{}", entt::type_id<typeof(mat)>().name());
-	}
-#endif
 
 };
 

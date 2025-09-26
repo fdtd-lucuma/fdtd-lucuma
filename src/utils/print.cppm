@@ -20,6 +20,9 @@ export module lucuma.utils:print;
 
 import std.compat;
 
+import lucuma.legacy_headers.entt;
+import lucuma.legacy_headers.mdspan;
+
 namespace lucuma::utils
 {
 
@@ -44,6 +47,38 @@ void writeToFile(const std::filesystem::path& path, F&& f)
 	f(ofs);
 
 }
+
+export template <typename T>
+inline auto toPrintable(T x)
+{
+	if constexpr(std::is_default_constructible_v<std::formatter<T>>)
+		return x;
+	else
+		return (float)x;
+}
+
+#ifndef NDEBUG
+
+export template<typename T, typename E, typename L, typename A>
+void debugPrint(Kokkos::mdspan<T,E,L,A> mat)
+{
+	for(std::size_t i = 0; i < mat.extent(0); i++)
+	{
+		for(std::size_t j = 0; j < mat.extent(1); j++)
+		{
+			for(std::size_t k = 0; k < mat.extent(2); k++)
+			{
+				std::print("{:.2f} ", toPrintable(mat[i,j,k]));
+			}
+			std::println();
+		}
+		std::println();
+	}
+
+	std::println("{}", entt::type_id<typeof(mat)>().name());
+}
+#endif
+
 
 
 }

@@ -18,18 +18,10 @@ module;
 
 export module lucuma.services.backends:utils;
 
-import std;
+//import std;
 
 namespace lucuma::services::backends
 {
 
-template <typename T>
-inline auto toPrintable(T x)
-{
-	if constexpr(std::is_default_constructible_v<std::formatter<T>>)
-		return x;
-	else
-		return (float)x;
-}
 
 }
