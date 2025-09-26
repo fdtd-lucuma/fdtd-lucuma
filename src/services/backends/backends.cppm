@@ -29,7 +29,7 @@ namespace lucuma::utils
 {
 using namespace lucuma::services::backends;
 
-extern template Base&         Injector::inject<Base>();
+extern template IBackend&     Injector::inject<IBackend>();
 extern template Instantiator& Injector::inject<Instantiator>();
 
 }

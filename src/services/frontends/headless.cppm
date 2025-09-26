@@ -36,7 +36,7 @@ public:
 	void compute();
 
 private:
-	backends::Base&    backend;
+	backends::IBackend&    backend;
 
 };
 

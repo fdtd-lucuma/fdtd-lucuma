@@ -94,9 +94,9 @@ Instantiator::Instantiator(Injector& injector):
 	settings(injector.inject<basic::Settings>())
 { }
 
-Base& Instantiator::instantiate()
+IBackend& Instantiator::instantiate()
 {
-	Base* ptr = nullptr;
+	IBackend* ptr = nullptr;
 
 	magic_enum::enum_switch([&](auto precision)
 	{
@@ -106,7 +106,7 @@ Base& Instantiator::instantiate()
 			{
 				using backend_t = typename BackendTraits<backend>::template type<precision>;
 
-				ptr = &injector.emplace<backend_t, backends::Base>(injector);
+				ptr = &injector.emplace<backend_t, backends::IBackend>(injector);
 			}
 			else
 			{

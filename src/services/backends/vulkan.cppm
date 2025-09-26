@@ -68,7 +68,7 @@ constexpr std::string_view shaderPath()
 
 export template<Precision precision>
 requires (precision != Precision::f16) //TODO: Fix float16 vulkan device requirements
-class Vulkan: public Base, public VulkanBase
+class Vulkan: public IBackend, public VulkanBase
 {
 public:
 	using T = PrecisionTraits<precision>::type;

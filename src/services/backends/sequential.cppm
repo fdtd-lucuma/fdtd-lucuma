@@ -47,7 +47,7 @@ protected:
 };
 
 export template<Precision precision>
-class Sequential: public Base, public SequentialBase
+class Sequential: public IBackend, public SequentialBase
 {
 public:
 	using T = PrecisionTraits<precision>::type;
