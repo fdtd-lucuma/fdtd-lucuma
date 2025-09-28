@@ -38,14 +38,14 @@ template <typename T>
 //requires std::is_arithmetic_v<T>
 MatrixData<T> initMat(svec3 dims, T defaultValue = 0)
 {
-	return std::vector<T>(dims.x*dims.y*dims.z, defaultValue);
+	return MatrixData<T>(dims.x*dims.y*dims.z, defaultValue);
 }
 
 template <typename T>
 //requires std::is_arithmetic_v<T>
 MatrixData<T> initMat(svec2 dims, T defaultValue = 0)
 {
-	return std::vector<T>(dims.x*dims.y, defaultValue);
+	return MatrixData<T>(dims.x*dims.y, defaultValue);
 }
 
 template <class T>
