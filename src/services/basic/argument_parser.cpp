@@ -84,6 +84,11 @@ std::optional<Precision> ArgumentParser::precision() const
 	return _precision;
 }
 
+std::optional<SaveAs> ArgumentParser::saveAs() const
+{
+	return _saveAs;
+}
+
 void ArgumentParser::usage(int exit_code)
 {
 	std::print(
@@ -99,6 +104,8 @@ void ArgumentParser::usage(int exit_code)
 		"\t-b, --backend=NAME When running in headless mode use this backend [default={:?}].\n"
 		"\t                   Values: {}.\n"
 		"\t-p, --precision=fN Floating point precision as N bits [default={:?}].\n"
+		"\t                   Values: {}.\n"
+		"\t-s, --save-as=NAME Save as [default={:?}].\n"
 		"\t                   Values: {}.\n",
 		argv0(),
 		Settings::defaultSizeX,
@@ -108,7 +115,9 @@ void ArgumentParser::usage(int exit_code)
 		Settings::defaultBackend,
 		magic_enum::enum_values<Backend>(),
 		Settings::defaultPrecision,
-		magic_enum::enum_values<Precision>()
+		magic_enum::enum_values<Precision>(),
+		Settings::defaultSaveAs,
+		magic_enum::enum_values<SaveAs>()
 	);
 
 	exit(exit_code);

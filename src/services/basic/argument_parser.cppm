@@ -46,6 +46,7 @@ public:
 
 	std::optional<Backend>   backend()   const;
 	std::optional<Precision> precision() const;
+	std::optional<SaveAs>    saveAs()    const;
 
 private:
 	std::string              _argv0;
@@ -62,6 +63,7 @@ private:
 
 	std::optional<Backend>   _backend   = std::nullopt;
 	std::optional<Precision> _precision = std::nullopt;
+	std::optional<SaveAs>    _saveAs    = std::nullopt;
 
 	[[noreturn]]
 	void usage(int exit_code);

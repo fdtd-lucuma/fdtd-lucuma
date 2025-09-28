@@ -42,9 +42,9 @@ public:
 
 	static constexpr unsigned int defaultTime = 300;
 
-	static constexpr Backend defaultBackend = Backend::sequential;
-
+	static constexpr Backend   defaultBackend   = Backend::sequential;
 	static constexpr Precision defaultPrecision = Precision::f32;
+	static constexpr SaveAs    defaultSaveAs    = SaveAs::none;
 
 	std::size_t sizeX() const;
 	std::size_t sizeY() const;
@@ -54,8 +54,9 @@ public:
 
 	svec3 size() const;
 
-	Backend backend() const;
+	Backend   backend()   const;
 	Precision precision() const;
+	SaveAs    saveAs()    const;
 
 private:
 	ArgumentParser& argumentParser;

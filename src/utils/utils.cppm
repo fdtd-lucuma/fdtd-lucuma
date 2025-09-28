@@ -24,6 +24,7 @@ export import :exceptions;
 export import :injector;
 export import :precision;
 export import :print;
+export import :save_as;
 
 import magic_enum;
 
@@ -39,5 +40,6 @@ struct MagicInstantiator
 
 extern template struct MagicInstantiator<Backend>;
 extern template struct MagicInstantiator<Precision>;
+extern template struct MagicInstantiator<SaveAs>;
 
 }

@@ -53,7 +53,7 @@ public:
 	using T = PrecisionTraits<precision>::type;
 
 	using data_t  = FdtdData<T>;
-	using saver_t = Saver<T>;
+	using saver_t = Saver<T>; //TODO: Select saver from traits
 
 	Sequential(Injector& injector):
 		SequentialBase(injector)
@@ -81,10 +81,14 @@ public:
 		};
 
 		data_t& data   = registry.emplace<data_t>(id, createInfo);
-		saver_t& saver = registry.emplace<saver_t>(id, saverCreateInfo);
 
 		data.initCoefs();
-		saver.start(data);
+
+		if(settings.saveAs() != SaveAs::none)
+		{
+			saver_t& saver = registry.emplace<saver_t>(id, saverCreateInfo);
+			saver.start(data);
+		}
 
 
 		return id;
@@ -109,8 +113,11 @@ public:
 		return canContinue;
 	}
 
-	virtual void saveFiles(entt::entity id)
+	virtual void saveFiles(entt::entity id) //TODO: Move this out of backend
 	{
+		if(settings.saveAs() == SaveAs::none)
+			return;
+
 		auto [data, saver] = registry.get<data_t, saver_t>(id);
 
 		saver.snapshot(data);

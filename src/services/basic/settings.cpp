@@ -68,5 +68,10 @@ Precision Settings::precision() const
 	return argumentParser.precision().value_or(defaultPrecision);
 }
 
+SaveAs Settings::saveAs() const
+{
+	return argumentParser.saveAs().value_or(defaultSaveAs);
+}
+
 
 }

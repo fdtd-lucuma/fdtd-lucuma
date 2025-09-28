@@ -1,3 +1,4 @@
+// Una GUI para fdtd
 // Copyright © 2025 Otreblan
 //
 // fdtd-lucuma is free software: you can redistribute it and/or modify
@@ -15,13 +16,18 @@
 
 module;
 
-module lucuma.utils;
+export module lucuma.utils:save_as;
 
 namespace lucuma::utils
 {
 
-template struct MagicInstantiator<Backend>;
-template struct MagicInstantiator<Precision>;
-template struct MagicInstantiator<SaveAs>;
+export enum class SaveAs
+{
+	none,
+	plain_text,
+	//parquet,
+};
+
+export template<SaveAs p> struct SaveAsTraits;
 
 }
