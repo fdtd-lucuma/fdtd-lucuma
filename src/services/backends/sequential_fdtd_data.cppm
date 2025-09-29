@@ -687,22 +687,16 @@ public:
 
 	void updateH()
 	{
-		#pragma omp parallel
-		{
-			updateHx();
-			updateHy();
-			updateHz();
-		}
+		updateHx();
+		updateHy();
+		updateHz();
 	}
 
 	void updateE()
 	{
-		#pragma omp parallel
-		{
-			updateEx();
-			updateEy();
-			updateEz();
-		}
+		updateEx();
+		updateEy();
+		updateEz();
 	}
 
 	static T gauss(T time, T sigma, T x0 = 0)
