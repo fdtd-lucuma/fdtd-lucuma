@@ -687,16 +687,40 @@ public:
 
 	void updateH()
 	{
-		updateHx();
-		updateHy();
-		updateHz();
+		#pragma omp taskgroup
+		{
+			#pragma omp task
+			{
+				updateHx();
+			}
+			#pragma omp task
+			{
+				updateHy();
+			}
+			#pragma omp task
+			{
+				updateHz();
+			}
+		}
 	}
 
 	void updateE()
 	{
-		updateEx();
-		updateEy();
-		updateEz();
+		#pragma omp taskgroup
+		{
+			#pragma omp task
+			{
+				updateEx();
+			}
+			#pragma omp task
+			{
+				updateEy();
+			}
+			#pragma omp task
+			{
+				updateEz();
+			}
+		}
 	}
 
 	static T gauss(T time, T sigma, T x0 = 0)
