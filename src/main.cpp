@@ -24,7 +24,11 @@ int main(int argc, char** argv)
 	std::locale::global(std::locale(""));
 	int exitCode;
 
-	exitCode = lucuma::Simulator().run(argc, argv);
+	#pragma omp parallel
+	#pragma omp single
+	{
+		exitCode = lucuma::Simulator().run(argc, argv);
+	}
 
 	return exitCode;
 }

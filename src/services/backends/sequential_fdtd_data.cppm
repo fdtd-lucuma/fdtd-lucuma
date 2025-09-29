@@ -859,12 +859,9 @@ public:
 
 	void abc()
 	{
-		#pragma omp parallel
-		{
-			abcX();
-			abcY();
-			abcZ();
-		}
+		abcX();
+		abcY();
+		abcZ();
 	}
 
 };
