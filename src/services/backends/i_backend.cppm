@@ -24,23 +24,17 @@ import lucuma.legacy_headers.entt;
 namespace lucuma::services::backends
 {
 
-export class Base
+export class IBackend
 {
 public:
-	Base() = default;
-	virtual ~Base() = default;
+	IBackend() = default;
+	virtual ~IBackend() = default;
 
 	virtual entt::entity init() = 0;
 	virtual bool step(entt::entity id) = 0;
 	virtual void saveFiles(entt::entity id) = 0;
 
-	entt::registry& registry()
-	{
-		return _registry;
-	}
-
 protected:
-	entt::registry _registry;
 
 };
 

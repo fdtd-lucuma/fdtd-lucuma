@@ -16,12 +16,15 @@
 
 module;
 
-export module lucuma.services.backends:utils;
+#include <taskflow/taskflow.hpp>
 
-//import std;
+export module lucuma.legacy_headers.taskflow;
 
-namespace lucuma::services::backends
+export namespace tf
 {
 
+using tf::Task;
+using tf::Executor;
+using tf::Taskflow;
 
-}
+};

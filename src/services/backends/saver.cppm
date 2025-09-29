@@ -23,6 +23,7 @@ export module lucuma.services.backends:saver;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
+import lucuma.legacy_headers.taskflow;
 
 import :sequential_fdtd_data;
 import :utils;
@@ -83,37 +84,11 @@ private:
 			std::filesystem::create_directory(datosCampoDir);
 	}
 
-	template <typename... Args>
-	void printAll(std::ostream& os, Args&&... args) {
-		(std::println(os, "{}", std::forward<Args>(args)), ...);
-	}
-
-	template <typename F>
-	void writeToFile(const std::filesystem::path& fileName, F f)
-	{
-		std::println("Start Thread {}", omp_get_thread_num());
-
-		const auto morfoPath = basePath/fileName;
-		auto ofs = std::ofstream(morfoPath);
-
-		if(!ofs.is_open())
-		{
-			perror(morfoPath.c_str());
-		}
-		else
-		{
-			f(ofs);
-		}
-
-		std::println("Finish Thread {}", omp_get_thread_num());
-
-	}
-
 	void writeInfo(const data_t& data)
 	{
-		writeToFile("Info.txt", [&](std::ostream& os)
+		writeToFile(basePath/"Info.txt", [&](std::ostream& os)
 		{
-			printAll(os,
+			utils::printAll(os,
 				data.maxTime,
 				data.size.x,
 				data.size.y,
@@ -131,15 +106,12 @@ private:
 
 	void writeMorfo(const data_t& data)
 	{
-		writeToFile("Morfo.txt", [&](std::ostream& os)
+		writeToFile(basePath/"Morfo.txt", [&](std::ostream& os)
 		{
-			writeMorfoLine(os, data.Hx());
-			writeMorfoLine(os, data.Hy());
-			writeMorfoLine(os, data.Hz());
-
-			writeMorfoLine(os, data.Ex());
-			writeMorfoLine(os, data.Ey());
-			writeMorfoLine(os, data.Ez());
+			for(auto&& [_, mat]: data.zippedFields())
+			{
+				writeMorfoLine(os, mat);
+			}
 		});
 
 	}
@@ -162,5 +134,11 @@ private:
 	}
 
 };
+
+// Add one line for each new precision
+// TODO: Find a way to automatically instantiate
+extern template class Saver<PrecisionTraits<Precision::f16>::type>;
+extern template class Saver<PrecisionTraits<Precision::f32>::type>;
+extern template class Saver<PrecisionTraits<Precision::f64>::type>;
 
 }

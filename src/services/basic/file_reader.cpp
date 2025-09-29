@@ -85,6 +85,8 @@ bool FileBuffer::readIntoMmap(const std::filesystem::path& path)
 		return false;
 	}
 
+	//TODO: Use madvise
+
 	bufferType = BufferType::MMAP;
 	return true;
 #endif

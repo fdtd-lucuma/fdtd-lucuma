@@ -16,12 +16,16 @@
 
 module;
 
-export module lucuma.services.backends:utils;
+module lucuma.services.backends;
 
-//import std;
+import :saver;
 
-namespace lucuma::services::backends
+// Explicit template instantiations for faster compilation
+namespace  lucuma::services::backends
 {
 
+template class Saver<PrecisionTraits<Precision::f16>::type>;
+template class Saver<PrecisionTraits<Precision::f32>::type>;
+template class Saver<PrecisionTraits<Precision::f64>::type>;
 
 }

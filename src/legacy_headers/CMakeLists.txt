@@ -21,6 +21,7 @@ target_sources(${PROJECT_NAME}
 		FILES
 			entt.cppm
 			mdspan.cppm
+			taskflow.cppm
 			xdg_utils_cxx.cppm
 			yaml_cpp.cppm
 )

@@ -26,7 +26,7 @@ namespace lucuma::services::frontends
 {
 
 Headless::Headless([[maybe_unused]]Injector& injector):
-	backend(injector.inject<backends::Base>())
+	backend(injector.inject<backends::IBackend>())
 { }
 
 void Headless::compute()

@@ -34,7 +34,7 @@ export class Instantiator
 public:
 	Instantiator(Injector& injector);
 
-	Base& instantiate();
+	IBackend& instantiate();
 	void instantiateAll();
 
 private:

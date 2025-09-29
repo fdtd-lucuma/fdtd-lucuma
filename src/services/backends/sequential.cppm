@@ -42,26 +42,18 @@ protected:
 	SequentialBase(Injector& injector);
 
 	basic::Settings& settings;
+	entt::registry& registry;
 
 };
 
 export template<Precision precision>
-class Sequential: public Base, public SequentialBase
+class Sequential: public IBackend, public SequentialBase
 {
 public:
 	using T = PrecisionTraits<precision>::type;
 
 	using data_t  = FdtdData<T>;
-	using saver_t = Saver<T>;
-
-	using extents_2d_t = Kokkos::dextents<std::size_t, 2>;
-	using extents_3d_t = Kokkos::dextents<std::size_t, 3>;
-
-	using mdspan_2d_t = Kokkos::mdspan<T, extents_2d_t>;
-	using mdspan_3d_t = Kokkos::mdspan<T, extents_3d_t>;
-
-	using cmdspan_2d_t = Kokkos::mdspan<const T, extents_2d_t>;
-	using cmdspan_3d_t = Kokkos::mdspan<const T, extents_3d_t>;
+	using saver_t = Saver<T>; //TODO: Select saver from traits
 
 	Sequential(Injector& injector):
 		SequentialBase(injector)
@@ -69,7 +61,7 @@ public:
 
 	virtual entt::entity init()
 	{
-		auto id = _registry.create();
+		auto id = registry.create();
 
 		FdtdDataCreateInfo<T> createInfo {
 			.size          = settings.size(),
@@ -88,11 +80,15 @@ public:
 			.basePath = ".",
 		};
 
-		data_t& data   = _registry.emplace<data_t>(id, createInfo);
-		saver_t& saver = _registry.emplace<saver_t>(id, saverCreateInfo);
+		data_t& data   = registry.emplace<data_t>(id, createInfo);
 
 		data.initCoefs();
-		saver.start(data);
+
+		if(settings.saveAs() != SaveAs::none)
+		{
+			saver_t& saver = registry.emplace<saver_t>(id, saverCreateInfo);
+			saver.start(data);
+		}
 
 
 		return id;
@@ -100,7 +96,7 @@ public:
 
 	virtual bool step(entt::entity id)
 	{
-		data_t& data = _registry.get<data_t>(id);
+		data_t& data = registry.get<data_t>(id);
 
 		bool canContinue = data.step();
 
@@ -117,9 +113,12 @@ public:
 		return canContinue;
 	}
 
-	virtual void saveFiles(entt::entity id)
+	virtual void saveFiles(entt::entity id) //TODO: Move this out of backend
 	{
-		auto [data, saver] = _registry.get<data_t, saver_t>(id);
+		if(settings.saveAs() == SaveAs::none)
+			return;
+
+		auto [data, saver] = registry.get<data_t, saver_t>(id);
 
 		//saver.snapshot(data);
 
@@ -131,26 +130,11 @@ public:
 	virtual ~Sequential() = default;
 private:
 
-#ifndef NDEBUG
-	void debugPrint(cmdspan_3d_t mat)
-	{
-		for(std::size_t i = 0; i < mat.extent(0); i++)
-		{
-			for(std::size_t j = 0; j < mat.extent(1); j++)
-			{
-				for(std::size_t k = 0; k < mat.extent(2); k++)
-				{
-					std::print("{:.2f} ", toPrintable(mat[i,j,k]));
-				}
-				std::println();
-			}
-			std::println();
-		}
-
-		std::println("{}", entt::type_id<typeof(mat)>().name());
-	}
-#endif
-
 };
+
+// Add one line for each new precision
+extern template class Sequential<Precision::f16>;
+extern template class Sequential<Precision::f32>;
+extern template class Sequential<Precision::f64>;
 
 }

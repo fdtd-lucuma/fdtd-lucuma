@@ -16,12 +16,18 @@
 
 module;
 
-export module lucuma.services.backends:utils;
+export module lucuma.utils:save_as;
 
-//import std;
-
-namespace lucuma::services::backends
+namespace lucuma::utils
 {
 
+export enum class SaveAs
+{
+	none,
+	plain_text,
+	//parquet,
+};
+
+export template<SaveAs p> struct SaveAsTraits;
 
 }

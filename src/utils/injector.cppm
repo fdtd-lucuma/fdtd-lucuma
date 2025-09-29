@@ -67,6 +67,9 @@ public:
 		}
 	}
 
+	template<>
+	[[nodiscard]] entt::registry& inject<entt::registry>();
+
 	~Injector();
 
 	/// Prints a directed acyclic graph in dot format

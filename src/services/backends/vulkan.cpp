@@ -95,4 +95,8 @@ VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::
 
 }
 
+//template class Vulkan<Precision::f16>;
+template class Vulkan<Precision::f32>;
+template class Vulkan<Precision::f64>;
+
 }

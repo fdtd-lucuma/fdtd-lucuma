@@ -22,7 +22,6 @@ export module lucuma.services.backends:sequential_fdtd_data;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
-import lucuma.legacy_headers.entt;
 
 import std;
 import glm;
@@ -33,17 +32,20 @@ namespace lucuma::services::backends
 using namespace lucuma::utils;
 
 template <typename T>
+using MatrixData = std::vector<T>;
+
+template <typename T>
 //requires std::is_arithmetic_v<T>
-std::vector<T> initMat(svec3 dims, T defaultValue = 0)
+MatrixData<T> initMat(svec3 dims, T defaultValue = 0)
 {
-	return std::vector<T>(dims.x*dims.y*dims.z, defaultValue);
+	return MatrixData<T>(dims.x*dims.y*dims.z, defaultValue);
 }
 
 template <typename T>
 //requires std::is_arithmetic_v<T>
-std::vector<T> initMat(svec2 dims, T defaultValue = 0)
+MatrixData<T> initMat(svec2 dims, T defaultValue = 0)
 {
-	return std::vector<T>(dims.x*dims.y, defaultValue);
+	return MatrixData<T>(dims.x*dims.y, defaultValue);
 }
 
 template <class T>
@@ -97,22 +99,22 @@ public:
 
 private:
 
-	static inline mdspan_3d_t toMdspan(std::vector<T>& v, svec3 dims)
+	static inline mdspan_3d_t toMdspan(MatrixData<T>& v, svec3 dims)
 	{
 		return mdspan_3d_t(v.data(), dims.x, dims.y, dims.z);
 	}
 
-	static inline mdspan_2d_t toMdspan(std::vector<T>& v, svec2 dims)
+	static inline mdspan_2d_t toMdspan(MatrixData<T>& v, svec2 dims)
 	{
 		return mdspan_2d_t(v.data(), dims.x, dims.y);
 	}
 
-	static inline cmdspan_3d_t toMdspan(const std::vector<T>& v, svec3 dims)
+	static inline cmdspan_3d_t toMdspan(const MatrixData<T>& v, svec3 dims)
 	{
 		return cmdspan_3d_t(v.data(), dims.x, dims.y, dims.z);
 	}
 
-	static inline cmdspan_2d_t toMdspan(const std::vector<T>& v, svec2 dims)
+	static inline cmdspan_2d_t toMdspan(const MatrixData<T>& v, svec2 dims)
 	{
 		return cmdspan_2d_t(v.data(), dims.x, dims.y);
 	}
@@ -356,72 +358,72 @@ private:
 
 	// Magnetic fields
 
-	std::vector<T> _Hx;
-	std::vector<T> _Hy;
-	std::vector<T> _Hz;
+	MatrixData<T> _Hx;
+	MatrixData<T> _Hy;
+	MatrixData<T> _Hz;
 
-	std::vector<T> _Chxh;
-	std::vector<T> _Chyh;
-	std::vector<T> _Chzh;
+	MatrixData<T> _Chxh;
+	MatrixData<T> _Chyh;
+	MatrixData<T> _Chzh;
 
-	std::vector<T> _Chxe;
-	std::vector<T> _Chye;
-	std::vector<T> _Chze;
+	MatrixData<T> _Chxe;
+	MatrixData<T> _Chye;
+	MatrixData<T> _Chze;
 
-	std::vector<T> _CMhx;
-	std::vector<T> _CMhy;
-	std::vector<T> _CMhz;
+	MatrixData<T> _CMhx;
+	MatrixData<T> _CMhy;
+	MatrixData<T> _CMhz;
 
-	std::vector<T> _mux;
-	std::vector<T> _muy;
-	std::vector<T> _muz;
+	MatrixData<T> _mux;
+	MatrixData<T> _muy;
+	MatrixData<T> _muz;
 
-	std::vector<T> _muxR;
-	std::vector<T> _muyR;
-	std::vector<T> _muzR;
+	MatrixData<T> _muxR;
+	MatrixData<T> _muyR;
+	MatrixData<T> _muzR;
 
 	// Electric fields
 
-	std::vector<T> _Ex;
-	std::vector<T> _Ey;
-	std::vector<T> _Ez;
+	MatrixData<T> _Ex;
+	MatrixData<T> _Ey;
+	MatrixData<T> _Ez;
 
-	std::vector<T> _Cexe;
-	std::vector<T> _Ceye;
-	std::vector<T> _Ceze;
+	MatrixData<T> _Cexe;
+	MatrixData<T> _Ceye;
+	MatrixData<T> _Ceze;
 
-	std::vector<T> _Cexh;
-	std::vector<T> _Ceyh;
-	std::vector<T> _Cezh;
+	MatrixData<T> _Cexh;
+	MatrixData<T> _Ceyh;
+	MatrixData<T> _Cezh;
 
-	std::vector<T> _CEEx;
-	std::vector<T> _CEEy;
-	std::vector<T> _CEEz;
+	MatrixData<T> _CEEx;
+	MatrixData<T> _CEEy;
+	MatrixData<T> _CEEz;
 
-	std::vector<T> _epsx;
-	std::vector<T> _epsy;
-	std::vector<T> _epsz;
+	MatrixData<T> _epsx;
+	MatrixData<T> _epsy;
+	MatrixData<T> _epsz;
 
-	std::vector<T> _epsxR;
-	std::vector<T> _epsyR;
-	std::vector<T> _epszR;
+	MatrixData<T> _epsxR;
+	MatrixData<T> _epsyR;
+	MatrixData<T> _epszR;
 
 	// ABC's
 
-	std::vector<T> _eyx0;
-	std::vector<T> _ezx0;
-	std::vector<T> _eyx1;
-	std::vector<T> _ezx1;
+	MatrixData<T> _eyx0;
+	MatrixData<T> _ezx0;
+	MatrixData<T> _eyx1;
+	MatrixData<T> _ezx1;
 
-	std::vector<T> _exy0;
-	std::vector<T> _ezy0;
-	std::vector<T> _exy1;
-	std::vector<T> _ezy1;
+	MatrixData<T> _exy0;
+	MatrixData<T> _ezy0;
+	MatrixData<T> _exy1;
+	MatrixData<T> _ezy1;
 
-	std::vector<T> _exz0;
-	std::vector<T> _eyz0;
-	std::vector<T> _exz1;
-	std::vector<T> _eyz1;
+	MatrixData<T> _exz0;
+	MatrixData<T> _eyz0;
+	MatrixData<T> _exz1;
+	MatrixData<T> _eyz1;
 
 public:
 	unsigned int getTime() const
@@ -736,17 +738,6 @@ public:
 		if constexpr(dim == Dim::Z)
 			return Kokkos::submdspan(mat, Kokkos::full_extent, Kokkos::full_extent, index);
 	}
-
-#ifndef NDEBUG
-	template <typename T2, typename E, typename L, typename A>
-	void debugPrint(std::string_view name, Kokkos::mdspan<T2, E, L, A> mat)
-	{
-		static_assert(mat.rank() == 2);
-
-		std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
-
-	}
-#endif
 
 	inline static T calculateSc(T Cr, T mu, T eps)
 	{

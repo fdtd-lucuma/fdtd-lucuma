@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME}
 	PRIVATE
 		exceptions.cpp
 		injector.cpp
+		instantiations.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -27,5 +28,7 @@ target_sources(${PROJECT_NAME}
 			exceptions.cppm
 			injector.cppm
 			precision.cppm
+			print.cppm
+			save_as.cppm
 			utils.cppm
 )
