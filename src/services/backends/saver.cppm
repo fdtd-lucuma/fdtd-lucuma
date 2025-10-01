@@ -120,7 +120,7 @@ private:
 
 	void writeMatrix(std::string_view name, unsigned int time, data_t::cmdspan_3d_t mat)
 	{
-		writeToFile(datosCampoDir/std::format("{}{}.txt", name, time), [&](std::ostream& os)
+		fastWriteToFile(datosCampoDir/std::format("{}{}.txt", name, time), [&](auto& out)
 		{
 			for(std::size_t i = 0; i < mat.extent(0); i++)
 			{
@@ -128,7 +128,7 @@ private:
 				{
 					for(std::size_t k = 0; k < mat.extent(2); k++)
 					{
-						std::print(os, "{}\n", toPrintable(mat[i,j,k]));
+						out.print("{}\n", toPrintable(mat[i,j,k]));
 					}
 				}
 			}

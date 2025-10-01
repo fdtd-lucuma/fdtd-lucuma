@@ -99,7 +99,6 @@ find_package(magic_enum REQUIRED)
 find_package(XdgUtils REQUIRED COMPONENTS BaseDir)
 find_package(Taskflow REQUIRED)
 find_package(Threads REQUIRED)
-find_package(fmt REQUIRED)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
@@ -110,6 +109,7 @@ set_target_properties(mdspan
 # Shared libraries
 pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET GLOBAL
+		fmt
 		glfw3
 		yaml-cpp
 )
@@ -316,7 +316,6 @@ target_link_libraries(${PROJECT_NAME}
 		XdgUtils::BaseDir
 		Taskflow::Taskflow
 		Threads::Threads
-		fmt::fmt
 )
 
 target_include_directories(${PROJECT_NAME}

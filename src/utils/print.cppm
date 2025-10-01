@@ -21,6 +21,7 @@ export module lucuma.utils:print;
 import std.compat;
 
 import lucuma.legacy_headers.entt;
+import lucuma.legacy_headers.fmt;
 import lucuma.legacy_headers.mdspan;
 
 import :alias;
@@ -47,6 +48,17 @@ void writeToFile(const std::filesystem::path& path, F&& f)
 	// Why is locale so slow?
 	ofs.imbue(std::locale::classic());
 	f(ofs);
+
+}
+
+export template <typename F>
+void fastWriteToFile(const std::filesystem::path& path, F&& f)
+{
+	auto out = fmt::output_file(path.c_str());
+
+	// TODO: Check if fmt::ostream is open
+
+	f(out);
 
 }
 
