@@ -3,6 +3,7 @@ build-essential
 clang
 cmake
 file
+libfmt-dev
 libglfw3-dev
 libglm-dev
 libtaskflow-cpp-dev
