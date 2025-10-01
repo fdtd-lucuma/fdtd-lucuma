@@ -765,12 +765,12 @@ public:
 		assert(Ec.extent(1) <= ec.extent(1));
 
 #ifndef NDEBUG
-		debugPrint("Ec", Ec);
-		debugPrint("Ecd", Ecd);
-		debugPrint("eps", eps);
-		debugPrint("mu", mu);
-		debugPrint("ec", ec);
-		std::println();
+		//debugPrint("Ec", Ec);
+		//debugPrint("Ecd", Ecd);
+		//debugPrint("eps", eps);
+		//debugPrint("mu", mu);
+		//debugPrint("ec", ec);
+		//std::println();
 #endif
 
 		for(std::size_t i = 0; i < Ec.extent(0); i++)

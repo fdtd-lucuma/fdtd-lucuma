@@ -23,6 +23,8 @@ import std.compat;
 import lucuma.legacy_headers.entt;
 import lucuma.legacy_headers.mdspan;
 
+import :alias;
+
 namespace lucuma::utils
 {
 
@@ -71,6 +73,26 @@ void debugPrint(Kokkos::mdspan<T,E,L,A> mat)
 				std::print("{:.2f} ", toPrintable(mat[i,j,k]));
 			}
 			std::println();
+		}
+		std::println();
+	}
+
+	std::println("{}", entt::type_id<typeof(mat)>().name());
+}
+
+export template<typename T, typename E, typename L, typename A>
+void debugPrintSlice(std::string_view name, Kokkos::mdspan<T,E,L,A> _mat, svec3 size)
+{
+	auto sliceIndex = size.x/2;
+	auto mat = Kokkos::submdspan(_mat, sliceIndex, Kokkos::full_extent, Kokkos::full_extent);
+
+	std::println("{} slice x={}", name, sliceIndex);
+
+	for(std::size_t i = 0; i < mat.extent(0); i++)
+	{
+		for(std::size_t j = 0; j < mat.extent(1); j++)
+		{
+			std::print("{:.2f} ", toPrintable(mat[i,j]));
 		}
 		std::println();
 	}

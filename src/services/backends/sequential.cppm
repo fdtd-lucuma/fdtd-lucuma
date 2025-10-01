@@ -108,6 +108,11 @@ public:
 			data.updateE();
 			data.gauss();
 			data.abc();
+
+#ifndef NDEBUG
+			for(auto&& [name, mat]: data.zippedFields())
+				debugPrintSlice(name, mat, data.size);
+#endif
 		}
 
 		return canContinue;
@@ -121,10 +126,6 @@ public:
 		auto [data, saver] = registry.get<data_t, saver_t>(id);
 
 		saver.snapshot(data);
-
-#ifndef NDEBUG
-		//debugPrint(data.Ex());
-#endif
 	}
 
 	virtual ~Sequential() = default;
