@@ -128,9 +128,10 @@ public:
 		if(settings.saveAs() == SaveAs::none)
 			return;
 
-		auto [data, saver] = registry.get<data_t, saver_t>(id);
+		// TODO: Make this more ecs
+		auto& saver = registry.get<saver_t>(id);
 
-		saver.snapshot(data);
+		saver.snapshot();
 	}
 
 	virtual ~Sequential() = default;
