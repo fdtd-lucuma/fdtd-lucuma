@@ -137,12 +137,13 @@ enum class Argument: int
 	time        = 't',
 	backend     = 'b',
 	precision   = 'p',
+	save_as     = 's',
 };
 
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "hHgG:x:y:z:t:b:p:";
+	static const char shortopts[] = "hHgG:x:y:z:t:b:p:s:";
 	static const option options[] {
 		{"help",        no_argument,       nullptr, (int)Argument::help},
 		{"headless",    no_argument,       nullptr, (int)Argument::headless},
@@ -154,6 +155,7 @@ void ArgumentParser::parse(int argc, char** argv)
 		{"time",        required_argument, nullptr, (int)Argument::time},
 		{"backend",     required_argument, nullptr, (int)Argument::backend},
 		{"precision",   required_argument, nullptr, (int)Argument::precision},
+		{"save_as",     required_argument, nullptr, (int)Argument::save_as},
 		{nullptr,       0,                 nullptr, 0},
 	};
 
@@ -207,6 +209,10 @@ void ArgumentParser::handleOption(int shortopt)
 
 		case Argument::precision:
 			fromString(_precision, optarg);
+			break;
+
+		case Argument::save_as:
+			fromString(_saveAs, optarg);
 			break;
 
 		case Argument::failure:
