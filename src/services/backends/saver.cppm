@@ -55,25 +55,14 @@ public:
 		createBaseDir();
 		writeInfo(data);
 		writeMorfo(data);
-
-		initTaskflow(data);
 	}
 
-	void snapshot()
+	void snapshot(const data_t& data)
 	{
 		// TODO: Move this to its own service
 		static tf::Executor executor;
+		tf::Taskflow taskflow;
 
-		executor.run(taskflow).wait();
-	}
-
-private:
-	std::filesystem::path basePath;
-	std::filesystem::path datosCampoDir;
-	tf::Taskflow taskflow;
-
-	void initTaskflow(const data_t& data)
-	{
 		taskflow.name("File saver");
 
 		const auto time = data.getTime();
@@ -82,7 +71,14 @@ private:
 		{
 			taskflow.emplace([=, this](){writeMatrix(name, time, mat);}).name(name);
 		}
+
+		executor.run(taskflow).wait();
 	}
+
+private:
+	std::filesystem::path basePath;
+	std::filesystem::path datosCampoDir;
+
 
 	void createBaseDir()
 	{
