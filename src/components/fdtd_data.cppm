@@ -18,7 +18,7 @@ module;
 
 #include <cassert>
 
-export module lucuma.services.backends:sequential_fdtd_data;
+export module lucuma.components:fdtd_data;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
@@ -26,7 +26,7 @@ import lucuma.legacy_headers.mdspan;
 import std;
 import glm;
 
-namespace lucuma::services::backends
+namespace lucuma::components
 {
 
 using namespace lucuma::utils;
@@ -48,7 +48,7 @@ MatrixData<T> initMat(svec2 dims, T defaultValue = 0)
 	return MatrixData<T>(dims.x*dims.y, defaultValue);
 }
 
-template <class T>
+export template <class T>
 struct FdtdDataCreateInfo
 {
 	svec3 size;
@@ -60,7 +60,7 @@ struct FdtdDataCreateInfo
 	T gaussSigma;
 };
 
-template <class T>
+export template <class T>
 class FdtdData
 {
 public:

@@ -24,7 +24,7 @@ import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
 import lucuma.legacy_headers.taskflow;
 
-import :sequential_fdtd_data;
+import lucuma.components;
 import :utils;
 
 import std.compat;
@@ -32,6 +32,8 @@ import glm;
 
 namespace lucuma::services::backends
 {
+
+using namespace lucuma::utils;
 
 struct SaverCreateInfo
 {
@@ -42,7 +44,7 @@ template <class T>
 class Saver
 {
 public:
-	using data_t = FdtdData<T>;
+	using data_t = components::FdtdData<T>;
 
 	Saver(const SaverCreateInfo& createInfo):
 		basePath(createInfo.basePath),

@@ -16,20 +16,9 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		instantiations.cpp
-		instantiator.cpp
-		saver.cpp
-		sequential.cpp
-		vulkan.cpp
-	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			backends.cppm
-			i_backend.cppm
-			instantiator.cppm
-			saver.cppm
-			sequential.cppm
-			utils.cppm
-			vulkan.cppm
+			fdtd_data.cppm
+			components.cppm
 )

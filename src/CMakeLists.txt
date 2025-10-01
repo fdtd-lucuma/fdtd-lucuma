@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME}
 			simulator.cppm
 )
 
+add_subdirectory(components)
+add_subdirectory(legacy_headers)
 add_subdirectory(services)
 add_subdirectory(utils)
-add_subdirectory(legacy_headers)

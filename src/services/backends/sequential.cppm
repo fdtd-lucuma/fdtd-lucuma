@@ -22,9 +22,9 @@ import lucuma.utils;
 import lucuma.services.basic;
 import lucuma.legacy_headers.mdspan;
 import lucuma.legacy_headers.entt;
+import lucuma.components;
 
 import :base;
-import :sequential_fdtd_data;
 import :saver;
 import :utils;
 
@@ -52,7 +52,7 @@ class Sequential: public IBackend, public SequentialBase
 public:
 	using T = PrecisionTraits<precision>::type;
 
-	using data_t  = FdtdData<T>;
+	using data_t  = components::FdtdData<T>;
 	using saver_t = Saver<T>; //TODO: Select saver from traits
 
 	Sequential(Injector& injector):
@@ -63,7 +63,7 @@ public:
 	{
 		auto id = registry.create();
 
-		FdtdDataCreateInfo<T> createInfo {
+		components::FdtdDataCreateInfo<T> createInfo {
 			.size          = settings.size(),
 			.gaussPosition = settings.size()/(std::ptrdiff_t)2,
 
