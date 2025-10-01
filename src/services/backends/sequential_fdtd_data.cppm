@@ -482,7 +482,8 @@ public:
 		mdspan_3d_t Ch,
 		mdspan_3d_t Ce,
 		cmdspan_3d_t CM,
-		cmdspan_3d_t mu
+		cmdspan_3d_t mu,
+		const T CrImp0
 	)
 	{
 		assert(Ch.extents() == Ce.extents());
@@ -502,7 +503,7 @@ public:
 					const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
 
 					Ch[i,j,k] = ((T)1-c)/((T)1+c);
-					Ce[i,j,k] = ((T)1/((T)1+c))*(Cr/imp0);
+					Ce[i,j,k] = ((T)1/((T)1+c))*CrImp0;
 				}
 			}
 		}
@@ -514,7 +515,8 @@ public:
 			Chxh(),
 			Chxe(),
 			CMhx(),
-			mux()
+			mux(),
+			Cr/imp0
 		);
 	}
 
@@ -524,7 +526,8 @@ public:
 			Chyh(),
 			Chye(),
 			CMhy(),
-			muy()
+			muy(),
+			Cr/imp0
 		);
 	}
 
@@ -534,7 +537,8 @@ public:
 			Chzh(),
 			Chze(),
 			CMhz(),
-			muz()
+			muz(),
+			Cr/imp0
 		);
 	}
 
@@ -544,7 +548,8 @@ public:
 			Cexe(),
 			Cexh(),
 			CEEx(),
-			epsx()
+			epsx(),
+			Cr*imp0
 		);
 	}
 
@@ -554,7 +559,8 @@ public:
 			Ceye(),
 			Ceyh(),
 			CEEy(),
-			epsy()
+			epsy(),
+			Cr*imp0
 		);
 	}
 
@@ -564,7 +570,8 @@ public:
 			Ceze(),
 			Cezh(),
 			CEEz(),
-			epsz()
+			epsz(),
+			Cr*imp0
 		);
 	}
 
