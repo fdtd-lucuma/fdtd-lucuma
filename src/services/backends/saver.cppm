@@ -128,7 +128,7 @@ private:
 				{
 					for(std::size_t k = 0; k < mat.extent(2); k++)
 					{
-						std::println(os, "{}", toPrintable(mat[i,j,k]));
+						std::print(os, "{}\n", toPrintable(mat[i,j,k]));
 					}
 				}
 			}
