@@ -90,6 +90,11 @@ public:
 			saver.start(data);
 		}
 
+#ifndef NDEBUG
+		for(auto&& [name, mat]: data.chZippedFields())
+			debugPrintSlice(name, mat, data.size);
+#endif
+
 
 		return id;
 	}

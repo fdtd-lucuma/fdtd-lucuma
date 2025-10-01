@@ -92,7 +92,7 @@ void debugPrintSlice(std::string_view name, Kokkos::mdspan<T,E,L,A> _mat, svec3 
 	{
 		for(std::size_t j = 0; j < mat.extent(1); j++)
 		{
-			std::print("{:.2f} ", toPrintable(mat[i,j]));
+			std::print("{} ", toPrintable(mat[i,j]));
 		}
 		std::println();
 	}

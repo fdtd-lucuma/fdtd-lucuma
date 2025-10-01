@@ -312,6 +312,52 @@ public:
 			co_yield p;
 	}
 
+	std::generator<std::tuple<const char*, cmdspan_3d_t>> chZippedFields() const {
+		static constexpr std::array names {
+			"Chxh()",
+			"Chyh()",
+			"Chzh()",
+			"Chxe()",
+			"Chye()",
+			"Chze()",
+		};
+
+		std::array mats {
+			Chxh(),
+			Chyh(),
+			Chzh(),
+			Chxe(),
+			Chye(),
+			Chze(),
+		};
+
+		for(auto&& p: std::views::zip(names, mats))
+			co_yield p;
+	}
+
+	std::generator<std::tuple<const char*, cmdspan_3d_t>> ceZippedFields() const {
+		static constexpr std::array names {
+			"Cexe()",
+			"Ceye()",
+			"Ceze()",
+			"Cexh()",
+			"Ceyh()",
+			"Cezh()",
+		};
+
+		std::array mats {
+			Cexe(),
+			Ceye(),
+			Ceze(),
+			Cexh(),
+			Ceyh(),
+			Cezh(),
+		};
+
+		for(auto&& p: std::views::zip(names, mats))
+			co_yield p;
+	}
+
 	/// Returns true and increments the counter by +1 if it can still continue.
 	bool step() {
 		if(time >= maxTime)
