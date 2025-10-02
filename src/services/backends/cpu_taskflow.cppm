@@ -16,46 +16,41 @@
 
 module;
 
-export module lucuma.services.backends:sequential;
+export module lucuma.services.backends:cpu_taskflow;
 
 import lucuma.utils;
 import lucuma.services.basic;
-import lucuma.legacy_headers.mdspan;
-import lucuma.legacy_headers.entt;
 import lucuma.components;
 
 import :base;
-import :saver;
-import :utils;
 import :cpu_common;
 
 import std;
-import glm;
 
 namespace lucuma::services::backends
 {
 
 using namespace lucuma::utils;
 
-class SequentialBase
+class CpuTaskflowBase
 {
 protected:
-	SequentialBase(Injector& injector);
+	CpuTaskflowBase(Injector& injector);
 
 	CpuCommon common;
 
 };
 
 export template<Precision precision>
-class Sequential: public IBackend, public SequentialBase
+class CpuTaskflow: public IBackend, public CpuTaskflowBase
 {
 public:
 	using T = PrecisionTraits<precision>::type;
 
 	using data_t = components::FdtdData<T>;
 
-	Sequential(Injector& injector):
-		SequentialBase(injector)
+	CpuTaskflow(Injector& injector):
+		CpuTaskflowBase(injector)
 	{ }
 
 	virtual entt::entity init()
@@ -67,6 +62,7 @@ public:
 	{
 		return common.step<T>(id, [](data_t& data)
 		{
+			//TODO Taskflow
 			data.updateH();
 			data.updateE();
 			data.gauss();
@@ -79,14 +75,14 @@ public:
 		common.saveFiles<T>(id);
 	}
 
-	virtual ~Sequential() = default;
+	virtual ~CpuTaskflow() = default;
 private:
 
 };
 
 // Add one line for each new precision
-extern template class Sequential<Precision::f16>;
-extern template class Sequential<Precision::f32>;
-extern template class Sequential<Precision::f64>;
+extern template class CpuTaskflow<Precision::f16>;
+extern template class CpuTaskflow<Precision::f32>;
+extern template class CpuTaskflow<Precision::f64>;
 
 }

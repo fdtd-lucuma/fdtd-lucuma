@@ -24,6 +24,7 @@ namespace lucuma::utils
 export enum class Backend
 {
 	sequential,
+	taskflow,
 	//TODO: Multithread openmp? taskflow?
 	vulkan,
 };

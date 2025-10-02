@@ -24,9 +24,10 @@ import std;
 import magic_enum;
 
 import :base;
+import :cpu_taskflow;
 import :sequential;
-import :vulkan;
 import :utils;
+import :vulkan;
 
 namespace lucuma::utils
 {
@@ -40,12 +41,18 @@ struct BackendTraits<Backend::sequential>
 };
 
 template<>
+struct BackendTraits<Backend::taskflow>
+{
+	template<Precision p>
+	using type = CpuTaskflow<p>;
+};
+
+template<>
 struct BackendTraits<Backend::vulkan>
 {
 	template<Precision p>
 	using type = Vulkan<p>;
 };
-
 
 }
 

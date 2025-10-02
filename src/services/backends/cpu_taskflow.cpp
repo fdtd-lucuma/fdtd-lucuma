@@ -21,12 +21,12 @@ module lucuma.services.backends;
 import lucuma.utils;
 import std;
 
-import :sequential;
+import :cpu_taskflow;
 
 namespace lucuma::services::backends
 {
 
-SequentialBase::SequentialBase([[maybe_unused]]Injector& injector):
+CpuTaskflowBase::CpuTaskflowBase([[maybe_unused]]Injector& injector):
 	common(injector.inject<CpuCommon>())
 { }
 
@@ -36,8 +36,8 @@ SequentialBase::SequentialBase([[maybe_unused]]Injector& injector):
 namespace  lucuma::services::backends
 {
 
-template class Sequential<Precision::f16>;
-template class Sequential<Precision::f32>;
-template class Sequential<Precision::f64>;
+template class CpuTaskflow<Precision::f16>;
+template class CpuTaskflow<Precision::f32>;
+template class CpuTaskflow<Precision::f64>;
 
 }

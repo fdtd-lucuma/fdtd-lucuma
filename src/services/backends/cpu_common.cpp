@@ -21,23 +21,14 @@ module lucuma.services.backends;
 import lucuma.utils;
 import std;
 
-import :sequential;
+import :cpu_common;
 
 namespace lucuma::services::backends
 {
 
-SequentialBase::SequentialBase([[maybe_unused]]Injector& injector):
-	common(injector.inject<CpuCommon>())
+CpuCommon::CpuCommon([[maybe_unused]]Injector& injector):
+	settings(injector.inject<basic::Settings>()),
+	registry(injector.inject<entt::registry>())
 { }
-
-}
-
-// Explicit template instantiations for faster compilation
-namespace  lucuma::services::backends
-{
-
-template class Sequential<Precision::f16>;
-template class Sequential<Precision::f32>;
-template class Sequential<Precision::f64>;
 
 }
