@@ -915,4 +915,8 @@ public:
 
 };
 
+extern template class FdtdData<PrecisionTraits<Precision::f16>::type>;
+extern template class FdtdData<PrecisionTraits<Precision::f32>::type>;
+extern template class FdtdData<PrecisionTraits<Precision::f64>::type>;
+
 }
