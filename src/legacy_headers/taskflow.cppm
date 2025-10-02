@@ -26,5 +26,6 @@ export namespace tf
 using tf::Task;
 using tf::Executor;
 using tf::Taskflow;
+using tf::Subflow;
 
 };

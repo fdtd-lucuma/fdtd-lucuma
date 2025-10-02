@@ -21,6 +21,7 @@ export module lucuma.services.backends:cpu_taskflow;
 import lucuma.utils;
 import lucuma.services.basic;
 import lucuma.components;
+import lucuma.legacy_headers.taskflow;
 
 import :base;
 import :cpu_common;
@@ -37,7 +38,7 @@ class CpuTaskflowBase
 protected:
 	CpuTaskflowBase(Injector& injector);
 
-	CpuCommon common;
+	CpuCommon& common;
 
 };
 
@@ -62,11 +63,32 @@ public:
 	{
 		return common.step<T>(id, [](data_t& data)
 		{
-			//TODO Taskflow
-			data.updateH();
-			data.updateE();
-			data.gauss();
-			data.abc();
+			static tf::Executor executor; //TODO Inject this
+
+			tf::Taskflow taskflow;
+
+			auto updateH = taskflow.emplace([&](tf::Subflow& subflow)
+			{
+				subflow.emplace([&](){data.updateHx();});
+				subflow.emplace([&](){data.updateHy();});
+				subflow.emplace([&](){data.updateHz();});
+			});
+
+			auto updateE = taskflow.emplace([&](tf::Subflow& subflow)
+			{
+				subflow.emplace([&](){data.updateEx();});
+				subflow.emplace([&](){data.updateEy();});
+				subflow.emplace([&](){data.updateEz();});
+			});
+
+			auto gauss = taskflow.emplace([&](){data.gauss();});
+			auto abc   = taskflow.emplace([&](){data.abc();});
+
+			updateH.precede(updateE);
+			updateE.precede(gauss);
+			gauss.precede(abc);
+
+			executor.run(taskflow).wait();
 		});
 	}
 

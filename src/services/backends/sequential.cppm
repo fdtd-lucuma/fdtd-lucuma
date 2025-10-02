@@ -20,17 +20,13 @@ export module lucuma.services.backends:sequential;
 
 import lucuma.utils;
 import lucuma.services.basic;
-import lucuma.legacy_headers.mdspan;
-import lucuma.legacy_headers.entt;
 import lucuma.components;
 
 import :base;
-import :saver;
 import :utils;
 import :cpu_common;
 
 import std;
-import glm;
 
 namespace lucuma::services::backends
 {
@@ -42,7 +38,7 @@ class SequentialBase
 protected:
 	SequentialBase(Injector& injector);
 
-	CpuCommon common;
+	CpuCommon& common;
 
 };
 
