@@ -69,16 +69,20 @@ public:
 
 			auto updateH = taskflow.emplace([&](tf::Subflow& subflow)
 			{
-				subflow.emplace([&](){data.updateHx();}).name("Hx");
-				subflow.emplace([&](){data.updateHy();}).name("Hy");
-				subflow.emplace([&](){data.updateHz();}).name("Hz");
+				subflow.emplace(
+					[&](){data.updateHx();},
+					[&](){data.updateHy();},
+					[&](){data.updateHz();}
+				);
 			});
 
 			auto updateE = taskflow.emplace([&](tf::Subflow& subflow)
 			{
-				subflow.emplace([&](){data.updateEx();}).name("Ex");
-				subflow.emplace([&](){data.updateEy();}).name("Ey");
-				subflow.emplace([&](){data.updateEz();}).name("Ez");
+				subflow.emplace(
+					[&](){data.updateEx();},
+					[&](){data.updateEy();},
+					[&](){data.updateEz();}
+				);
 			});
 
 			auto gauss = taskflow.emplace([&](){data.gauss();});
