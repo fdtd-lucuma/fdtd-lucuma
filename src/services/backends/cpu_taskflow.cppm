@@ -63,7 +63,7 @@ public:
 	{
 		return common.step<T>(id, [](data_t& data)
 		{
-			static tf::Executor executor; //TODO Inject this
+			static tf::Executor executor(3); //TODO Inject this
 
 			tf::Taskflow taskflow;
 
