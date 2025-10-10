@@ -35,18 +35,24 @@ function(add_spirv_target)
 
 	foreach(SOURCE IN LISTS ARG_SOURCES)
 		get_filename_component(SOURCE_NAME "${SOURCE}" NAME_WLE)
+
 		set(BINARY_NAME "${SOURCE_NAME}.spv")
+		set(DEPFILE_NAME "${SOURCE_NAME}_depfile.txt")
+
+		set(BINARY_PATH "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}")
+		set(DEPFILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${DEPFILE_NAME}")
 
 		add_custom_command(
-			OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}"
+			OUTPUT "${BINARY_PATH}"
 			DEPENDS "${SOURCE}"
 			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-			COMMAND "${SLANG_EXECUTABLE}" "${SOURCE}" -O3 -profile spirv_1_4 -target spirv -o "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}"
+			COMMAND "${SLANG_EXECUTABLE}" "${SOURCE}" -depfile "${DEPFILE_PATH}" -O3 -profile spirv_1_4 -target spirv -o "${BINARY_PATH}"
+			DEPFILE "${DEPFILE_PATH}"
 			COMMENT "${SOURCE} -> ${BINARY_NAME}"
 			VERBATIM
 		)
 
-		list(APPEND BINARIES "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}")
+		list(APPEND BINARIES "${BINARY_PATH}")
 
 	endforeach()
 
