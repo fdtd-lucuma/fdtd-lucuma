@@ -18,6 +18,8 @@ module;
 
 export module lucuma.services.backends:vulkan;
 
+import lucuma.legacy_headers.mdspan;
+
 import lucuma.utils;
 import lucuma.services.basic;
 import lucuma.services.vulkan;
@@ -31,6 +33,71 @@ namespace lucuma::services::backends
 {
 
 using namespace lucuma::utils;
+
+template <typename T>
+class VulkanFdtdData
+{
+public:
+	constexpr static auto HxDimsDelta = svec3(0, -1, -1);
+	constexpr static auto HyDimsDelta = svec3(-1, 0, -1);
+	constexpr static auto HzDimsDelta = svec3(-1, -1, 0);
+
+	constexpr static auto ExDimsDelta = svec3(-1, 0, 0);
+	constexpr static auto EyDimsDelta = svec3(0, -1, 0);
+	constexpr static auto EzDimsDelta = svec3(0, 0, -1);
+
+	template <typename extents, typename layout = Kokkos::layout_right>
+	using mdspan_t = Kokkos::mdspan<T, extents, layout>;
+
+	template <typename extents, typename layout = Kokkos::layout_right>
+	using cmdspan_t = Kokkos::mdspan<const T, extents, layout>;
+
+	using extents_2d_t = Kokkos::dextents<std::size_t, 2>;
+	using extents_3d_t = Kokkos::dextents<std::size_t, 3>;
+
+	template <typename layout = Kokkos::layout_right>
+	using _mdspan_2d_t = mdspan_t<extents_2d_t, layout>;
+	template <typename layout = Kokkos::layout_right>
+	using _mdspan_3d_t = mdspan_t<extents_3d_t, layout>;
+
+	template <typename layout = Kokkos::layout_right>
+	using _cmdspan_2d_t = cmdspan_t<extents_2d_t, layout>;
+	template <typename layout = Kokkos::layout_right>
+	using _cmdspan_3d_t = cmdspan_t<extents_3d_t, layout>;
+
+	using mdspan_2d_t = _mdspan_2d_t<>;
+	using mdspan_3d_t = _mdspan_3d_t<>;
+
+	using cmdspan_2d_t = _cmdspan_2d_t<>;
+	using cmdspan_3d_t = _cmdspan_3d_t<>;
+
+private:
+
+	static inline auto toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
+	{
+		return Kokkos::submdspan(mdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims.x, dims.y, dims.z);
+	}
+
+	static inline auto toMdspan(vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
+	{
+		return Kokkos::submdspan(mdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims.x, dims.y);
+	}
+
+	static inline auto toMdspan(const vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
+	{
+		return Kokkos::submdspan(cmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims.x, dims.y, dims.z);
+	}
+
+	static inline auto toMdspan(const vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
+	{
+		return Kokkos::submdspan(cmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims.x, dims.y);
+	}
+
+
+public:
+
+private:
+};
 
 export class VulkanBase
 {

@@ -60,6 +60,13 @@ public:
 		return {(T*)info.pMappedData, info.size/sizeof(T)};
 	}
 
+	template<typename T>
+	std::span<const T> getData() const
+	{
+		const auto info = getInfo();
+		return {(const T*)info.pMappedData, info.size/sizeof(T)};
+	}
+
 private:
 
 	vma::UniqueBuffer     buffer;
