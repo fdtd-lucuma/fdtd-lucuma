@@ -98,6 +98,20 @@ VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::
 
 }
 
+std::ptrdiff_t pad(std::ptrdiff_t size, std::ptrdiff_t workGroupSize)
+{
+	return (size % workGroupSize) == 0 ? size : (size/workGroupSize + 1)*workGroupSize;
+}
+
+svec3 pad(svec3 size, std::ptrdiff_t workGroupSize)
+{
+	return {
+		pad(size.x, workGroupSize),
+		pad(size.y, workGroupSize),
+		pad(size.z, workGroupSize),
+	};
+}
+
 //template class Vulkan<Precision::f16>;
 template class Vulkan<Precision::f32>;
 template class Vulkan<Precision::f64>;

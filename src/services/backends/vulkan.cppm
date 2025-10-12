@@ -37,6 +37,8 @@ namespace lucuma::services::backends
 
 using namespace lucuma::utils;
 
+svec3 pad(svec3 size, std::ptrdiff_t workGroupSize);
+
 template <typename T>
 class VulkanFdtdData
 {
@@ -100,8 +102,12 @@ private:
 public:
 	using create_info_t = components::FdtdDataCreateInfo<T>;
 
+	// TODO: Find a way of chaning this
+	constexpr static std::ptrdiff_t workGroupSize = 8;
+
 	VulkanFdtdData(const create_info_t& createInfo):
 		size(createInfo.size),
+		paddedSize(pad(size, workGroupSize)),
 		gaussPosition(createInfo.gaussPosition),
 		deltaT(createInfo.deltaT),
 		imp0(createInfo.imp0),
@@ -124,6 +130,7 @@ public:
 	}
 
 	const svec3 size;
+	const svec3 paddedSize;
 	const svec3 gaussPosition;
 	const T deltaT;
 	const T imp0;
