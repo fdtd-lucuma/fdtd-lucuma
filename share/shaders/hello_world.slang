@@ -1,6 +1,4 @@
-#ifndef FDTD_FLOAT_T
-#define FDTD_FLOAT_T float
-#endif
+#include "fdtd_macros.slang"
 
 [shader("compute")]
 [numthreads(1,1,1)]
