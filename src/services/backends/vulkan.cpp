@@ -20,9 +20,11 @@ module lucuma.services.backends;
 
 import lucuma.utils;
 import lucuma.services.vulkan;
+import lucuma.legacy_headers.entt;
 import std;
 import vulkan_hpp;
 import vk_mem_alloc_hpp;
+
 
 import :vulkan;
 
@@ -33,7 +35,8 @@ VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	vulkanAllocator(injector.inject<vulkan::Allocator>()),
 	vulkanCompute(injector.inject<vulkan::Compute>()),
 	vulkanAll(injector.inject<vulkan::All>()),
-	settings(injector.inject<basic::Settings>())
+	settings(injector.inject<basic::Settings>()),
+	registry(injector.inject<entt::registry>())
 { }
 
 VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::string_view shaderPath)

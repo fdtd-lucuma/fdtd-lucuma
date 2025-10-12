@@ -19,8 +19,11 @@ module;
 export module lucuma.services.backends:vulkan;
 
 import lucuma.legacy_headers.mdspan;
+import lucuma.legacy_headers.entt;
+import glm;
 
 import lucuma.utils;
+import lucuma.components;
 import lucuma.services.basic;
 import lucuma.services.vulkan;
 import vulkan_hpp;
@@ -95,8 +98,65 @@ private:
 
 
 public:
+	using create_info_t = components::FdtdDataCreateInfo<T>;
+
+	VulkanFdtdData(const create_info_t& createInfo):
+		size(createInfo.size),
+		gaussPosition(createInfo.gaussPosition),
+		deltaT(createInfo.deltaT),
+		imp0(createInfo.imp0),
+		Cr(createInfo.Cr),
+		maxTime(createInfo.maxTime),
+		gaussSigma(createInfo.gaussSigma),
+		HxDims(size + HxDimsDelta),
+		HyDims(size + HyDimsDelta),
+		HzDims(size + HzDimsDelta),
+		ExDims(size + ExDimsDelta),
+		EyDims(size + EyDimsDelta),
+		EzDims(size + EzDimsDelta),
+		eyxDims(EyDims.yz()),
+		ezxDims(EzDims.yz()),
+		exyDims(ExDims.xz()),
+		ezyDims(EzDims.xz()),
+		exzDims(ExDims.xy()),
+		eyzDims(EyDims.xy())
+	{
+	}
+
+	const svec3 size;
+	const svec3 gaussPosition;
+	const T deltaT;
+	const T imp0;
+	const T Cr;
+
+	const unsigned int maxTime;
 
 private:
+	unsigned int time = 0;
+	T gaussSigma;
+
+	// Magnetic field dimentions
+
+	const svec3 HxDims;
+	const svec3 HyDims;
+	const svec3 HzDims;
+
+	// Electric field dimentions
+
+	const svec3 ExDims;
+	const svec3 EyDims;
+	const svec3 EzDims;
+
+	// ABC dimentions
+
+	const svec2 eyxDims;
+	const svec2 ezxDims;
+
+	const svec2 exyDims;
+	const svec2 ezyDims;
+
+	const svec2 exzDims;
+	const svec2 eyzDims;
 };
 
 export class VulkanBase
@@ -108,6 +168,7 @@ protected:
 	vulkan::Compute&   vulkanCompute;
 	vulkan::All&       vulkanAll;
 	basic::Settings&   settings;
+	entt::registry&    registry;
 
 	struct HelloWorldData
 	{
@@ -139,6 +200,8 @@ class Vulkan: public IBackend, public VulkanBase
 {
 public:
 	using T = PrecisionTraits<precision>::type;
+	using data_t = VulkanFdtdData<T>;
+	using create_info_t = typename data_t::create_info_t;
 
 	Vulkan(Injector& injector):
 		VulkanBase(injector)
@@ -147,9 +210,25 @@ public:
 
 	virtual entt::entity init()
 	{
-		helloWorld();
-		//TODO
-		return entt::null;
+		//helloWorld();
+		auto id = registry.create();
+
+		create_info_t createInfo {
+			.size          = settings.size(),
+			.gaussPosition = settings.size()/(std::ptrdiff_t)2,
+
+			//TODO: Get from settings
+			.deltaT = (T)1,
+			.imp0 = (T)377,
+			.Cr = (T)(1.f/std::sqrt(3.f)),
+
+			.maxTime = settings.time(),
+			.gaussSigma = 10,
+		};
+
+		data_t& d = registry.emplace<data_t>(id, createInfo);
+
+		return id;
 	}
 
 	virtual bool step(entt::entity id)
