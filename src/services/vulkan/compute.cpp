@@ -103,13 +103,20 @@ std::tuple<svec3, std::ptrdiff_t> limits(const vk::PhysicalDeviceLimits limits)
 	return {{limits.maxComputeWorkGroupSize[0], limits.maxComputeWorkGroupSize[1], limits.maxComputeWorkGroupSize[2]}, limits.maxComputeWorkGroupInvocations};
 }
 
+bool fits(svec3 workgroupSize, svec3 maxWorkgroupSize, svec3 size, std::ptrdiff_t maxInvocations)
+{
+	return glm::all(glm::lessThanEqual(workgroupSize, maxWorkgroupSize)) &&
+		glm::all(glm::lessThanEqual(workgroupSize, size)) &&
+		glm::compMul(workgroupSize) <= maxInvocations;
+}
+
 svec3 Compute::getWorkgroupSize(svec3 size) const
 {
 	svec3 result;
 
 	auto [wgSizes, wgInvocations] = limits(device.getPhysicalDevice().getProperties().limits);
 
-	for(result = svec3(1,1,1); glm::all(glm::lessThanEqual(result, wgSizes)) && glm::all(glm::lessThanEqual(result, size)) && glm::compMul(result) <= wgInvocations; result *= 2)
+	for(result = svec3(1,1,1); fits(result, wgSizes, size, wgInvocations); result *= 2)
 	{
 	}
 
