@@ -121,21 +121,31 @@ std::vector<vk::DeviceQueueCreateInfo> Device::getQueueCreateInfos()
 
 void Device::createDevice()
 {
-	// TODO: Chain 1.1 and 1.2 features
-	auto features   = getPhysicalDevice().getFeatures();
 
 	auto extensions = getRequiredExtensions();
 	auto layers     = getRequiredLayers();
 
 	auto queues = getQueueCreateInfos();
 
-	vk::DeviceCreateInfo deviceCreateInfo{};
+	auto featureChain = getPhysicalDevice().getFeatures2<
+		vk::PhysicalDeviceFeatures2,
+		vk::PhysicalDeviceVulkan11Features,
+		vk::PhysicalDeviceVulkan12Features,
+		vk::PhysicalDeviceVulkan13Features,
+		vk::PhysicalDeviceVulkan14Features
+	>();
+
+	vk::StructureChain<vk::DeviceCreateInfo, vk::PhysicalDeviceFeatures2> createInfoChain {
+		{},
+		featureChain.get<vk::PhysicalDeviceFeatures2>()
+	};
+
+	auto& deviceCreateInfo = createInfoChain.get<vk::DeviceCreateInfo>();
 
 	deviceCreateInfo
 		.setPEnabledLayerNames(layers)
 		.setPEnabledExtensionNames(extensions)
 		.setQueueCreateInfos(queues)
-		.setPEnabledFeatures(&features)
 	;
 
 	device = getPhysicalDevice().createDevice(deviceCreateInfo);

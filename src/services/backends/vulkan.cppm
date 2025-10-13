@@ -217,7 +217,7 @@ public:
 
 	virtual entt::entity init()
 	{
-		//helloWorld();
+		helloWorld();
 		auto id = registry.create();
 
 		create_info_t createInfo {

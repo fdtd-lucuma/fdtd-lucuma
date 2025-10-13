@@ -45,6 +45,7 @@ export struct ComputePipelineCreateInfo
 	std::filesystem::path      shaderPath;
 	std::string                entrypoint = "main";
 	std::span<const setLayout> setLayouts;
+	svec3                      workgroupSize = {1,1,1};
 };
 
 export class ComputePipeline

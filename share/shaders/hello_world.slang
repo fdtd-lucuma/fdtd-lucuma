@@ -1,7 +1,11 @@
 #include "fdtd_macros.slang"
 
+[[vk::constant_id(0)]] const uint wgX;
+[[vk::constant_id(1)]] const uint wgY;
+[[vk::constant_id(2)]] const uint wgZ;
+
 [shader("compute")]
-[numthreads(1,1,1)]
+[numthreads(wgX,wgY,wgZ)]
 void main(
 	uint3 threadId : SV_DispatchThreadID,
 	StructuredBuffer<FDTD_FLOAT_T> a,

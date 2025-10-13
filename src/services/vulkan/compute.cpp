@@ -16,9 +16,12 @@
 
 module;
 
+#include <cstddef>
+
 module lucuma.services.vulkan;
 
 import lucuma.services.basic;
+import glm;
 
 namespace lucuma::services::vulkan
 {
@@ -230,13 +233,32 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 
 	layout = device.createPipelineLayout(pipelineLayoutCreateInfo);
 
+	// Workgroup size
+	using wgVec = glm::vec<3, std::uint32_t>;
+	static constexpr std::size_t wgDataSize = sizeof(std::uint32_t);
+
+	wgVec wgSize = info.workgroupSize;
+
+	std::array specializationMap {
+		vk::SpecializationMapEntry{0, offsetof(wgVec, x), wgDataSize},
+		vk::SpecializationMapEntry{1, offsetof(wgVec, y), wgDataSize},
+		vk::SpecializationMapEntry{2, offsetof(wgVec, z), wgDataSize},
+	};
+
+	vk::SpecializationInfo specializationInfo {
+	};
+
+	specializationInfo.setData<wgVec>(wgSize);
+	specializationInfo.setMapEntries(specializationMap);
+
 	// Create pipeline
 	auto shaderModule = builder.shaderLoader.createShaderModule(info.shaderPath);
 
 	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
-		.stage  = vk::ShaderStageFlagBits::eCompute,
-		.module = shaderModule,
-		.pName  = info.entrypoint.c_str(),
+		.stage               = vk::ShaderStageFlagBits::eCompute,
+		.module              = shaderModule,
+		.pName               = info.entrypoint.c_str(),
+		.pSpecializationInfo = &specializationInfo,
 	};
 
 	vk::ComputePipelineCreateInfo computePipelineCreateInfo {
