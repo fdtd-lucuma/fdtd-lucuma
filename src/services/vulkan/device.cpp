@@ -127,7 +127,8 @@ void Device::createDevice()
 
 	auto queues = getQueueCreateInfos();
 
-	auto featureChain = getPhysicalDevice().getFeatures2<
+	auto chain = getPhysicalDevice().getFeatures2<
+		vk::DeviceCreateInfo,
 		vk::PhysicalDeviceFeatures2,
 		vk::PhysicalDeviceVulkan11Features,
 		vk::PhysicalDeviceVulkan12Features,
@@ -135,12 +136,7 @@ void Device::createDevice()
 		vk::PhysicalDeviceVulkan14Features
 	>();
 
-	vk::StructureChain<vk::DeviceCreateInfo, vk::PhysicalDeviceFeatures2> createInfoChain {
-		{},
-		featureChain.get<vk::PhysicalDeviceFeatures2>()
-	};
-
-	auto& deviceCreateInfo = createInfoChain.get<vk::DeviceCreateInfo>();
+	auto& deviceCreateInfo = chain.get<vk::DeviceCreateInfo>();
 
 	deviceCreateInfo
 		.setPEnabledLayerNames(layers)
