@@ -105,16 +105,13 @@ std::tuple<svec3, std::ptrdiff_t> limits(const vk::PhysicalDeviceLimits limits)
 
 svec3 Compute::getWorkgroupSize(svec3 size) const
 {
-	svec3 result(1,1,1);
-	svec3 nextAttempt = result;
+	svec3 result;
 
 	auto [wgSizes, wgInvocations] = limits(device.getPhysicalDevice().getProperties().limits);
 
-	do
+	for(result = svec3(1,1,1); glm::all(glm::lessThanEqual(result, wgSizes)) && glm::all(glm::lessThanEqual(result, size)) && glm::compMul(result) <= wgInvocations; result *= 2)
 	{
-		result = nextAttempt;
-		nextAttempt *= 2;
-	} while(glm::all(glm::lessThanEqual(nextAttempt, wgSizes)) && glm::all(glm::lessThanEqual(nextAttempt, size)) && glm::compMul(nextAttempt) <= wgInvocations);
+	}
 
 	return result;
 }
