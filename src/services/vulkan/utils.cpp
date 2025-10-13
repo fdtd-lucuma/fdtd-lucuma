@@ -57,7 +57,10 @@ std::ostream& operator<<(std::ostream& output, vk::Instance instance)
 
 std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice)
 {
-	const auto properties = physicalDevice.getProperties();
+	const auto chain = physicalDevice.getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceVulkan12Properties>();
+
+	const auto& properties = chain.get<vk::PhysicalDeviceProperties2>().properties;
+	const auto& v12Properties = chain.get<vk::PhysicalDeviceVulkan12Properties>();
 
 	output
 		<< "Device name: " << properties.deviceName << '\n'
@@ -69,10 +72,18 @@ std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice
 			<< vk::versionMajor(properties.driverVersion) << '.'
 			<< vk::versionMinor(properties.driverVersion) << '.'
 			<< vk::versionPatch(properties.driverVersion) << '\n'
+		<< "Vulkan driver name: "
+			<< v12Properties.driverName << '\n'
+		<< "Vulkan driver info: "
+			<< v12Properties.driverInfo << '\n'
 		<< "Device type: " << to_string(properties.deviceType) << '\n'
 		<< "Max image dimension 1D: " << properties.limits.maxImageDimension1D << '\n'
 		<< "Max image dimension 2D: " << properties.limits.maxImageDimension2D << '\n'
 		<< "Max image dimension 3D: " << properties.limits.maxImageDimension3D << '\n'
+		<< "Max workgroup size X: " << properties.limits.maxComputeWorkGroupSize[0] << '\n'
+		<< "Max workgroup size Y: " << properties.limits.maxComputeWorkGroupSize[1] << '\n'
+		<< "Max workgroup size Z: " << properties.limits.maxComputeWorkGroupSize[2] << '\n'
+		<< "Max total workgroup size (X*Y*Z): " << properties.limits.maxComputeWorkGroupInvocations << '\n'
 		<< "Max compute shared memory size: " << properties.limits.maxComputeSharedMemorySize << '\n'
 	;
 
