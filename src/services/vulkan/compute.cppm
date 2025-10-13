@@ -100,6 +100,7 @@ public:
 	ComputePipeline createPipeline(const ComputePipelineCreateInfo& info);
 
 	void submit(const vk::CommandBuffer& commandBuffer);
+	svec3 getWorkgroupSize(svec3 size) const;
 
 private:
 	Device&       device;

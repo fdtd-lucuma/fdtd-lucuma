@@ -17,6 +17,7 @@
 module;
 
 #include <cstddef>
+#include <glm/gtx/component_wise.hpp> // Why is this not in the module?
 
 module lucuma.services.vulkan;
 
@@ -95,6 +96,27 @@ void Compute::submit(const vk::CommandBuffer& commandBuffer)
 
 	queue.submit(submitInfo);
 	queue.waitIdle();
+}
+
+std::tuple<svec3, std::ptrdiff_t> limits(const vk::PhysicalDeviceLimits limits)
+{
+	return {{limits.maxComputeWorkGroupSize[0], limits.maxComputeWorkGroupSize[1], limits.maxComputeWorkGroupSize[2]}, limits.maxComputeWorkGroupInvocations};
+}
+
+svec3 Compute::getWorkgroupSize(svec3 size) const
+{
+	svec3 result(1,1,1);
+	svec3 nextAttempt = result;
+
+	auto [wgSizes, wgInvocations] = limits(device.getPhysicalDevice().getProperties().limits);
+
+	do
+	{
+		result = nextAttempt;
+		nextAttempt *= 2;
+	} while(glm::all(glm::lessThanEqual(nextAttempt, wgSizes)) && glm::all(glm::lessThanEqual(nextAttempt, size)) && glm::compMul(nextAttempt) <= wgInvocations);
+
+	return result;
 }
 
 ComputePipeline::ComputePipeline(ComputePipeline&& other):
