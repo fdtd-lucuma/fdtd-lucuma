@@ -1,4 +1,5 @@
 #include "fdtd_macros.slang"
+#include "matrix.slang"
 
 [[vk::constant_id(0)]] const uint wgX;
 [[vk::constant_id(1)]] const uint wgY;
