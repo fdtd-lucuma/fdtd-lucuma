@@ -46,7 +46,7 @@ function(add_spirv_target)
 			OUTPUT "${BINARY_PATH}"
 			DEPENDS "${SOURCE}"
 			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-			COMMAND "${SLANG_EXECUTABLE}" "${SOURCE}" -depfile "${DEPFILE_PATH}" -O3 -profile spirv_1_4 -target spirv -o "${BINARY_PATH}"
+			COMMAND "${SLANG_EXECUTABLE}" -depfile "${DEPFILE_PATH}" -O3 -profile spirv_1_4 -target spirv -o "${BINARY_PATH}" -- "${SOURCE}"
 			DEPFILE "${DEPFILE_PATH}"
 			COMMENT "${SOURCE} -> ${BINARY_NAME}"
 			VERBATIM
