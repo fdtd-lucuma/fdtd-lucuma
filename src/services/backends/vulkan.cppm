@@ -133,12 +133,18 @@ private:
 		return result;
 	}
 
+	template <typename svec_t>
+	svec_t padVec(svec_t vec)
+	{
+		return pad(vec, workGroupSize);
+	}
+
 public:
 
 	VulkanFdtdData(const create_info_t& createInfo):
 		workGroupSize(createInfo.compute.getWorkgroupSize(createInfo.fdtdDataCreateInfo.size)),
 		size(createInfo.fdtdDataCreateInfo.size),
-		paddedSize(pad(size, workGroupSize)),
+		paddedSize(padVec(size)),
 		gaussPosition(createInfo.fdtdDataCreateInfo.gaussPosition),
 		deltaT(createInfo.fdtdDataCreateInfo.deltaT),
 		imp0(createInfo.fdtdDataCreateInfo.imp0),
@@ -156,7 +162,19 @@ public:
 		exyDims(ExDims.xz()),
 		ezyDims(EzDims.xz()),
 		exzDims(ExDims.xy()),
-		eyzDims(EyDims.xy())
+		eyzDims(EyDims.xy()),
+		paddedHxDims(padVec(HxDims)),
+		paddedHyDims(padVec(HyDims)),
+		paddedHzDims(padVec(HzDims)),
+		paddedExDims(padVec(ExDims)),
+		paddedEyDims(padVec(EyDims)),
+		paddedEzDims(padVec(EzDims)),
+		paddedEyxDims(padVec(eyxDims)),
+		paddedEzxDims(padVec(ezxDims)),
+		paddedExyDims(padVec(exyDims)),
+		paddedEzyDims(padVec(ezyDims)),
+		paddedExzDims(padVec(exzDims)),
+		paddedEyzDims(padVec(eyzDims))
 	{
 	}
 
@@ -196,6 +214,29 @@ private:
 
 	const svec2 exzDims;
 	const svec2 eyzDims;
+
+	// Padded Magnetic field dimentions
+
+	const svec3 paddedHxDims;
+	const svec3 paddedHyDims;
+	const svec3 paddedHzDims;
+
+	// Padded Electric field dimentions
+
+	const svec3 paddedExDims;
+	const svec3 paddedEyDims;
+	const svec3 paddedEzDims;
+
+	// Padded ABC dimentions
+
+	const svec2 paddedEyxDims;
+	const svec2 paddedEzxDims;
+
+	const svec2 paddedExyDims;
+	const svec2 paddedEzyDims;
+
+	const svec2 paddedExzDims;
+	const svec2 paddedEyzDims;
 };
 
 export class VulkanBase
