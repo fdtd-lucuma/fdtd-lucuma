@@ -789,12 +789,13 @@ public:
 			return Kokkos::submdspan(mat, Kokkos::full_extent, Kokkos::full_extent, index);
 	}
 
-	inline static T calculateSc(T Cr, T mu, T eps)
+	template <typename T2 = T>
+	inline static T2 calculateSc(T2 Cr, T2 mu, T2 eps)
 	{
-		if constexpr(std::is_arithmetic_v<T>)
+		if constexpr(std::is_arithmetic_v<T2>)
 			return Cr/std::sqrt(mu*eps);
 		else
-			return Cr/std::sqrt((float)(mu*eps));
+			return calculateSc<float>(Cr, mu, eps);
 	}
 
 	template <typename L1, typename L2, typename L3>
