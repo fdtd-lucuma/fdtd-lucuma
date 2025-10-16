@@ -30,9 +30,8 @@ endif()
 FetchContent_Declare(
 	imgui
 	GIT_REPOSITORY https://github.com/ocornut/imgui.git
-	GIT_TAG        3d937beb628ac1f39d32fde21f35c730cbfe6dcf
-	#GIT_TAG        origin/docking # Wait until https://github.com/stripe2933/imgui-module/issues/1
-	#GIT_SHALLOW    ON
+	GIT_TAG        origin/docking
+	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
 )
 
@@ -49,8 +48,10 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	VulkanMemoryAllocator-Hpp
-	GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git
-	GIT_TAG                v3.2.1
+	#GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git # Wait until https://github.com/YaaZ/VulkanMemoryAllocator-Hpp/issues/61
+	GIT_REPOSITORY         https://github.com/otreblan/VulkanMemoryAllocator-Hpp.git
+	GIT_TAG                master
+	#GIT_TAG                v3.2.1
 	GIT_SHALLOW            ON
 	GIT_PROGRESS           ON
 	GIT_SUBMODULES         ""

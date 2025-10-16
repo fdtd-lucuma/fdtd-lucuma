@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.1.1.r136.g3e81714
+pkgver=0.1.1.r168.ga853720
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -41,11 +41,13 @@ provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 _gitrepo="$(git rev-parse --show-toplevel)"
 _headcommit="$(git rev-parse HEAD)"
+
+#"vma-hpp-git::git+https://github.com/YaaZ/VulkanMemoryAllocator-Hpp#tag=v3.2.1"
 source=(
 	"$pkgname::git+file://$_gitrepo#commit=$_headcommit"
-	"imgui-git::git+https://github.com/ocornut/imgui#commit=3d937beb628ac1f39d32fde21f35c730cbfe6dcf"
+	"imgui-git::git+https://github.com/ocornut/imgui#branch=docking"
 	"imgui-module-git::git+https://github.com/stripe2933/imgui-module#branch=docking"
-	"vma-hpp-git::git+https://github.com/YaaZ/VulkanMemoryAllocator-Hpp#tag=v3.2.1"
+	"vma-hpp-git::git+https://github.com/otreblan/VulkanMemoryAllocator-Hpp#branch=master"
 	"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
 	"mdspan-git::git+https://github.com/kokkos/mdspan#branch=stable"
