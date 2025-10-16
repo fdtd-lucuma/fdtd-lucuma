@@ -112,6 +112,14 @@ svec3 pad(svec3 size, svec3 workGroupSize)
 	};
 }
 
+svec2 pad(svec2 size, svec2 workGroupSize)
+{
+	return {
+		pad(size.x, workGroupSize.x),
+		pad(size.y, workGroupSize.y)
+	};
+}
+
 //template class Vulkan<Precision::f16>;
 template class Vulkan<Precision::f32>;
 template class Vulkan<Precision::f64>;

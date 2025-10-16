@@ -41,6 +41,7 @@ namespace lucuma::services::backends
 using namespace lucuma::utils;
 
 svec3 pad(svec3 size, svec3 workGroupSize);
+svec2 pad(svec2 size, svec2 workGroupSize);
 
 template <typename T>
 struct VulkanFdtdDataCreateInfo
@@ -88,6 +89,8 @@ public:
 	using cmdspan_3d_t = _cmdspan_3d_t<>;
 
 	using create_info_t = VulkanFdtdDataCreateInfo<T>;
+
+	using MatrixData = vulkan::Buffer;
 private:
 
 	static inline auto toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
@@ -114,12 +117,12 @@ private:
 	template <typename vec_t = svec3>
 	static vulkan::Buffer makeBuffer(const create_info_t& createInfo, vec_t paddedDims, T defaultValue = (T)0, bool hostReadable = false)
 	{
-		vma::AllocationCreateFlags vmaFlags =
-			vma::AllocationCreateFlagBits::eHostAccessSequentialWrite |
-			vma::AllocationCreateFlagBits::eMapped;
+		vma::AllocationCreateFlags vmaFlags = vma::AllocationCreateFlagBits::eMapped;
 
 		if(hostReadable)
 			vmaFlags |= vma::AllocationCreateFlagBits::eHostAccessRandom;
+		else
+			vmaFlags |= vma::AllocationCreateFlagBits::eHostAccessSequentialWrite;
 
 		vulkan::Buffer result = createInfo.allocator.allocate(
 			glm::compMul(paddedDims)*sizeof(T),
@@ -127,16 +130,37 @@ private:
 			vmaFlags
 		);
 
+		// TODO: Init from a shader
 		for(auto& x: result.getData<T>())
 			x = defaultValue;
 
 		return result;
 	}
 
-	template <typename svec_t>
-	svec_t padVec(svec_t vec)
+	template <typename vec_t = svec3>
+	static vulkan::Buffer makeRWBuffer(const create_info_t& createInfo, vec_t paddedDims, T defaultValue = (T)0)
+	{
+		return makeBuffer(createInfo, paddedDims, defaultValue, true);
+	}
+
+	svec3 padDims(svec3 vec)
 	{
 		return pad(vec, workGroupSize);
+	}
+
+	svec2 padYZDims(svec2 dims)
+	{
+		return pad(dims, workGroupSize.yz());
+	}
+
+	svec2 padXZDims(svec2 dims)
+	{
+		return pad(dims, workGroupSize.xz());
+	}
+
+	svec2 padXYDims(svec2 dims)
+	{
+		return pad(dims, workGroupSize.xy());
 	}
 
 public:
@@ -144,7 +168,7 @@ public:
 	VulkanFdtdData(const create_info_t& createInfo):
 		workGroupSize(createInfo.compute.getWorkgroupSize(createInfo.fdtdDataCreateInfo.size)),
 		size(createInfo.fdtdDataCreateInfo.size),
-		paddedSize(padVec(size)),
+		paddedSize(padDims(size)),
 		gaussPosition(createInfo.fdtdDataCreateInfo.gaussPosition),
 		deltaT(createInfo.fdtdDataCreateInfo.deltaT),
 		imp0(createInfo.fdtdDataCreateInfo.imp0),
@@ -163,18 +187,66 @@ public:
 		ezyDims(EzDims.xz()),
 		exzDims(ExDims.xy()),
 		eyzDims(EyDims.xy()),
-		paddedHxDims(padVec(HxDims)),
-		paddedHyDims(padVec(HyDims)),
-		paddedHzDims(padVec(HzDims)),
-		paddedExDims(padVec(ExDims)),
-		paddedEyDims(padVec(EyDims)),
-		paddedEzDims(padVec(EzDims)),
-		paddedEyxDims(padVec(eyxDims)),
-		paddedEzxDims(padVec(ezxDims)),
-		paddedExyDims(padVec(exyDims)),
-		paddedEzyDims(padVec(ezyDims)),
-		paddedExzDims(padVec(exzDims)),
-		paddedEyzDims(padVec(eyzDims))
+		paddedHxDims(padDims(HxDims)),
+		paddedHyDims(padDims(HyDims)),
+		paddedHzDims(padDims(HzDims)),
+		paddedExDims(padDims(ExDims)),
+		paddedEyDims(padDims(EyDims)),
+		paddedEzDims(padDims(EzDims)),
+		paddedEyxDims(padYZDims(eyxDims)),
+		paddedEzxDims(padYZDims(ezxDims)),
+		paddedExyDims(padXZDims(exyDims)),
+		paddedEzyDims(padXZDims(ezyDims)),
+		paddedExzDims(padXYDims(exzDims)),
+		paddedEyzDims(padXYDims(eyzDims)),
+		_Hx(makeRWBuffer(createInfo, paddedHxDims)),
+		_Hy(makeRWBuffer(createInfo, paddedHyDims)),
+		_Hz(makeRWBuffer(createInfo, paddedHzDims)),
+		_Chxh(makeBuffer(createInfo, paddedHxDims)),
+		_Chyh(makeBuffer(createInfo, paddedHyDims)),
+		_Chzh(makeBuffer(createInfo, paddedHzDims)),
+		_Chxe(makeBuffer(createInfo, paddedHxDims)),
+		_Chye(makeBuffer(createInfo, paddedHyDims)),
+		_Chze(makeBuffer(createInfo, paddedHzDims)),
+		_CMhx(makeBuffer(createInfo, paddedHxDims)),
+		_CMhy(makeBuffer(createInfo, paddedHyDims)),
+		_CMhz(makeBuffer(createInfo, paddedHzDims)),
+		_mux(makeBuffer(createInfo, paddedHxDims, 1)),
+		_muy(makeBuffer(createInfo, paddedHyDims, 1)),
+		_muz(makeBuffer(createInfo, paddedHzDims, 1)),
+		_muxR(makeBuffer(createInfo, paddedSize, 1)),
+		_muyR(makeBuffer(createInfo, paddedSize, 1)),
+		_muzR(makeBuffer(createInfo, paddedSize, 1)),
+		_Ex(makeRWBuffer(createInfo, paddedExDims)),
+		_Ey(makeRWBuffer(createInfo, paddedEyDims)),
+		_Ez(makeRWBuffer(createInfo, paddedEzDims)),
+		_Cexe(makeBuffer(createInfo, paddedExDims)),
+		_Ceye(makeBuffer(createInfo, paddedEyDims)),
+		_Ceze(makeBuffer(createInfo, paddedEzDims)),
+		_Cexh(makeBuffer(createInfo, paddedExDims)),
+		_Ceyh(makeBuffer(createInfo, paddedEyDims)),
+		_Cezh(makeBuffer(createInfo, paddedEzDims)),
+		_CEEx(makeBuffer(createInfo, paddedExDims)),
+		_CEEy(makeBuffer(createInfo, paddedEyDims)),
+		_CEEz(makeBuffer(createInfo, paddedEzDims)),
+		_epsx(makeBuffer(createInfo, paddedExDims, 1)),
+		_epsy(makeBuffer(createInfo, paddedEyDims, 1)),
+		_epsz(makeBuffer(createInfo, paddedEzDims, 1)),
+		_epsxR(makeBuffer(createInfo, paddedSize, 1)),
+		_epsyR(makeBuffer(createInfo, paddedSize, 1)),
+		_epszR(makeBuffer(createInfo, paddedSize, 1)),
+		_eyx0(makeBuffer(createInfo, paddedEyxDims)),
+		_ezx0(makeBuffer(createInfo, paddedEzxDims)),
+		_eyx1(makeBuffer(createInfo, paddedEyxDims)),
+		_ezx1(makeBuffer(createInfo, paddedEzxDims)),
+		_exy0(makeBuffer(createInfo, paddedExyDims)),
+		_ezy0(makeBuffer(createInfo, paddedEzyDims)),
+		_exy1(makeBuffer(createInfo, paddedExyDims)),
+		_ezy1(makeBuffer(createInfo, paddedEzyDims)),
+		_exz0(makeBuffer(createInfo, paddedExzDims)),
+		_eyz0(makeBuffer(createInfo, paddedEyzDims)),
+		_exz1(makeBuffer(createInfo, paddedExzDims)),
+		_eyz1(makeBuffer(createInfo, paddedEyzDims))
 	{
 	}
 
@@ -237,6 +309,73 @@ private:
 
 	const svec2 paddedExzDims;
 	const svec2 paddedEyzDims;
+
+	MatrixData _Hx;
+	MatrixData _Hy;
+	MatrixData _Hz;
+
+	MatrixData _Chxh;
+	MatrixData _Chyh;
+	MatrixData _Chzh;
+
+	MatrixData _Chxe;
+	MatrixData _Chye;
+	MatrixData _Chze;
+
+	MatrixData _CMhx;
+	MatrixData _CMhy;
+	MatrixData _CMhz;
+
+	MatrixData _mux;
+	MatrixData _muy;
+	MatrixData _muz;
+
+	MatrixData _muxR;
+	MatrixData _muyR;
+	MatrixData _muzR;
+
+	// Electric fields
+
+	MatrixData _Ex;
+	MatrixData _Ey;
+	MatrixData _Ez;
+
+	MatrixData _Cexe;
+	MatrixData _Ceye;
+	MatrixData _Ceze;
+
+	MatrixData _Cexh;
+	MatrixData _Ceyh;
+	MatrixData _Cezh;
+
+	MatrixData _CEEx;
+	MatrixData _CEEy;
+	MatrixData _CEEz;
+
+	MatrixData _epsx;
+	MatrixData _epsy;
+	MatrixData _epsz;
+
+	MatrixData _epsxR;
+	MatrixData _epsyR;
+	MatrixData _epszR;
+
+	// ABC's
+
+	MatrixData _eyx0;
+	MatrixData _ezx0;
+	MatrixData _eyx1;
+	MatrixData _ezx1;
+
+	MatrixData _exy0;
+	MatrixData _ezy0;
+	MatrixData _exy1;
+	MatrixData _ezy1;
+
+	MatrixData _exz0;
+	MatrixData _eyz0;
+	MatrixData _exz1;
+	MatrixData _eyz1;
 };
 
 export class VulkanBase

@@ -20,13 +20,15 @@ module lucuma.services.frontends;
 
 import lucuma.utils;
 import lucuma.services.backends;
+import lucuma.legacy_headers.entt;
 import std;
 
 namespace lucuma::services::frontends
 {
 
 Headless::Headless([[maybe_unused]]Injector& injector):
-	backend(injector.inject<backends::IBackend>())
+	backend(injector.inject<backends::IBackend>()),
+	registry(injector.inject<entt::registry>())
 { }
 
 void Headless::compute()
@@ -37,6 +39,9 @@ void Headless::compute()
 	{
 		backend.saveFiles(id);
 	}
+
+	// TODO: RAII this
+	registry.destroy(id);
 }
 
 }
