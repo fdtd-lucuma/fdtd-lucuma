@@ -16,11 +16,15 @@ RUN \
 	./install-deps.sh vulkan-validation-layers vulkan-radeon #TODO: Change driver by target
 
 FROM install-dependecies AS build
+ENV CFLAGS="-march=native -mtune=native -O2"
+ENV CXXFLAGS="-march=native -mtune=native -O2"
 WORKDIR /fdtd-lucuma
 RUN --mount=type=bind,source=.,target=./source \
 	--mount=type=cache,target=./build,sharing=private \
 	cmake \
 		-DUSE_SYSTEM_LIBS=ON \
+		-DCMAKE_BUILD_TYPE='None' \
+		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
 		-B build \
 		-G Ninja \
 		-S source && \
