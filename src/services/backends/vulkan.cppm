@@ -80,22 +80,22 @@ private:
 
 	static inline auto toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
 	{
-		return Kokkos::submdspan(mdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims.x, dims.y, dims.z);
+		return unpad(mdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
 	}
 
 	static inline auto toMdspan(vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
 	{
-		return Kokkos::submdspan(mdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims.x, dims.y);
+		return unpad(mdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
 	}
 
 	static inline auto toMdspan(const vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
 	{
-		return Kokkos::submdspan(cmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims.x, dims.y, dims.z);
+		return unpad(cmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
 	}
 
 	static inline auto toMdspan(const vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
 	{
-		return Kokkos::submdspan(cmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims.x, dims.y);
+		return unpad(cmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
 	}
 
 

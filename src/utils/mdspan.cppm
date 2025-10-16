@@ -16,31 +16,44 @@
 
 module;
 
-export module lucuma.utils;
+export module lucuma.utils:mdspan;
 
-export import :alias;
-export import :backend;
-export import :exceptions;
-export import :injector;
-export import :mdspan;
-export import :precision;
-export import :print;
-export import :save_as;
+import :alias;
 
-import magic_enum;
+import lucuma.legacy_headers.mdspan;
+
+import std;
 
 namespace lucuma::utils
 {
 
 template <typename T>
-requires std::is_enum_v<T>
-struct MagicInstantiator
+auto zeroToDim(T n)
 {
-	constexpr static auto values = magic_enum::enum_values<T>();
-};
+	return std::pair<T,T>((T)0, n);
+}
 
-extern template struct MagicInstantiator<Backend>;
-extern template struct MagicInstantiator<Precision>;
-extern template struct MagicInstantiator<SaveAs>;
+export template <typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
+auto unpad(Kokkos::mdspan<T,E,L,A> matrix, svec3 dims)
+{
+	return Kokkos::submdspan(
+		matrix,
+		zeroToDim(dims.x),
+		zeroToDim(dims.y),
+		zeroToDim(dims.z)
+	);
+}
+
+export template <typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
+auto unpad(Kokkos::mdspan<T,E,L,A> matrix, svec2 dims)
+{
+	return Kokkos::submdspan(
+		matrix,
+		zeroToDim(dims.x),
+		zeroToDim(dims.y)
+	);
+}
 
 }
