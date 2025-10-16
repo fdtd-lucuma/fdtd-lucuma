@@ -37,7 +37,15 @@ namespace lucuma::services::backends
 
 using namespace lucuma::utils;
 
-svec3 pad(svec3 size, std::ptrdiff_t workGroupSize);
+svec3 pad(svec3 size, svec3 workGroupSize);
+
+template <typename T>
+struct VulkanFdtdDataCreateInfo
+{
+	components::FdtdDataCreateInfo<T> fdtdDataCreateInfo;
+	vulkan::Compute& compute;
+	vulkan::Allocator& allocator;
+};
 
 template <typename T>
 class VulkanFdtdData
@@ -100,20 +108,18 @@ private:
 
 
 public:
-	using create_info_t = components::FdtdDataCreateInfo<T>;
-
-	// TODO: Find a way of chaning this
-	constexpr static std::ptrdiff_t workGroupSize = 8;
+	using create_info_t = VulkanFdtdDataCreateInfo<T>;
 
 	VulkanFdtdData(const create_info_t& createInfo):
-		size(createInfo.size),
+		workGroupSize(createInfo.compute.getWorkgroupSize(createInfo.fdtdDataCreateInfo.size)),
+		size(createInfo.fdtdDataCreateInfo.size),
 		paddedSize(pad(size, workGroupSize)),
-		gaussPosition(createInfo.gaussPosition),
-		deltaT(createInfo.deltaT),
-		imp0(createInfo.imp0),
-		Cr(createInfo.Cr),
-		maxTime(createInfo.maxTime),
-		gaussSigma(createInfo.gaussSigma),
+		gaussPosition(createInfo.fdtdDataCreateInfo.gaussPosition),
+		deltaT(createInfo.fdtdDataCreateInfo.deltaT),
+		imp0(createInfo.fdtdDataCreateInfo.imp0),
+		Cr(createInfo.fdtdDataCreateInfo.Cr),
+		maxTime(createInfo.fdtdDataCreateInfo.maxTime),
+		gaussSigma(createInfo.fdtdDataCreateInfo.gaussSigma),
 		HxDims(size + HxDimsDelta),
 		HyDims(size + HyDimsDelta),
 		HzDims(size + HzDimsDelta),
@@ -129,6 +135,7 @@ public:
 	{
 	}
 
+	const svec3 workGroupSize;
 	const svec3 size;
 	const svec3 paddedSize;
 	const svec3 gaussPosition;
@@ -220,16 +227,20 @@ public:
 		auto id = registry.create();
 
 		create_info_t createInfo {
-			.size          = settings.size(),
-			.gaussPosition = settings.size()/(std::ptrdiff_t)2,
+			.fdtdDataCreateInfo = {
+				.size          = settings.size(),
+				.gaussPosition = settings.size()/(std::ptrdiff_t)2,
 
-			//TODO: Get from settings
-			.deltaT = (T)1,
-			.imp0 = (T)377,
-			.Cr = (T)(1.f/std::sqrt(3.f)),
+				//TODO: Get from settings
+				.deltaT = (T)1,
+				.imp0 = (T)377,
+				.Cr = (T)(1.f/std::sqrt(3.f)),
 
-			.maxTime = settings.time(),
-			.gaussSigma = 10,
+				.maxTime = settings.time(),
+				.gaussSigma = 10,
+			},
+			.compute = vulkanCompute,
+			.allocator = vulkanAllocator,
 		};
 
 		data_t& d = registry.emplace<data_t>(id, createInfo);

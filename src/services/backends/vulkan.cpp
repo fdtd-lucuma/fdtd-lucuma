@@ -103,12 +103,12 @@ std::ptrdiff_t pad(std::ptrdiff_t size, std::ptrdiff_t workGroupSize)
 	return (size % workGroupSize) == 0 ? size : (size/workGroupSize + 1)*workGroupSize;
 }
 
-svec3 pad(svec3 size, std::ptrdiff_t workGroupSize)
+svec3 pad(svec3 size, svec3 workGroupSize)
 {
 	return {
-		pad(size.x, workGroupSize),
-		pad(size.y, workGroupSize),
-		pad(size.z, workGroupSize),
+		pad(size.x, workGroupSize.x),
+		pad(size.y, workGroupSize.y),
+		pad(size.z, workGroupSize.z),
 	};
 }
 
