@@ -16,6 +16,8 @@
 
 module;
 
+#include <glm/gtx/component_wise.hpp> // Why is this not in the module?
+
 export module lucuma.services.backends:vulkan;
 
 import lucuma.legacy_headers.mdspan;
@@ -27,6 +29,7 @@ import lucuma.components;
 import lucuma.services.basic;
 import lucuma.services.vulkan;
 import vulkan_hpp;
+import vk_mem_alloc_hpp;
 
 import :base;
 
@@ -84,6 +87,7 @@ public:
 	using cmdspan_2d_t = _cmdspan_2d_t<>;
 	using cmdspan_3d_t = _cmdspan_3d_t<>;
 
+	using create_info_t = VulkanFdtdDataCreateInfo<T>;
 private:
 
 	static inline auto toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
@@ -107,8 +111,29 @@ private:
 	}
 
 
+	template <typename vec_t = svec3>
+	static vulkan::Buffer makeBuffer(const create_info_t& createInfo, vec_t paddedDims, T defaultValue = (T)0, bool hostReadable = false)
+	{
+		vma::AllocationCreateFlags vmaFlags =
+			vma::AllocationCreateFlagBits::eHostAccessSequentialWrite |
+			vma::AllocationCreateFlagBits::eMapped;
+
+		if(hostReadable)
+			vmaFlags |= vma::AllocationCreateFlagBits::eHostAccessRandom;
+
+		vulkan::Buffer result = createInfo.allocator.allocate(
+			glm::compMul(paddedDims)*sizeof(T),
+			vk::BufferUsageFlagBits::eStorageBuffer,
+			vmaFlags
+		);
+
+		for(auto& x: result.getData<T>())
+			x = defaultValue;
+
+		return result;
+	}
+
 public:
-	using create_info_t = VulkanFdtdDataCreateInfo<T>;
 
 	VulkanFdtdData(const create_info_t& createInfo):
 		workGroupSize(createInfo.compute.getWorkgroupSize(createInfo.fdtdDataCreateInfo.size)),
