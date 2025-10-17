@@ -35,6 +35,26 @@ class Buffer;
 
 export class Compute;
 
+export class SimpleCommandBuffer
+{
+public:
+	SimpleCommandBuffer() = default;
+
+	SimpleCommandBuffer(SimpleCommandBuffer const&) = delete;
+	SimpleCommandBuffer(SimpleCommandBuffer&& other);
+
+	SimpleCommandBuffer& operator=(SimpleCommandBuffer const&) = delete;
+	SimpleCommandBuffer& operator=(SimpleCommandBuffer&&)      = default;
+
+	vk::raii::CommandBuffer&  getCommandBuffer();
+private:
+	SimpleCommandBuffer(Compute& compute);
+
+	vk::raii::CommandBuffer commandBuffer = nullptr;
+
+	friend class Compute;
+};
+
 export struct ComputePipelineCreateInfo
 {
 	struct setLayout {
@@ -58,7 +78,6 @@ public:
 	std::vector<vk::DescriptorSet>     getDescriptorSetsUnraii();
 
 	vk::raii::DescriptorPool& getDescriptorPool();
-	vk::raii::CommandBuffer&  getCommandBuffer();
 	vk::raii::PipelineLayout& getLayout();
 	vk::raii::Pipeline&       getPipeline();
 
@@ -76,7 +95,6 @@ private:
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
 
 	vk::raii::DescriptorPool descriptorPool = nullptr;
-	vk::raii::CommandBuffer  commandBuffer  = nullptr;
 
 	std::vector<vk::raii::DescriptorSet> descriptorSets;
 
@@ -115,6 +133,7 @@ private:
 	void createCommandPool();
 
 	friend class ComputePipeline;
+	friend class SimpleCommandBuffer;
 };
 
 }

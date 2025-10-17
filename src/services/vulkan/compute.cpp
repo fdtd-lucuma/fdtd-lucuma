@@ -127,7 +127,6 @@ svec3 Compute::getWorkgroupSize(svec3 size) const
 ComputePipeline::ComputePipeline(ComputePipeline&& other):
 	descriptorSetLayouts(std::exchange(other.descriptorSetLayouts, {})),
 	descriptorPool(std::exchange(other.descriptorPool, nullptr)),
-	commandBuffer(std::exchange(other.commandBuffer, nullptr)),
 	descriptorSets(std::exchange(other.descriptorSets, {})),
 	layout(std::exchange(other.layout, nullptr)),
 	pipeline(std::exchange(other.pipeline, nullptr))
@@ -136,16 +135,6 @@ ComputePipeline::ComputePipeline(ComputePipeline&& other):
 ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info)
 {
 	auto& device = builder.device.getDevice();
-
-	// Create command buffer
-	// TODO: Move this outside
-	vk::CommandBufferAllocateInfo commandBufferAllocateInfo {
-		.commandPool        = builder.getCommandPool(),
-		.level              = vk::CommandBufferLevel::ePrimary,
-		.commandBufferCount = 1, // TODO: Multiple frames in flight
-	};
-
-	commandBuffer = std::move(device.allocateCommandBuffers(commandBufferAllocateInfo)[0]);
 
 	// Create descriptor set layouts
 	descriptorSetLayouts = info.setLayouts |
@@ -321,11 +310,6 @@ vk::raii::DescriptorPool& ComputePipeline::getDescriptorPool()
 	return descriptorPool;
 }
 
-vk::raii::CommandBuffer& ComputePipeline::getCommandBuffer()
-{
-	return commandBuffer;
-}
-
 vk::raii::PipelineLayout& ComputePipeline::getLayout()
 {
 	return layout;
@@ -343,5 +327,30 @@ void ComputePipeline::bind(vk::CommandBuffer commandBuffer)
 	commandBuffer.bindPipeline(bindPoint, getPipeline());
 	commandBuffer.bindDescriptorSets(bindPoint, getLayout(), 0, getDescriptorSetsUnraii(), nullptr);
 }
+
+SimpleCommandBuffer::SimpleCommandBuffer(SimpleCommandBuffer&& other):
+	commandBuffer(std::exchange(other.commandBuffer, nullptr))
+{}
+
+SimpleCommandBuffer::SimpleCommandBuffer(Compute& compute)
+{
+	auto& device = compute.device.getDevice();
+
+	// Create command buffer
+	vk::CommandBufferAllocateInfo commandBufferAllocateInfo {
+		.commandPool        = compute.getCommandPool(),
+		.level              = vk::CommandBufferLevel::ePrimary,
+		.commandBufferCount = 1, // TODO: Multiple frames in flight
+	};
+
+	commandBuffer = std::move(device.allocateCommandBuffers(commandBufferAllocateInfo)[0]);
+
+}
+
+vk::raii::CommandBuffer& SimpleCommandBuffer::getCommandBuffer()
+{
+	return commandBuffer;
+}
+
 
 }

@@ -456,8 +456,6 @@ protected:
 		vulkan::Buffer cBuffer;
 	};
 
-	HelloWorldData createHelloWorld(std::size_t bytes, std::string_view shaderPath);
-
 };
 
 template<Precision precision = Precision::f32>
@@ -486,7 +484,6 @@ public:
 
 	virtual entt::entity init()
 	{
-		//helloWorld(); // TODO: Purge hellow world
 		auto id = registry.create();
 
 		create_info_t createInfo {
@@ -540,46 +537,46 @@ public:
 
 private:
 
-	void helloWorld()
-	{
-		auto generator = std::views::iota(0, 10);
+	//void helloWorld()
+	//{
+	//	auto generator = std::views::iota(0, 10);
 
-		std::vector<T> a{std::from_range, generator};
-		std::vector<T> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
+	//	std::vector<T> a{std::from_range, generator};
+	//	std::vector<T> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
 
-		auto pipeline = createHelloWorld(std::span(a).size_bytes(), shaderPath<precision>());
+	//	auto pipeline = createHelloWorld(std::span(a).size_bytes(), shaderPath<precision>());
 
-		pipeline.aBuffer.template setData<T>(a);
-		pipeline.bBuffer.template setData<T>(b);
+	//	pipeline.aBuffer.template setData<T>(a);
+	//	pipeline.bBuffer.template setData<T>(b);
 
-		auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
+	//	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
 
-		vk::CommandBufferBeginInfo beginInfo{};
+	//	vk::CommandBufferBeginInfo beginInfo{};
 
-		commandBuffer.begin(beginInfo);
+	//	commandBuffer.begin(beginInfo);
 
-		pipeline.pipeline.bind(commandBuffer);
-		commandBuffer.dispatch(a.size(), 1, 1);
+	//	pipeline.pipeline.bind(commandBuffer);
+	//	commandBuffer.dispatch(a.size(), 1, 1);
 
-		commandBuffer.end();
+	//	commandBuffer.end();
 
-		vulkanCompute.submit(commandBuffer);
+	//	vulkanCompute.submit(commandBuffer);
 
-		auto c = pipeline.cBuffer.template getData<T>().subspan(0, a.size());
+	//	auto c = pipeline.cBuffer.template getData<T>().subspan(0, a.size());
 
-		if constexpr(std::is_default_constructible_v<std::formatter<std::vector<T>>>)
-			std::println("{} + {} = {}", a, b, c);
-		else
-		{
-			auto toFloat = std::views::transform([](auto&& x){return (float)x;});
+	//	if constexpr(std::is_default_constructible_v<std::formatter<std::vector<T>>>)
+	//		std::println("{} + {} = {}", a, b, c);
+	//	else
+	//	{
+	//		auto toFloat = std::views::transform([](auto&& x){return (float)x;});
 
-			std::println("{} + {} = {}",
-				a | toFloat,
-				b | toFloat,
-				c | toFloat
-			);
-		}
-	}
+	//		std::println("{} + {} = {}",
+	//			a | toFloat,
+	//			b | toFloat,
+	//			c | toFloat
+	//		);
+	//	}
+	//}
 
 
 };

@@ -39,64 +39,64 @@ VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	registry(injector.inject<entt::registry>())
 { }
 
-VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
-{
-	HelloWorldData result;
-
-	result.aBuffer = vulkanAllocator.allocate(
-		bytes,
-		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
-	);
-
-	result.bBuffer = vulkanAllocator.allocate(
-		bytes,
-		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
-		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
-	);
-
-	result.cBuffer = vulkanAllocator.allocate(
-		bytes,
-		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
-		vma::AllocationCreateFlagBits::eHostAccessRandom | vma::AllocationCreateFlagBits::eMapped
-	);
-
-	result.pipeline = vulkanCompute.createPipeline({
-		.shaderPath = shaderPath,
-		.setLayouts = {
-			{
-				.bindings = {
-					vk::DescriptorSetLayoutBinding {
-						.binding         = 0,
-						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-						.descriptorCount = 1,
-						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-					},
-					vk::DescriptorSetLayoutBinding {
-						.binding         = 1,
-						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-						.descriptorCount = 1,
-						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-					},
-					vk::DescriptorSetLayoutBinding {
-						.binding         = 2,
-						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-						.descriptorCount = 1,
-						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-					},
-				},
-				.buffers = {
-					result.aBuffer,
-					result.bBuffer,
-					result.cBuffer,
-				}
-			}
-		},
-	});
-
-	return result;
-
-}
+//VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
+//{
+//	HelloWorldData result;
+//
+//	result.aBuffer = vulkanAllocator.allocate(
+//		bytes,
+//		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
+//		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
+//	);
+//
+//	result.bBuffer = vulkanAllocator.allocate(
+//		bytes,
+//		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
+//		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
+//	);
+//
+//	result.cBuffer = vulkanAllocator.allocate(
+//		bytes,
+//		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
+//		vma::AllocationCreateFlagBits::eHostAccessRandom | vma::AllocationCreateFlagBits::eMapped
+//	);
+//
+//	result.pipeline = vulkanCompute.createPipeline({
+//		.shaderPath = shaderPath,
+//		.setLayouts = {
+//			{
+//				.bindings = {
+//					vk::DescriptorSetLayoutBinding {
+//						.binding         = 0,
+//						.descriptorType  = vk::DescriptorType::eStorageBuffer,
+//						.descriptorCount = 1,
+//						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
+//					},
+//					vk::DescriptorSetLayoutBinding {
+//						.binding         = 1,
+//						.descriptorType  = vk::DescriptorType::eStorageBuffer,
+//						.descriptorCount = 1,
+//						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
+//					},
+//					vk::DescriptorSetLayoutBinding {
+//						.binding         = 2,
+//						.descriptorType  = vk::DescriptorType::eStorageBuffer,
+//						.descriptorCount = 1,
+//						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
+//					},
+//				},
+//				.buffers = {
+//					result.aBuffer,
+//					result.bBuffer,
+//					result.cBuffer,
+//				}
+//			}
+//		},
+//	});
+//
+//	return result;
+//
+//}
 
 std::ptrdiff_t pad(std::ptrdiff_t size, std::ptrdiff_t workGroupSize)
 {
