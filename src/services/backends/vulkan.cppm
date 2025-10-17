@@ -376,6 +376,31 @@ private:
 	MatrixData _eyz0;
 	MatrixData _exz1;
 	MatrixData _eyz1;
+
+public:
+
+	auto Hx() const { return toMdspan(_Hx, paddedHxDims, HxDims); }
+	auto Hy() const { return toMdspan(_Hy, paddedHyDims, HyDims); }
+	auto Hz() const { return toMdspan(_Hz, paddedHzDims, HzDims); }
+	auto Ex() const { return toMdspan(_Ex, paddedExDims, ExDims); }
+	auto Ey() const { return toMdspan(_Ey, paddedEyDims, EyDims); }
+	auto Ez() const { return toMdspan(_Ez, paddedEzDims, EzDims); }
+
+	/// Returns true and increments the counter by +1 if it can still continue.
+	bool step() {
+		if(time >= maxTime)
+			return false;
+
+		time++;
+		return true;
+	}
+
+	unsigned int getTime() const
+	{
+		return time;
+	}
+
+
 };
 
 export class VulkanBase
@@ -428,7 +453,7 @@ public:
 
 	virtual entt::entity init()
 	{
-		helloWorld();
+		//helloWorld(); // TODO: Purge hellow world
 		auto id = registry.create();
 
 		create_info_t createInfo {
@@ -448,15 +473,28 @@ public:
 			.allocator = vulkanAllocator,
 		};
 
-		data_t& d = registry.emplace<data_t>(id, createInfo);
+		data_t& data = registry.emplace<data_t>(id, createInfo);
 
 		return id;
 	}
 
 	virtual bool step(entt::entity id)
 	{
-		//TODO
-		return false;
+		data_t& data = registry.get<data_t>(id);
+
+		bool canContinue = data.step();
+
+		if(canContinue)
+		{
+			std::println("Step #{}", data.getTime());
+
+			//TODO: Pipeline stuff
+#ifndef NDEBUG
+			debugPrintSlice("Ex", data.Ex(), data.size);
+#endif
+		}
+
+		return canContinue;
 	}
 
 	virtual void saveFiles(entt::entity id)
