@@ -96,32 +96,14 @@ public:
 
 	void bind(vk::CommandBuffer commandBuffer);
 
-	template <typename ...Ts>
-	requires std::is_trivially_copyable_v<Ts...>
-	void pushConstants(vk::CommandBuffer commandBuffer, Ts... datas)
+	template <typename T>
+	requires std::is_trivially_copyable_v<T> && std::is_standard_layout_v<T> && (alignof(T) % 4 == 0) // std430
+	void pushConstants(vk::CommandBuffer commandBuffer, const T& data, std::uint32_t offset = 0)
 	{
-		std::tuple<Ts...> data(datas...);
-
-		pushConstantsInternal(commandBuffer, data, std::index_sequence_for<Ts...>{});
+		commandBuffer.pushConstants(getLayout(), vk::ShaderStageFlagBits::eCompute, offset, data);
 	}
 
 private:
-
-	template <typename Tuple, std::size_t... I>
-	void pushConstantsInternal(vk::CommandBuffer commandBuffer, const Tuple& tuple, std::index_sequence<I...>)
-	{
-		std::uint32_t offset = 0;
-		(
-			[&] {
-				const auto& data = std::get<I>(tuple);
-
-				commandBuffer.pushConstants(getLayout(), vk::ShaderStageFlagBits::eCompute, offset, data);
-
-				offset += sizeof(data);
-			}(),
-			...
-		);
-	}
 
 	std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
 

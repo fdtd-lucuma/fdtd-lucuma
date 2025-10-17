@@ -51,7 +51,7 @@ public:
 	void dispatch(vk::CommandBuffer commandBuffer)
 	{
 		pipeline.bind(commandBuffer);
-		pipeline.pushConstants(commandBuffer, paddedDims, dims, CrImp);
+		//pipeline.pushConstants(commandBuffer, paddedDims, dims, CrImp); 
 		commandBuffer.dispatch(groupCount.x, groupCount.y, groupCount.z);
 	}
 
