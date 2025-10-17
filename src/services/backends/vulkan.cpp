@@ -110,7 +110,9 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 //
 //}
 
-std::ptrdiff_t pad(std::ptrdiff_t size, std::ptrdiff_t workGroupSize)
+template <typename T>
+requires std::is_arithmetic_v<T>
+T pad(T size, T workGroupSize)
 {
 	return (size % workGroupSize) == 0 ? size : (size/workGroupSize + 1)*workGroupSize;
 }

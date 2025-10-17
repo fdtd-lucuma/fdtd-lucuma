@@ -585,7 +585,7 @@ public:
 		initCoefEz();
 	}
 
-	template<svec3 Ec1Delta, svec3 Ec2Delta>
+	template<svec3Delta Ec1Delta, svec3Delta Ec2Delta>
 	void updateHComponent(
 		mdspan_3d_t Hc,
 		cmdspan_3d_t Ch,
@@ -628,7 +628,7 @@ public:
 		}
 	}
 
-	template<svec3 Hc1Delta, svec3 Hc2Delta>
+	template<svec3Delta Hc1Delta, svec3Delta Hc2Delta>
 	void updateEComponent(
 		mdspan_3d_t Ec,
 		cmdspan_3d_t Ce,

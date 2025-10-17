@@ -113,12 +113,12 @@ void Compute::submit(const vk::CommandBuffer& commandBuffer)
 	queue.waitIdle(); //TODO: Proper fence
 }
 
-std::tuple<svec3, std::ptrdiff_t> limits(const vk::PhysicalDeviceLimits limits)
+std::tuple<svec3, std::uint64_t> limits(const vk::PhysicalDeviceLimits limits)
 {
 	return {{limits.maxComputeWorkGroupSize[0], limits.maxComputeWorkGroupSize[1], limits.maxComputeWorkGroupSize[2]}, limits.maxComputeWorkGroupInvocations};
 }
 
-bool fits(svec3 workgroupSize, svec3 maxWorkgroupSize, svec3 size, std::ptrdiff_t maxInvocations)
+bool fits(svec3 workgroupSize, svec3 maxWorkgroupSize, svec3 size, std::uint64_t maxInvocations)
 {
 	return glm::all(glm::lessThanEqual(workgroupSize, maxWorkgroupSize)) &&
 		glm::all(glm::lessThanEqual(workgroupSize, size)) &&

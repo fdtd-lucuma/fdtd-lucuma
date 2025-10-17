@@ -485,7 +485,7 @@ public:
 		create_info_t createInfo {
 			.fdtdDataCreateInfo = {
 				.size          = settings.size(),
-				.gaussPosition = settings.size()/(std::ptrdiff_t)2,
+				.gaussPosition = settings.size()/(std::uint64_t)2,
 
 				//TODO: Get from settings
 				.deltaT = (T)1,
