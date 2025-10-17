@@ -261,6 +261,7 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 	auto setLayouts = getDescriptorSetLayoutsUnraii();
 
 	pipelineLayoutCreateInfo.setSetLayouts(setLayouts);
+	pipelineLayoutCreateInfo.setPushConstantRanges(info.pushConstants);
 
 	layout = device.createPipelineLayout(pipelineLayoutCreateInfo);
 

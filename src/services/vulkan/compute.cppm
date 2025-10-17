@@ -69,6 +69,8 @@ export struct ComputePipelineCreateInfo
 	std::string                entrypoint = "main";
 	std::span<const setLayout> setLayouts;
 	svec3                      workgroupSize = {1,1,1};
+
+	std::span<const vk::PushConstantRange> pushConstants;
 };
 
 export class ComputePipeline
