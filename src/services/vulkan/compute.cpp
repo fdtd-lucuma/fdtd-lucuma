@@ -379,7 +379,18 @@ vk::raii::CommandBuffer* SimpleCommandBuffer::operator ->()
 
 CommandRecorder::CommandRecorder(const CommandRecorderCreateInfo& createInfo):
 	commandBuffer(createInfo.commandBuffer),
-	compute(createInfo.compute)
+	compute(&createInfo.compute)
+{
+	init();
+}
+
+CommandRecorder::CommandRecorder(CommandRecorder&& other):
+	commandBuffer(std::exchange(other.commandBuffer, {})),
+	compute(std::exchange(other.compute, nullptr))
+{
+}
+
+void CommandRecorder::init()
 {
 	commandBuffer.reset();
 	auto _ = commandBuffer.begin({});
@@ -402,8 +413,11 @@ vk::CommandBuffer* CommandRecorder::operator ->()
 
 CommandRecorder::~CommandRecorder()
 {
+	if(!commandBuffer || compute == nullptr)
+		return;
+
 	commandBuffer.end();
-	compute.submit(getCommandBuffer()); // TODO: Fence?
+	compute->submit(getCommandBuffer()); // TODO: Fence?
 }
 
 

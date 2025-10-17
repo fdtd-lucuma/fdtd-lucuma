@@ -126,11 +126,21 @@ public:
 
 	~CommandRecorder();
 
+	CommandRecorder() = default;
+
+	CommandRecorder(CommandRecorder const&) = delete;
+	CommandRecorder(CommandRecorder&& other);
+
+	CommandRecorder& operator=(CommandRecorder const&) = delete;
+	CommandRecorder& operator=(CommandRecorder&&)      = default;
+
 private:
 	CommandRecorder(const CommandRecorderCreateInfo& createInfo);
 
-	vk::CommandBuffer commandBuffer;
-	Compute&          compute;
+	void init();
+
+	vk::CommandBuffer commandBuffer = {};
+	Compute*          compute = nullptr;
 
 	friend class Compute;
 };
