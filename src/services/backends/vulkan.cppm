@@ -44,6 +44,32 @@ svec3 pad(svec3 size, svec3 workGroupSize);
 svec2 pad(svec2 size, svec2 workGroupSize);
 
 template <typename T>
+class InitCoefPipeline
+{
+public:
+
+	void dispatch(vk::CommandBuffer commandBuffer)
+	{
+		pipeline.bind(commandBuffer);
+		pipeline.pushConstants(commandBuffer, paddedDims, dims, CrImp);
+		commandBuffer.dispatch(groupCount.x, groupCount.y, groupCount.z);
+	}
+
+private:
+	svec3 groupCount;
+	svec3 paddedDims;
+	svec3 dims;
+	T CrImp;
+
+	vulkan::Buffer Ch;
+	vulkan::Buffer Ce;
+	vulkan::Buffer CM;
+	vulkan::Buffer mu;
+
+	vulkan::ComputePipeline pipeline;
+};
+
+template <typename T>
 struct VulkanFdtdDataCreateInfo
 {
 	components::FdtdDataCreateInfo<T> fdtdDataCreateInfo;
