@@ -37,7 +37,14 @@ VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	vulkanAll(injector.inject<vulkan::All>()),
 	settings(injector.inject<basic::Settings>()),
 	registry(injector.inject<entt::registry>())
-{ }
+{
+	init();
+}
+
+void VulkanBase::init()
+{
+	commandBuffer = vulkanCompute.createSimpleCommandBuffer();
+}
 
 //VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
 //{

@@ -447,14 +447,18 @@ protected:
 	basic::Settings&   settings;
 	entt::registry&    registry;
 
-	struct HelloWorldData
-	{
-		vulkan::ComputePipeline pipeline;
+	vulkan::SimpleCommandBuffer commandBuffer;
 
-		vulkan::Buffer aBuffer;
-		vulkan::Buffer bBuffer;
-		vulkan::Buffer cBuffer;
-	};
+	void init();
+
+	//struct HelloWorldData
+	//{
+	//	vulkan::ComputePipeline pipeline;
+
+	//	vulkan::Buffer aBuffer;
+	//	vulkan::Buffer bBuffer;
+	//	vulkan::Buffer cBuffer;
+	//};
 
 };
 
@@ -505,6 +509,15 @@ public:
 
 		data_t& data = registry.emplace<data_t>(id, createInfo);
 
+		//TODO: Dedup this
+		commandBuffer->reset();
+		commandBuffer->begin({});
+
+		//TODO: Pipeline stuff
+
+		commandBuffer->end();
+		vulkanCompute.submit(commandBuffer); // TODO: Fence?
+
 		return id;
 	}
 
@@ -518,7 +531,14 @@ public:
 		{
 			std::println("Step #{}", data.getTime());
 
+			commandBuffer->reset();
+			commandBuffer->begin({});
+
 			//TODO: Pipeline stuff
+
+			commandBuffer->end();
+			vulkanCompute.submit(commandBuffer); // TODO: Fence?
+
 #ifndef NDEBUG
 		for(auto&& [name, mat]: data.zippedFields())
 			debugPrintSlice(name, mat, data.size);
@@ -536,48 +556,6 @@ public:
 	virtual ~Vulkan() = default;
 
 private:
-
-	//void helloWorld()
-	//{
-	//	auto generator = std::views::iota(0, 10);
-
-	//	std::vector<T> a{std::from_range, generator};
-	//	std::vector<T> b{std::from_range, generator | std::views::transform([](auto&& x){return x*x;})};
-
-	//	auto pipeline = createHelloWorld(std::span(a).size_bytes(), shaderPath<precision>());
-
-	//	pipeline.aBuffer.template setData<T>(a);
-	//	pipeline.bBuffer.template setData<T>(b);
-
-	//	auto& commandBuffer = pipeline.pipeline.getCommandBuffer();
-
-	//	vk::CommandBufferBeginInfo beginInfo{};
-
-	//	commandBuffer.begin(beginInfo);
-
-	//	pipeline.pipeline.bind(commandBuffer);
-	//	commandBuffer.dispatch(a.size(), 1, 1);
-
-	//	commandBuffer.end();
-
-	//	vulkanCompute.submit(commandBuffer);
-
-	//	auto c = pipeline.cBuffer.template getData<T>().subspan(0, a.size());
-
-	//	if constexpr(std::is_default_constructible_v<std::formatter<std::vector<T>>>)
-	//		std::println("{} + {} = {}", a, b, c);
-	//	else
-	//	{
-	//		auto toFloat = std::views::transform([](auto&& x){return (float)x;});
-
-	//		std::println("{} + {} = {}",
-	//			a | toFloat,
-	//			b | toFloat,
-	//			c | toFloat
-	//		);
-	//	}
-	//}
-
 
 };
 

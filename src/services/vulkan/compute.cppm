@@ -49,7 +49,7 @@ public:
 	vk::raii::CommandBuffer& getCommandBuffer();
 
 	operator vk::CommandBuffer();
-	vk::raii::CommandBuffer& operator ->();
+	vk::raii::CommandBuffer* operator ->();
 private:
 	SimpleCommandBuffer(Compute& compute);
 

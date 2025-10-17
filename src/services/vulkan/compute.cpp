@@ -100,7 +100,7 @@ void Compute::submit(const vk::CommandBuffer& commandBuffer)
 	auto& queue = getQueue();
 
 	queue.submit(submitInfo);
-	queue.waitIdle();
+	queue.waitIdle(); //TODO: Proper fence
 }
 
 std::tuple<svec3, std::ptrdiff_t> limits(const vk::PhysicalDeviceLimits limits)
@@ -362,9 +362,9 @@ SimpleCommandBuffer::operator vk::CommandBuffer()
 	return getCommandBuffer();
 }
 
-vk::raii::CommandBuffer& SimpleCommandBuffer::operator ->()
+vk::raii::CommandBuffer* SimpleCommandBuffer::operator ->()
 {
-	return getCommandBuffer();
+	return &getCommandBuffer();
 }
 
 
