@@ -46,7 +46,10 @@ public:
 	SimpleCommandBuffer& operator=(SimpleCommandBuffer const&) = delete;
 	SimpleCommandBuffer& operator=(SimpleCommandBuffer&&)      = default;
 
-	vk::raii::CommandBuffer&  getCommandBuffer();
+	vk::raii::CommandBuffer& getCommandBuffer();
+
+	operator vk::CommandBuffer();
+	vk::raii::CommandBuffer& operator ->();
 private:
 	SimpleCommandBuffer(Compute& compute);
 
@@ -116,6 +119,7 @@ public:
 	vk::raii::CommandPool&    getCommandPool();
 
 	ComputePipeline createPipeline(const ComputePipelineCreateInfo& info);
+	SimpleCommandBuffer createSimpleCommandBuffer();
 
 	void submit(const vk::CommandBuffer& commandBuffer);
 	svec3 getWorkgroupSize(svec3 size) const;

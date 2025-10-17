@@ -85,6 +85,11 @@ ComputePipeline Compute::createPipeline(const ComputePipelineCreateInfo& info)
 	return {*this, info};
 }
 
+SimpleCommandBuffer Compute::createSimpleCommandBuffer()
+{
+	return {*this};
+}
+
 void Compute::submit(const vk::CommandBuffer& commandBuffer)
 {
 	vk::SubmitInfo submitInfo {
@@ -350,6 +355,16 @@ SimpleCommandBuffer::SimpleCommandBuffer(Compute& compute)
 vk::raii::CommandBuffer& SimpleCommandBuffer::getCommandBuffer()
 {
 	return commandBuffer;
+}
+
+SimpleCommandBuffer::operator vk::CommandBuffer()
+{
+	return getCommandBuffer();
+}
+
+vk::raii::CommandBuffer& SimpleCommandBuffer::operator ->()
+{
+	return getCommandBuffer();
 }
 
 
