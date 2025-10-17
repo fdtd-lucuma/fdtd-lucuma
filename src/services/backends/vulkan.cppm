@@ -82,35 +82,45 @@ public:
 	template <typename layout = Kokkos::layout_right>
 	using _cmdspan_3d_t = cmdspan_t<extents_3d_t, layout>;
 
-	using mdspan_2d_t = _mdspan_2d_t<>;
-	using mdspan_3d_t = _mdspan_3d_t<>;
+	// Padded vulkan buffers
 
-	using cmdspan_2d_t = _cmdspan_2d_t<>;
-	using cmdspan_3d_t = _cmdspan_3d_t<>;
+	using vmdspan_2d_t = _mdspan_2d_t<>;
+	using vmdspan_3d_t = _mdspan_3d_t<>;
+
+	using vcmdspan_2d_t = _cmdspan_2d_t<>;
+	using vcmdspan_3d_t = _cmdspan_3d_t<>;
+
+
+	// Unpadded vulkan buffers
+	using mdspan_2d_t = _mdspan_2d_t<Kokkos::layout_stride>;
+	using mdspan_3d_t = _mdspan_3d_t<Kokkos::layout_stride>;
+
+	using cmdspan_2d_t = _cmdspan_2d_t<Kokkos::layout_stride>;
+	using cmdspan_3d_t = _cmdspan_3d_t<Kokkos::layout_stride>;
 
 	using create_info_t = VulkanFdtdDataCreateInfo<T>;
 
 	using MatrixData = vulkan::Buffer;
 private:
 
-	static inline auto toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
+	static inline mdspan_3d_t toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
 	{
-		return unpad(mdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
+		return unpad(vmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
 	}
 
-	static inline auto toMdspan(vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
+	static inline mdspan_2d_t toMdspan(vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
 	{
-		return unpad(mdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
+		return unpad(vmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
 	}
 
-	static inline auto toMdspan(const vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
+	static inline cmdspan_3d_t toMdspan(const vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
 	{
-		return unpad(cmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
+		return unpad(vcmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
 	}
 
-	static inline auto toMdspan(const vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
+	static inline cmdspan_2d_t toMdspan(const vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
 	{
-		return unpad(cmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
+		return unpad(vcmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
 	}
 
 
@@ -379,12 +389,12 @@ private:
 
 public:
 
-	auto Hx() const { return toMdspan(_Hx, paddedHxDims, HxDims); }
-	auto Hy() const { return toMdspan(_Hy, paddedHyDims, HyDims); }
-	auto Hz() const { return toMdspan(_Hz, paddedHzDims, HzDims); }
-	auto Ex() const { return toMdspan(_Ex, paddedExDims, ExDims); }
-	auto Ey() const { return toMdspan(_Ey, paddedEyDims, EyDims); }
-	auto Ez() const { return toMdspan(_Ez, paddedEzDims, EzDims); }
+	cmdspan_3d_t Hx() const { return toMdspan(_Hx, paddedHxDims, HxDims); }
+	cmdspan_3d_t Hy() const { return toMdspan(_Hy, paddedHyDims, HyDims); }
+	cmdspan_3d_t Hz() const { return toMdspan(_Hz, paddedHzDims, HzDims); }
+	cmdspan_3d_t Ex() const { return toMdspan(_Ex, paddedExDims, ExDims); }
+	cmdspan_3d_t Ey() const { return toMdspan(_Ey, paddedEyDims, EyDims); }
+	cmdspan_3d_t Ez() const { return toMdspan(_Ez, paddedEzDims, EzDims); }
 
 	/// Returns true and increments the counter by +1 if it can still continue.
 	bool step() {
@@ -398,6 +408,29 @@ public:
 	unsigned int getTime() const
 	{
 		return time;
+	}
+
+	std::generator<std::tuple<const char*, cmdspan_3d_t>> zippedFields() const {
+		static constexpr std::array names {
+			"Hx",
+			"Hy",
+			"Hz",
+			"Ex",
+			"Ey",
+			"Ez",
+		};
+
+		std::array mats {
+			Hx(),
+			Hy(),
+			Hz(),
+			Ex(),
+			Ey(),
+			Ez(),
+		};
+
+		for(auto&& p: std::views::zip(names, mats))
+			co_yield p;
 	}
 
 
@@ -490,7 +523,8 @@ public:
 
 			//TODO: Pipeline stuff
 #ifndef NDEBUG
-			debugPrintSlice("Ex", data.Ex(), data.size);
+		for(auto&& [name, mat]: data.zippedFields())
+			debugPrintSlice(name, mat, data.size);
 #endif
 		}
 
