@@ -46,6 +46,11 @@ void VulkanBase::init()
 	commandBuffer = vulkanCompute.createSimpleCommandBuffer();
 }
 
+vulkan::CommandRecorder VulkanBase::createCommandRecorder()
+{
+	return vulkanCompute.createCommandRecorder(commandBuffer);
+}
+
 //VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
 //{
 //	HelloWorldData result;

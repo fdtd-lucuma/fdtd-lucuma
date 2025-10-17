@@ -450,15 +450,7 @@ protected:
 	vulkan::SimpleCommandBuffer commandBuffer;
 
 	void init();
-
-	//struct HelloWorldData
-	//{
-	//	vulkan::ComputePipeline pipeline;
-
-	//	vulkan::Buffer aBuffer;
-	//	vulkan::Buffer bBuffer;
-	//	vulkan::Buffer cBuffer;
-	//};
+	vulkan::CommandRecorder createCommandRecorder();
 
 };
 
@@ -509,14 +501,11 @@ public:
 
 		data_t& data = registry.emplace<data_t>(id, createInfo);
 
-		//TODO: Dedup this
-		commandBuffer->reset();
-		commandBuffer->begin({});
+		{
+			auto recorder = createCommandRecorder();
 
-		//TODO: Pipeline stuff
-
-		commandBuffer->end();
-		vulkanCompute.submit(commandBuffer); // TODO: Fence?
+			//TODO: Pipeline stuff
+		}
 
 		return id;
 	}
@@ -531,17 +520,15 @@ public:
 		{
 			std::println("Step #{}", data.getTime());
 
-			commandBuffer->reset();
-			commandBuffer->begin({});
+			{
+				auto recorder = createCommandRecorder();
 
-			//TODO: Pipeline stuff
-
-			commandBuffer->end();
-			vulkanCompute.submit(commandBuffer); // TODO: Fence?
+				//TODO: Pipeline stuff
+			}
 
 #ifndef NDEBUG
-		for(auto&& [name, mat]: data.zippedFields())
-			debugPrintSlice(name, mat, data.size);
+			for(auto&& [name, mat]: data.zippedFields())
+				debugPrintSlice(name, mat, data.size);
 #endif
 		}
 

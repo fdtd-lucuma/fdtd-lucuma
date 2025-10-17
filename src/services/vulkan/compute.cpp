@@ -90,6 +90,16 @@ SimpleCommandBuffer Compute::createSimpleCommandBuffer()
 	return {*this};
 }
 
+CommandRecorder Compute::createCommandRecorder(vk::CommandBuffer commandBuffer)
+{
+	CommandRecorderCreateInfo createInfo {
+		.commandBuffer = commandBuffer,
+		.compute       = *this,
+	};
+
+	return {createInfo};
+}
+
 void Compute::submit(const vk::CommandBuffer& commandBuffer)
 {
 	vk::SubmitInfo submitInfo {
@@ -365,6 +375,35 @@ SimpleCommandBuffer::operator vk::CommandBuffer()
 vk::raii::CommandBuffer* SimpleCommandBuffer::operator ->()
 {
 	return &getCommandBuffer();
+}
+
+CommandRecorder::CommandRecorder(const CommandRecorderCreateInfo& createInfo):
+	commandBuffer(createInfo.commandBuffer),
+	compute(createInfo.compute)
+{
+	commandBuffer.reset();
+	auto _ = commandBuffer.begin({});
+}
+
+vk::CommandBuffer& CommandRecorder::getCommandBuffer()
+{
+	return commandBuffer;
+}
+
+CommandRecorder::operator vk::CommandBuffer&()
+{
+	return getCommandBuffer();
+}
+
+vk::CommandBuffer* CommandRecorder::operator ->()
+{
+	return &getCommandBuffer();
+}
+
+CommandRecorder::~CommandRecorder()
+{
+	commandBuffer.end();
+	compute.submit(getCommandBuffer()); // TODO: Fence?
 }
 
 

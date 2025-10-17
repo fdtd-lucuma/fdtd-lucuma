@@ -109,6 +109,32 @@ private:
 	friend class Compute;
 };
 
+struct CommandRecorderCreateInfo
+{
+	vk::CommandBuffer commandBuffer;
+	Compute&          compute;
+};
+
+/// A wrapper around a command buffer that submits to the Compute service
+/// on deletion.
+export class CommandRecorder
+{
+public:
+	vk::CommandBuffer& getCommandBuffer();
+	operator vk::CommandBuffer&();
+	vk::CommandBuffer* operator ->();
+
+	~CommandRecorder();
+
+private:
+	CommandRecorder(const CommandRecorderCreateInfo& createInfo);
+
+	vk::CommandBuffer commandBuffer;
+	Compute&          compute;
+
+	friend class Compute;
+};
+
 
 class Compute
 {
@@ -120,6 +146,7 @@ public:
 
 	ComputePipeline createPipeline(const ComputePipelineCreateInfo& info);
 	SimpleCommandBuffer createSimpleCommandBuffer();
+	CommandRecorder createCommandRecorder(vk::CommandBuffer commandBuffer);
 
 	void submit(const vk::CommandBuffer& commandBuffer);
 	svec3 getWorkgroupSize(svec3 size) const;
@@ -136,6 +163,7 @@ private:
 	void createQueues();
 	void createCommandPool();
 
+	// TODO: Better wrapping
 	friend class ComputePipeline;
 	friend class SimpleCommandBuffer;
 };
