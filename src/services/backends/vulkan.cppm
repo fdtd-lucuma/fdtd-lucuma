@@ -433,6 +433,30 @@ public:
 			co_yield p;
 	}
 
+	void initCoefs(vk::CommandBuffer commandBuffer)
+	{
+		//TODO
+	}
+
+	void updateH(vk::CommandBuffer commandBuffer)
+	{
+		//TODO
+	}
+
+	void updateE(vk::CommandBuffer commandBuffer)
+	{
+		//TODO
+	}
+
+	void gauss(vk::CommandBuffer commandBuffer)
+	{
+		//TODO
+	}
+
+	void abc(vk::CommandBuffer commandBuffer)
+	{
+		//TODO
+	}
 
 };
 
@@ -504,7 +528,7 @@ public:
 		{
 			auto recorder = createCommandRecorder();
 
-			//TODO: Pipeline stuff
+			data.initCoefs(recorder);
 		}
 
 		return id;
@@ -523,7 +547,10 @@ public:
 			{
 				auto recorder = createCommandRecorder();
 
-				//TODO: Pipeline stuff
+				data.updateH(recorder);
+				data.updateE(recorder);
+				data.gauss(recorder);
+				data.abc(recorder);
 			}
 
 #ifndef NDEBUG
