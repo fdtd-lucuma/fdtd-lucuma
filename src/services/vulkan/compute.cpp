@@ -394,7 +394,11 @@ CommandRecorder::CommandRecorder(CommandRecorder&& other):
 void CommandRecorder::init()
 {
 	commandBuffer.reset();
-	auto _ = commandBuffer.begin({});
+
+	vk::CommandBufferBeginInfo beginInfo {
+	};
+
+	commandBuffer.begin(beginInfo);
 }
 
 vk::CommandBuffer& CommandRecorder::getCommandBuffer()
