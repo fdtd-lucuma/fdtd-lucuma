@@ -1,4 +1,4 @@
-#include "utils/fdtd_macros.slang"
+#include "utils/types.slang"
 #include "utils/matrix.slang"
 
 [[vk::constant_id(0)]] const uint wgX;
