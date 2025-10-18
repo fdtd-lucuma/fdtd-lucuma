@@ -86,7 +86,7 @@ public:
 
 	vma::Allocator& getAllocator();
 
-	Buffer allocate(vk::DeviceSize size, vk::BufferUsageFlags usage, vma::AllocationCreateFlags flags);
+	Buffer allocate(vk::DeviceSize size, vk::BufferUsageFlags usage, vma::AllocationCreateFlags flags, vk::MemoryPropertyFlags requiredFlags = {});
 
 	void flush(Buffer& buffer, vk::DeviceSize offset = 0, vk::DeviceSize size = vk::WholeSize);
 	vk::Result flush(

@@ -131,7 +131,8 @@ private:
 		vulkan::Buffer result = createInfo.allocator.allocate(
 			glm::compMul(paddedDims)*sizeof(T),
 			vk::BufferUsageFlagBits::eStorageBuffer,
-			vmaFlags
+			vmaFlags,
+			vk::MemoryPropertyFlagBits::eDeviceLocal
 		);
 
 		// TODO: Init from a shader
