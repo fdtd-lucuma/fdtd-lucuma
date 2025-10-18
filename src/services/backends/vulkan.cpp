@@ -51,30 +51,6 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 	return vulkanCompute.createCommandRecorder(commandBuffer);
 }
 
-template <typename T>
-requires std::is_arithmetic_v<T>
-T pad(T size, T workGroupSize)
-{
-	return (size % workGroupSize) == 0 ? size : (size/workGroupSize + 1)*workGroupSize;
-}
-
-svec3 pad(svec3 size, svec3 workGroupSize)
-{
-	return {
-		pad(size.x, workGroupSize.x),
-		pad(size.y, workGroupSize.y),
-		pad(size.z, workGroupSize.z),
-	};
-}
-
-svec2 pad(svec2 size, svec2 workGroupSize)
-{
-	return {
-		pad(size.x, workGroupSize.x),
-		pad(size.y, workGroupSize.y)
-	};
-}
-
 template class Vulkan<Precision::f16>;
 template class Vulkan<Precision::f32>;
 template class Vulkan<Precision::f64>;

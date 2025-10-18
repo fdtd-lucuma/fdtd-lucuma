@@ -26,7 +26,6 @@ import magic_enum;
 import :base;
 import :cpu_taskflow;
 import :sequential;
-import :utils;
 import :vulkan;
 
 namespace lucuma::utils

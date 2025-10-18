@@ -16,29 +16,6 @@
 
 module;
 
-export module lucuma.services.backends:utils;
+export module lucuma.services.backends.vulkan_components;
 
-import std;
-
-import vulkan_hpp;
-
-namespace lucuma::services::backends
-{
-
-export template <std::size_t N>
-constexpr auto simpleStorageBuffersLayout()
-{
-	return []<std::size_t... I>(std::index_sequence<I...>)
-	{
-		return std::array{
-			vk::DescriptorSetLayoutBinding{
-				I,
-				vk::DescriptorType::eStorageBuffer,
-				1,
-				vk::ShaderStageFlagBits::eCompute
-			}...
-		};
-	}(std::make_index_sequence<N>{});
-}
-
-}
+export import :fdtd_data;

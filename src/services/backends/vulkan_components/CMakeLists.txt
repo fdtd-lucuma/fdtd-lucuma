@@ -16,25 +16,12 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		cpu_common.cpp
-		cpu_taskflow.cpp
-		instantiations.cpp
-		instantiator.cpp
-		saver.cpp
-		sequential.cpp
-		vulkan.cpp
+		utils.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			backends.cppm
-			cpu_common.cppm
-			cpu_taskflow.cppm
-			i_backend.cppm
-			instantiator.cppm
-			saver.cppm
-			sequential.cppm
-			vulkan.cppm
+			fdtd_data.cppm
+			utils.cppm
+			vulkan_components.cppm
 )
-
-add_subdirectory(vulkan_components)
