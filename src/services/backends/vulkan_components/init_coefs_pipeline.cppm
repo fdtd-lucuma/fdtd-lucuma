@@ -100,8 +100,12 @@ public:
 					}
 				}
 			},
-			.workGroupSize = createInfo.workGroupSize,
 			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
+			.specializationConstants = vulkan::SpecializationConstants::make(
+				0, (std::uint32_t)createInfo.workGroupSize.x,
+				1, (std::uint32_t)createInfo.workGroupSize.y,
+				2, (std::uint32_t)createInfo.workGroupSize.z
+			),
 		}))
 	{ }
 

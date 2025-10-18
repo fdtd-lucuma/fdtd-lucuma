@@ -35,6 +35,56 @@ class Buffer;
 
 export class Compute;
 
+export class SpecializationConstants
+{
+public:
+	SpecializationConstants() = default;
+
+	vk::SpecializationInfo getInfo() const;
+
+	template<typename... Args>
+	static SpecializationConstants make(Args&&... args)
+	{
+		static_assert(sizeof...(args) % 2 == 0,
+			"Arguments must be pairs: (constantID, value).");
+
+		SpecializationConstants result;
+		result.appendAll(std::forward<Args>(args)...);
+		return result;
+	}
+
+private:
+	std::vector<vk::SpecializationMapEntry> entries;
+	std::vector<std::byte> data;
+
+	template<typename T, typename... Rest>
+	void appendAll(std::uint32_t id, const T& value, Rest&&... rest)
+	{
+		append(id, value);
+		if constexpr (sizeof...(rest) > 0)
+			appendAll(std::forward<Rest>(rest)...);
+	}
+
+	template<typename T>
+	void append(std::uint32_t id, const T& value)
+	{
+		std::uint32_t offset = data.size();
+		std::size_t size   = sizeof(T);
+
+		vk::SpecializationMapEntry entry {
+			.constantID = id,
+			.offset	 = offset,
+			.size	   = size,
+		};
+
+		entries.push_back(entry);
+
+		const std::byte* ptr = reinterpret_cast<const std::byte*>(&value);
+		data.insert(data.end(), ptr, ptr + size);
+	}
+
+};
+
 export class SimpleCommandBuffer
 {
 public:
@@ -44,7 +94,7 @@ public:
 	SimpleCommandBuffer(SimpleCommandBuffer&& other);
 
 	SimpleCommandBuffer& operator=(SimpleCommandBuffer const&) = delete;
-	SimpleCommandBuffer& operator=(SimpleCommandBuffer&&)      = default;
+	SimpleCommandBuffer& operator=(SimpleCommandBuffer&&)	  = default;
 
 	vk::raii::CommandBuffer& getCommandBuffer();
 
@@ -61,30 +111,30 @@ private:
 export struct ComputePipelineCreateInfo
 {
 	struct setLayout {
-		std::span<const vk::DescriptorSetLayoutBinding>       bindings;
+		std::span<const vk::DescriptorSetLayoutBinding>	   bindings;
 		std::span<const std::reference_wrapper<const Buffer>> buffers;
 	};
 
-	std::filesystem::path      shaderPath;
-	std::string                entrypoint = "main";
+	std::filesystem::path	  shaderPath;
+	std::string				entrypoint = "main";
 	std::span<const setLayout> setLayouts;
-	svec3                      workGroupSize = {1,1,1};
 
 	std::span<const vk::PushConstantRange> pushConstants = {};
+	SpecializationConstants specializationConstants = {};
 };
 
 export class ComputePipeline
 {
 public:
 	std::span<vk::raii::DescriptorSetLayout> getDescriptorSetLayouts();
-	std::vector<vk::DescriptorSetLayout>     getDescriptorSetLayoutsUnraii();
+	std::vector<vk::DescriptorSetLayout>	 getDescriptorSetLayoutsUnraii();
 
 	std::span<vk::raii::DescriptorSet> getDescriptorSets();
-	std::vector<vk::DescriptorSet>     getDescriptorSetsUnraii();
+	std::vector<vk::DescriptorSet>	 getDescriptorSetsUnraii();
 
 	vk::raii::DescriptorPool& getDescriptorPool();
 	vk::raii::PipelineLayout& getLayout();
-	vk::raii::Pipeline&       getPipeline();
+	vk::raii::Pipeline&	   getPipeline();
 
 	ComputePipeline() = default;
 
@@ -92,7 +142,7 @@ public:
 	ComputePipeline(ComputePipeline&& other);
 
 	ComputePipeline& operator=(ComputePipeline const&) = delete;
-	ComputePipeline& operator=(ComputePipeline&&)      = default;
+	ComputePipeline& operator=(ComputePipeline&&)	  = default;
 
 	void bind(vk::CommandBuffer commandBuffer);
 
@@ -112,7 +162,7 @@ private:
 	std::vector<vk::raii::DescriptorSet> descriptorSets;
 
 	vk::raii::PipelineLayout layout   = nullptr;
-	vk::raii::Pipeline       pipeline = nullptr;
+	vk::raii::Pipeline	   pipeline = nullptr;
 
 	ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info);
 
@@ -122,7 +172,7 @@ private:
 struct CommandRecorderCreateInfo
 {
 	vk::CommandBuffer commandBuffer;
-	Compute&          compute;
+	Compute&		  compute;
 };
 
 /// A wrapper around a command buffer that submits to the Compute service
@@ -142,7 +192,7 @@ public:
 	CommandRecorder(CommandRecorder&& other);
 
 	CommandRecorder& operator=(CommandRecorder const&) = delete;
-	CommandRecorder& operator=(CommandRecorder&&)      = default;
+	CommandRecorder& operator=(CommandRecorder&&)	  = default;
 
 private:
 	CommandRecorder(const CommandRecorderCreateInfo& createInfo);
@@ -150,7 +200,7 @@ private:
 	void init();
 
 	vk::CommandBuffer commandBuffer = {};
-	Compute*          compute = nullptr;
+	Compute*		  compute = nullptr;
 
 	friend class Compute;
 };
@@ -161,8 +211,8 @@ class Compute
 public:
 	Compute(Injector& injector);
 
-	vk::raii::Queue&          getQueue();
-	vk::raii::CommandPool&    getCommandPool();
+	vk::raii::Queue&		  getQueue();
+	vk::raii::CommandPool&	getCommandPool();
 
 	ComputePipeline createPipeline(const ComputePipelineCreateInfo& info);
 	SimpleCommandBuffer createSimpleCommandBuffer();
@@ -185,11 +235,11 @@ public:
 
 
 private:
-	Device&       device;
+	Device&	   device;
 	ShaderLoader& shaderLoader;
 
 	std::vector<vk::raii::Queue> queues;
-	vk::raii::CommandPool        commandPool = nullptr;
+	vk::raii::CommandPool		commandPool = nullptr;
 
 	void init();
 

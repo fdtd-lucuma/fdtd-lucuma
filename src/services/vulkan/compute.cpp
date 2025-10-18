@@ -264,26 +264,9 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 
 	layout = device.createPipelineLayout(pipelineLayoutCreateInfo);
 
-	// Workgroup size
-	using wgVec = glm::vec<3, std::uint32_t>;
-	static constexpr std::size_t wgDataSize = sizeof(std::uint32_t);
-
-	wgVec wgSize = info.workGroupSize;
-
-	std::array specializationMap {
-		vk::SpecializationMapEntry{0, offsetof(wgVec, x), wgDataSize},
-		vk::SpecializationMapEntry{1, offsetof(wgVec, y), wgDataSize},
-		vk::SpecializationMapEntry{2, offsetof(wgVec, z), wgDataSize},
-	};
-
-	vk::SpecializationInfo specializationInfo {
-	};
-
-	specializationInfo.setData<wgVec>(wgSize);
-	specializationInfo.setMapEntries(specializationMap);
-
 	// Create pipeline
 	auto shaderModule = builder.shaderLoader.createShaderModule(info.shaderPath);
+	auto specializationInfo = info.specializationConstants.getInfo();
 
 	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
 		.stage               = vk::ShaderStageFlagBits::eCompute,
@@ -422,6 +405,19 @@ CommandRecorder::~CommandRecorder()
 
 	commandBuffer.end();
 	compute->submit(getCommandBuffer()); // TODO: Fence?
+}
+
+vk::SpecializationInfo SpecializationConstants::getInfo() const
+{
+	vk::SpecializationInfo result;
+
+	if(!data.empty())
+	{
+		result.setMapEntries(entries);
+		result.setData<std::byte>(data);
+	}
+
+	return result;
 }
 
 
