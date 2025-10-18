@@ -33,6 +33,9 @@ export using svec2 = glm::vec<2, std::uint64_t>;
 /// Size vector 3 for fdtd matrices
 export using svec3 = glm::vec<3, std::uint64_t>;
 
+/// Size vector 4 for fdtd matrices
+export using svec4 = glm::vec<4, std::uint64_t>;
+
 /// Size vector 1 for fdtd matrices deltas
 export using svec1Delta = glm::vec<1, std::ptrdiff_t>;
 
@@ -41,5 +44,8 @@ export using svec2Delta = glm::vec<2, std::ptrdiff_t>;
 
 /// Size vector 3 for fdtd matrices deltas
 export using svec3Delta = glm::vec<3, std::ptrdiff_t>;
+
+/// Size vector 4 for fdtd matrices deltas
+export using svec4Delta = glm::vec<4, std::ptrdiff_t>;
 
 }

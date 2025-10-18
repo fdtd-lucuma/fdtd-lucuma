@@ -23,7 +23,6 @@ import lucuma.services.basic;
 import lucuma.components;
 
 import :base;
-import :utils;
 import :cpu_common;
 
 import std;

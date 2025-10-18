@@ -118,11 +118,11 @@ std::tuple<svec3, std::uint64_t> limits(const vk::PhysicalDeviceLimits limits)
 	return {{limits.maxComputeWorkGroupSize[0], limits.maxComputeWorkGroupSize[1], limits.maxComputeWorkGroupSize[2]}, limits.maxComputeWorkGroupInvocations};
 }
 
-bool fits(svec3 workgroupSize, svec3 maxWorkgroupSize, svec3 size, std::uint64_t maxInvocations)
+bool fits(svec3 workGroupSize, svec3 maxWorkgroupSize, svec3 size, std::uint64_t maxInvocations)
 {
-	return glm::all(glm::lessThanEqual(workgroupSize, maxWorkgroupSize)) &&
-		glm::all(glm::lessThanEqual(workgroupSize, size)) &&
-		glm::compMul(workgroupSize) <= maxInvocations;
+	return glm::all(glm::lessThanEqual(workGroupSize, maxWorkgroupSize)) &&
+		glm::all(glm::lessThanEqual(workGroupSize, size)) &&
+		glm::compMul(workGroupSize) <= maxInvocations;
 }
 
 svec3 Compute::getWorkgroupSize(svec3 size) const
@@ -269,7 +269,7 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 	using wgVec = glm::vec<3, std::uint32_t>;
 	static constexpr std::size_t wgDataSize = sizeof(std::uint32_t);
 
-	wgVec wgSize = info.workgroupSize;
+	wgVec wgSize = info.workGroupSize;
 
 	std::array specializationMap {
 		vk::SpecializationMapEntry{0, offsetof(wgVec, x), wgDataSize},

@@ -25,7 +25,6 @@ import lucuma.legacy_headers.mdspan;
 import lucuma.legacy_headers.taskflow;
 
 import lucuma.components;
-import :utils;
 
 import std.compat;
 import glm;

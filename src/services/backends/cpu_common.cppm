@@ -24,7 +24,6 @@ import lucuma.legacy_headers.entt;
 import lucuma.components;
 
 import :saver;
-import :utils;
 
 import std;
 

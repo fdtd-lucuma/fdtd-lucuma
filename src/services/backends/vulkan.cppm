@@ -32,6 +32,7 @@ import vulkan_hpp;
 import vk_mem_alloc_hpp;
 
 import :base;
+import :utils;
 
 import std;
 
@@ -40,33 +41,116 @@ namespace lucuma::services::backends
 
 using namespace lucuma::utils;
 
+template <typename T>
+constexpr std::string_view shaderSuffix()
+{
+	if constexpr(std::is_same_v<T, PrecisionTraits<Precision::f16>::type>)
+		return "_half.spv";
+	if constexpr(std::is_same_v<T, PrecisionTraits<Precision::f32>::type>)
+		return "_float.spv";
+	if constexpr(std::is_same_v<T, PrecisionTraits<Precision::f64>::type>)
+		return "_double.spv";
+}
+
+
+template <typename T>
+std::filesystem::path shaderName(std::string_view name)
+{
+	return std::format("{}{}", name, shaderSuffix<T>());
+}
+
+
 svec3 pad(svec3 size, svec3 workGroupSize);
 svec2 pad(svec2 size, svec2 workGroupSize);
 
 template <typename T>
-class InitCoefPipeline
+struct InitCoefPipelineCreateInfo
 {
-public:
-
-	void dispatch(vk::CommandBuffer commandBuffer)
-	{
-		pipeline.bind(commandBuffer);
-		//pipeline.pushConstants(commandBuffer, paddedDims, dims, CrImp); 
-		commandBuffer.dispatch(groupCount.x, groupCount.y, groupCount.z);
-	}
-
-private:
-	svec3 groupCount;
 	svec3 paddedDims;
 	svec3 dims;
 	T CrImp;
 
-	vulkan::Buffer Ch;
-	vulkan::Buffer Ce;
-	vulkan::Buffer CM;
-	vulkan::Buffer mu;
+	vulkan::Buffer& Ch;
+	vulkan::Buffer& Ce;
+	vulkan::Buffer& CM;
+	vulkan::Buffer& mu;
+
+	std::filesystem::path shaderPath;
+	std::string_view      entrypoint = "main";
+	svec3                 workGroupSize;
+
+	vulkan::Compute& compute;
+};
+
+template <typename T>
+class InitCoefPipeline
+{
+private:
+	struct alignas(32)
+	{
+		alignas(sizeof(svec4)) svec3 paddedDims;
+		alignas(sizeof(svec4)) svec3 dims;
+		T CrImp;
+
+		constexpr auto getPushConstantsLayout()
+		{
+			using this_t = typeof(pushConstants);
+
+			return vulkan::Compute::makePushConstantsLayout<this_t>(
+				&this_t::paddedDims,
+				&this_t::dims,
+				&this_t::CrImp
+			);
+		}
+
+	} pushConstants;
+
+	svec3 groupCount;
+
+	vulkan::Buffer& Ch;
+	vulkan::Buffer& Ce;
+	vulkan::Buffer& CM;
+	vulkan::Buffer& mu;
 
 	vulkan::ComputePipeline pipeline;
+
+public:
+	InitCoefPipeline(const InitCoefPipelineCreateInfo<T>& createInfo):
+		pushConstants({
+			.paddedDims = createInfo.paddedDims,
+			.dims = createInfo.dims,
+			.CrImp = createInfo.CrImp,
+		}),
+		groupCount(createInfo.paddedDims/createInfo.workGroupSize),
+		Ch(createInfo.Ch),
+		Ce(createInfo.Ce),
+		CM(createInfo.CM),
+		mu(createInfo.mu),
+		pipeline(createInfo.compute.createPipeline({
+			.shaderPath = createInfo.shaderPath,
+			.setLayouts = {
+				{
+					.bindings = simpleStorageBuffersLayout<4>(),
+					.buffers = {
+						createInfo.Ch,
+						createInfo.Ce,
+						createInfo.CM,
+						createInfo.mu,
+					}
+				}
+			},
+			.workGroupSize = createInfo.workGroupSize,
+			.pushConstants = pushConstants.getPushConstantsLayout(),
+		}))
+	{ }
+
+	void dispatch(vk::CommandBuffer commandBuffer)
+	{
+		pipeline.bind(commandBuffer);
+		pipeline.pushConstants(commandBuffer, pushConstants);
+		commandBuffer.dispatch(groupCount.x, groupCount.y, groupCount.z);
+	}
+
 };
 
 template <typename T>
@@ -282,7 +366,79 @@ public:
 		_exz0(makeBuffer(createInfo, paddedExzDims)),
 		_eyz0(makeBuffer(createInfo, paddedEyzDims)),
 		_exz1(makeBuffer(createInfo, paddedExzDims)),
-		_eyz1(makeBuffer(createInfo, paddedEyzDims))
+		_eyz1(makeBuffer(createInfo, paddedEyzDims)),
+		initCoefHxPipeline(InitCoefPipelineCreateInfo<T>{
+			.paddedDims = paddedHxDims,
+			.dims = HxDims,
+			.CrImp = Cr/imp0,
+			.Ch = _Chxh,
+			.Ce = _Chxe,
+			.CM = _CMhx,
+			.mu = _mux,
+			.shaderPath = shaderName<T>("init_coefs"),
+			.workGroupSize = workGroupSize,
+			.compute = createInfo.compute,
+		})//,
+		//initCoefHyPipeline({
+		//	.paddedDims = paddedHyDims,
+		//	.dims = HyDims,
+		//	.CrImp = Cr/imp0,
+		//	.workGroupSize = workGroupSize,
+		//	.Ch = _Chyh,
+		//	.Ce = _Chye,
+		//	.CM = _CMhy,
+		//	.mu = _muy,
+		//	.shaderPath = "init_coefs",
+		//	.compute = createInfo.compute,
+		//}),
+		//initCoefHzPipeline({
+		//	.paddedDims = paddedHzDims,
+		//	.dims = HzDims,
+		//	.CrImp = Cr/imp0,
+		//	.workGroupSize = workGroupSize,
+		//	.Ch = _Chzh,
+		//	.Ce = _Chze,
+		//	.CM = _CMhz,
+		//	.mu = _muz,
+		//	.shaderPath = "init_coefs",
+		//	.compute = createInfo.compute,
+		//}),
+		//initCoefExPipeline({
+		//	.paddedDims = paddedExDims,
+		//	.dims = ExDims,
+		//	.CrImp = Cr*imp0,
+		//	.workGroupSize = workGroupSize,
+		//	.Ch = _Cexe,
+		//	.Ce = _Cexh,
+		//	.CM = _CEEx,
+		//	.mu = _epsx,
+		//	.shaderPath = "init_coefs",
+		//	.compute = createInfo.compute,
+		//}),
+		//initCoefEyPipeline({
+		//	.paddedDims = paddedEyDims,
+		//	.dims = EyDims,
+		//	.CrImp = Cr*imp0,
+		//	.workGroupSize = workGroupSize,
+		//	.Ch = _Ceye,
+		//	.Ce = _Ceyh,
+		//	.CM = _CEEy,
+		//	.mu = _epsy,
+		//	.shaderPath = "init_coefs",
+		//	.compute = createInfo.compute,
+		//}),
+		//initCoefEzPipeline({
+		//	.paddedDims = paddedEzDims,
+		//	.dims = EzDims,
+		//	.CrImp = Cr*imp0,
+		//	.workGroupSize = workGroupSize,
+		//	.Ch = _Ceze,
+		//	.Ce = _Cezh,
+		//	.CM = _CEEz,
+		//	.mu = _epsz,
+		//	.shaderPath = "init_coefs",
+		//	.compute = createInfo.compute,
+		//})
 	{
 	}
 
@@ -413,6 +569,14 @@ private:
 	MatrixData _exz1;
 	MatrixData _eyz1;
 
+	InitCoefPipeline<T> initCoefHxPipeline;
+	//InitCoefPipeline<T> initCoefHyPipeline;
+	//InitCoefPipeline<T> initCoefHzPipeline;
+
+	//InitCoefPipeline<T> initCoefExPipeline;
+	//InitCoefPipeline<T> initCoefEyPipeline;
+	//InitCoefPipeline<T> initCoefEzPipeline;
+
 public:
 
 	cmdspan_3d_t Hx() const { return toMdspan(_Hx, paddedHxDims, HxDims); }
@@ -504,17 +668,6 @@ protected:
 
 };
 
-template<Precision precision = Precision::f32>
-constexpr std::string_view shaderPath()
-{
-	if constexpr(precision == Precision::f16)
-		return "hello_world_half.spv";
-	if constexpr(precision == Precision::f32)
-		return "hello_world_float.spv";
-	if constexpr(precision == Precision::f64)
-		return "hello_world_double.spv";
-}
-
 export template<Precision precision>
 class Vulkan: public IBackend, public VulkanBase
 {
@@ -600,7 +753,7 @@ private:
 };
 
 // Add one line for each new precision
-//extern template class Vulkan<Precision::f16>;
+extern template class Vulkan<Precision::f16>;
 extern template class Vulkan<Precision::f32>;
 extern template class Vulkan<Precision::f64>;
 

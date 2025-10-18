@@ -51,65 +51,6 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 	return vulkanCompute.createCommandRecorder(commandBuffer);
 }
 
-//VulkanBase::HelloWorldData VulkanBase::createHelloWorld(std::size_t bytes, std::string_view shaderPath)
-//{
-//	HelloWorldData result;
-//
-//	result.aBuffer = vulkanAllocator.allocate(
-//		bytes,
-//		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
-//		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
-//	);
-//
-//	result.bBuffer = vulkanAllocator.allocate(
-//		bytes,
-//		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferDst,
-//		vma::AllocationCreateFlagBits::eHostAccessSequentialWrite | vma::AllocationCreateFlagBits::eMapped
-//	);
-//
-//	result.cBuffer = vulkanAllocator.allocate(
-//		bytes,
-//		vk::BufferUsageFlagBits::eStorageBuffer | vk::BufferUsageFlagBits::eTransferSrc,
-//		vma::AllocationCreateFlagBits::eHostAccessRandom | vma::AllocationCreateFlagBits::eMapped
-//	);
-//
-//	result.pipeline = vulkanCompute.createPipeline({
-//		.shaderPath = shaderPath,
-//		.setLayouts = {
-//			{
-//				.bindings = {
-//					vk::DescriptorSetLayoutBinding {
-//						.binding         = 0,
-//						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-//						.descriptorCount = 1,
-//						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-//					},
-//					vk::DescriptorSetLayoutBinding {
-//						.binding         = 1,
-//						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-//						.descriptorCount = 1,
-//						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-//					},
-//					vk::DescriptorSetLayoutBinding {
-//						.binding         = 2,
-//						.descriptorType  = vk::DescriptorType::eStorageBuffer,
-//						.descriptorCount = 1,
-//						.stageFlags      = vk::ShaderStageFlagBits::eCompute,
-//					},
-//				},
-//				.buffers = {
-//					result.aBuffer,
-//					result.bBuffer,
-//					result.cBuffer,
-//				}
-//			}
-//		},
-//	});
-//
-//	return result;
-//
-//}
-
 template <typename T>
 requires std::is_arithmetic_v<T>
 T pad(T size, T workGroupSize)
@@ -134,7 +75,7 @@ svec2 pad(svec2 size, svec2 workGroupSize)
 	};
 }
 
-//template class Vulkan<Precision::f16>;
+template class Vulkan<Precision::f16>;
 template class Vulkan<Precision::f32>;
 template class Vulkan<Precision::f64>;
 
