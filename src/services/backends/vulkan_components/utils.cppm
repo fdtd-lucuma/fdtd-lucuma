@@ -48,5 +48,22 @@ constexpr auto simpleStorageBuffersLayout()
 svec3 pad(svec3 size, svec3 workGroupSize);
 svec2 pad(svec2 size, svec2 workGroupSize);
 
+template <typename T>
+constexpr std::string_view shaderSuffix()
+{
+	if constexpr(std::is_same_v<T, PrecisionTraits<Precision::f16>::type>)
+		return "_half.spv";
+	if constexpr(std::is_same_v<T, PrecisionTraits<Precision::f32>::type>)
+		return "_float.spv";
+	if constexpr(std::is_same_v<T, PrecisionTraits<Precision::f64>::type>)
+		return "_double.spv";
+}
+
+
+template <typename T>
+std::filesystem::path shaderName(std::string_view name)
+{
+	return std::format("{}{}", name, shaderSuffix<T>());
+}
 
 }
