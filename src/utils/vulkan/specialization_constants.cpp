@@ -19,6 +19,7 @@ module;
 module lucuma.utils.vulkan;
 
 import vulkan_hpp;
+import std;
 
 namespace lucuma::utils::vulkan
 {
