@@ -16,6 +16,7 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		instantiations.cpp
 		utils.cpp
 	PRIVATE
 		FILE_SET fdtd

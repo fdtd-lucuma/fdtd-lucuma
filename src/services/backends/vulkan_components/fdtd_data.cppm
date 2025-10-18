@@ -97,22 +97,22 @@ public:
 	using MatrixData = vulkan::Buffer;
 private:
 
-	static inline mdspan_3d_t toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
+	static inline auto toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
 	{
 		return unpad(vmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
 	}
 
-	static inline mdspan_2d_t toMdspan(vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
+	static inline auto toMdspan(vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
 	{
 		return unpad(vmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
 	}
 
-	static inline cmdspan_3d_t toMdspan(const vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
+	static inline auto toMdspan(const vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
 	{
 		return unpad(vcmdspan_3d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y, paddedDims.z), dims);
 	}
 
-	static inline cmdspan_2d_t toMdspan(const vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
+	static inline auto toMdspan(const vulkan::Buffer& buffer, svec2 paddedDims, svec2 dims)
 	{
 		return unpad(vcmdspan_2d_t(buffer.getData<T>().data(), paddedDims.x, paddedDims.y), dims);
 	}

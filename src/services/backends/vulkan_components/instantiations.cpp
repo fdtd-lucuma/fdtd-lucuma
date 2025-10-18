@@ -16,17 +16,14 @@
 
 module;
 
-export module lucuma.services.backends.vulkan_components;
 
-export import :fdtd_data;
-import :utils;
-import :init_coefs_pipeline;
+module lucuma.services.backends.vulkan_components;
 
 namespace lucuma::services::backends::vulkan_components
 {
 
-extern template class FdtdData<PrecisionTraits<Precision::f16>::type>;
-extern template class FdtdData<PrecisionTraits<Precision::f32>::type>;
-extern template class FdtdData<PrecisionTraits<Precision::f64>::type>;
+template class FdtdData<PrecisionTraits<Precision::f16>::type>;
+template class FdtdData<PrecisionTraits<Precision::f32>::type>;
+template class FdtdData<PrecisionTraits<Precision::f64>::type>;
 
-};
+}
