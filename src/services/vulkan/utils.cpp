@@ -47,6 +47,22 @@ std::ostream& listQueueFamilies(std::ostream& output, std::span<const vk::QueueF
 	return output;
 }
 
+std::ostream& listMemoryProperties(std::ostream& output, std::span<const vk::MemoryType> memoryTypes)
+{
+	output << "Device memory types:\n";
+
+	for(std::size_t i = 0; const auto& memoryType: memoryTypes)
+	{
+		output
+			<< "Memory type " << i++ << ":\n"
+			<< "\tProperties: " << to_string(memoryType.propertyFlags) << '\n'
+			<< "\tHeap index: " << memoryType.heapIndex << '\n'
+		;
+	}
+
+	return output;
+}
+
 std::ostream& operator<<(std::ostream& output, vk::Instance instance)
 {
 	for(const auto& device: instance.enumeratePhysicalDevices())
@@ -58,6 +74,7 @@ std::ostream& operator<<(std::ostream& output, vk::Instance instance)
 std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice)
 {
 	const auto chain = physicalDevice.getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceVulkan12Properties>();
+	const auto memoryProperties = physicalDevice.getMemoryProperties();
 
 	const auto& properties = chain.get<vk::PhysicalDeviceProperties2>().properties;
 	const auto& v12Properties = chain.get<vk::PhysicalDeviceVulkan12Properties>();
@@ -87,6 +104,7 @@ std::ostream& operator<<(std::ostream& output, vk::PhysicalDevice physicalDevice
 		<< "Max compute shared memory size: " << properties.limits.maxComputeSharedMemorySize << '\n'
 	;
 
+	listMemoryProperties(output, {memoryProperties.memoryTypes.data(), memoryProperties.memoryTypeCount});
 	return listQueueFamilies(output, physicalDevice.getQueueFamilyProperties());
 }
 
