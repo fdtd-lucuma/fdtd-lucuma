@@ -254,6 +254,7 @@ public:
 		initCoefPipelines(InitCoefPipelinesCreateInfo<T>{
 			.Cr = Cr,
 			.Imp0 = imp0,
+			.deltaT = deltaT,
 			.shaderPath = shaderName<T>("init_coefs"),
 			.workGroupSize = workGroupSize,
 			.compute = createInfo.compute,

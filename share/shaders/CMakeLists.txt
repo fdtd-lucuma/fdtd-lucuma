@@ -21,4 +21,7 @@ add_spirv_target(
 		hello_world_half.slang
 		hello_world_float.slang
 		hello_world_double.slang
+		init_coefs_half.slang
+		init_coefs_float.slang
+		init_coefs_double.slang
 )
