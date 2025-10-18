@@ -169,13 +169,15 @@ template <typename T>
 class InitCoefPipelines
 {
 public:
-	InitCoefPipelines(InitCoefPipelinesCreateInfo<T> createInfo):
-		Hx(map<FieldType::H, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Hx)),
-		Hy(map<FieldType::H, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Hy)),
-		Hz(map<FieldType::H, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Hz)),
-		Ex(map<FieldType::E, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Ex)),
-		Ey(map<FieldType::E, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Ey)),
-		Ez(map<FieldType::E, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Ez))
+	using create_info_t = InitCoefPipelinesCreateInfo<T>;
+
+	InitCoefPipelines(create_info_t createInfo):
+		Hx(map<FieldType::H, T>(createInfo, &create_info_t::Hx)),
+		Hy(map<FieldType::H, T>(createInfo, &create_info_t::Hy)),
+		Hz(map<FieldType::H, T>(createInfo, &create_info_t::Hz)),
+		Ex(map<FieldType::E, T>(createInfo, &create_info_t::Ex)),
+		Ey(map<FieldType::E, T>(createInfo, &create_info_t::Ey)),
+		Ez(map<FieldType::E, T>(createInfo, &create_info_t::Ez))
 	{ }
 
 	void dispatch(vk::CommandBuffer commandBuffer)
