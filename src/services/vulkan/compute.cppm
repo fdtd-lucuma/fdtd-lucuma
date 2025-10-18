@@ -70,7 +70,7 @@ export struct ComputePipelineCreateInfo
 	std::span<const setLayout> setLayouts;
 	svec3                      workGroupSize = {1,1,1};
 
-	std::span<const vk::PushConstantRange> pushConstants;
+	std::span<const vk::PushConstantRange> pushConstants = {};
 };
 
 export class ComputePipeline
@@ -171,21 +171,15 @@ public:
 	void submit(const vk::CommandBuffer& commandBuffer);
 	svec3 getWorkgroupSize(svec3 size) const;
 
-	template<typename T, typename... Members>
-	static constexpr auto makePushConstantsLayout(Members... members)
+	template<typename T>
+	static constexpr std::array<vk::PushConstantRange, 1> makePushConstantsLayout()
 	{
 		return std::array {
 			vk::PushConstantRange {
-				vk::ShaderStageFlagBits::eCompute,
-				(std::uint32_t)
-				reinterpret_cast<std::size_t>(
-					&(reinterpret_cast<T const volatile*>(0)->*members)
-				)
-				,
-				sizeof(std::remove_reference_t<
-					decltype(((T*)0)->*members)
-				>)
-			}...
+				.stageFlags = vk::ShaderStageFlagBits::eCompute,
+				.offset = 0,
+				.size = sizeof(T),
+			}
 		};
 	}
 

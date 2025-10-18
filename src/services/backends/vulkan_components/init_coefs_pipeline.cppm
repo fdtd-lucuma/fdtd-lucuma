@@ -61,18 +61,6 @@ private:
 		alignas(sizeof(svec4)) svec3 paddedDims;
 		alignas(sizeof(svec4)) svec3 dims;
 		T CrImp;
-
-		constexpr auto getPushConstantsLayout()
-		{
-			using this_t = typeof(pushConstants);
-
-			return vulkan::Compute::makePushConstantsLayout<this_t>(
-				&this_t::paddedDims,
-				&this_t::dims,
-				&this_t::CrImp
-			);
-		}
-
 	} pushConstants;
 
 	svec3 groupCount;
@@ -110,7 +98,7 @@ public:
 				}
 			},
 			.workGroupSize = createInfo.workGroupSize,
-			.pushConstants = pushConstants.getPushConstantsLayout(),
+			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
 		}))
 	{ }
 
