@@ -19,6 +19,14 @@ struct cmatrix3d<T = FDTD_FLOAT_T>
 		z = _z;
 	}
 
+	__init(buffer_t _buffer, svec3 dims)
+	{
+		buffer = _buffer;
+		x = (uint)dims.x;
+		y = (uint)dims.y;
+		z = (uint)dims.z;
+	}
+
 	__subscript(uint i, uint j, uint k) -> T
 	{
 		get { return buffer[i*(y*z)+j*z+k]; }
@@ -43,6 +51,14 @@ struct matrix3d<T = FDTD_FLOAT_T>
 		z = _z;
 	}
 
+	__init(buffer_t _buffer, svec3 dims)
+	{
+		buffer = _buffer;
+		x = (uint)dims.x;
+		y = (uint)dims.y;
+		z = (uint)dims.z;
+	}
+
 	__subscript(uint i, uint j, uint k) -> T
 	{
 		get { return buffer[i*(y*z)+j*z+k]; }
@@ -65,6 +81,13 @@ struct cmatrix2d<T = FDTD_FLOAT_T>
 		y = _y;
 	}
 
+	__init(buffer_t _buffer, svec2 dims)
+	{
+		buffer = _buffer;
+		x = (uint)dims.x;
+		y = (uint)dims.y;
+	}
+
 	__subscript(uint i, uint j, uint k) -> T
 	{
 		get { return buffer[i*y+j]; }
@@ -85,6 +108,13 @@ struct matrix2d<T = FDTD_FLOAT_T>
 		buffer = _buffer;
 		x = _x;
 		y = _y;
+	}
+
+	__init(buffer_t _buffer, svec2 dims)
+	{
+		buffer = _buffer;
+		x = (uint)dims.x;
+		y = (uint)dims.y;
 	}
 
 	__subscript(uint i, uint j) -> T
