@@ -407,18 +407,4 @@ CommandRecorder::~CommandRecorder()
 	compute->submit(getCommandBuffer()); // TODO: Fence?
 }
 
-vk::SpecializationInfo SpecializationConstants::getInfo() const
-{
-	vk::SpecializationInfo result;
-
-	if(!data.empty())
-	{
-		result.setMapEntries(entries);
-		result.setData<std::byte>(data);
-	}
-
-	return result;
-}
-
-
 }

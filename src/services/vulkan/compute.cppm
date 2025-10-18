@@ -22,11 +22,13 @@ import vulkan_hpp;
 import std;
 
 import lucuma.utils;
+import lucuma.utils.vulkan;
 
 namespace lucuma::services::vulkan
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::vulkan;
 using namespace lucuma::services;
 
 class Device;
@@ -34,56 +36,6 @@ class ShaderLoader;
 class Buffer;
 
 export class Compute;
-
-export class SpecializationConstants
-{
-public:
-	SpecializationConstants() = default;
-
-	vk::SpecializationInfo getInfo() const;
-
-	template<typename... Args>
-	static SpecializationConstants make(Args&&... args)
-	{
-		static_assert(sizeof...(args) % 2 == 0,
-			"Arguments must be pairs: (constantID, value).");
-
-		SpecializationConstants result;
-		result.appendAll(std::forward<Args>(args)...);
-		return result;
-	}
-
-private:
-	std::vector<vk::SpecializationMapEntry> entries;
-	std::vector<std::byte> data;
-
-	template<typename T, typename... Rest>
-	void appendAll(std::uint32_t id, const T& value, Rest&&... rest)
-	{
-		append(id, value);
-		if constexpr (sizeof...(rest) > 0)
-			appendAll(std::forward<Rest>(rest)...);
-	}
-
-	template<typename T>
-	void append(std::uint32_t id, const T& value)
-	{
-		std::uint32_t offset = data.size();
-		std::size_t size   = sizeof(T);
-
-		vk::SpecializationMapEntry entry {
-			.constantID = id,
-			.offset	 = offset,
-			.size	   = size,
-		};
-
-		entries.push_back(entry);
-
-		const std::byte* ptr = reinterpret_cast<const std::byte*>(&value);
-		data.insert(data.end(), ptr, ptr + size);
-	}
-
-};
 
 export class SimpleCommandBuffer
 {

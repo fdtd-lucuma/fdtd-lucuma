@@ -21,6 +21,7 @@ export module lucuma.services.backends.vulkan_components:init_coefs_pipeline;
 import glm;
 
 import lucuma.utils;
+import lucuma.utils.vulkan;
 import lucuma.services.vulkan;
 import vulkan_hpp;
 
@@ -32,6 +33,7 @@ namespace lucuma::services::backends::vulkan_components
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::vulkan;
 
 template <typename T>
 struct InitCoefPipelineCreateInfo
@@ -101,7 +103,7 @@ public:
 				}
 			},
 			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
-			.specializationConstants = vulkan::SpecializationConstants::make(
+			.specializationConstants = SpecializationConstants::make(
 				0, (std::uint32_t)createInfo.workGroupSize.x,
 				1, (std::uint32_t)createInfo.workGroupSize.y,
 				2, (std::uint32_t)createInfo.workGroupSize.z

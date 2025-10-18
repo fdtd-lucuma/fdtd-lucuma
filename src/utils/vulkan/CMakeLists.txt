@@ -16,22 +16,11 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		exceptions.cpp
-		injector.cpp
-		instantiations.cpp
+		specialization_constants.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			alias.cppm
-			backend.cppm
-			exceptions.cppm
-			injector.cppm
-			mdspan.cppm
-			precision.cppm
-			print.cppm
-			save_as.cppm
-			utils.cppm
+			vulkan.cppm
+			specialization_constants.cppm
 )
-
-add_subdirectory(vulkan)
