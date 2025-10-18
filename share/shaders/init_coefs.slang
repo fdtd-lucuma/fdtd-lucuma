@@ -20,7 +20,7 @@ StructuredBuffer<FDTD_FLOAT_T> _mu;
 
 bool inBoundaries(uint3 threadId, svec3 dims)
 {
-	return threadId.x < dims.x && threadId.y < dims.y && threadId.z < dims.z;
+	return any(threadId >= dims);
 }
 
 [shader("compute")]
