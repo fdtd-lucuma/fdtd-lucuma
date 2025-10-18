@@ -16,12 +16,10 @@
 
 module;
 
-#include <glm/gtx/component_wise.hpp> // Why is this not in the module?
-
 export module lucuma.services.backends.vulkan_components:fdtd_data;
 
 import lucuma.legacy_headers.mdspan;
-import glm;
+import lucuma.legacy_headers.glm;
 
 import lucuma.utils;
 import lucuma.components;

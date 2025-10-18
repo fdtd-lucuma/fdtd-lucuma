@@ -17,12 +17,11 @@
 module;
 
 #include <cstddef>
-#include <glm/gtx/component_wise.hpp> // Why is this not in the module?
 
 module lucuma.services.vulkan;
 
 import lucuma.services.basic;
-import glm;
+import lucuma.legacy_headers.glm;
 
 namespace lucuma::services::vulkan
 {
