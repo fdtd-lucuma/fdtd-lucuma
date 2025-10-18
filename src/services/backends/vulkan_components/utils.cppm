@@ -66,4 +66,23 @@ std::filesystem::path shaderName(std::string_view name)
 	return std::format("{}{}", name, shaderSuffix<T>());
 }
 
+enum class FieldType
+{
+	/// Magnetic field
+	H,
+
+	/// Electric field
+	E,
+};
+
+template <FieldType F, typename T>
+constexpr T crImp(T Cr, T Imp0)
+{
+	if constexpr(F == FieldType::H)
+		return Cr/Imp0;
+	if constexpr(F == FieldType::E)
+		return Cr*Imp0;
+}
+
+
 }

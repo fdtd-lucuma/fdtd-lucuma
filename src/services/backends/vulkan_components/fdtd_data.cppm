@@ -251,78 +251,61 @@ public:
 		_eyz0(makeBuffer(createInfo, paddedEyzDims)),
 		_exz1(makeBuffer(createInfo, paddedExzDims)),
 		_eyz1(makeBuffer(createInfo, paddedEyzDims)),
-		initCoefHxPipeline(InitCoefPipelineCreateInfo<T>{
-			.paddedDims = paddedHxDims,
-			.dims = HxDims,
-			.CrImp = Cr/imp0,
-			.Ch = _Chxh,
-			.Ce = _Chxe,
-			.CM = _CMhx,
-			.mu = _mux,
+		initCoefPipelines(InitCoefPipelinesCreateInfo<T>{
+			.Cr = Cr,
+			.Imp0 = imp0,
 			.shaderPath = shaderName<T>("init_coefs"),
 			.workGroupSize = workGroupSize,
 			.compute = createInfo.compute,
-		})//,
-		//initCoefHyPipeline({
-		//	.paddedDims = paddedHyDims,
-		//	.dims = HyDims,
-		//	.CrImp = Cr/imp0,
-		//	.workGroupSize = workGroupSize,
-		//	.Ch = _Chyh,
-		//	.Ce = _Chye,
-		//	.CM = _CMhy,
-		//	.mu = _muy,
-		//	.shaderPath = "init_coefs",
-		//	.compute = createInfo.compute,
-		//}),
-		//initCoefHzPipeline({
-		//	.paddedDims = paddedHzDims,
-		//	.dims = HzDims,
-		//	.CrImp = Cr/imp0,
-		//	.workGroupSize = workGroupSize,
-		//	.Ch = _Chzh,
-		//	.Ce = _Chze,
-		//	.CM = _CMhz,
-		//	.mu = _muz,
-		//	.shaderPath = "init_coefs",
-		//	.compute = createInfo.compute,
-		//}),
-		//initCoefExPipeline({
-		//	.paddedDims = paddedExDims,
-		//	.dims = ExDims,
-		//	.CrImp = Cr*imp0,
-		//	.workGroupSize = workGroupSize,
-		//	.Ch = _Cexe,
-		//	.Ce = _Cexh,
-		//	.CM = _CEEx,
-		//	.mu = _epsx,
-		//	.shaderPath = "init_coefs",
-		//	.compute = createInfo.compute,
-		//}),
-		//initCoefEyPipeline({
-		//	.paddedDims = paddedEyDims,
-		//	.dims = EyDims,
-		//	.CrImp = Cr*imp0,
-		//	.workGroupSize = workGroupSize,
-		//	.Ch = _Ceye,
-		//	.Ce = _Ceyh,
-		//	.CM = _CEEy,
-		//	.mu = _epsy,
-		//	.shaderPath = "init_coefs",
-		//	.compute = createInfo.compute,
-		//}),
-		//initCoefEzPipeline({
-		//	.paddedDims = paddedEzDims,
-		//	.dims = EzDims,
-		//	.CrImp = Cr*imp0,
-		//	.workGroupSize = workGroupSize,
-		//	.Ch = _Ceze,
-		//	.Ce = _Cezh,
-		//	.CM = _CEEz,
-		//	.mu = _epsz,
-		//	.shaderPath = "init_coefs",
-		//	.compute = createInfo.compute,
-		//})
+			.Hx = {
+				.paddedDims = paddedHxDims,
+				.dims = HxDims,
+				.Ch = _Chxh,
+				.Ce = _Chxe,
+				.CM = _CMhx,
+				.mu = _mux,
+			},
+			.Hy = {
+				.paddedDims = paddedHyDims,
+				.dims = HyDims,
+				.Ch = _Chyh,
+				.Ce = _Chye,
+				.CM = _CMhy,
+				.mu = _muy,
+			},
+			.Hz = {
+				.paddedDims = paddedHzDims,
+				.dims = HzDims,
+				.Ch = _Chzh,
+				.Ce = _Chze,
+				.CM = _CMhz,
+				.mu = _muz,
+			},
+			.Ex = {
+				.paddedDims = paddedExDims,
+				.dims = ExDims,
+				.Ch = _Cexe,
+				.Ce = _Cexh,
+				.CM = _CEEx,
+				.mu = _epsx,
+			},
+			.Ey = {
+				.paddedDims = paddedEyDims,
+				.dims = EyDims,
+				.Ch = _Ceye,
+				.Ce = _Ceyh,
+				.CM = _CEEy,
+				.mu = _epsy,
+			},
+			.Ez = {
+				.paddedDims = paddedEzDims,
+				.dims = EzDims,
+				.Ch = _Ceze,
+				.Ce = _Cezh,
+				.CM = _CEEz,
+				.mu = _epsz,
+			},
+		})
 	{
 	}
 
@@ -453,13 +436,7 @@ private:
 	MatrixData _exz1;
 	MatrixData _eyz1;
 
-	InitCoefPipeline<T> initCoefHxPipeline;
-	//InitCoefPipeline<T> initCoefHyPipeline;
-	//InitCoefPipeline<T> initCoefHzPipeline;
-
-	//InitCoefPipeline<T> initCoefExPipeline;
-	//InitCoefPipeline<T> initCoefEyPipeline;
-	//InitCoefPipeline<T> initCoefEzPipeline;
+	InitCoefPipelines<T> initCoefPipelines;
 
 public:
 
@@ -509,7 +486,7 @@ public:
 
 	void initCoefs(vk::CommandBuffer commandBuffer)
 	{
-		//TODO
+		initCoefPipelines.dispatch(commandBuffer);
 	}
 
 	void updateH(vk::CommandBuffer commandBuffer)

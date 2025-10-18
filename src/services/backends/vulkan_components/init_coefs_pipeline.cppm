@@ -123,4 +123,92 @@ public:
 
 };
 
+struct InitCoefPipelineInfo
+{
+	svec3 paddedDims;
+	svec3 dims;
+
+	vulkan::Buffer&  Ch;
+	vulkan::Buffer&  Ce;
+	vulkan::Buffer&  CM;
+	vulkan::Buffer&  mu;
+
+	std::string_view entrypoint = "main";
+};
+
+template <typename T>
+struct InitCoefPipelinesCreateInfo
+{
+	T Cr;
+	T Imp0;
+
+	std::filesystem::path shaderPath;
+	svec3                 workGroupSize;
+
+	vulkan::Compute& compute;
+
+	InitCoefPipelineInfo Hx;
+	InitCoefPipelineInfo Hy;
+	InitCoefPipelineInfo Hz;
+
+	InitCoefPipelineInfo Ex;
+	InitCoefPipelineInfo Ey;
+	InitCoefPipelineInfo Ez;
+
+};
+
+template <FieldType F, typename T>
+InitCoefPipelineCreateInfo<T> map(const InitCoefPipelinesCreateInfo<T> createInfo, InitCoefPipelineInfo InitCoefPipelinesCreateInfo<T>::* _pipelineInfo)
+{
+	auto& pipelineInfo = createInfo.*_pipelineInfo;
+
+	return {
+		.paddedDims    = pipelineInfo.paddedDims,
+		.dims          = pipelineInfo.dims,
+		.CrImp         = crImp<F>(createInfo.Cr,createInfo.Imp0),
+		.Ch            = pipelineInfo.Ch,
+		.Ce            = pipelineInfo.Ce,
+		.CM            = pipelineInfo.mu,
+		.mu            = pipelineInfo.mu,
+		.shaderPath    = createInfo.shaderPath,
+		.entrypoint    = pipelineInfo.entrypoint,
+		.workGroupSize = createInfo.workGroupSize,
+		.compute       = createInfo.compute,
+	};
+}
+
+template <typename T>
+class InitCoefPipelines
+{
+public:
+	InitCoefPipelines(InitCoefPipelinesCreateInfo<T> createInfo):
+		Hx(map<FieldType::H, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Hx)),
+		Hy(map<FieldType::H, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Hy)),
+		Hz(map<FieldType::H, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Hz)),
+		Ex(map<FieldType::E, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Ex)),
+		Ey(map<FieldType::E, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Ey)),
+		Ez(map<FieldType::E, T>(createInfo, &InitCoefPipelinesCreateInfo<T>::Ez))
+	{ }
+
+	void dispatch(vk::CommandBuffer commandBuffer)
+	{
+		Hx.dispatch(commandBuffer);
+		Hy.dispatch(commandBuffer);
+		Hz.dispatch(commandBuffer);
+
+		Ex.dispatch(commandBuffer);
+		Ey.dispatch(commandBuffer);
+		Ez.dispatch(commandBuffer);
+	}
+
+private:
+	InitCoefPipeline<T> Hx;
+	InitCoefPipeline<T> Hy;
+	InitCoefPipeline<T> Hz;
+
+	InitCoefPipeline<T> Ex;
+	InitCoefPipeline<T> Ey;
+	InitCoefPipeline<T> Ez;
+};
+
 }

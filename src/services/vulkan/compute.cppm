@@ -100,7 +100,7 @@ public:
 	requires std::is_trivially_copyable_v<T> && std::is_standard_layout_v<T> && (alignof(T) % 4 == 0) // std430
 	void pushConstants(vk::CommandBuffer commandBuffer, const T& data, std::uint32_t offset = 0)
 	{
-		commandBuffer.pushConstants(getLayout(), vk::ShaderStageFlagBits::eCompute, offset, data);
+		commandBuffer.pushConstants<T>(getLayout(), vk::ShaderStageFlagBits::eCompute, offset, data);
 	}
 
 private:
