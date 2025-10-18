@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			fdtd_data.cppm
+			init_coefs_pipeline.cppm
 			utils.cppm
 			vulkan_components.cppm
 )
