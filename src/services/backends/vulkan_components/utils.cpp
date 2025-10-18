@@ -51,4 +51,13 @@ svec2 pad(svec2 size, svec2 workGroupSize)
 	};
 }
 
+SpecializationConstants simpleWorkgroupSize(svec3 workGroupSize)
+{
+	return SpecializationConstants::make(
+		0, (std::uint32_t)workGroupSize.x,
+		1, (std::uint32_t)workGroupSize.y,
+		2, (std::uint32_t)workGroupSize.z
+	);
+}
+
 }

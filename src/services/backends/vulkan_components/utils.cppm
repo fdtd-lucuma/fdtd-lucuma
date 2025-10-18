@@ -21,6 +21,7 @@ export module lucuma.services.backends.vulkan_components:utils;
 import std;
 
 import lucuma.utils;
+import lucuma.utils.vulkan;
 
 import vulkan_hpp;
 
@@ -28,6 +29,7 @@ namespace lucuma::services::backends::vulkan_components
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::vulkan;
 
 template <std::size_t N>
 constexpr auto simpleStorageBuffersLayout()
@@ -84,5 +86,6 @@ constexpr T crImp(T Cr, T Imp0)
 		return Cr*Imp0;
 }
 
+SpecializationConstants simpleWorkgroupSize(svec3 workGroupSize);
 
 }
