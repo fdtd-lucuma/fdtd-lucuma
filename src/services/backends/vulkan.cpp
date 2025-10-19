@@ -51,6 +51,23 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 	return vulkanCompute.createCommandRecorder(commandBuffer);
 }
 
+void VulkanBase::barrier(vk::CommandBuffer commandBuffer)
+{
+	vk::MemoryBarrier2 memoryBarrier {
+		.srcStageMask  = vk::PipelineStageFlagBits2::eComputeShader,
+		.srcAccessMask = vk::AccessFlagBits2::eShaderWrite,
+		.dstStageMask  = vk::PipelineStageFlagBits2::eComputeShader,
+		.dstAccessMask = vk::AccessFlagBits2::eShaderRead | vk::AccessFlagBits2::eShaderWrite,
+	};
+
+	vk::DependencyInfo dependencyInfo {
+	};
+
+	dependencyInfo.setMemoryBarriers(memoryBarrier);
+
+	commandBuffer.pipelineBarrier2(dependencyInfo);
+}
+
 template class Vulkan<Precision::f16>;
 template class Vulkan<Precision::f32>;
 template class Vulkan<Precision::f64>;

@@ -53,6 +53,8 @@ protected:
 	void init();
 	vulkan::CommandRecorder createCommandRecorder();
 
+	static void barrier(vk::CommandBuffer commandBuffer);
+
 };
 
 export template<Precision precision>
@@ -114,8 +116,17 @@ public:
 				auto recorder = createCommandRecorder();
 
 				data.updateH(recorder);
+
+				barrier(recorder);
+
 				data.updateE(recorder);
+
+				barrier(recorder);
+
 				data.gauss(recorder);
+
+				barrier(recorder);
+
 				data.abc(recorder);
 			}
 
