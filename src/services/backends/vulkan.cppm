@@ -131,7 +131,8 @@ public:
 
 				data.abc(recorder);
 
-				computeCpuBarrier(recorder);
+				if(settings.saveAs() != SaveAs::none)
+					computeCpuBarrier(recorder);
 			}
 
 #ifndef NDEBUG
