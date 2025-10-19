@@ -18,7 +18,7 @@ RWStructuredBuffer<FDTD_FLOAT_T> _Ce;
 StructuredBuffer<FDTD_FLOAT_T> _CM;
 StructuredBuffer<FDTD_FLOAT_T> _mu;
 
-bool inBoundaries(uint3 threadId, svec3 dims)
+bool outside(uint3 threadId, svec3 dims)
 {
 	return any(threadId >= dims);
 }
@@ -27,7 +27,7 @@ bool inBoundaries(uint3 threadId, svec3 dims)
 [numthreads(wgX,wgY,wgZ)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
-	if(!inBoundaries(threadId, pushConstants.dims))
+	if(outside(threadId, pushConstants.dims))
 		return;
 
 	matrix3d Ch = matrix3d<FDTD_FLOAT_T>(_Ch, pushConstants.paddedDims);
