@@ -51,42 +51,58 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 	return vulkanCompute.createCommandRecorder(commandBuffer);
 }
 
-constexpr vk::MemoryBarrier2 writeReadBarrier(vk::PipelineStageFlags2 src, vk::PipelineStageFlags2 dst)
+using enum vk::PipelineStageFlagBits2;
+using enum vk::AccessFlagBits2;
+
+constexpr vk::AccessFlags2 writeAccessMask(vk::PipelineStageFlags2 stage)
+{
+	vk::AccessFlags2 result;
+
+	if(stage & eComputeShader)
+		result |= eShaderWrite;
+	if(stage & eHost)
+		result |= eHostWrite;
+
+	return result;
+}
+
+constexpr vk::AccessFlags2 readAccessMask(vk::PipelineStageFlags2 stage)
+{
+	vk::AccessFlags2 result;
+
+	if(stage & eComputeShader)
+		result |= eShaderRead;
+	if(stage & eHost)
+		result |= eHostRead;
+
+	return result;
+}
+
+void writeReadBarrier(vk::CommandBuffer commandBuffer, vk::PipelineStageFlags2 src, vk::PipelineStageFlags2 dst)
 {
 	vk::MemoryBarrier2 memoryBarrier {
 		.srcStageMask  = src,
-		.srcAccessMask = vk::AccessFlagBits2::eShaderWrite,
+		.srcAccessMask = writeAccessMask(src),
 		.dstStageMask  = dst,
-		.dstAccessMask = vk::AccessFlagBits2::eShaderRead,
+		.dstAccessMask = readAccessMask(dst),
 	};
 
-	return memoryBarrier;
+	vk::DependencyInfo dependencyInfo {
+	};
+
+	dependencyInfo.setMemoryBarriers(memoryBarrier);
+
+	commandBuffer.pipelineBarrier2(dependencyInfo);
 }
 
 void VulkanBase::computeComputeBarrier(vk::CommandBuffer commandBuffer)
 {
-	using enum vk::PipelineStageFlagBits2;
-
-	vk::DependencyInfo dependencyInfo {
-	};
-
-	const auto barrier = writeReadBarrier(eComputeShader, eComputeShader);
-	dependencyInfo.setMemoryBarriers(barrier);
-
-	commandBuffer.pipelineBarrier2(dependencyInfo);
+	writeReadBarrier(commandBuffer, eComputeShader, eComputeShader);
 }
 
 void VulkanBase::computeCpuBarrier(vk::CommandBuffer commandBuffer)
 {
-	using enum vk::PipelineStageFlagBits2;
-
-	vk::DependencyInfo dependencyInfo {
-	};
-
-	const auto barrier = writeReadBarrier(eComputeShader, eHost);
-	dependencyInfo.setMemoryBarriers(barrier);
-
-	commandBuffer.pipelineBarrier2(dependencyInfo);
+	writeReadBarrier(commandBuffer, eComputeShader, eHost);
 }
 
 template class Vulkan<Precision::f16>;
