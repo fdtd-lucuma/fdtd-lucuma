@@ -57,15 +57,16 @@ private:
 	}
 
 	template<typename T>
+	requires (std::is_standard_layout_v<T> && std::is_trivially_copyable_v<T>)
 	void append(std::uint32_t id, const T& value)
 	{
 		std::uint32_t offset = data.size();
-		std::size_t size   = sizeof(T);
+		std::size_t size     = sizeof(T);
 
 		vk::SpecializationMapEntry entry {
 			.constantID = id,
-			.offset	 = offset,
-			.size	   = size,
+			.offset     = offset,
+			.size       = size,
 		};
 
 		entries.push_back(entry);

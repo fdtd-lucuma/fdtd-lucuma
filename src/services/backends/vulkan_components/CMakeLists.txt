@@ -17,6 +17,7 @@
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		instantiations.cpp
+		update_h_pipeline.cpp
 		utils.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -24,6 +25,7 @@ target_sources(${PROJECT_NAME}
 		FILES
 			fdtd_data.cppm
 			init_coefs_pipeline.cppm
+			update_h_pipeline.cppm
 			utils.cppm
 			vulkan_components.cppm
 )

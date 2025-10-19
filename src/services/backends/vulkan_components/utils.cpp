@@ -60,4 +60,19 @@ SpecializationConstants simpleWorkgroupSize(svec3 workGroupSize)
 	);
 }
 
+SpecializationConstants workgroupSizeWithDeltas(svec3 workGroupSize, svec3 delta1, svec3 delta2)
+{
+	return SpecializationConstants::make(
+		0, (std::uint32_t)workGroupSize.x,
+		1, (std::uint32_t)workGroupSize.y,
+		2, (std::uint32_t)workGroupSize.z,
+		3, (std::int32_t)delta1.x,
+		4, (std::int32_t)delta1.y,
+		5, (std::int32_t)delta1.z,
+		6, (std::int32_t)delta2.x,
+		7, (std::int32_t)delta2.y,
+		8, (std::int32_t)delta2.z
+	);
+}
+
 }

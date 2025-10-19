@@ -123,7 +123,6 @@ void Device::createDevice()
 {
 
 	auto extensions = getRequiredExtensions();
-	auto layers     = getRequiredLayers();
 
 	auto queues = getQueueCreateInfos();
 
@@ -139,17 +138,11 @@ void Device::createDevice()
 	auto& deviceCreateInfo = chain.get<vk::DeviceCreateInfo>();
 
 	deviceCreateInfo
-		.setPEnabledLayerNames(layers)
 		.setPEnabledExtensionNames(extensions)
 		.setQueueCreateInfos(queues)
 	;
 
 	device = getPhysicalDevice().createDevice(deviceCreateInfo);
-}
-
-std::vector<const char*> Device::getRequiredLayers()
-{
-	return {};
 }
 
 std::vector<const char*> Device::getRequiredExtensions()

@@ -54,14 +54,12 @@ public:
 private:
 	Core&            core;
 	basic::Settings& settings;
-	
 
 	vk::raii::Device device = nullptr;
 
 	std::optional<QueueFamilyInfo> computeInfo = std::nullopt;
 	std::optional<QueueFamilyInfo> graphicsInfo = std::nullopt;
 
-	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();
 
 	void init();

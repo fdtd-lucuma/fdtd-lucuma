@@ -69,11 +69,6 @@ private:
 
 	svec3 groupCount;
 
-	vulkan::Buffer& Ch;
-	vulkan::Buffer& Ce;
-	vulkan::Buffer& CM;
-	vulkan::Buffer& mu;
-
 	vulkan::ComputePipeline pipeline;
 
 public:
@@ -85,10 +80,6 @@ public:
 			.deltaT = createInfo.deltaT,
 		}),
 		groupCount(createInfo.paddedDims/createInfo.workGroupSize),
-		Ch(createInfo.Ch),
-		Ce(createInfo.Ce),
-		CM(createInfo.CM),
-		mu(createInfo.mu),
 		pipeline(createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
 			.setLayouts = {
