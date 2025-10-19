@@ -36,9 +36,6 @@ bool outside(uint3 threadId, svec3 dims)
 [numthreads(wgX,wgY,wgZ)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
-	if(outside(threadId, pushConstants.Hdims))
-		return;
-
 	matrix3d Hc = matrix3d<FDTD_FLOAT_T>(_Hc, pushConstants.paddedHDims);
 
 	cmatrix3d Ch = cmatrix3d<FDTD_FLOAT_T>(_Ch, pushConstants.paddedHDims);
@@ -59,7 +56,8 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	const uint Ec2j = j + Ec2DeltaY;
 	const uint Ec2k = k + Ec2DeltaZ;
 
-	Hc[i,j,k] = Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
-		((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k]) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k]))
+	Hc[i,j,k] = outside(threadId, pushConstants.Hdims) ? Hc[i,j,k] :
+		Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
+			((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k]) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k]))
 	;
 }
