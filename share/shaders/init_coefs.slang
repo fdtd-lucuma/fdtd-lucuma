@@ -18,10 +18,18 @@ RWStructuredBuffer<FDTD_FLOAT_T> _Ce;
 StructuredBuffer<FDTD_FLOAT_T> _CM;
 StructuredBuffer<FDTD_FLOAT_T> _mu;
 
+bool outside(uint3 threadId, svec3 dims)
+{
+	return any(threadId >= dims);
+}
+
 [shader("compute")]
 [numthreads(wgX,wgY,wgZ)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
+	if(outside(threadId, pushConstants.dims))
+		return;
+
 	matrix3d Ch = matrix3d<FDTD_FLOAT_T>(_Ch, pushConstants.paddedDims);
 	matrix3d Ce = matrix3d<FDTD_FLOAT_T>(_Ce, pushConstants.paddedDims);
 
