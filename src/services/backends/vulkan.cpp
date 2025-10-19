@@ -57,7 +57,7 @@ void VulkanBase::barrier(vk::CommandBuffer commandBuffer)
 		.srcStageMask  = vk::PipelineStageFlagBits2::eComputeShader,
 		.srcAccessMask = vk::AccessFlagBits2::eShaderWrite,
 		.dstStageMask  = vk::PipelineStageFlagBits2::eComputeShader,
-		.dstAccessMask = vk::AccessFlagBits2::eShaderRead | vk::AccessFlagBits2::eShaderWrite,
+		.dstAccessMask = vk::AccessFlagBits2::eShaderRead,
 	};
 
 	vk::DependencyInfo dependencyInfo {
