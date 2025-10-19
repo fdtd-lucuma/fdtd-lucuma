@@ -63,7 +63,7 @@ constexpr vk::MemoryBarrier2 writeReadBarrier(vk::PipelineStageFlags2 src, vk::P
 	return memoryBarrier;
 }
 
-void VulkanBase::gpuGpuBarrier(vk::CommandBuffer commandBuffer)
+void VulkanBase::computeComputeBarrier(vk::CommandBuffer commandBuffer)
 {
 	using enum vk::PipelineStageFlagBits2;
 
@@ -76,7 +76,7 @@ void VulkanBase::gpuGpuBarrier(vk::CommandBuffer commandBuffer)
 	commandBuffer.pipelineBarrier2(dependencyInfo);
 }
 
-void VulkanBase::gpuCpuBarrier(vk::CommandBuffer commandBuffer)
+void VulkanBase::computeCpuBarrier(vk::CommandBuffer commandBuffer)
 {
 	using enum vk::PipelineStageFlagBits2;
 

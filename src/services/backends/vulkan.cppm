@@ -53,8 +53,8 @@ protected:
 	void init();
 	vulkan::CommandRecorder createCommandRecorder();
 
-	static void gpuGpuBarrier(vk::CommandBuffer commandBuffer);
-	static void gpuCpuBarrier(vk::CommandBuffer commandBuffer);
+	static void computeComputeBarrier(vk::CommandBuffer commandBuffer);
+	static void computeCpuBarrier(vk::CommandBuffer commandBuffer);
 
 };
 
@@ -98,7 +98,7 @@ public:
 			auto recorder = createCommandRecorder();
 
 			data.initCoefs(recorder);
-			gpuGpuBarrier(recorder);
+			computeComputeBarrier(recorder);
 		}
 
 		return id;
@@ -119,19 +119,19 @@ public:
 
 				data.updateH(recorder);
 
-				gpuGpuBarrier(recorder);
+				computeComputeBarrier(recorder);
 
 				data.updateE(recorder);
 
-				gpuGpuBarrier(recorder);
+				computeComputeBarrier(recorder);
 
 				data.gauss(recorder);
 
-				gpuGpuBarrier(recorder);
+				computeComputeBarrier(recorder);
 
 				data.abc(recorder);
 
-				gpuCpuBarrier(recorder);
+				computeCpuBarrier(recorder);
 			}
 
 #ifndef NDEBUG
