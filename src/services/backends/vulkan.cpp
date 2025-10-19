@@ -51,19 +51,40 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 	return vulkanCompute.createCommandRecorder(commandBuffer);
 }
 
-void VulkanBase::barrier(vk::CommandBuffer commandBuffer)
+constexpr vk::MemoryBarrier2 writeReadBarrier(vk::PipelineStageFlags2 src, vk::PipelineStageFlags2 dst)
 {
 	vk::MemoryBarrier2 memoryBarrier {
-		.srcStageMask  = vk::PipelineStageFlagBits2::eComputeShader,
+		.srcStageMask  = src,
 		.srcAccessMask = vk::AccessFlagBits2::eShaderWrite,
-		.dstStageMask  = vk::PipelineStageFlagBits2::eComputeShader,
+		.dstStageMask  = dst,
 		.dstAccessMask = vk::AccessFlagBits2::eShaderRead,
 	};
+
+	return memoryBarrier;
+}
+
+void VulkanBase::gpuGpuBarrier(vk::CommandBuffer commandBuffer)
+{
+	using enum vk::PipelineStageFlagBits2;
 
 	vk::DependencyInfo dependencyInfo {
 	};
 
-	dependencyInfo.setMemoryBarriers(memoryBarrier);
+	const auto barrier = writeReadBarrier(eComputeShader, eComputeShader);
+	dependencyInfo.setMemoryBarriers(barrier);
+
+	commandBuffer.pipelineBarrier2(dependencyInfo);
+}
+
+void VulkanBase::gpuCpuBarrier(vk::CommandBuffer commandBuffer)
+{
+	using enum vk::PipelineStageFlagBits2;
+
+	vk::DependencyInfo dependencyInfo {
+	};
+
+	const auto barrier = writeReadBarrier(eComputeShader, eHost);
+	dependencyInfo.setMemoryBarriers(barrier);
 
 	commandBuffer.pipelineBarrier2(dependencyInfo);
 }
