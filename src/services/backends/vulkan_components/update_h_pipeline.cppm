@@ -21,6 +21,7 @@ export module lucuma.services.backends.vulkan_components:update_h_pipeline;
 import lucuma.utils;
 import lucuma.services.vulkan;
 import vulkan_hpp;
+import std;
 
 namespace lucuma::services::backends::vulkan_components
 {
@@ -34,8 +35,8 @@ struct UpdateHPipelineCreateInfo
 	svec3 paddedEc2Dims;
 	svec3 HDims;
 
-	svec3 Ec1Delta;
-	svec3 Ec2Delta;
+	svec3Delta Ec1Delta;
+	svec3Delta Ec2Delta;
 
 	vulkan::Buffer& Hc;
 	vulkan::Buffer& Ch;
@@ -79,8 +80,8 @@ struct UpdateHPipelineInfo
 	svec3 paddedEc2Dims;
 	svec3 HDims;
 
-	svec3 Ec1Delta;
-	svec3 Ec2Delta;
+	svec3Delta Ec1Delta;
+	svec3Delta Ec2Delta;
 
 	vulkan::Buffer& Hc;
 	vulkan::Buffer& Ch;

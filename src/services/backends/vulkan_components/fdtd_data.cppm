@@ -31,6 +31,7 @@ import std;
 
 import :utils;
 import :init_coefs_pipeline;
+import :update_h_pipeline;
 
 namespace lucuma::services::backends::vulkan_components
 {
@@ -49,13 +50,13 @@ export template <typename T>
 class FdtdData
 {
 public:
-	constexpr static auto HxDimsDelta = svec3(0, -1, -1);
-	constexpr static auto HyDimsDelta = svec3(-1, 0, -1);
-	constexpr static auto HzDimsDelta = svec3(-1, -1, 0);
+	constexpr static auto HxDimsDelta = svec3Delta(0, -1, -1);
+	constexpr static auto HyDimsDelta = svec3Delta(-1, 0, -1);
+	constexpr static auto HzDimsDelta = svec3Delta(-1, -1, 0);
 
-	constexpr static auto ExDimsDelta = svec3(-1, 0, 0);
-	constexpr static auto EyDimsDelta = svec3(0, -1, 0);
-	constexpr static auto EzDimsDelta = svec3(0, 0, -1);
+	constexpr static auto ExDimsDelta = svec3Delta(-1, 0, 0);
+	constexpr static auto EyDimsDelta = svec3Delta(0, -1, 0);
+	constexpr static auto EzDimsDelta = svec3Delta(0, 0, -1);
 
 	template <typename extents, typename layout = Kokkos::layout_right>
 	using mdspan_t = Kokkos::mdspan<T, extents, layout>;
@@ -180,12 +181,12 @@ public:
 		Cr(createInfo.fdtdDataCreateInfo.Cr),
 		maxTime(createInfo.fdtdDataCreateInfo.maxTime),
 		gaussSigma(createInfo.fdtdDataCreateInfo.gaussSigma),
-		HxDims(size + HxDimsDelta),
-		HyDims(size + HyDimsDelta),
-		HzDims(size + HzDimsDelta),
-		ExDims(size + ExDimsDelta),
-		EyDims(size + EyDimsDelta),
-		EzDims(size + EzDimsDelta),
+		HxDims((svec3Delta)size + HxDimsDelta),
+		HyDims((svec3Delta)size + HyDimsDelta),
+		HzDims((svec3Delta)size + HzDimsDelta),
+		ExDims((svec3Delta)size + ExDimsDelta),
+		EyDims((svec3Delta)size + EyDimsDelta),
+		EzDims((svec3Delta)size + EzDimsDelta),
 		eyxDims(EyDims.yz()),
 		ezxDims(EzDims.yz()),
 		exyDims(ExDims.xz()),
@@ -306,6 +307,62 @@ public:
 				.Ce = _Cezh,
 				.CM = _CEEz,
 				.mu = _epsz,
+			},
+		}),
+		updateHPipelines(UpdateHPipelinesCreateInfo{
+			.shaderPath = shaderName<T>("update_h"),
+			.workGroupSize = workGroupSize,
+			.compute = createInfo.compute,
+			.x = {
+
+				.paddedHDims   = paddedHxDims,
+				.paddedEc1Dims = paddedEyDims,
+				.paddedEc2Dims = paddedEzDims,
+				.HDims         = HxDims,
+
+				.Ec1Delta = -ExDimsDelta,
+				.Ec2Delta = -EzDimsDelta,
+
+				.Hc  = _Hx,
+				.Ch  = _Chxh,
+				.Ce  = _Chxe,
+				.Ec1 = _Ey,
+				.Ec2 = _Ez,
+
+			},
+			.y = {
+
+				.paddedHDims   = paddedHyDims,
+				.paddedEc1Dims = paddedEzDims,
+				.paddedEc2Dims = paddedExDims,
+				.HDims         = HyDims,
+
+				.Ec1Delta = -EyDimsDelta,
+				.Ec2Delta = -ExDimsDelta,
+
+				.Hc  = _Hy,
+				.Ch  = _Chyh,
+				.Ce  = _Chye,
+				.Ec1 = _Ez,
+				.Ec2 = _Ex,
+
+			},
+			.z = {
+
+				.paddedHDims   = paddedHzDims,
+				.paddedEc1Dims = paddedExDims,
+				.paddedEc2Dims = paddedEyDims,
+				.HDims         = HzDims,
+
+				.Ec1Delta = -EyDimsDelta,
+				.Ec2Delta = -ExDimsDelta,
+
+				.Hc  = _Hz,
+				.Ch  = _Chzh,
+				.Ce  = _Chze,
+				.Ec1 = _Ex,
+				.Ec2 = _Ey,
+
 			},
 		})
 	{
@@ -439,6 +496,7 @@ private:
 	MatrixData _eyz1;
 
 	InitCoefPipelines<T> initCoefPipelines;
+	UpdateHPipelines     updateHPipelines;
 
 public:
 
@@ -493,7 +551,7 @@ public:
 
 	void updateH(vk::CommandBuffer commandBuffer)
 	{
-		//TODO
+		updateHPipelines.dispatch(commandBuffer);
 	}
 
 	void updateE(vk::CommandBuffer commandBuffer)
