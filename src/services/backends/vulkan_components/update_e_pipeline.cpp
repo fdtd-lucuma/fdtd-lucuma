@@ -68,7 +68,7 @@ UpdateEPipelineCreateInfo map(const UpdateEPipelinesCreateInfo createInfo, Updat
 		.paddedEDims   = pipelineInfo.paddedEDims,
 		.paddedHc1Dims = pipelineInfo.paddedHc1Dims,
 		.paddedHc2Dims = pipelineInfo.paddedHc2Dims,
-		.dims          = pipelineInfo.dims,
+		.dims          = createInfo.dims,
 		.start         = pipelineInfo.start,
 		.Hc1Delta      = pipelineInfo.Hc1Delta,
 		.Hc2Delta      = pipelineInfo.Hc2Delta,

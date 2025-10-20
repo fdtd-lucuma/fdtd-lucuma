@@ -80,7 +80,6 @@ struct UpdateEPipelineInfo
 	svec3 paddedEDims;
 	svec3 paddedHc1Dims;
 	svec3 paddedHc2Dims;
-	svec3 dims;
 	svec3 start;
 
 	svec3Delta Hc1Delta;
@@ -99,6 +98,7 @@ struct UpdateEPipelinesCreateInfo
 {
 	std::filesystem::path shaderPath;
 	svec3                 workGroupSize;
+	svec3                 dims;
 
 	vulkan::Compute& compute;
 

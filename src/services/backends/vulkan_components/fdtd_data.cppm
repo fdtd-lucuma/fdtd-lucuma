@@ -369,13 +369,13 @@ public:
 		updateEPipelines(UpdateEPipelinesCreateInfo{
 			.shaderPath = shaderName<T>("update_e"),
 			.workGroupSize = workGroupSize,
+			.dims = size - svec3(1),
 			.compute = createInfo.compute,
 			.x = {
 
 				.paddedEDims   = paddedExDims,
 				.paddedHc1Dims = paddedHzDims,
 				.paddedHc2Dims = paddedHyDims,
-				.dims          = size,
 				.start         = -HxDimsDelta,
 
 				.Hc1Delta = EyDimsDelta,
@@ -393,7 +393,6 @@ public:
 				.paddedEDims   = paddedEyDims,
 				.paddedHc1Dims = paddedHxDims,
 				.paddedHc2Dims = paddedHzDims,
-				.dims          = size,
 				.start         = -HyDimsDelta,
 
 				.Hc1Delta = EzDimsDelta,
@@ -411,7 +410,6 @@ public:
 				.paddedEDims   = paddedEzDims,
 				.paddedHc1Dims = paddedHyDims,
 				.paddedHc2Dims = paddedHxDims,
-				.dims          = size,
 				.start         = -HzDimsDelta,
 
 				.Hc1Delta = ExDimsDelta,
