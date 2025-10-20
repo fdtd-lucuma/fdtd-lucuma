@@ -771,13 +771,6 @@ public:
 			gauss(time, gaussSigma);
 	}
 
-	enum class Dim
-	{
-		X,
-		Y,
-		Z
-	};
-
 	template <Dim dim, typename T2, typename E, typename L, typename A>
 	static auto slice(Kokkos::mdspan<T2, E, L, A> mat, std::size_t index = 0)
 	{

@@ -25,6 +25,7 @@ target_sources(${PROJECT_NAME}
 		FILES
 			alias.cppm
 			backend.cppm
+			dims.cppm
 			exceptions.cppm
 			injector.cppm
 			mdspan.cppm
