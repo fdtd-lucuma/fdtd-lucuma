@@ -33,6 +33,7 @@ import :utils;
 import :init_coefs_pipeline;
 import :update_h_pipeline;
 import :update_e_pipeline;
+import :gauss_pipeline;
 
 namespace lucuma::services::backends::vulkan_components
 {
@@ -422,6 +423,12 @@ public:
 				.Hc2 = _Hx,
 
 			},
+		}),
+		gaussPipeline(GaussPipelineCreateInfo<T>{
+			.paddedDims = paddedExDims,
+			.Ec         = _Ex,
+			.shaderPath = shaderName<T>("gauss"),
+			.compute    = createInfo.compute,
 		})
 	{
 	}
@@ -556,6 +563,7 @@ private:
 	InitCoefPipelines<T> initCoefPipelines;
 	UpdateHPipelines     updateHPipelines;
 	UpdateEPipelines     updateEPipelines;
+	GaussPipeline<T>     gaussPipeline;
 
 public:
 
@@ -620,7 +628,7 @@ public:
 
 	void gauss(vk::CommandBuffer commandBuffer)
 	{
-		//TODO
+		gaussPipeline.dispatch(commandBuffer, gaussPosition, time, gaussSigma);
 	}
 
 	void abc(vk::CommandBuffer commandBuffer)

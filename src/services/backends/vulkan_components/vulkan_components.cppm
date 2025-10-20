@@ -20,10 +20,11 @@ export module lucuma.services.backends.vulkan_components;
 
 export import :fdtd_data;
 
-import :init_coefs_pipeline;
-import :update_h_pipeline;
-import :update_e_pipeline;
-import :utils;
+import: gauss_pipeline;
+import: init_coefs_pipeline;
+import: update_e_pipeline;
+import: update_h_pipeline;
+import: utils;
 
 namespace lucuma::services::backends::vulkan_components
 {
