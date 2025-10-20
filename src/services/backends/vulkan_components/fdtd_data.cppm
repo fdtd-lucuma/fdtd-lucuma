@@ -32,6 +32,7 @@ import std;
 import :utils;
 import :init_coefs_pipeline;
 import :update_h_pipeline;
+import :update_e_pipeline;
 
 namespace lucuma::services::backends::vulkan_components
 {
@@ -364,6 +365,65 @@ public:
 				.Ec2 = _Ey,
 
 			},
+		}),
+		updateEPipelines(UpdateEPipelinesCreateInfo{
+			.shaderPath = shaderName<T>("update_e"),
+			.workGroupSize = workGroupSize,
+			.compute = createInfo.compute,
+			.x = {
+
+				.paddedEDims   = paddedExDims,
+				.paddedHc1Dims = paddedHzDims,
+				.paddedHc2Dims = paddedHyDims,
+				.dims          = size,
+				.start         = -HxDimsDelta,
+
+				.Hc1Delta = EyDimsDelta,
+				.Hc2Delta = EzDimsDelta,
+
+				.Ec  = _Ex,
+				.Ce  = _Cexe,
+				.Ch  = _Cexh,
+				.Hc1 = _Hx,
+				.Hc2 = _Hy,
+
+			},
+			.y = {
+
+				.paddedEDims   = paddedEyDims,
+				.paddedHc1Dims = paddedHxDims,
+				.paddedHc2Dims = paddedHzDims,
+				.dims          = size,
+				.start         = -HyDimsDelta,
+
+				.Hc1Delta = EzDimsDelta,
+				.Hc2Delta = ExDimsDelta,
+
+				.Ec  = _Ey,
+				.Ce  = _Ceye,
+				.Ch  = _Ceyh,
+				.Hc1 = _Hx,
+				.Hc2 = _Hz,
+
+			},
+			.z = {
+
+				.paddedEDims   = paddedEzDims,
+				.paddedHc1Dims = paddedHyDims,
+				.paddedHc2Dims = paddedHxDims,
+				.dims          = size,
+				.start         = -HzDimsDelta,
+
+				.Hc1Delta = ExDimsDelta,
+				.Hc2Delta = EyDimsDelta,
+
+				.Ec  = _Ez,
+				.Ce  = _Ceze,
+				.Ch  = _Cezh,
+				.Hc1 = _Hy,
+				.Hc2 = _Hx,
+
+			},
 		})
 	{
 	}
@@ -497,6 +557,7 @@ private:
 
 	InitCoefPipelines<T> initCoefPipelines;
 	UpdateHPipelines     updateHPipelines;
+	UpdateEPipelines     updateEPipelines;
 
 public:
 
@@ -556,7 +617,7 @@ public:
 
 	void updateE(vk::CommandBuffer commandBuffer)
 	{
-		//TODO
+		updateEPipelines.dispatch(commandBuffer);
 	}
 
 	void gauss(vk::CommandBuffer commandBuffer)

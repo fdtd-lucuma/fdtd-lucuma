@@ -22,6 +22,7 @@ export import :fdtd_data;
 
 import :init_coefs_pipeline;
 import :update_h_pipeline;
+import :update_e_pipeline;
 import :utils;
 
 namespace lucuma::services::backends::vulkan_components
