@@ -36,9 +36,9 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	cmatrix3d CM = cmatrix3d<FDTD_FLOAT_T>(_CM, pushConstants.paddedDims);
 	cmatrix3d mu = cmatrix3d<FDTD_FLOAT_T>(_mu, pushConstants.paddedDims);
 
-	uint i = threadId.x;
-	uint j = threadId.y;
-	uint k = threadId.z;
+	const uint i = threadId.x;
+	const uint j = threadId.y;
+	const uint k = threadId.z;
 
 	const FDTD_FLOAT_T c = (CM[i,j,k]*pushConstants.deltaT)/(2*mu[i,j,k]);
 
