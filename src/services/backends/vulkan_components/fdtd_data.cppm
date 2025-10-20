@@ -385,7 +385,7 @@ public:
 				.Ec  = _Ex,
 				.Ce  = _Cexe,
 				.Ch  = _Cexh,
-				.Hc1 = _Hx,
+				.Hc1 = _Hz,
 				.Hc2 = _Hy,
 
 			},
