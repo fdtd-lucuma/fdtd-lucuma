@@ -150,6 +150,30 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 {
 	auto& device = builder.device.getDevice();
 
+	initDescriptorSets(device, info);
+	initLayout(device, info);
+
+	// Create pipeline
+	auto shaderModule = builder.shaderLoader.createShaderModule(info.shaderPath);
+	auto specializationInfo = info.specializationConstants.getInfo();
+
+	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
+		.stage               = vk::ShaderStageFlagBits::eCompute,
+		.module              = shaderModule,
+		.pName               = info.entrypoint.c_str(),
+		.pSpecializationInfo = &specializationInfo,
+	};
+
+	vk::ComputePipelineCreateInfo computePipelineCreateInfo {
+		.stage  = pipelineShaderStageCreateInfo,
+		.layout = layout,
+	};
+
+	pipeline = device.createComputePipeline(nullptr, computePipelineCreateInfo);
+}
+
+void ComputePipeline::initDescriptorSets(vk::raii::Device& device, const ComputePipelineCreateInfo& info)
+{
 	// Create descriptor set layouts
 	descriptorSetLayouts = info.setLayouts |
 		std::views::transform([&](auto&& x)
@@ -252,7 +276,9 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 	;
 
 	device.updateDescriptorSets(descriptorWrite, nullptr);
-
+}
+void ComputePipeline::initLayout(vk::raii::Device& device, const ComputePipelineCreateInfo& info)
+{
 	// Create pipeline layout
 	vk::PipelineLayoutCreateInfo pipelineLayoutCreateInfo {
 	};
@@ -264,23 +290,6 @@ ComputePipeline::ComputePipeline(Compute& builder, const ComputePipelineCreateIn
 
 	layout = device.createPipelineLayout(pipelineLayoutCreateInfo);
 
-	// Create pipeline
-	auto shaderModule = builder.shaderLoader.createShaderModule(info.shaderPath);
-	auto specializationInfo = info.specializationConstants.getInfo();
-
-	vk::PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
-		.stage               = vk::ShaderStageFlagBits::eCompute,
-		.module              = shaderModule,
-		.pName               = info.entrypoint.c_str(),
-		.pSpecializationInfo = &specializationInfo,
-	};
-
-	vk::ComputePipelineCreateInfo computePipelineCreateInfo {
-		.stage  = pipelineShaderStageCreateInfo,
-		.layout = layout,
-	};
-
-	pipeline = device.createComputePipeline(nullptr, computePipelineCreateInfo);
 }
 
 std::span<vk::raii::DescriptorSetLayout> ComputePipeline::getDescriptorSetLayouts()

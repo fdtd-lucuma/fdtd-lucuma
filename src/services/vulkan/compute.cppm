@@ -118,6 +118,9 @@ private:
 
 	ComputePipeline(Compute& builder, const ComputePipelineCreateInfo& info);
 
+	void initDescriptorSets(vk::raii::Device& device, const ComputePipelineCreateInfo& info);
+	void initLayout(vk::raii::Device& device, const ComputePipelineCreateInfo& info);
+
 	friend class Compute;
 };
 

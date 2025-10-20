@@ -31,6 +31,7 @@ template <typename T>
 requires std::is_arithmetic_v<T>
 T pad(T size, T workGroupSize)
 {
+	size++;
 	return (size % workGroupSize) == 0 ? size : (size/workGroupSize + 1)*workGroupSize;
 }
 
