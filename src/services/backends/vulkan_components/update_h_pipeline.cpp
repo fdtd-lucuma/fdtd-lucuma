@@ -16,6 +16,8 @@
 
 module;
 
+#include <cassert>
+
 module lucuma.services.backends.vulkan_components;
 
 namespace lucuma::services::backends::vulkan_components
@@ -50,7 +52,9 @@ UpdateHPipeline::UpdateHPipeline(const UpdateHPipelineCreateInfo& createInfo):
 			createInfo.Ec2Delta
 		),
 	}))
-{ }
+{
+	assert(groupCount*createInfo.workGroupSize == createInfo.paddedHDims.zyx());
+}
 
 void UpdateHPipeline::dispatch(vk::CommandBuffer commandBuffer)
 {

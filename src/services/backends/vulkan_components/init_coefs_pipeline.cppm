@@ -16,6 +16,8 @@
 
 module;
 
+#include <cassert>
+
 export module lucuma.services.backends.vulkan_components:init_coefs_pipeline;
 
 import glm;
@@ -96,7 +98,9 @@ public:
 			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
 			.specializationConstants = simpleWorkgroupSize(createInfo.workGroupSize),
 		}))
-	{ }
+	{
+		assert(groupCount*createInfo.workGroupSize == createInfo.paddedDims.zyx());
+	}
 
 	void dispatch(vk::CommandBuffer commandBuffer)
 	{
@@ -112,10 +116,10 @@ struct InitCoefPipelineInfo
 	svec3 paddedDims;
 	svec3 dims;
 
-	vulkan::Buffer&  Ch;
-	vulkan::Buffer&  Ce;
-	vulkan::Buffer&  CM;
-	vulkan::Buffer&  mu;
+	vulkan::Buffer& Ch;
+	vulkan::Buffer& Ce;
+	vulkan::Buffer& CM;
+	vulkan::Buffer& mu;
 
 	std::string_view entrypoint = "main";
 };
