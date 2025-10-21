@@ -166,14 +166,17 @@ class Compute
 public:
 	Compute(Injector& injector);
 
-	vk::raii::Queue&		  getQueue();
-	vk::raii::CommandPool&	getCommandPool();
+	vk::raii::Queue&       getQueue();
+	vk::raii::CommandPool& getCommandPool();
 
 	ComputePipeline createPipeline(const ComputePipelineCreateInfo& info);
 	SimpleCommandBuffer createSimpleCommandBuffer();
 	CommandRecorder createCommandRecorder(vk::CommandBuffer commandBuffer);
 
 	void submit(const vk::CommandBuffer& commandBuffer);
+
+	/// Get workGroupSize for size swizzled to zyx.
+	/// Don't forget to swiggle in the shader.
 	svec3 getWorkgroupSize(svec3 size) const;
 
 	template<typename T>

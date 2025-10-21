@@ -29,7 +29,7 @@ UpdateEPipeline::UpdateEPipeline(const UpdateEPipelineCreateInfo& createInfo):
 		.dims          = createInfo.dims,
 		.start         = createInfo.start,
 	}),
-	groupCount(createInfo.paddedEDims/createInfo.workGroupSize),
+	groupCount(workGroupCount(createInfo.paddedEDims, createInfo.workGroupSize)),
 	pipeline(createInfo.compute.createPipeline({
 		.shaderPath = createInfo.shaderPath,
 		.setLayouts = {

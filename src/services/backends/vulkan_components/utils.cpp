@@ -76,4 +76,9 @@ SpecializationConstants workgroupSizeWithDeltas(svec3 workGroupSize, svec3 delta
 	);
 }
 
+svec3 workGroupCount(svec3 paddedDims, svec3 swizzledWorkGroupSize)
+{
+	return paddedDims.zyx() / swizzledWorkGroupSize;
+}
+
 }

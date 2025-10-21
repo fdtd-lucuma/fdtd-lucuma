@@ -28,7 +28,7 @@ UpdateHPipeline::UpdateHPipeline(const UpdateHPipelineCreateInfo& createInfo):
 		.paddedEc2Dims = createInfo.paddedEc2Dims,
 		.HDims         = createInfo.HDims,
 	}),
-	groupCount(createInfo.paddedHDims/createInfo.workGroupSize),
+	groupCount(workGroupCount(createInfo.paddedHDims, createInfo.workGroupSize)),
 	pipeline(createInfo.compute.createPipeline({
 		.shaderPath = createInfo.shaderPath,
 		.setLayouts = {

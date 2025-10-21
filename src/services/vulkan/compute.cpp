@@ -130,7 +130,7 @@ svec3 Compute::getWorkgroupSize(svec3 size) const
 
 	auto [wgSizes, wgInvocations] = limits(device.getPhysicalDevice().getProperties().limits);
 
-	for(svec3 x = result; fits(x, wgSizes, size, wgInvocations); x *= 2)
+	for(svec3 x = result; fits(x, wgSizes, size.zyx(), wgInvocations); x *= 2)
 	{
 		result = x;
 	}

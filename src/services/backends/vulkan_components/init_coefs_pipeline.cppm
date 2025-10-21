@@ -79,7 +79,7 @@ public:
 			.CrImp = createInfo.CrImp,
 			.deltaT = createInfo.deltaT,
 		}),
-		groupCount(createInfo.paddedDims/createInfo.workGroupSize),
+		groupCount(workGroupCount(createInfo.paddedDims, createInfo.workGroupSize)),
 		pipeline(createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
 			.setLayouts = {

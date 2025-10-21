@@ -89,4 +89,6 @@ constexpr T crImp(T Cr, T Imp0)
 SpecializationConstants simpleWorkgroupSize(svec3 workGroupSize);
 SpecializationConstants workgroupSizeWithDeltas(svec3 workGroupSize, svec3 delta1, svec3 delta2);
 
+svec3 workGroupCount(svec3 paddedDims, svec3 swizzledWorkGroupSize);
+
 }
