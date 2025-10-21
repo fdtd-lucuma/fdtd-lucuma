@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types.slang"
+#include "enums.slang"
 
 struct cmatrix3d<T = FDTD_FLOAT_T>
 {
@@ -121,5 +122,123 @@ struct matrix2d<T = FDTD_FLOAT_T>
 	{
 		get { return buffer[i*y+j]; }
 		set { buffer[i*y+j] = newValue; }
+	}
+};
+
+struct slicedCmatrix2d<T = FDTD_FLOAT_T>
+{
+	typealias matrix_t = cmatrix3d<T>;
+
+	matrix_t matrix;
+	Dim dim;
+	uint s;
+
+	__init(matrix_t _matrix, Dim _dim, uint _s)
+	{
+		matrix = _matrix;
+		dim = _dim;
+		s = _s;
+	}
+
+	__subscript(uint i, uint j) -> T
+	{
+		get { return matrix[getI(i,j), getJ(i,j), getK(i,j)]; }
+	}
+
+	uint getI(uint i, uint j)
+	{
+		switch(dim)
+		{
+			case Dim::X:
+				return s;
+			case Dim::Y:
+			case Dim::Z:
+				return i;
+		}
+	}
+
+	uint getJ(uint i, uint j)
+	{
+		switch(dim)
+		{
+			case Dim::X:
+				return i;
+			case Dim::Y:
+				return s;
+			case Dim::Z:
+				return j;
+		}
+	}
+
+	uint getK(uint i, uint j)
+	{
+		switch(dim)
+		{
+			case Dim::X:
+			case Dim::Y:
+				return j;
+			case Dim::Z:
+				return s;
+		}
+	}
+};
+
+// TODO: Find a way to dedup this
+struct slicedMatrix2d<T = FDTD_FLOAT_T>
+{
+	typealias matrix_t = matrix3d<T>;
+
+	matrix_t matrix;
+	Dim dim;
+	uint s;
+
+	__init(matrix_t _matrix, Dim _dim, uint _s)
+	{
+		matrix = _matrix;
+		dim = _dim;
+		s = _s;
+	}
+
+	__subscript(uint i, uint j) -> T
+	{
+		get { return matrix[getI(i,j), getJ(i,j), getK(i,j)]; }
+		set { matrix[getI(i,j), getJ(i,j), getK(i,j)] = newValue; }
+	}
+
+	uint getI(uint i, uint j)
+	{
+		switch(dim)
+		{
+			case Dim::X:
+				return s;
+			case Dim::Y:
+			case Dim::Z:
+				return i;
+		}
+	}
+
+	uint getJ(uint i, uint j)
+	{
+		switch(dim)
+		{
+			case Dim::X:
+				return i;
+			case Dim::Y:
+				return s;
+			case Dim::Z:
+				return j;
+		}
+	}
+
+	uint getK(uint i, uint j)
+	{
+		switch(dim)
+		{
+			case Dim::X:
+			case Dim::Y:
+				return j;
+			case Dim::Z:
+				return s;
+		}
 	}
 };
