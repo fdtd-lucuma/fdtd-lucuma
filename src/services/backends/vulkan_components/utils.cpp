@@ -76,9 +76,54 @@ SpecializationConstants workgroupSizeWithDeltas(svec3 workGroupSize, svec3 delta
 	);
 }
 
+SpecializationConstants workgroupSizeWithDimAndSlices(svec3 workGroupSize, Dim dim, std::size_t sliceIndex, std::ptrdiff_t sliceDelta)
+{
+	return SpecializationConstants::make(
+		0, (std::uint32_t)workGroupSize.x,
+		1, (std::uint32_t)workGroupSize.y,
+		2, (std::uint32_t)workGroupSize.z,
+		3, dim,
+		4, (std::int32_t)sliceIndex,
+		5, (std::int32_t)(sliceIndex+sliceDelta)
+	);
+}
+
 svec3 workGroupCount(svec3 paddedDims, svec3 swizzledWorkGroupSize)
 {
 	return paddedDims.zyx() / swizzledWorkGroupSize;
+}
+
+svec3 slice(svec3 workGroupSize, Dim dim)
+{
+	// The workgroupSize is swizzled
+	switch(dim)
+	{
+		case Dim::X:
+			workGroupSize.z = 1;
+			break;
+		case Dim::Y:
+			workGroupSize.y = 1;
+			break;
+		case Dim::Z:
+			workGroupSize.x = 1;
+			break;
+	}
+
+	return workGroupSize;
+}
+
+std::size_t countOnes(svec3 vec)
+{
+	std::size_t result = 0;
+
+	if(vec.x == 1)
+		result++;
+	if(vec.y == 1)
+		result++;
+	if(vec.z == 1)
+		result++;
+
+	return result;
 }
 
 }

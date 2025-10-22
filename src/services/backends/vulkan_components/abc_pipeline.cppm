@@ -82,8 +82,39 @@ private:
 
 	vulkan::ComputePipeline pipeline;
 public:
-	AbcSlicedPipeline(const AbcSlicedPipelineCreateInfo<T>& createInfo);
-	//TODO: Map workgroup sizes by dim
+	AbcSlicedPipeline(const AbcSlicedPipelineCreateInfo<T>& createInfo):
+		pushConstants({
+			.paddedDims   = createInfo.paddedDims,
+			.paddedEcDims = createInfo.paddedEcDims,
+			.paddedecDims = createInfo.paddedecDims,
+			.dims         = createInfo.dims,
+			.Cr           = createInfo.Cr,
+		}),
+		groupCount(workGroupCount(slice(createInfo.paddedEcDims, createInfo.dim), createInfo.workGroupSize)),
+		pipeline(createInfo.compute.createPipeline({
+			.shaderPath = createInfo.shaderPath,
+			.setLayouts = {
+				{
+					.bindings = simpleStorageBuffersLayout<4>(),
+					.buffers = {
+						createInfo.mu,
+						createInfo.eps,
+						createInfo.Ec,
+						createInfo.ec,
+					}
+				}
+			},
+			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
+			.specializationConstants = workgroupSizeWithDimAndSlices(
+				createInfo.workGroupSize,
+				createInfo.dim,
+				createInfo.sliceIndex,
+				createInfo.sliceDelta
+			),
+		}))
+	{
+		assert(countOnes(groupCount) == 1);
+	}
 
 	void dispatch(vk::CommandBuffer commandBuffer)
 	{
@@ -324,7 +355,7 @@ Abc01PipelinesCreateInfo<T> map(const AbcPipelinesCreateInfo<T> createInfo, Abc0
 		},
 		.shaderPath    = createInfo.shaderPath,
 		.entrypoint    = pipelineInfo.entrypoint,
-		.workGroupSize = createInfo.workGroupSize,
+		.workGroupSize = slice(createInfo.workGroupSize, dim),
 		.compute       = createInfo.compute,
 	};
 }
