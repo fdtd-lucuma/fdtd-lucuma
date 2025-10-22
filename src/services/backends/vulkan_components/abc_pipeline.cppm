@@ -114,7 +114,7 @@ public:
 		}))
 	{
 		assert(countOnes(groupCount) == 1);
-		assert(groupCount*slice(createInfo.workGroupSize, createInfo.dim) == normalSlice(createInfo.paddedEcDims, createInfo.dim).zyx());
+		assert(groupCount*createInfo.workGroupSize == normalSlice(createInfo.paddedEcDims, createInfo.dim).zyx());
 	}
 
 	void dispatch(vk::CommandBuffer commandBuffer)
