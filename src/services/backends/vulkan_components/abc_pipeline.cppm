@@ -90,7 +90,7 @@ public:
 			.dims         = createInfo.dims,
 			.Cr           = createInfo.Cr,
 		}),
-		groupCount(workGroupCount(slice(createInfo.paddedEcDims, createInfo.dim), createInfo.workGroupSize)),
+		groupCount(workGroupCount(normalSlice(createInfo.paddedEcDims, createInfo.dim), createInfo.workGroupSize)),
 		pipeline(createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
 			.setLayouts = {
