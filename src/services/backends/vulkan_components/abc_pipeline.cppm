@@ -73,8 +73,8 @@ private:
 	{
 		alignas(sizeof(svec4)) svec3 paddedDims;
 		alignas(sizeof(svec4)) svec3 paddedEcDims;
-		alignas(sizeof(svec4)) svec3 paddedecDims;
 		alignas(sizeof(svec4)) svec3 dims;
+		alignas(sizeof(svec2)) svec2 paddedecDims;
 		T Cr;
 	} pushConstants;
 
@@ -86,8 +86,8 @@ public:
 		pushConstants({
 			.paddedDims   = createInfo.paddedDims,
 			.paddedEcDims = createInfo.paddedEcDims,
-			.paddedecDims = createInfo.paddedecDims,
 			.dims         = createInfo.dims,
+			.paddedecDims = createInfo.paddedecDims,
 			.Cr           = createInfo.Cr,
 		}),
 		groupCount(workGroupCount(normalSlice(createInfo.paddedEcDims, createInfo.dim), createInfo.workGroupSize)),
@@ -160,12 +160,47 @@ struct AbcDoublePipelinesCreateInfo
 	vulkan::Compute& compute;
 };
 
+template <typename T>
+AbcSlicedPipelineCreateInfo<T> map(const AbcDoublePipelinesCreateInfo<T> createInfo, AbcSlicedInfo AbcDoublePipelinesCreateInfo<T>::* _pipelineInfo)
+{
+	auto& pipelineInfo = createInfo.*_pipelineInfo;
+
+	return {
+		.paddedDims = createInfo.paddedDims,
+
+		.paddedEcDims = pipelineInfo.paddedEcDims,
+		.paddedecDims = pipelineInfo.paddedecDims,
+
+		.dims = createInfo.dims,
+		.Cr = createInfo.Cr,
+
+		.dim = createInfo.dim,
+
+		.mu = createInfo.mu,
+		.eps = createInfo.eps,
+
+		.Ec = pipelineInfo.Ec,
+		.ec = pipelineInfo.ec,
+
+		.sliceIndex = createInfo.sliceIndex,
+		.sliceDelta = createInfo.sliceDelta,
+
+		.shaderPath = createInfo.shaderPath,
+		.entrypoint = createInfo.entrypoint,
+		.workGroupSize = createInfo.workGroupSize,
+
+		.compute = createInfo.compute,
+	};
+}
 
 template <typename T>
 class AbcDoublePipelines
 {
 public:
-	AbcDoublePipelines(const AbcDoublePipelinesCreateInfo<T>& createInfo);
+	AbcDoublePipelines(const AbcDoublePipelinesCreateInfo<T>& createInfo):
+		slice1(map<T>(createInfo, &AbcDoublePipelinesCreateInfo<T>::slice1)),
+		slice2(map<T>(createInfo, &AbcDoublePipelinesCreateInfo<T>::slice2))
+	{}
 
 	void dispatch(vk::CommandBuffer commandBuffer)
 	{
@@ -276,12 +311,10 @@ private:
 
 struct Abc01PipelinesInfo
 {
-	svec3 paddedDims;
 	svec3 paddedEc1Dims;
 	svec3 paddedEc2Dims;
 	svec2 paddedec1Dims;
 	svec2 paddedec2Dims;
-	svec3 dims;
 
 	vulkan::Buffer& Ec1;
 	vulkan::Buffer& Ec2;
@@ -299,6 +332,8 @@ template <typename T>
 struct AbcPipelinesCreateInfo
 {
 	T Cr;
+	svec3 paddedDims;
+	svec3 dims;
 
 	std::filesystem::path shaderPath;
 	svec3                 workGroupSize;
@@ -330,12 +365,12 @@ Abc01PipelinesCreateInfo<T> map(const AbcPipelinesCreateInfo<T> createInfo, Abc0
 	auto& pipelineInfo = createInfo.*_pipelineInfo;
 
 	return {
-		.paddedDims    = pipelineInfo.paddedDims,
+		.paddedDims    = createInfo.paddedDims,
 		.paddedEc1Dims = pipelineInfo.paddedEc1Dims,
 		.paddedEc2Dims = pipelineInfo.paddedEc2Dims,
 		.paddedec1Dims = pipelineInfo.paddedec1Dims,
 		.paddedec2Dims = pipelineInfo.paddedec2Dims,
-		.dims          = pipelineInfo.dims,
+		.dims          = createInfo.dims,
 		.Cr            = createInfo.Cr,
 		.dim           = dim,
 		.Ec1           = pipelineInfo.Ec1,
@@ -351,7 +386,7 @@ Abc01PipelinesCreateInfo<T> map(const AbcPipelinesCreateInfo<T> createInfo, Abc0
 		.top = {
 			.ec1        = pipelineInfo.ec11,
 			.ec2        = pipelineInfo.ec21,
-			.sliceIndex = getSliceIndex(pipelineInfo.dims, dim),
+			.sliceIndex = getSliceIndex(createInfo.dims, dim),
 			.sliceDelta = -1,
 		},
 		.shaderPath    = createInfo.shaderPath,

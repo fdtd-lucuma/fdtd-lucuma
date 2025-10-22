@@ -29,11 +29,12 @@ import vk_mem_alloc_hpp;
 
 import std;
 
-import :utils;
-import :init_coefs_pipeline;
-import :update_h_pipeline;
-import :update_e_pipeline;
+import :abc_pipeline;
 import :gauss_pipeline;
+import :init_coefs_pipeline;
+import :update_e_pipeline;
+import :update_h_pipeline;
+import :utils;
 
 namespace lucuma::services::backends::vulkan_components
 {
@@ -429,6 +430,59 @@ public:
 			.Ec         = _Ex,
 			.shaderPath = shaderName<T>("gauss"),
 			.compute    = createInfo.compute,
+		}),
+		abcPipelines(AbcPipelinesCreateInfo<T>{
+			.Cr = Cr,
+			.paddedDims = paddedSize,
+			.dims = size,
+			.shaderPath = shaderName<T>("abc"),
+			.workGroupSize = workGroupSize,
+			.compute = createInfo.compute,
+			.x = {
+				.paddedEc1Dims = paddedEyDims,
+				.paddedEc2Dims = paddedEzDims,
+				.paddedec1Dims = paddedEyxDims,
+				.paddedec2Dims = paddedEzxDims,
+
+				.Ec1  = _Ey,
+				.Ec2  = _Ez,
+				.mu   = _muxR,
+				.eps  = _epsxR,
+				.ec10 = _eyx0,
+				.ec11 = _eyx1,
+				.ec20 = _ezx0,
+				.ec21 = _ezx1,
+			},
+			.y = {
+				.paddedEc1Dims = paddedExDims,
+				.paddedEc2Dims = paddedEzDims,
+				.paddedec1Dims = paddedExyDims,
+				.paddedec2Dims = paddedEzyDims,
+
+				.Ec1  = _Ex,
+				.Ec2  = _Ez,
+				.mu   = _muyR,
+				.eps  = _epsyR,
+				.ec10 = _exy0,
+				.ec11 = _exy1,
+				.ec20 = _ezy0,
+				.ec21 = _ezy1,
+			},
+			.z = {
+				.paddedEc1Dims = paddedExDims,
+				.paddedEc2Dims = paddedEyDims,
+				.paddedec1Dims = paddedExzDims,
+				.paddedec2Dims = paddedEyzDims,
+
+				.Ec1  = _Ex,
+				.Ec2  = _Ey,
+				.mu   = _muzR,
+				.eps  = _epszR,
+				.ec10 = _exz0,
+				.ec11 = _exz1,
+				.ec20 = _eyz0,
+				.ec21 = _eyz1,
+			},
 		})
 	{
 	}
@@ -564,6 +618,7 @@ private:
 	UpdateHPipelines     updateHPipelines;
 	UpdateEPipelines     updateEPipelines;
 	GaussPipeline<T>     gaussPipeline;
+	AbcPipelines<T>      abcPipelines;
 
 public:
 
@@ -633,7 +688,7 @@ public:
 
 	void abc(vk::CommandBuffer commandBuffer)
 	{
-		//TODO
+		abcPipelines.dispatch(commandBuffer);
 	}
 
 };
