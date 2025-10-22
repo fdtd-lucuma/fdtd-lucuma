@@ -24,6 +24,7 @@ target_sources(${PROJECT_NAME}
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
+			abc_pipeline.cppm
 			fdtd_data.cppm
 			gauss_pipeline.cppm
 			init_coefs_pipeline.cppm

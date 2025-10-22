@@ -20,6 +20,7 @@ export module lucuma.services.backends.vulkan_components;
 
 export import :fdtd_data;
 
+import: abc_pipeline;
 import: gauss_pipeline;
 import: init_coefs_pipeline;
 import: update_e_pipeline;
