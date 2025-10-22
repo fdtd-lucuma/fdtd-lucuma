@@ -96,20 +96,25 @@ svec3 workGroupCount(svec3 paddedDims, svec3 swizzledWorkGroupSize)
 svec3 slice(svec3 workGroupSize, Dim dim)
 {
 	// The workgroupSize is swizzled
+	return normalSlice(workGroupSize.zyx(), dim).zyx();
+}
+
+svec3 normalSlice(svec3 dims, Dim dim)
+{
 	switch(dim)
 	{
 		case Dim::X:
-			workGroupSize.z = 1;
+			dims.x = 1;
 			break;
 		case Dim::Y:
-			workGroupSize.y = 1;
+			dims.y = 1;
 			break;
 		case Dim::Z:
-			workGroupSize.x = 1;
+			dims.z = 1;
 			break;
 	}
 
-	return workGroupSize;
+	return dims;
 }
 
 std::size_t countOnes(svec3 vec)
