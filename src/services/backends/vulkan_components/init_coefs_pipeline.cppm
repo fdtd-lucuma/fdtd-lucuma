@@ -158,7 +158,7 @@ InitCoefPipelineCreateInfo<T> map(const InitCoefPipelinesCreateInfo<T> createInf
 		.deltaT        = createInfo.deltaT,
 		.Ch            = pipelineInfo.Ch,
 		.Ce            = pipelineInfo.Ce,
-		.CM            = pipelineInfo.mu,
+		.CM            = pipelineInfo.CM,
 		.mu            = pipelineInfo.mu,
 		.shaderPath    = createInfo.shaderPath,
 		.entrypoint    = pipelineInfo.entrypoint,
