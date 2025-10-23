@@ -18,6 +18,9 @@ add_spirv_target(
 	TARGET shaders
 	DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}/shaders"
 	SOURCES
+		abc_double.slang
+		abc_float.slang
+		abc_half.slang
 		gauss_double.slang
 		gauss_float.slang
 		gauss_half.slang

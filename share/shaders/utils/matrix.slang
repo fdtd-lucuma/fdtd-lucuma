@@ -153,6 +153,7 @@ struct slicedCmatrix2d<T = FDTD_FLOAT_T>
 				return s;
 			case Dim::Y:
 			case Dim::Z:
+			default:
 				return i;
 		}
 	}
@@ -166,6 +167,7 @@ struct slicedCmatrix2d<T = FDTD_FLOAT_T>
 			case Dim::Y:
 				return s;
 			case Dim::Z:
+			default:
 				return j;
 		}
 	}
@@ -178,6 +180,7 @@ struct slicedCmatrix2d<T = FDTD_FLOAT_T>
 			case Dim::Y:
 				return j;
 			case Dim::Z:
+			default:
 				return s;
 		}
 	}
@@ -213,6 +216,7 @@ struct slicedMatrix2d<T = FDTD_FLOAT_T>
 				return s;
 			case Dim::Y:
 			case Dim::Z:
+			default:
 				return i;
 		}
 	}
@@ -226,6 +230,7 @@ struct slicedMatrix2d<T = FDTD_FLOAT_T>
 			case Dim::Y:
 				return s;
 			case Dim::Z:
+			default:
 				return j;
 		}
 	}
@@ -238,6 +243,7 @@ struct slicedMatrix2d<T = FDTD_FLOAT_T>
 			case Dim::Y:
 				return j;
 			case Dim::Z:
+			default:
 				return s;
 		}
 	}
