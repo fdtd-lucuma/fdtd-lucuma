@@ -29,6 +29,7 @@ import lucuma.services.backends.vulkan_components;
 import vulkan_hpp;
 
 import :base;
+import :saver;
 
 import std;
 
@@ -64,6 +65,7 @@ class Vulkan: public IBackend, public VulkanBase
 public:
 	using T = PrecisionTraits<precision>::type;
 	using data_t = vulkan_components::FdtdData<T>;
+	using saver_t = Saver<data_t>;
 	using create_info_t = typename data_t::create_info_t;
 
 	Vulkan(Injector& injector):
@@ -92,6 +94,10 @@ public:
 			.allocator = vulkanAllocator,
 		};
 
+		SaverCreateInfo saverCreateInfo {
+			.basePath = ".",
+		};
+
 		data_t& data = registry.emplace<data_t>(id, createInfo);
 
 		{
@@ -99,6 +105,13 @@ public:
 
 			data.initCoefs(recorder);
 			computeComputeBarrier(recorder);
+		}
+
+		// TODO: Find a way to dedup this
+		if(settings.saveAs() != SaveAs::none)
+		{
+			saver_t& saver = registry.emplace<saver_t>(id, saverCreateInfo);
+			saver.start(data);
 		}
 
 #ifndef NDEBUG
@@ -153,7 +166,13 @@ public:
 
 	virtual void saveFiles(entt::entity id)
 	{
-		//TODO
+		// TODO: Sync Hx
+		if(settings.saveAs() == SaveAs::none)
+			return;
+
+		auto [data, saver] = registry.get<data_t, saver_t>(id);
+
+		saver.snapshot(data);
 	}
 
 	virtual ~Vulkan() = default;

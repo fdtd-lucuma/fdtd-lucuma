@@ -37,7 +37,7 @@ export class CpuCommon
 public:
 	CpuCommon(Injector& injector);
 
-	template <typename T, typename data_t = components::FdtdData<T>, typename saver_t = Saver<T>>
+	template <typename T, typename data_t = components::FdtdData<T>, typename saver_t = Saver<data_t>>
 	entt::entity init()
 	{
 		auto id = registry.create();
@@ -101,7 +101,7 @@ public:
 		return canContinue;
 	}
 
-	template <typename T, typename data_t = components::FdtdData<T>, typename saver_t = Saver<T>>
+	template <typename T, typename data_t = components::FdtdData<T>, typename saver_t = Saver<data_t>>
 	void saveFiles(entt::entity id) //TODO: Move this out of backend
 	{
 		if(settings.saveAs() == SaveAs::none)

@@ -39,12 +39,10 @@ struct SaverCreateInfo
 	const std::filesystem::path& basePath;
 };
 
-template <class T>
+template <typename data_t>
 class Saver
 {
 public:
-	using data_t = components::FdtdData<T>;
-
 	Saver(const SaverCreateInfo& createInfo):
 		basePath(createInfo.basePath),
 		datosCampoDir(basePath / "Datos_campo")
@@ -137,11 +135,5 @@ private:
 	}
 
 };
-
-// Add one line for each new precision
-// TODO: Find a way to automatically instantiate
-extern template class Saver<PrecisionTraits<Precision::f16>::type>;
-extern template class Saver<PrecisionTraits<Precision::f32>::type>;
-extern template class Saver<PrecisionTraits<Precision::f64>::type>;
 
 }
