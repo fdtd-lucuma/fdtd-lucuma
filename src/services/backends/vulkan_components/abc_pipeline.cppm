@@ -386,7 +386,7 @@ Abc01PipelinesCreateInfo<T> map(const AbcPipelinesCreateInfo<T> createInfo, Abc0
 		.top = {
 			.ec1        = pipelineInfo.ec11,
 			.ec2        = pipelineInfo.ec21,
-			.sliceIndex = getSliceIndex(createInfo.dims, dim),
+			.sliceIndex = getSliceIndex(createInfo.dims, dim)-1,
 			.sliceDelta = -1,
 		},
 		.shaderPath    = createInfo.shaderPath,
