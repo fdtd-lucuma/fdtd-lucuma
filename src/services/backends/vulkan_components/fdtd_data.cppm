@@ -622,12 +622,42 @@ private:
 
 public:
 
-	cmdspan_3d_t Hx() const { return toMdspan(_Hx, paddedHxDims, HxDims); }
-	cmdspan_3d_t Hy() const { return toMdspan(_Hy, paddedHyDims, HyDims); }
-	cmdspan_3d_t Hz() const { return toMdspan(_Hz, paddedHzDims, HzDims); }
-	cmdspan_3d_t Ex() const { return toMdspan(_Ex, paddedExDims, ExDims); }
-	cmdspan_3d_t Ey() const { return toMdspan(_Ey, paddedEyDims, EyDims); }
-	cmdspan_3d_t Ez() const { return toMdspan(_Ez, paddedEzDims, EzDims); }
+	cmdspan_3d_t Hx()    const { return toMdspan(_Hx,    paddedHxDims, HxDims);  }
+	cmdspan_3d_t Hy()    const { return toMdspan(_Hy,    paddedHyDims, HyDims);  }
+	cmdspan_3d_t Hz()    const { return toMdspan(_Hz,    paddedHzDims, HzDims);  }
+	cmdspan_3d_t Chxh()  const { return toMdspan(_Chxh,  paddedHxDims, HxDims);  }
+	cmdspan_3d_t Chyh()  const { return toMdspan(_Chyh,  paddedHyDims, HyDims);  }
+	cmdspan_3d_t Chzh()  const { return toMdspan(_Chzh,  paddedHzDims, HzDims);  }
+	cmdspan_3d_t Chxe()  const { return toMdspan(_Chxe,  paddedHxDims, HxDims);  }
+	cmdspan_3d_t Chye()  const { return toMdspan(_Chye,  paddedHyDims, HyDims);  }
+	cmdspan_3d_t Chze()  const { return toMdspan(_Chze,  paddedHzDims, HzDims);  }
+	cmdspan_3d_t CMhx()  const { return toMdspan(_CMhx,  paddedHxDims, HxDims);  }
+	cmdspan_3d_t CMhy()  const { return toMdspan(_CMhy,  paddedHyDims, HyDims);  }
+	cmdspan_3d_t CMhz()  const { return toMdspan(_CMhz,  paddedHzDims, HzDims);  }
+	cmdspan_3d_t mux()   const { return toMdspan(_mux,   paddedHxDims, HxDims);  }
+	cmdspan_3d_t muy()   const { return toMdspan(_muy,   paddedHyDims, HyDims);  }
+	cmdspan_3d_t muz()   const { return toMdspan(_muz,   paddedHzDims, HzDims);  }
+	cmdspan_3d_t muxR()  const { return toMdspan(_muxR,  paddedSize, size);    }
+	cmdspan_3d_t muyR()  const { return toMdspan(_muyR,  paddedSize, size);    }
+	cmdspan_3d_t muzR()  const { return toMdspan(_muzR,  paddedSize, size);    }
+	cmdspan_3d_t Ex()    const { return toMdspan(_Ex,    paddedExDims, ExDims);  }
+	cmdspan_3d_t Ey()    const { return toMdspan(_Ey,    paddedEyDims, EyDims);  }
+	cmdspan_3d_t Ez()    const { return toMdspan(_Ez,    paddedEzDims, EzDims);  }
+	cmdspan_3d_t Cexe()  const { return toMdspan(_Cexe,  paddedExDims, ExDims);  }
+	cmdspan_3d_t Ceye()  const { return toMdspan(_Ceye,  paddedEyDims, EyDims);  }
+	cmdspan_3d_t Ceze()  const { return toMdspan(_Ceze,  paddedEzDims, EzDims);  }
+	cmdspan_3d_t Cexh()  const { return toMdspan(_Cexh,  paddedExDims, ExDims);  }
+	cmdspan_3d_t Ceyh()  const { return toMdspan(_Ceyh,  paddedEyDims, EyDims);  }
+	cmdspan_3d_t Cezh()  const { return toMdspan(_Cezh,  paddedEzDims, EzDims);  }
+	cmdspan_3d_t CEEx()  const { return toMdspan(_CEEx,  paddedExDims, ExDims);  }
+	cmdspan_3d_t CEEy()  const { return toMdspan(_CEEy,  paddedEyDims, EyDims);  }
+	cmdspan_3d_t CEEz()  const { return toMdspan(_CEEz,  paddedEzDims, EzDims);  }
+	cmdspan_3d_t epsx()  const { return toMdspan(_epsx,  paddedExDims, ExDims);  }
+	cmdspan_3d_t epsy()  const { return toMdspan(_epsy,  paddedEyDims, EyDims);  }
+	cmdspan_3d_t epsz()  const { return toMdspan(_epsz,  paddedEzDims, EzDims);  }
+	cmdspan_3d_t epsxR() const { return toMdspan(_epsxR, paddedSize, size);    }
+	cmdspan_3d_t epsyR() const { return toMdspan(_epsyR, paddedSize, size);    }
+	cmdspan_3d_t epszR() const { return toMdspan(_epszR, paddedSize, size);    }
 
 	/// Returns true and increments the counter by +1 if it can still continue.
 	bool step() {
@@ -660,6 +690,52 @@ public:
 			Ex(),
 			Ey(),
 			Ez(),
+		};
+
+		for(auto&& p: std::views::zip(names, mats))
+			co_yield p;
+	}
+
+	std::generator<std::tuple<const char*, cmdspan_3d_t>> chZippedFields() const {
+		static constexpr std::array names {
+			"Chxh()",
+			"Chyh()",
+			"Chzh()",
+			"Chxe()",
+			"Chye()",
+			"Chze()",
+		};
+
+		std::array mats {
+			Chxh(),
+			Chyh(),
+			Chzh(),
+			Chxe(),
+			Chye(),
+			Chze(),
+		};
+
+		for(auto&& p: std::views::zip(names, mats))
+			co_yield p;
+	}
+
+	std::generator<std::tuple<const char*, cmdspan_3d_t>> ceZippedFields() const {
+		static constexpr std::array names {
+			"Cexe()",
+			"Ceye()",
+			"Ceze()",
+			"Cexh()",
+			"Ceyh()",
+			"Cezh()",
+		};
+
+		std::array mats {
+			Cexe(),
+			Ceye(),
+			Ceze(),
+			Cexh(),
+			Ceyh(),
+			Cezh(),
 		};
 
 		for(auto&& p: std::views::zip(names, mats))

@@ -101,6 +101,13 @@ public:
 			computeComputeBarrier(recorder);
 		}
 
+#ifndef NDEBUG
+		for(auto&& [name, mat]: data.chZippedFields())
+			debugPrintSlice(name, mat, data.size);
+		for(auto&& [name, mat]: data.ceZippedFields())
+			debugPrintSlice(name, mat, data.size);
+#endif
+
 		return id;
 	}
 
