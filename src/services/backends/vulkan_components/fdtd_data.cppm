@@ -323,8 +323,8 @@ public:
 				.paddedEc2Dims = paddedEzDims,
 				.HDims         = HxDims,
 
-				.Ec1Delta = -ExDimsDelta,
-				.Ec2Delta = -EzDimsDelta,
+				.Ec1Delta = -EzDimsDelta,
+				.Ec2Delta = -EyDimsDelta,
 
 				.Hc  = _Hx,
 				.Ch  = _Chxh,
@@ -340,8 +340,8 @@ public:
 				.paddedEc2Dims = paddedExDims,
 				.HDims         = HyDims,
 
-				.Ec1Delta = -EyDimsDelta,
-				.Ec2Delta = -ExDimsDelta,
+				.Ec1Delta = -ExDimsDelta,
+				.Ec2Delta = -EzDimsDelta,
 
 				.Hc  = _Hy,
 				.Ch  = _Chyh,
