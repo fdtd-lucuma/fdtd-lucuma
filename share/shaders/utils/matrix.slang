@@ -30,7 +30,7 @@ struct cmatrix3d<T = FDTD_FLOAT_T>
 
 	__subscript(uint i, uint j, uint k) -> T
 	{
-		get { return buffer[i*(y*z)+j*z+k]; }
+		get { return buffer[i+j*x+k*(x*y)]; }
 	}
 };
 
@@ -62,8 +62,8 @@ struct matrix3d<T = FDTD_FLOAT_T>
 
 	__subscript(uint i, uint j, uint k) -> T
 	{
-		get { return buffer[i*(y*z)+j*z+k]; }
-		set { buffer[i*(y*z)+j*z+k] = newValue; }
+		get { return buffer[i+j*x+k*(x*y)]; }
+		set { buffer[i+j*x+k*(x*y)] = newValue; }
 	}
 };
 
@@ -91,7 +91,7 @@ struct cmatrix2d<T = FDTD_FLOAT_T>
 
 	__subscript(uint i, uint j, uint k) -> T
 	{
-		get { return buffer[i*y+j]; }
+		get { return buffer[i+j*x]; }
 	}
 };
 
@@ -120,8 +120,8 @@ struct matrix2d<T = FDTD_FLOAT_T>
 
 	__subscript(uint i, uint j) -> T
 	{
-		get { return buffer[i*y+j]; }
-		set { buffer[i*y+j] = newValue; }
+		get { return buffer[i+j*x]; }
+		set { buffer[i+j*x] = newValue; }
 	}
 };
 

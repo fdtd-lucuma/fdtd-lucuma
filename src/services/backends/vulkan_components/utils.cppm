@@ -90,11 +90,7 @@ SpecializationConstants simpleWorkgroupSize(svec3 workGroupSize);
 SpecializationConstants workgroupSizeWithDeltas(svec3 workGroupSize, svec3 delta1, svec3 delta2);
 SpecializationConstants workgroupSizeWithDimAndSlices(svec3 workGroupSize, Dim dim, std::size_t sliceIndex, std::ptrdiff_t sliceDelta);
 
-/// Slice swizzled space
 svec3 slice(svec3 workGroupSize, Dim dim);
-
-/// Slice normal space
-svec3 normalSlice(svec3 dims, Dim dim);
 
 svec3 workGroupCount(svec3 paddedDims, svec3 swizzledWorkGroupSize);
 

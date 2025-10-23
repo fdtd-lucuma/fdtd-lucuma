@@ -61,23 +61,23 @@ public:
 	constexpr static auto EyDimsDelta = svec3Delta(0, -1, 0);
 	constexpr static auto EzDimsDelta = svec3Delta(0, 0, -1);
 
-	template <typename extents, typename layout = Kokkos::layout_right>
+	template <typename extents, typename layout = Kokkos::layout_left>
 	using mdspan_t = Kokkos::mdspan<T, extents, layout>;
 
-	template <typename extents, typename layout = Kokkos::layout_right>
+	template <typename extents, typename layout = Kokkos::layout_left>
 	using cmdspan_t = Kokkos::mdspan<const T, extents, layout>;
 
 	using extents_2d_t = Kokkos::dextents<std::size_t, 2>;
 	using extents_3d_t = Kokkos::dextents<std::size_t, 3>;
 
-	template <typename layout = Kokkos::layout_right>
+	template <typename layout = Kokkos::layout_left>
 	using _mdspan_2d_t = mdspan_t<extents_2d_t, layout>;
-	template <typename layout = Kokkos::layout_right>
+	template <typename layout = Kokkos::layout_left>
 	using _mdspan_3d_t = mdspan_t<extents_3d_t, layout>;
 
-	template <typename layout = Kokkos::layout_right>
+	template <typename layout = Kokkos::layout_left>
 	using _cmdspan_2d_t = cmdspan_t<extents_2d_t, layout>;
-	template <typename layout = Kokkos::layout_right>
+	template <typename layout = Kokkos::layout_left>
 	using _cmdspan_3d_t = cmdspan_t<extents_3d_t, layout>;
 
 	// Padded vulkan buffers

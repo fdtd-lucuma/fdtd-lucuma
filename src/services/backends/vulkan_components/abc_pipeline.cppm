@@ -90,7 +90,7 @@ public:
 			.paddedecDims = createInfo.paddedecDims,
 			.Cr           = createInfo.Cr,
 		}),
-		groupCount(workGroupCount(normalSlice(createInfo.paddedEcDims, createInfo.dim), createInfo.workGroupSize)),
+		groupCount(workGroupCount(slice(createInfo.paddedEcDims, createInfo.dim), createInfo.workGroupSize)),
 		pipeline(createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
 			.setLayouts = {
@@ -114,7 +114,7 @@ public:
 		}))
 	{
 		assert(countOnes(groupCount) == 1);
-		assert(groupCount*createInfo.workGroupSize == normalSlice(createInfo.paddedEcDims, createInfo.dim).zyx());
+		assert(groupCount*createInfo.workGroupSize == slice(createInfo.paddedEcDims, createInfo.dim));
 	}
 
 	void dispatch(vk::CommandBuffer commandBuffer)

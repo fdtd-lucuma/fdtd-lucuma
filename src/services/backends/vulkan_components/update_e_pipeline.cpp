@@ -54,7 +54,7 @@ UpdateEPipeline::UpdateEPipeline(const UpdateEPipelineCreateInfo& createInfo):
 		),
 	}))
 {
-	assert(groupCount*createInfo.workGroupSize == createInfo.paddedEDims.zyx());
+	assert(groupCount*createInfo.workGroupSize == createInfo.paddedEDims);
 }
 
 void UpdateEPipeline::dispatch(vk::CommandBuffer commandBuffer)

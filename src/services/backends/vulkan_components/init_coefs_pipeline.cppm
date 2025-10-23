@@ -99,7 +99,7 @@ public:
 			.specializationConstants = simpleWorkgroupSize(createInfo.workGroupSize),
 		}))
 	{
-		assert(groupCount*createInfo.workGroupSize == createInfo.paddedDims.zyx());
+		assert(groupCount*createInfo.workGroupSize == createInfo.paddedDims);
 	}
 
 	void dispatch(vk::CommandBuffer commandBuffer)

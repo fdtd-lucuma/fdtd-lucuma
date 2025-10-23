@@ -53,7 +53,7 @@ UpdateHPipeline::UpdateHPipeline(const UpdateHPipelineCreateInfo& createInfo):
 		),
 	}))
 {
-	assert(groupCount*createInfo.workGroupSize == createInfo.paddedHDims.zyx());
+	assert(groupCount*createInfo.workGroupSize == createInfo.paddedHDims);
 }
 
 void UpdateHPipeline::dispatch(vk::CommandBuffer commandBuffer)

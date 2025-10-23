@@ -82,7 +82,7 @@ SpecializationConstants workgroupSizeWithDimAndSlices(svec3 workGroupSize, Dim d
 		0, (std::uint32_t)workGroupSize.x,
 		1, (std::uint32_t)workGroupSize.y,
 		2, (std::uint32_t)workGroupSize.z,
-		3, dim,
+		3, (std::uint32_t)dim,
 		4, (std::int32_t)sliceIndex,
 		5, (std::int32_t)(sliceIndex+sliceDelta)
 	);
@@ -90,16 +90,10 @@ SpecializationConstants workgroupSizeWithDimAndSlices(svec3 workGroupSize, Dim d
 
 svec3 workGroupCount(svec3 paddedDims, svec3 swizzledWorkGroupSize)
 {
-	return paddedDims.zyx() / swizzledWorkGroupSize;
+	return paddedDims / swizzledWorkGroupSize;
 }
 
-svec3 slice(svec3 workGroupSize, Dim dim)
-{
-	// The workgroupSize is swizzled
-	return normalSlice(workGroupSize.zyx(), dim).zyx();
-}
-
-svec3 normalSlice(svec3 dims, Dim dim)
+svec3 slice(svec3 dims, Dim dim)
 {
 	switch(dim)
 	{

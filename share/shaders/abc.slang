@@ -55,13 +55,12 @@ uint getJ(Dim dim, uint3 index)
 }
 
 [shader("compute")]
-[numthreads(wgZ,wgY,wgX)]
+[numthreads(wgX,wgY,wgZ)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
 	const Dim dim = (Dim)_dim;
-	const uint3 swizzledThreadId = threadId.zyx;
 
-	if(outside(swizzledThreadId, pushConstants.paddedEcDims))
+	if(outside(threadId, pushConstants.paddedEcDims))
 		return;
 
 	cmatrix3d __mu  = cmatrix3d<FDTD_FLOAT_T>(_mu, pushConstants.paddedDims);
@@ -75,8 +74,8 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	slicedMatrix2d Ec   = slicedMatrix2d<FDTD_FLOAT_T>(__Ec, dim, sliceIndex);
 	slicedMatrix2d Ecd  = slicedMatrix2d<FDTD_FLOAT_T>(__Ec, dim, sliceIndex2);
 
-	const uint i = getI(dim, swizzledThreadId);
-	const uint j = getJ(dim, swizzledThreadId);
+	const uint i = getI(dim, threadId);
+	const uint j = getJ(dim, threadId);
 
 	const FDTD_FLOAT_T Sc = pushConstants.Cr/sqrt(mu[i,j]*eps[i,j]);
 	const FDTD_FLOAT_T abcCoef = (Sc-1)/(Sc+1);

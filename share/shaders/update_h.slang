@@ -36,9 +36,7 @@ bool outside(uint3 threadId, svec3 dims)
 [numthreads(wgZ,wgY,wgX)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
-	const uint3 swizzledThreadId = threadId.zyx;
-
-	if(outside(swizzledThreadId, pushConstants.Hdims))
+	if(outside(threadId, pushConstants.Hdims))
 		return;
 
 	matrix3d Hc = matrix3d<FDTD_FLOAT_T>(_Hc, pushConstants.paddedHDims);
@@ -49,9 +47,9 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	cmatrix3d Ec1 = cmatrix3d<FDTD_FLOAT_T>(_Ec1, pushConstants.paddedEc1Dims);
 	cmatrix3d Ec2 = cmatrix3d<FDTD_FLOAT_T>(_Ec2, pushConstants.paddedEc2Dims);
 
-	const uint i = swizzledThreadId.x;
-	const uint j = swizzledThreadId.y;
-	const uint k = swizzledThreadId.z;
+	const uint i = threadId.x;
+	const uint j = threadId.y;
+	const uint k = threadId.z;
 
 	const uint Ec1i = i + Ec1DeltaX;
 	const uint Ec1j = j + Ec1DeltaY;

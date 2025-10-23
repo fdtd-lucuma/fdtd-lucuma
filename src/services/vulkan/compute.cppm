@@ -175,8 +175,6 @@ public:
 
 	void submit(const vk::CommandBuffer& commandBuffer);
 
-	/// Get workGroupSize for size swizzled to zyx.
-	/// Don't forget to swiggle in the shader.
 	svec3 getWorkgroupSize(svec3 size) const;
 
 	template<typename T>
