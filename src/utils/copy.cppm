@@ -16,33 +16,13 @@
 
 module;
 
-export module lucuma.utils;
+export module lucuma.utils:copy;
 
-export import :alias;
-export import :backend;
-export import :copy;
-export import :dims;
-export import :exceptions;
-export import :injector;
-export import :mdspan;
-export import :precision;
-export import :print;
-export import :save_as;
-
-import magic_enum;
+import std;
 
 namespace lucuma::utils
 {
 
-template <typename T>
-requires std::is_enum_v<T>
-struct MagicInstantiator
-{
-	constexpr static auto values = magic_enum::enum_values<T>();
-};
-
-extern template struct MagicInstantiator<Backend>;
-extern template struct MagicInstantiator<Precision>;
-extern template struct MagicInstantiator<SaveAs>;
+export std::vector<char> copyFrom(std::istream& is);
 
 }

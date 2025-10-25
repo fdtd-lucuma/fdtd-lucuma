@@ -47,6 +47,17 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
+	VulkanMemoryAllocator
+	GIT_REPOSITORY         https://github.com/M2-TE/VulkanMemoryAllocator
+	GIT_TAG                origin/fixing-static-export # clang 21 fix
+	GIT_SHALLOW            ON
+	GIT_PROGRESS           ON
+	GIT_SUBMODULES         ""
+	GIT_SUBMODULES_RECURSE OFF
+	OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_Declare(
 	VulkanMemoryAllocator-Hpp
 	#GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git # Wait until https://github.com/YaaZ/VulkanMemoryAllocator-Hpp/issues/61
 	GIT_REPOSITORY         https://github.com/otreblan/VulkanMemoryAllocator-Hpp.git
@@ -86,7 +97,15 @@ FetchContent_Declare(
 	GIT_PROGRESS   ON
 )
 
-FetchContent_MakeAvailable(imgui imgui-module VulkanMemoryAllocator-Hpp vkfw magic_enum mdspan)
+FetchContent_MakeAvailable(
+	imgui
+	imgui-module
+	VulkanMemoryAllocator
+	VulkanMemoryAllocator-Hpp
+	vkfw
+	magic_enum
+	mdspan
+)
 
 # Packages
 find_package(VulkanMemoryAllocator REQUIRED)
@@ -247,7 +266,7 @@ target_compile_definitions(GlmModule
 		GLM_ENABLE_EXPERIMENTAL
 		GLM_FORCE_DEPTH_ZERO_TO_ONE
 		GLM_FORCE_RADIANS
-		GLM_SWIZZLE
+		GLM_FORCE_SWIZZLE
 )
 
 target_link_libraries(GlmModule PUBLIC glm::glm-header-only)
@@ -259,6 +278,7 @@ target_sources(VulkanMemoryAllocator-HppModule PUBLIC
 	BASE_DIRS ${VulkanMemoryAllocator-Hpp_SOURCE_DIR}
 	FILES ${VulkanMemoryAllocator-Hpp_SOURCE_DIR}/src/vk_mem_alloc.cppm
 )
+
 set_target_properties(VulkanMemoryAllocator-HppModule
 	PROPERTIES
 		CXX_STANDARD 26
@@ -279,7 +299,8 @@ target_link_libraries(VulkanMemoryAllocator-HppModule
 		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
 		VulkanHppModule
 
-	INTERFACE
+	# Uncomment when vma fixes https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/pull/514
+	#INTERFACE
 		GPUOpen::VulkanMemoryAllocator
 )
 

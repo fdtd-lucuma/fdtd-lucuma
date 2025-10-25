@@ -17,7 +17,6 @@
 module;
 
 #include <cassert>
-#include <streambuf>
 #include <filesystem>
 #include <vector>
 #include <utility>
@@ -35,7 +34,7 @@ module;
 
 module lucuma.services.basic;
 
-//import std;
+import lucuma.utils;
 
 namespace lucuma::services::basic
 {
@@ -54,7 +53,7 @@ void FileBuffer::readIntoVector(const std::filesystem::path& path)
 	if(!file.is_open())
 		throwFile(path);
 
-	copyBuffer = std::vector<char>(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+	copyBuffer = copyFrom(file);
 	bufferType = BufferType::COPY;
 }
 

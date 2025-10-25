@@ -16,6 +16,7 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		copy.cpp
 		exceptions.cpp
 		injector.cpp
 		instantiations.cpp
@@ -25,6 +26,7 @@ target_sources(${PROJECT_NAME}
 		FILES
 			alias.cppm
 			backend.cppm
+			copy.cppm
 			dims.cppm
 			exceptions.cppm
 			injector.cppm
