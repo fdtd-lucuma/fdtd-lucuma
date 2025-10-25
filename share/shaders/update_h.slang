@@ -33,7 +33,7 @@ bool outside(uint3 threadId, svec3 dims)
 }
 
 [shader("compute")]
-[numthreads(wgZ,wgY,wgX)]
+[numthreads(wgX,wgY,wgZ)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
 	if(outside(threadId, pushConstants.Hdims))
