@@ -57,7 +57,7 @@ void Core::createInstance()
 		.applicationVersion = vk::makeVersion(0, 0, 0),
 		.pEngineName        = "Fdtd",
 		.engineVersion      = vk::makeVersion(0, 0, 0),
-		.apiVersion         = vk::ApiVersion14,
+		.apiVersion         = vk::ApiVersion13,
 	};
 
 	auto layers     = getRequiredLayers();
@@ -185,7 +185,7 @@ bool Core::isSuitable(vk::PhysicalDevice physicalDevice)
 	auto properties = physicalDevice.getProperties();
 	//auto features   = physicalDevice.getFeatures();
 
-	if(properties.apiVersion < vk::ApiVersion14)
+	if(properties.apiVersion < vk::ApiVersion13)
 		return false;
 
 	// TODO: Check for extensions

@@ -131,8 +131,8 @@ void Device::createDevice()
 		vk::PhysicalDeviceFeatures2,
 		vk::PhysicalDeviceVulkan11Features,
 		vk::PhysicalDeviceVulkan12Features,
-		vk::PhysicalDeviceVulkan13Features,
-		vk::PhysicalDeviceVulkan14Features
+		vk::PhysicalDeviceVulkan13Features
+		//vk::PhysicalDeviceVulkan14Features
 	>();
 
 	auto& deviceCreateInfo = chain.get<vk::DeviceCreateInfo>();
