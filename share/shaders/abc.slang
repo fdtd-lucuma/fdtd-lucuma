@@ -77,7 +77,7 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	const uint i = getI(dim, threadId);
 	const uint j = getJ(dim, threadId);
 
-	const FDTD_FLOAT_T Sc = pushConstants.Cr/sqrt(mu[i,j]*eps[i,j]);
+	const FDTD_FLOAT_T Sc = pushConstants.Cr/sqrt<FDTD_FLOAT_T>(mu[i,j]*eps[i,j]);
 	const FDTD_FLOAT_T abcCoef = (Sc-1)/(Sc+1);
 
 	Ec[i,j] = ec[i,j] + abcCoef*(Ecd[i,j]-Ec[i,j]);

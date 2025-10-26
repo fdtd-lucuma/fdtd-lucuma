@@ -17,7 +17,7 @@ FDTD_FLOAT_T gauss(FDTD_FLOAT_T time, FDTD_FLOAT_T sigma, FDTD_FLOAT_T x0)
 {
 	const FDTD_FLOAT_T x = (time-x0)/sigma;
 
-	return exp(-(x*x));
+	return exp<FDTD_FLOAT_T>(-(x*x));
 }
 
 [shader("compute")]
