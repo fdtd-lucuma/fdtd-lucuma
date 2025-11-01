@@ -45,3 +45,22 @@ paru -Bi pkg/arch/
 
 fdtd-lucuma
 ```
+
+## Build (any other linux distro)
+```bash
+git clone https://github.com/fsquillace/junest.git ~/.local/share/junest
+export PATH=~/.local/share/junest/bin:$PATH
+export PATH="$PATH:~/.junest/usr/bin_wrappers"
+
+junest setup
+junest
+
+sudo pacman -Syu base-devel
+
+git clone https://github.com/fdtd-lucuma/fdtd-lucuma
+cd fdtd-lucuma
+
+yay -Bi pkg/arch/
+
+fdtd-lucuma
+```
