@@ -55,7 +55,7 @@ export PATH="$PATH:~/.junest/usr/bin_wrappers"
 junest setup
 junest
 
-sudo sed -i 's/MAKEFLAGS.*/MAKEFLAGS="-j$(nproc)"/g' /etc/makepkg.conf
+sudo sed -i 's/#MAKEFLAGS.*/MAKEFLAGS="-j$(nproc)"/g' /etc/makepkg.conf
 sudo pacman -Syu base-devel
 
 git clone https://github.com/fdtd-lucuma/fdtd-lucuma
