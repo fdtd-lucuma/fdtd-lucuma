@@ -34,8 +34,13 @@ Glfw::Glfw([[maybe_unused]] Injector& injector):
 	init();
 }
 
+void error_callback(int, const char *description) {
+	std::print(std::cerr, "GLFW: {}\n", description);
+}
+
 void Glfw::init()
 {
+	vkfw::setErrorCallback(error_callback);
 	instance = vkfw::initUnique();
 
 	vkfw::windowHint<vkfw::WindowHint::eClientAPI>(vkfw::ClientAPI::eNone);
@@ -56,6 +61,11 @@ bool Glfw::shouldClose() const
 void Glfw::pollEvents()
 {
 	vkfw::pollEvents();
+}
+
+vkfw::Window& Glfw::getWindow()
+{
+	return window.get();
 }
 
 }

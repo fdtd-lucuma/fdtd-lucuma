@@ -38,6 +38,8 @@ public:
 	bool shouldClose() const;
 	void pollEvents();
 
+	vkfw::Window& getWindow();
+
 private:
 	basic::Settings& settings;
 

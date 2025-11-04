@@ -17,6 +17,7 @@
 module;
 
 #include <ranges>
+#include <cassert>
 
 module lucuma.services.vulkan;
 
@@ -90,6 +91,10 @@ void Core::createSurface()
 {
 	if(settings.isHeadless())
 		return;
+
+	assert(glfw != nullptr);
+
+	surface = vk::raii::SurfaceKHR(instance, vkfw::createWindowSurface(instance, glfw->getWindow()));
 }
 
 std::vector<const char*> Core::getRequiredLayers()
@@ -105,10 +110,10 @@ std::vector<const char*> Core::getRequiredLayers()
 
 std::vector<const char*> Core::getRequiredExtensions()
 {
-
 	auto result = std::views::concat(
-		debugRequirements.getRequiredExtensions()
-		// TODO: glfw
+		debugRequirements.getRequiredExtensions(),
+		glfw == nullptr ? std::span<const char*>() : vkfw::getRequiredInstanceExtensions()
+		// TODO: Make glfw more maintainable
 		) | std::ranges::to<std::vector>();
 
 	checkExtensions(result);
