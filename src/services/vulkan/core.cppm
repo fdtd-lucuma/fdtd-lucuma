@@ -22,6 +22,7 @@ import vulkan_hpp;
 import std;
 
 import lucuma.utils;
+import lucuma.services.basic;
 
 namespace lucuma::services::vulkan
 {
@@ -39,17 +40,21 @@ public:
 	vk::raii::Context&        getContext();
 	vk::raii::Instance&       getInstance();
 	vk::raii::PhysicalDevice& getPhysicalDevice();
+	vk::raii::SurfaceKHR&     getSurface();
 
 private:
 	Context&           context;
 	DebugRequirements& debugRequirements;
+	basic::Settings&          settings;
 
 	vk::raii::Instance       instance       = nullptr;
 	vk::raii::PhysicalDevice physicalDevice = nullptr;
+	vk::raii::SurfaceKHR     surface        = nullptr;
 
 	void init();
 
 	void createInstance();
+	void createSurface();
 
 	std::vector<const char*> getRequiredLayers();
 	std::vector<const char*> getRequiredExtensions();

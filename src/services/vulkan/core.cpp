@@ -20,12 +20,15 @@ module;
 
 module lucuma.services.vulkan;
 
+import vkfw;
+
 namespace lucuma::services::vulkan
 {
 
 Core::Core([[maybe_unused]] Injector& injector):
 	context(injector.inject<Context>()),
-	debugRequirements(injector.inject<DebugRequirements>())
+	debugRequirements(injector.inject<DebugRequirements>()),
+	settings(injector.inject<basic::Settings>())
 {
 	init();
 }
@@ -45,9 +48,15 @@ vk::raii::PhysicalDevice& Core::getPhysicalDevice()
 	return physicalDevice;
 }
 
+vk::raii::SurfaceKHR& Core::getSurface()
+{
+	return surface;
+}
+
 void Core::init()
 {
 	createInstance();
+	createSurface();
 	createPhysicalDevice();
 }
 
@@ -72,6 +81,12 @@ void Core::createInstance()
 		.setPEnabledExtensionNames(extensions);
 
 	instance = getContext().createInstance(instanceCreateInfo);
+}
+
+void Core::createSurface()
+{
+	if(settings.isHeadless())
+		return;
 }
 
 std::vector<const char*> Core::getRequiredLayers()
