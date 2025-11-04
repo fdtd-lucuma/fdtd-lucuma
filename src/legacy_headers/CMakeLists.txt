@@ -24,7 +24,6 @@ target_sources(${PROJECT_NAME}
 			glm.cppm
 			mdspan.cppm
 			taskflow.cppm
-			vkfw.cppm
 			xdg_utils_cxx.cppm
 			yaml_cpp.cppm
 )

@@ -23,6 +23,7 @@ import std;
 
 import lucuma.utils;
 import lucuma.services.basic;
+import lucuma.services.window;
 
 namespace lucuma::services::vulkan
 {
@@ -45,7 +46,8 @@ public:
 private:
 	Context&           context;
 	DebugRequirements& debugRequirements;
-	basic::Settings&          settings;
+	basic::Settings&   settings;
+	window::Glfw*      glfw = nullptr;
 
 	vk::raii::Instance       instance       = nullptr;
 	vk::raii::PhysicalDevice physicalDevice = nullptr;

@@ -16,20 +16,33 @@
 
 module;
 
-#include <vkfw/vkfw.hpp>
+export module lucuma.services.window:glfw;
 
-export module lucuma.legacy_headers.vkfw;
+import std;
+import vkfw;
 
-export namespace vkfw
+import lucuma.utils;
+import lucuma.services.basic;
+
+namespace lucuma::services::window
 {
 
-namespace raii
-{
+using namespace lucuma::utils;
+using namespace lucuma::services;
 
-using vkfw::raii::Instance;
-using vkfw::raii::Window;
-using vkfw::raii::Cursor;
+export class Glfw
+{
+public:
+	Glfw(Injector& injector);
+
+private:
+	basic::Settings& settings;
+
+	vkfw::UniqueInstance instance;
+	vkfw::UniqueWindow   window;
+
+	void init();
 
 };
 
-};
+}

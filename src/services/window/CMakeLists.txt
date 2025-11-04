@@ -16,16 +16,12 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		glfw.cpp
 		instantiations.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			services.cppm
+			glfw.cppm
+			window.cppm
 )
-
-add_subdirectory(backends)
-add_subdirectory(basic)
-add_subdirectory(frontends)
-add_subdirectory(vulkan)
-add_subdirectory(window)

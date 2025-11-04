@@ -30,6 +30,9 @@ Core::Core([[maybe_unused]] Injector& injector):
 	debugRequirements(injector.inject<DebugRequirements>()),
 	settings(injector.inject<basic::Settings>())
 {
+	if(!settings.isHeadless())
+		glfw = &injector.inject<window::Glfw>();
+
 	init();
 }
 
