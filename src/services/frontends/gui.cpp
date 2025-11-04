@@ -16,44 +16,27 @@
 
 module;
 
-module lucuma.services.window;
+module lucuma.services.frontends;
 
-import vkfw;
+import lucuma.utils;
+import lucuma.services.window;
+import lucuma.legacy_headers.entt;
+import std;
 
-import lucuma.services.basic;
-
-namespace lucuma::services::window
+namespace lucuma::services::frontends
 {
 
-using namespace lucuma::services;
+Gui::Gui([[maybe_unused]]Injector& injector):
+	registry(injector.inject<entt::registry>()),
+	glfw(injector.inject<window::Glfw>())
+{ }
 
-Glfw::Glfw([[maybe_unused]] Injector& injector):
-	settings(injector.inject<basic::Settings>())
-
+void Gui::start()
 {
-	init();
-}
-
-void Glfw::init()
-{
-	instance = vkfw::initUnique();
-
-	window = vkfw::createWindowUnique(800, 600, "fdtd-lucuma");
-	window->setUserPointer(this);
-
-	// TODO: Framebuffer callback
-	// TODO: Key callback
-}
-
-
-bool Glfw::shouldClose() const
-{
-	return window->shouldClose();
-}
-
-void Glfw::pollEvents()
-{
-	vkfw::pollEvents();
+	while(!glfw.shouldClose())
+	{
+		glfw.pollEvents();
+	}
 }
 
 }

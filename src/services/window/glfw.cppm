@@ -35,6 +35,9 @@ export class Glfw
 public:
 	Glfw(Injector& injector);
 
+	bool shouldClose() const;
+	void pollEvents();
+
 private:
 	basic::Settings& settings;
 

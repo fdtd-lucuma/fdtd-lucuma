@@ -16,6 +16,7 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		gui.cpp
 		headless.cpp
 		instantiations.cpp
 	PRIVATE
@@ -23,5 +24,6 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			frontends.cppm
+			gui.cppm
 			headless.cppm
 )

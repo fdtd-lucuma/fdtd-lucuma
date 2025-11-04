@@ -21,11 +21,13 @@ export module lucuma.services.frontends;
 import lucuma.utils;
 
 export import :headless;
+export import :gui;
 
 namespace lucuma::utils
 {
 using namespace lucuma::services::frontends;
 
+extern template Gui& Injector::inject<Gui>();
 extern template Headless& Injector::inject<Headless>();
 
 }

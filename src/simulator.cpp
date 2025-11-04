@@ -62,8 +62,10 @@ void Simulator::selectFrontend()
 	else // Gui
 	{
 		instantiator.instantiateAll();
-		// TODO: Init gui or headless
-		// TODO: Multiple backends maybe
+
+		auto& gui = injector.inject<services::frontends::Gui>();
+
+		gui.start();
 	}
 }
 

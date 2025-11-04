@@ -23,6 +23,7 @@ namespace lucuma::utils
 {
 using namespace lucuma::services::frontends;
 
+template Gui& Injector::inject<Gui>();
 template Headless& Injector::inject<Headless>();
 
 }
