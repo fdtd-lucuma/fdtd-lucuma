@@ -38,6 +38,8 @@ void Glfw::init()
 {
 	instance = vkfw::initUnique();
 
+	vkfw::windowHint<vkfw::WindowHint::eClientAPI>(vkfw::ClientAPI::eNone);
+
 	window = vkfw::createWindowUnique(800, 600, "fdtd-lucuma");
 	window->setUserPointer(this);
 
