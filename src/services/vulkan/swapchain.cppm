@@ -56,10 +56,14 @@ private:
 	vk::Format   format;
 	vk::Extent2D extent;
 
-	vk::raii::SwapchainKHR swapchain = nullptr;
-	std::vector<vk::Image> swapchainImages;
+	vk::raii::SwapchainKHR           swapchain = nullptr;
+	std::vector<vk::Image>           swapchainImages;
+	std::vector<vk::raii::ImageView> swapchainImageViews;
 
 	void init();
+	void createSwapchain();
+	void createSwapchainImageViews();
+
 	SwapchainDetails getDetails() const;
 
 	vk::SurfaceFormatKHR selectDefaultSurfaceFormat(const SwapchainDetails& details) const;

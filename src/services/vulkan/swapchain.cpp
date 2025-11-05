@@ -39,6 +39,12 @@ Swapchain::Swapchain([[maybe_unused]] Injector& injector):
 
 void Swapchain::init()
 {
+	createSwapchain();
+	createSwapchainImageViews();
+}
+
+void Swapchain::createSwapchain()
+{
 	auto swapchainDetails = getDetails();
 
 	auto surfaceFormat = selectDefaultSurfaceFormat(swapchainDetails);
@@ -92,6 +98,32 @@ void Swapchain::init()
 
 	swapchain       = vk::raii::SwapchainKHR(device.getDevice(), createInfo);
 	swapchainImages = swapchain.getImages();
+}
+
+void Swapchain::createSwapchainImageViews()
+{
+	swapchainImageViews.clear();
+	swapchainImageViews.reserve(swapchainImages.size());
+
+	vk::ImageViewCreateInfo createInfo {
+		.viewType = vk::ImageViewType::e2D,
+		.format   = format,
+
+		.subresourceRange = {
+			.aspectMask     = vk::ImageAspectFlagBits::eColor,
+			.baseMipLevel   = 0,
+			.levelCount     = 1,
+			.baseArrayLayer = 0,
+			.layerCount     = 1,
+		}
+
+	};
+
+	for(const auto& image: swapchainImages) {
+		createInfo.image = image;
+		swapchainImageViews.emplace_back(device.getDevice(), createInfo);
+	}
+
 }
 
 SwapchainDetails Swapchain::getDetails() const
