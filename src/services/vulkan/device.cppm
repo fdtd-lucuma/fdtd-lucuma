@@ -57,7 +57,7 @@ private:
 
 	vk::raii::Device device = nullptr;
 
-	std::optional<QueueFamilyInfo> computeInfo = std::nullopt;
+	std::optional<QueueFamilyInfo> computeInfo  = std::nullopt;
 	std::optional<QueueFamilyInfo> graphicsInfo = std::nullopt;
 
 	std::vector<const char*> getRequiredExtensions();
@@ -65,11 +65,15 @@ private:
 	void init();
 
 	vk::DeviceQueueCreateInfo getComputeQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties);
+	vk::DeviceQueueCreateInfo getGraphicsQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties);
 
 	std::vector<vk::DeviceQueueCreateInfo> getQueueCreateInfos();
 	void createDevice();
 
+	QueueFamilyInfo selectQueueFamilyCommon(std::span<const vk::QueueFamilyProperties> properties, vk::QueueFlags queueFlags);
+
 	QueueFamilyInfo selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties);
+	QueueFamilyInfo selectGraphicsQueueFamily(std::span<const vk::QueueFamilyProperties> properties);
 };
 
 }

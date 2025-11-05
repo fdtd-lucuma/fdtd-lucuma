@@ -51,7 +51,7 @@ const std::optional<QueueFamilyInfo>& Device::getGraphicsInfo() const
 
 const std::optional<QueueFamilyInfo>& Device::getComputeInfo() const
 {
-	return computeInfo;
+	return graphicsInfo;
 }
 
 void Device::init()
@@ -59,9 +59,9 @@ void Device::init()
 	createDevice();
 }
 
-QueueFamilyInfo Device::selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties)
+QueueFamilyInfo Device::selectQueueFamilyCommon(std::span<const vk::QueueFamilyProperties> properties, vk::QueueFlags queueFlags)
 {
-	auto filter = [&](auto&& i) {return (bool)(properties[i].queueFlags & vk::QueueFlagBits::eCompute); };
+	auto filter = [&](auto&& i) {return (bool)(properties[i].queueFlags & queueFlags); };
 
 	std::uint32_t maxCount = std::numeric_limits<std::uint32_t>::lowest();
 	std::uint32_t maxIndex;
@@ -76,12 +76,22 @@ QueueFamilyInfo Device::selectComputeQueueFamily(std::span<const vk::QueueFamily
 	}
 
 	if(maxCount == std::numeric_limits<std::uint32_t>::lowest())
-		throw new std::runtime_error("Couldn't find a compute queue family.");
+		throw new std::runtime_error(std::format("Couldn't find a {} queue family.", to_string(queueFlags)));
 
 	return {
 		.index = maxIndex,
 		.count = maxCount,
 	};
+}
+
+QueueFamilyInfo Device::selectComputeQueueFamily(std::span<const vk::QueueFamilyProperties> properties)
+{
+	return selectQueueFamilyCommon(properties, vk::QueueFlagBits::eCompute);
+}
+
+QueueFamilyInfo Device::selectGraphicsQueueFamily(std::span<const vk::QueueFamilyProperties> properties)
+{
+	return selectQueueFamilyCommon(properties, vk::QueueFlagBits::eGraphics);
 }
 
 vk::DeviceQueueCreateInfo Device::getComputeQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties)
@@ -103,6 +113,28 @@ vk::DeviceQueueCreateInfo Device::getComputeQueueCreateInfo(std::span<const vk::
 	return computeQueueCreateInfo;
 }
 
+vk::DeviceQueueCreateInfo Device::getGraphicsQueueCreateInfo(std::span<const vk::QueueFamilyProperties> properties)
+{
+	graphicsInfo.emplace(selectGraphicsQueueFamily(properties));
+
+	if(!core.getPhysicalDevice().getSurfaceSupportKHR(graphicsInfo->index, core.getSurface()))
+		throw new std::runtime_error("Graphics queue doesn't support present.");
+
+	std::cout
+		<< "Selected queue family for graphics:\n"
+		<< "Queue family " << graphicsInfo->index << ":\n"
+		<< properties[graphicsInfo->index]
+	;
+
+	vk::DeviceQueueCreateInfo graphicsQueueCreateInfo {
+		.queueFamilyIndex = graphicsInfo->index,
+	};
+
+	graphicsQueueCreateInfo.setQueuePriorities(graphicsInfo->priorities);
+
+	return graphicsQueueCreateInfo;
+}
+
 std::vector<vk::DeviceQueueCreateInfo> Device::getQueueCreateInfos()
 {
 	auto queueProperties = getPhysicalDevice().getQueueFamilyProperties();
@@ -113,7 +145,7 @@ std::vector<vk::DeviceQueueCreateInfo> Device::getQueueCreateInfos()
 
 	if(!settings.isHeadless())
 	{
-		// TODO: getGraphicsQueueCreateInfo
+		createInfos.emplace_back(getGraphicsQueueCreateInfo(queueProperties));
 	}
 
 	return createInfos;
