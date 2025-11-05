@@ -50,6 +50,7 @@ public:
 
 	const std::optional<QueueFamilyInfo>& getGraphicsInfo() const;
 	const std::optional<QueueFamilyInfo>& getComputeInfo() const;
+	const std::optional<QueueFamilyInfo>& getPresentInfo() const;
 
 private:
 	Core&            core;
@@ -59,6 +60,7 @@ private:
 
 	std::optional<QueueFamilyInfo> computeInfo  = std::nullopt;
 	std::optional<QueueFamilyInfo> graphicsInfo = std::nullopt;
+	std::optional<QueueFamilyInfo> presentInfo = std::nullopt;
 
 	std::vector<const char*> getRequiredExtensions();
 

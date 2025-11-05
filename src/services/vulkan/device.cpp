@@ -51,7 +51,12 @@ const std::optional<QueueFamilyInfo>& Device::getGraphicsInfo() const
 
 const std::optional<QueueFamilyInfo>& Device::getComputeInfo() const
 {
-	return graphicsInfo;
+	return computeInfo;
+}
+
+const std::optional<QueueFamilyInfo>& Device::getPresentInfo() const
+{
+	return presentInfo;
 }
 
 void Device::init()
@@ -119,6 +124,8 @@ vk::DeviceQueueCreateInfo Device::getGraphicsQueueCreateInfo(std::span<const vk:
 
 	if(!core.getPhysicalDevice().getSurfaceSupportKHR(graphicsInfo->index, core.getSurface()))
 		throw new std::runtime_error("Graphics queue doesn't support present.");
+
+	presentInfo = graphicsInfo; //TODO: support graphics != present?
 
 	std::cout
 		<< "Selected queue family for graphics:\n"
