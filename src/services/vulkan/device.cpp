@@ -186,7 +186,12 @@ void Device::createDevice()
 
 std::vector<const char*> Device::getRequiredExtensions()
 {
-	return {};
+	std::vector<const char*> result;
+
+	if(!settings.isHeadless())
+		result.emplace_back(vk::KHRSwapchainExtensionName);
+
+	return result;
 }
 
 }

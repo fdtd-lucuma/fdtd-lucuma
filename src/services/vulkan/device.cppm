@@ -36,6 +36,8 @@ struct QueueFamilyInfo
 	std::uint32_t count = 0;
 
 	std::vector<float> priorities = std::vector<float>(count, 1.0f);
+
+	auto operator<=>(QueueFamilyInfo const &) const = default;
 };
 
 class Core;

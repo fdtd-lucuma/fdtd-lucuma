@@ -20,6 +20,7 @@ module lucuma.services.frontends;
 
 import lucuma.utils;
 import lucuma.services.window;
+import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
 import std;
 
@@ -28,7 +29,8 @@ namespace lucuma::services::frontends
 
 Gui::Gui([[maybe_unused]]Injector& injector):
 	registry(injector.inject<entt::registry>()),
-	glfw(injector.inject<window::Glfw>())
+	glfw(injector.inject<window::Glfw>()),
+	swapchain(injector.inject<vulkan::Swapchain>())
 { }
 
 void Gui::start()

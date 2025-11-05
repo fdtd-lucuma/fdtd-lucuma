@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME}
 		device.cpp
 		instantiations.cpp
 		shader_loader.cpp
+		swapchain.cpp
 		utils.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -40,6 +41,7 @@ target_sources(${PROJECT_NAME}
 			debug_requirements.cppm
 			device.cppm
 			shader_loader.cppm
+			swapchain.cppm
 			utils.cppm
 			vulkan.cppm
 )

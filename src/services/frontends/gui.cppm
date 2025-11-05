@@ -20,6 +20,7 @@ export module lucuma.services.frontends:gui;
 
 import lucuma.utils;
 import lucuma.services.window;
+import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
 
 import std;
@@ -37,8 +38,9 @@ public:
 	void start();
 
 private:
-	entt::registry& registry;
-	window::Glfw&   glfw;
+	entt::registry&    registry;
+	window::Glfw&      glfw;
+	vulkan::Swapchain& swapchain;
 
 };
 
