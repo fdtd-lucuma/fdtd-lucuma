@@ -30,6 +30,7 @@ export import :core;
 export import :debug;
 export import :debug_requirements;
 export import :device;
+export import :graphics;
 export import :swapchain;
 
 import :shader_loader;
@@ -50,6 +51,7 @@ extern template Core&              Injector::inject<Core>();
 extern template Debug&             Injector::inject<Debug>();
 extern template DebugRequirements& Injector::inject<DebugRequirements>();
 extern template Device&            Injector::inject<Device>();
+extern template Graphics&          Injector::inject<Graphics>();
 extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 extern template Swapchain&         Injector::inject<Swapchain>();
 

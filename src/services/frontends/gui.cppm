@@ -38,9 +38,9 @@ public:
 	void start();
 
 private:
-	entt::registry&    registry;
-	window::Glfw&      glfw;
-	vulkan::Swapchain& swapchain;
+	entt::registry&   registry;
+	window::Glfw&     glfw;
+	vulkan::Graphics& graphics;
 
 };
 

@@ -16,29 +16,47 @@
 
 module;
 
-module lucuma.services.frontends;
+export module lucuma.services.vulkan:graphics;
 
-import lucuma.utils;
-import lucuma.services.window;
-import lucuma.services.vulkan;
-import lucuma.legacy_headers.entt;
+import vulkan_hpp;
 import std;
 
-namespace lucuma::services::frontends
+import lucuma.utils;
+import lucuma.utils.vulkan;
+
+namespace lucuma::services::vulkan
 {
 
-Gui::Gui([[maybe_unused]]Injector& injector):
-	registry(injector.inject<entt::registry>()),
-	glfw(injector.inject<window::Glfw>()),
-	graphics(injector.inject<vulkan::Graphics>())
-{ }
+using namespace lucuma::utils;
+using namespace lucuma::utils::vulkan;
+using namespace lucuma::services;
 
-void Gui::start()
+class Buffer;
+class Device;
+class ShaderLoader;
+class Swapchain;
+
+
+export class Graphics
 {
-	while(!glfw.shouldClose())
-	{
-		glfw.pollEvents();
-	}
-}
+public:
+	Graphics(Injector& injector);
+
+	vk::raii::Queue&       getQueue();
+	vk::raii::CommandPool& getCommandPool();
+
+private:
+	Device&       device;
+	ShaderLoader& shaderLoader;
+	Swapchain&    swapchain;
+
+	std::vector<vk::raii::Queue> queues;
+	vk::raii::CommandPool		commandPool = nullptr;
+
+	void init();
+
+	void createQueues();
+	void createCommandPool();
+};
 
 }
