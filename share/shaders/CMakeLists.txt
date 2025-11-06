@@ -27,6 +27,7 @@ add_spirv_target(
 		init_coefs_double.slang
 		init_coefs_float.slang
 		init_coefs_half.slang
+		triangle.slang
 		update_e_double.slang
 		update_e_float.slang
 		update_e_half.slang
