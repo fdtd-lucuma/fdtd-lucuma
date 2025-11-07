@@ -21,6 +21,7 @@ module;
 module lucuma.services.vulkan;
 
 import lucuma.services.basic;
+import lucuma.services.window;
 
 namespace lucuma::services::vulkan
 {
