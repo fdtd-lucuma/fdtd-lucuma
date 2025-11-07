@@ -80,7 +80,7 @@ void Graphics::createCommandPool()
 
 void Graphics::createGraphicsPipeline()
 {
-	auto shaderCode = shaderLoader.createShaderModule("triangle.slang");
+	auto shaderCode = shaderLoader.createShaderModule("triangle.spv");
 
 	vk::PipelineShaderStageCreateInfo vertShaderStageCreateInfo {
 		.stage  = vk::ShaderStageFlagBits::eVertex,
