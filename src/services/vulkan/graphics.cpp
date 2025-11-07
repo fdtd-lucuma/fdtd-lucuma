@@ -158,10 +158,6 @@ void Graphics::createGraphicsPipeline()
 
 	pipelineLayout = device.getDevice().createPipelineLayout(pipelineLayoutInfo);
 
-	const auto swapchainFormat = swapchain.getFormat();
-	vk::PipelineRenderingCreateInfo pipelineRenderingCreateInfo;
-	pipelineRenderingCreateInfo.setColorAttachmentFormats(swapchainFormat);
-
 	vk::StructureChain chain {
 		vk::GraphicsPipelineCreateInfo {
 			.pVertexInputState   = &vertexInputInfo,
@@ -174,13 +170,17 @@ void Graphics::createGraphicsPipeline()
 			.layout              = pipelineLayout,
 			.renderPass          = nullptr,
 		},
-		pipelineRenderingCreateInfo,
+		vk::PipelineRenderingCreateInfo{},
 	};
 
-	auto& pipelineInfo = chain.get<vk::GraphicsPipelineCreateInfo>();
+	auto& [pipelineInfo, pipelineRenderingCreateInfo] = chain;
+
+	const auto swapchainFormat = swapchain.getFormat();
 
 	pipelineInfo.setStages(shaderStages);
+	pipelineRenderingCreateInfo.setColorAttachmentFormats(swapchainFormat);
 
+	pipeline = device.getDevice().createGraphicsPipeline(nullptr, pipelineInfo);
 }
 
 }

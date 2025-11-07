@@ -61,6 +61,7 @@ private:
 
 	// Triangle data. TODO: Move this into its own object
 	vk::raii::PipelineLayout pipelineLayout = nullptr;
+	vk::raii::Pipeline       pipeline       = nullptr;
 };
 
 }
