@@ -58,6 +58,9 @@ private:
 	void createQueues();
 	void createCommandPool();
 	void createGraphicsPipeline(); //TODO: Move this into its own object
+
+	// Triangle data. TODO: Move this into its own object
+	vk::raii::PipelineLayout pipelineLayout = nullptr;
 };
 
 }

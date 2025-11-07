@@ -99,6 +99,64 @@ void Graphics::createGraphicsPipeline()
 		fragShaderStageCreateInfo,
 	};
 
+	std::vector dynamicStates = {
+		vk::DynamicState::eViewport,
+		vk::DynamicState::eScissor,
+	};
+
+	vk::PipelineDynamicStateCreateInfo dynamicState;
+	dynamicState.setDynamicStates(dynamicStates);
+
+	vk::PipelineVertexInputStateCreateInfo vertexInputInfo;
+
+	vk::PipelineInputAssemblyStateCreateInfo inputAssembly {
+		.topology = vk::PrimitiveTopology::eTriangleList,
+	};
+
+	vk::PipelineViewportStateCreateInfo viewportState {
+		.viewportCount = 1,
+		.scissorCount  = 1,
+	};
+
+	vk::PipelineRasterizationStateCreateInfo rasterizer {
+		.depthClampEnable        = false,
+		.rasterizerDiscardEnable = false,
+		.polygonMode             = vk::PolygonMode::eFill,
+		.cullMode                = vk::CullModeFlagBits::eBack,
+		.frontFace               = vk::FrontFace::eClockwise,
+		.depthBiasEnable         = false,
+		.depthBiasSlopeFactor    = 1.0f,
+		.lineWidth               = 1.0f,
+	};
+
+	// TODO: Get from settings
+	vk::PipelineMultisampleStateCreateInfo multisampling {
+		.rasterizationSamples = vk::SampleCountFlagBits::e1,
+		.sampleShadingEnable  = false,
+	};
+
+	vk::PipelineColorBlendAttachmentState colorBlendAttachment {
+		.blendEnable = false,
+		.colorWriteMask =
+			vk::ColorComponentFlagBits::eR |
+			vk::ColorComponentFlagBits::eG |
+			vk::ColorComponentFlagBits::eB |
+			vk::ColorComponentFlagBits::eA,
+	};
+
+	vk::PipelineColorBlendStateCreateInfo colorBlending {
+		.logicOpEnable = false,
+		.logicOp       = vk::LogicOp::eCopy,
+	};
+
+	colorBlending.setAttachments(colorBlendAttachment);
+
+	vk::PipelineLayoutCreateInfo pipelineLayoutInfo {
+		.setLayoutCount         = 0,
+		.pushConstantRangeCount = 0,
+	};
+
+	pipelineLayout = device.getDevice().createPipelineLayout(pipelineLayoutInfo);
 }
 
 }

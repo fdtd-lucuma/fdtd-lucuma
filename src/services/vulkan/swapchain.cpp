@@ -174,4 +174,38 @@ vk::Extent2D Swapchain::selectDefaultExtent(const SwapchainDetails& details) con
 	};
 }
 
+vk::Format Swapchain::getFormat() const
+{
+	return format;
+}
+
+vk::Extent2D Swapchain::getExtent() const
+{
+	return extent;
+}
+
+vk::Viewport Swapchain::getCurrentViewport() const
+{
+	return vk::Viewport {
+		.x        = 0.0f,
+		.y        = 0.0f,
+		.width    = (float)getExtent().width,
+		.height   = (float)getExtent().height,
+		.minDepth = 0.0f,
+		.maxDepth = 1.0f,
+	};
+}
+
+vk::Rect2D Swapchain::getCurrentScissor() const
+{
+	return vk::Rect2D {
+		.offset = {
+			.x = 0,
+			.y = 0,
+		},
+		.extent = getExtent(),
+	};
+
+}
+
 }

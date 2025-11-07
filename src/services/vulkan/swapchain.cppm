@@ -47,6 +47,12 @@ export class Swapchain
 public:
 	Swapchain(Injector& injector);
 
+	vk::Format   getFormat() const;
+	vk::Extent2D getExtent() const;
+
+	vk::Viewport getCurrentViewport() const;
+	vk::Rect2D   getCurrentScissor()  const;
+
 private:
 	Core&            core;
 	Device&          device;
