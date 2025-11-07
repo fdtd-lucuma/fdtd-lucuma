@@ -53,6 +53,9 @@ public:
 	vk::Viewport getCurrentViewport() const;
 	vk::Rect2D   getCurrentScissor()  const;
 
+	std::span<const vk::Image> getImages() const;
+	std::span<const vk::raii::ImageView> getImageViews() const;
+
 private:
 	Core&            core;
 	Device&          device;

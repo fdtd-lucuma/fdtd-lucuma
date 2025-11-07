@@ -36,6 +36,15 @@ class Device;
 class ShaderLoader;
 class Swapchain;
 
+struct TransitionImageLayoutInfo {
+	std::uint32_t           imageIndex    = {};
+	vk::ImageLayout         oldLayout     = {};
+	vk::ImageLayout         newLayout     = {};
+	vk::AccessFlags2        srcAccessMask = {};
+	vk::AccessFlags2        dstAccessMask = {};
+	vk::PipelineStageFlags2 srcStageMask  = {};
+	vk::PipelineStageFlags2 dstStageMask  = {};
+};
 
 export class Graphics
 {
@@ -58,10 +67,20 @@ private:
 	void createQueues();
 	void createCommandPool();
 	void createGraphicsPipeline(); //TODO: Move this into its own object
+	void createCommandBuffer(); //TODO: Move this into its own object
+
+	void recordCommandBuffer(std::uint32_t imageIndex);
+	void transition_image_layout(const TransitionImageLayoutInfo& input);
+
+	void transitionImageAny2Optimal(std::uint32_t imageIndex);
+	void transitionImageOptimal2PresentSrc(std::uint32_t imageIndex);
 
 	// Triangle data. TODO: Move this into its own object
 	vk::raii::PipelineLayout pipelineLayout = nullptr;
 	vk::raii::Pipeline       pipeline       = nullptr;
+
+	// TODO: Move this even more outside
+	vk::raii::CommandBuffer commandBuffer = nullptr;
 };
 
 }

@@ -209,4 +209,14 @@ vk::Rect2D Swapchain::getCurrentScissor() const
 
 }
 
+std::span<const vk::Image> Swapchain::getImages() const
+{
+	return swapchainImages;
+}
+
+std::span<const vk::raii::ImageView> Swapchain::getImageViews() const
+{
+	return swapchainImageViews;
+}
+
 }
