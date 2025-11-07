@@ -35,6 +35,7 @@ class Buffer;
 class Device;
 class ShaderLoader;
 class Swapchain;
+struct QueueFamilyInfo;
 
 struct TransitionImageLayoutInfo {
 	std::uint32_t           imageIndex    = {};
@@ -51,23 +52,44 @@ export class Graphics
 public:
 	Graphics(Injector& injector);
 
-	vk::raii::Queue&       getQueue();
-	vk::raii::CommandPool& getCommandPool();
+	vk::raii::Queue&       getGraphicsQueue();
+	vk::raii::CommandPool& getGraphicsCommandPool();
+
+	vk::raii::Queue&       getPresentQueue();
+	vk::raii::CommandPool& getPresentCommandPool();
+
+	vk::Result acquireNextImage();
+
+	void draw();
+	void waitFence();
+	vk::Result present();
+
+	~Graphics();
 
 private:
 	Device&       device;
 	ShaderLoader& shaderLoader;
 	Swapchain&    swapchain;
 
-	std::vector<vk::raii::Queue> queues;
-	vk::raii::CommandPool		commandPool = nullptr;
+	std::uint32_t currentImageIndex;
+
+	std::vector<vk::raii::Queue> graphicsQueues;
+	vk::raii::CommandPool		graphicsCommandPool = nullptr;
+
+	std::vector<vk::raii::Queue> presentQueues;
+	vk::raii::CommandPool		presentCommandPool = nullptr;
 
 	void init();
 
 	void createQueues();
-	void createCommandPool();
+	void createCommandPools();
+
+	std::vector<vk::raii::Queue> createQueuesCommon(const QueueFamilyInfo& info);
+	vk::raii::CommandPool createCommandPool(const QueueFamilyInfo& info);
+
 	void createGraphicsPipeline(); //TODO: Move this into its own object
 	void createCommandBuffer(); //TODO: Move this into its own object
+	void createSyncObjects();
 
 	void recordCommandBuffer(std::uint32_t imageIndex);
 	void transition_image_layout(const TransitionImageLayoutInfo& input);
@@ -81,6 +103,11 @@ private:
 
 	// TODO: Move this even more outside
 	vk::raii::CommandBuffer commandBuffer = nullptr;
+
+	vk::raii::Semaphore presentCompleteSemaphore = nullptr;
+	vk::raii::Semaphore renderFinishedSemaphore  = nullptr;
+	vk::raii::Fence     drawFence                = nullptr;
+
 };
 
 }

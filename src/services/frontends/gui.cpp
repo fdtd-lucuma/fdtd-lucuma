@@ -38,7 +38,16 @@ void Gui::start()
 	while(!glfw.shouldClose())
 	{
 		glfw.pollEvents();
+		drawFrame();
 	}
+}
+
+void Gui::drawFrame()
+{
+	graphics.acquireNextImage();
+	graphics.draw();
+	graphics.waitFence();
+	graphics.present();
 }
 
 }

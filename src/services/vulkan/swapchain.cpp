@@ -219,4 +219,14 @@ std::span<const vk::raii::ImageView> Swapchain::getImageViews() const
 	return swapchainImageViews;
 }
 
+vk::raii::SwapchainKHR& Swapchain::getSwapchain()
+{
+	return swapchain;
+}
+
+const vk::raii::SwapchainKHR& Swapchain::getSwapchain() const
+{
+	return swapchain;
+}
+
 }

@@ -42,6 +42,8 @@ private:
 	window::Glfw&     glfw;
 	vulkan::Graphics& graphics;
 
+	void drawFrame();
+
 };
 
 }

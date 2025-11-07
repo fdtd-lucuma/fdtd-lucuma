@@ -39,46 +39,66 @@ Graphics::Graphics([[maybe_unused]] Injector& injector):
 	init();
 }
 
-vk::raii::Queue& Graphics::getQueue()
+vk::raii::Queue& Graphics::getGraphicsQueue()
 {
-	return queues[0];
+	return graphicsQueues[0];
 }
 
-vk::raii::CommandPool& Graphics::getCommandPool()
+vk::raii::CommandPool& Graphics::getGraphicsCommandPool()
 {
-	return commandPool;
+	return graphicsCommandPool;
+}
+
+vk::raii::Queue& Graphics::getPresentQueue()
+{
+	return graphicsQueues[0];
+}
+
+vk::raii::CommandPool& Graphics::getPresentCommandPool()
+{
+	return graphicsCommandPool;
 }
 
 void Graphics::init()
 {
 	createQueues();
-	createCommandPool();
+	createCommandPools();
 
 	// TODO: Move this
 	createGraphicsPipeline();
 	createCommandBuffer();
+
+	createSyncObjects();
+}
+
+std::vector<vk::raii::Queue> Graphics::createQueuesCommon(const QueueFamilyInfo& info)
+{
+	return
+		std::views::iota(0u, info.count) |
+		std::views::transform([&](auto i){return device.getDevice().getQueue(info.index, i);}) |
+		std::ranges::to<std::vector>();
 }
 
 void Graphics::createQueues()
 {
-	auto info = device.getGraphicsInfo();
-
-	queues =
-		std::views::iota(0u, info->count) |
-		std::views::transform([&](auto i){return device.getDevice().getQueue(info->index, i);}) |
-		std::ranges::to<std::vector>();
+	graphicsQueues = createQueuesCommon(device.getGraphicsInfo().value());
+	presentQueues = createQueuesCommon(device.getPresentInfo().value());
 }
 
-void Graphics::createCommandPool()
+void Graphics::createCommandPools()
 {
-	auto info = device.getGraphicsInfo();
+	graphicsCommandPool = createCommandPool(device.getGraphicsInfo().value());
+	presentCommandPool  = createCommandPool(device.getPresentInfo().value());
+}
 
+vk::raii::CommandPool Graphics::createCommandPool(const QueueFamilyInfo& info)
+{
 	vk::CommandPoolCreateInfo createInfo {
 		.flags            = vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-		.queueFamilyIndex = info->index,
+		.queueFamilyIndex = info.index,
 	};
 
-	commandPool = device.getDevice().createCommandPool(createInfo);
+	return device.getDevice().createCommandPool(createInfo);
 }
 
 void Graphics::createGraphicsPipeline()
@@ -189,7 +209,7 @@ void Graphics::createGraphicsPipeline()
 void Graphics::createCommandBuffer()
 {
 	vk::CommandBufferAllocateInfo allocInfo {
-		.commandPool        = commandPool,
+		.commandPool        = graphicsCommandPool,
 		.level              = vk::CommandBufferLevel::ePrimary,
 		.commandBufferCount = 1,
 	};
@@ -287,6 +307,71 @@ void Graphics::transitionImageOptimal2PresentSrc(std::uint32_t imageIndex)
 		.srcStageMask  = vk::PipelineStageFlagBits2::eColorAttachmentOutput,
 		.dstStageMask  = vk::PipelineStageFlagBits2::eBottomOfPipe,
 	});
+}
+
+void Graphics::createSyncObjects()
+{
+	presentCompleteSemaphore = device.getDevice().createSemaphore({});
+	renderFinishedSemaphore  = device.getDevice().createSemaphore({});
+
+	drawFence = device.getDevice().createFence({.flags = vk::FenceCreateFlagBits::eSignaled});
+
+}
+
+vk::Result Graphics::acquireNextImage()
+{
+	auto [result, _imageIndex] = swapchain
+		.getSwapchain()
+		.acquireNextImage(std::numeric_limits<std::uint64_t>::max(), presentCompleteSemaphore, nullptr);
+
+	currentImageIndex = _imageIndex;
+	return result;
+}
+
+void Graphics::draw()
+{
+	recordCommandBuffer(currentImageIndex);
+	device.getDevice().resetFences(*drawFence);
+
+	vk::PipelineStageFlags waitDestinationStageMask = vk::PipelineStageFlagBits::eColorAttachmentOutput;
+	vk::SubmitInfo submitInfo;
+
+	submitInfo
+		.setWaitDstStageMask(waitDestinationStageMask)
+		.setWaitSemaphores(*presentCompleteSemaphore)
+		.setCommandBuffers(*commandBuffer)
+		.setSignalSemaphores(*renderFinishedSemaphore)
+	;
+
+	getGraphicsQueue().submit(submitInfo, drawFence);
+}
+
+void Graphics::waitFence()
+{
+	while(vk::Result::eTimeout == device
+		.getDevice()
+		.waitForFences(*drawFence, true, std::numeric_limits<std::uint64_t>::max())
+	);
+}
+
+vk::Result Graphics::present()
+{
+	vk::PresentInfoKHR presentInfo {
+		.pResults = nullptr,
+	};
+
+	presentInfo
+		.setWaitSemaphores(*renderFinishedSemaphore)
+		.setSwapchains(*swapchain.getSwapchain())
+		.setImageIndices(currentImageIndex)
+	;
+
+	return getPresentQueue().presentKHR(presentInfo);
+}
+
+Graphics::~Graphics()
+{
+	device.getDevice().waitIdle();
 }
 
 }

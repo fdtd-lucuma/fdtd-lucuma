@@ -56,6 +56,9 @@ public:
 	std::span<const vk::Image> getImages() const;
 	std::span<const vk::raii::ImageView> getImageViews() const;
 
+	vk::raii::SwapchainKHR& getSwapchain();
+	const vk::raii::SwapchainKHR& getSwapchain() const;
+
 private:
 	Core&            core;
 	Device&          device;
