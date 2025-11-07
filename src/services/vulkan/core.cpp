@@ -20,6 +20,7 @@ module;
 #include <cassert>
 
 module lucuma.services.vulkan;
+import lucuma.services.window;
 
 import vkfw;
 
