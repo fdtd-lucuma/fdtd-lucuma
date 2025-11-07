@@ -53,6 +53,7 @@ void Graphics::init()
 {
 	createQueues();
 	createCommandPool();
+	createGraphicsPipeline();
 }
 
 void Graphics::createQueues()
@@ -77,5 +78,27 @@ void Graphics::createCommandPool()
 	commandPool = device.getDevice().createCommandPool(createInfo);
 }
 
+void Graphics::createGraphicsPipeline()
+{
+	auto shaderCode = shaderLoader.createShaderModule("triangle.slang");
+
+	vk::PipelineShaderStageCreateInfo vertShaderStageCreateInfo {
+		.stage  = vk::ShaderStageFlagBits::eVertex,
+		.module = shaderCode,
+		.pName  = "vertMain",
+	};
+
+	vk::PipelineShaderStageCreateInfo fragShaderStageCreateInfo {
+		.stage  = vk::ShaderStageFlagBits::eFragment,
+		.module = shaderCode,
+		.pName  = "fragMain",
+	};
+
+	vk::PipelineShaderStageCreateInfo shaderStages[] = {
+		vertShaderStageCreateInfo,
+		fragShaderStageCreateInfo,
+	};
+
+}
 
 }

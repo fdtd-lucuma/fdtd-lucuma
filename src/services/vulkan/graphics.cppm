@@ -57,6 +57,7 @@ private:
 
 	void createQueues();
 	void createCommandPool();
+	void createGraphicsPipeline(); //TODO: Move this into its own object
 };
 
 }
