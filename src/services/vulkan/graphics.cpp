@@ -157,6 +157,30 @@ void Graphics::createGraphicsPipeline()
 	};
 
 	pipelineLayout = device.getDevice().createPipelineLayout(pipelineLayoutInfo);
+
+	const auto swapchainFormat = swapchain.getFormat();
+	vk::PipelineRenderingCreateInfo pipelineRenderingCreateInfo;
+	pipelineRenderingCreateInfo.setColorAttachmentFormats(swapchainFormat);
+
+	vk::StructureChain chain {
+		vk::GraphicsPipelineCreateInfo {
+			.pVertexInputState   = &vertexInputInfo,
+			.pInputAssemblyState = &inputAssembly,
+			.pViewportState      = &viewportState,
+			.pRasterizationState = &rasterizer,
+			.pMultisampleState   = &multisampling,
+			.pColorBlendState    = &colorBlending,
+			.pDynamicState       = &dynamicState,
+			.layout              = pipelineLayout,
+			.renderPass          = nullptr,
+		},
+		pipelineRenderingCreateInfo,
+	};
+
+	auto& pipelineInfo = chain.get<vk::GraphicsPipelineCreateInfo>();
+
+	pipelineInfo.setStages(shaderStages);
+
 }
 
 }
