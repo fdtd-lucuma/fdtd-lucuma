@@ -67,6 +67,8 @@ public:
 	~Graphics();
 
 private:
+	constexpr static int MAX_FRAMES_IN_FLIGHT = 2;
+
 	Device&       device;
 	ShaderLoader& shaderLoader;
 	Swapchain&    swapchain;
@@ -88,7 +90,7 @@ private:
 	vk::raii::CommandPool createCommandPool(const QueueFamilyInfo& info);
 
 	void createGraphicsPipeline(); //TODO: Move this into its own object
-	void createCommandBuffer(); //TODO: Move this into its own object
+	void createCommandBuffers(); //TODO: Move this into its own object
 	void createSyncObjects();
 
 	void recordCommandBuffer(std::uint32_t imageIndex);
@@ -97,16 +99,25 @@ private:
 	void transitionImageAny2Optimal(std::uint32_t imageIndex);
 	void transitionImageOptimal2PresentSrc(std::uint32_t imageIndex);
 
+	std::uint32_t currentFrame = 0;
+
+	void advanceFrame();
+
 	// Triangle data. TODO: Move this into its own object
 	vk::raii::PipelineLayout pipelineLayout = nullptr;
 	vk::raii::Pipeline       pipeline       = nullptr;
 
 	// TODO: Move this even more outside
-	vk::raii::CommandBuffer commandBuffer = nullptr;
+	std::vector<vk::raii::CommandBuffer> commandBuffers;
 
-	vk::raii::Semaphore presentCompleteSemaphore = nullptr;
-	vk::raii::Semaphore renderFinishedSemaphore  = nullptr;
-	vk::raii::Fence     drawFence                = nullptr;
+	std::vector<vk::raii::Semaphore> presentCompleteSemaphores;
+	std::vector<vk::raii::Semaphore> renderFinishedSemaphores;
+	std::vector<vk::raii::Fence>     inFlightFences;
+
+	vk::raii::CommandBuffer& getCurrentCommandBuffer();
+	vk::raii::Semaphore&     getCurrentPresentCompleteSemaphore();
+	vk::raii::Semaphore&     getCurrentRenderFinishedSemaphore();
+	vk::raii::Fence&         getCurrentInFlightFence();
 
 };
 

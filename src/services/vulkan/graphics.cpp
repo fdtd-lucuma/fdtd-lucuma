@@ -66,7 +66,7 @@ void Graphics::init()
 
 	// TODO: Move this
 	createGraphicsPipeline();
-	createCommandBuffer();
+	createCommandBuffers();
 
 	createSyncObjects();
 }
@@ -206,19 +206,23 @@ void Graphics::createGraphicsPipeline()
 	pipeline = device.getDevice().createGraphicsPipeline(nullptr, pipelineInfo);
 }
 
-void Graphics::createCommandBuffer()
+void Graphics::createCommandBuffers()
 {
 	vk::CommandBufferAllocateInfo allocInfo {
 		.commandPool        = graphicsCommandPool,
 		.level              = vk::CommandBufferLevel::ePrimary,
-		.commandBufferCount = 1,
+		.commandBufferCount = MAX_FRAMES_IN_FLIGHT,
 	};
 
-	commandBuffer = std::move(device.getDevice().allocateCommandBuffers(allocInfo)[0]);
+	commandBuffers = device.getDevice().allocateCommandBuffers(allocInfo);
 }
 
 void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 {
+	auto& commandBuffer = getCurrentCommandBuffer();
+
+	commandBuffer.reset();
+
 	commandBuffer.begin({});
 
 	transitionImageAny2Optimal(imageIndex);
@@ -260,6 +264,8 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 
 void Graphics::transition_image_layout(const TransitionImageLayoutInfo& input)
 {
+	auto& commandBuffer = getCurrentCommandBuffer();
+
 	vk::ImageMemoryBarrier2 barrier {
 		.srcStageMask        = input.srcStageMask,
 		.srcAccessMask       = input.srcAccessMask,
@@ -311,10 +317,18 @@ void Graphics::transitionImageOptimal2PresentSrc(std::uint32_t imageIndex)
 
 void Graphics::createSyncObjects()
 {
-	presentCompleteSemaphore = device.getDevice().createSemaphore({});
-	renderFinishedSemaphore  = device.getDevice().createSemaphore({});
+	presentCompleteSemaphores.clear();
+	renderFinishedSemaphores.clear();
+	inFlightFences.clear();
 
-	drawFence = device.getDevice().createFence({.flags = vk::FenceCreateFlagBits::eSignaled});
+	for(int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+	{
+		presentCompleteSemaphores.emplace_back(device.getDevice().createSemaphore({}));
+		renderFinishedSemaphores.emplace_back(device.getDevice().createSemaphore({}));
+
+		inFlightFences.emplace_back(device.getDevice().createFence({.flags = vk::FenceCreateFlagBits::eSignaled}));
+	}
+
 
 }
 
@@ -322,7 +336,7 @@ vk::Result Graphics::acquireNextImage()
 {
 	auto [result, _imageIndex] = swapchain
 		.getSwapchain()
-		.acquireNextImage(std::numeric_limits<std::uint64_t>::max(), presentCompleteSemaphore, nullptr);
+		.acquireNextImage(std::numeric_limits<std::uint64_t>::max(), getCurrentPresentCompleteSemaphore(), nullptr);
 
 	currentImageIndex = _imageIndex;
 	return result;
@@ -330,27 +344,27 @@ vk::Result Graphics::acquireNextImage()
 
 void Graphics::draw()
 {
+	device.getDevice().resetFences(*getCurrentInFlightFence());
 	recordCommandBuffer(currentImageIndex);
-	device.getDevice().resetFences(*drawFence);
 
 	vk::PipelineStageFlags waitDestinationStageMask = vk::PipelineStageFlagBits::eColorAttachmentOutput;
 	vk::SubmitInfo submitInfo;
 
 	submitInfo
 		.setWaitDstStageMask(waitDestinationStageMask)
-		.setWaitSemaphores(*presentCompleteSemaphore)
-		.setCommandBuffers(*commandBuffer)
-		.setSignalSemaphores(*renderFinishedSemaphore)
+		.setWaitSemaphores(*getCurrentPresentCompleteSemaphore())
+		.setCommandBuffers(*getCurrentCommandBuffer())
+		.setSignalSemaphores(*getCurrentRenderFinishedSemaphore())
 	;
 
-	getGraphicsQueue().submit(submitInfo, drawFence);
+	getGraphicsQueue().submit(submitInfo, getCurrentInFlightFence());
 }
 
 void Graphics::waitFence()
 {
 	while(vk::Result::eTimeout == device
 		.getDevice()
-		.waitForFences(*drawFence, true, std::numeric_limits<std::uint64_t>::max())
+		.waitForFences(*getCurrentInFlightFence(), true, std::numeric_limits<std::uint64_t>::max())
 	);
 }
 
@@ -361,17 +375,46 @@ vk::Result Graphics::present()
 	};
 
 	presentInfo
-		.setWaitSemaphores(*renderFinishedSemaphore)
+		.setWaitSemaphores(*getCurrentRenderFinishedSemaphore())
 		.setSwapchains(*swapchain.getSwapchain())
 		.setImageIndices(currentImageIndex)
 	;
 
-	return getPresentQueue().presentKHR(presentInfo);
+	auto result = getPresentQueue().presentKHR(presentInfo);
+
+	advanceFrame();
+
+	return result;
 }
 
 Graphics::~Graphics()
 {
 	device.getDevice().waitIdle();
+}
+
+vk::raii::CommandBuffer& Graphics::getCurrentCommandBuffer()
+{
+	return commandBuffers[currentFrame];
+}
+
+vk::raii::Semaphore& Graphics::getCurrentPresentCompleteSemaphore()
+{
+	return presentCompleteSemaphores[currentFrame];
+}
+
+vk::raii::Semaphore& Graphics::getCurrentRenderFinishedSemaphore()
+{
+	return renderFinishedSemaphores[currentFrame];
+}
+
+vk::raii::Fence& Graphics::getCurrentInFlightFence()
+{
+	return inFlightFences[currentFrame];
+}
+
+void Graphics::advanceFrame()
+{
+	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
 }
