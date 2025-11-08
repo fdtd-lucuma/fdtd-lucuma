@@ -42,6 +42,7 @@ void Swapchain::init()
 {
 	createSwapchain();
 	createSwapchainImageViews();
+	createSyncObjects();
 }
 
 void Swapchain::createSwapchain()
@@ -227,6 +228,34 @@ vk::raii::SwapchainKHR& Swapchain::getSwapchain()
 const vk::raii::SwapchainKHR& Swapchain::getSwapchain() const
 {
 	return swapchain;
+}
+
+void Swapchain::advanceFrame()
+{
+	semaphoreIndex = (semaphoreIndex + 1) % presentCompleteSemaphores.size();
+}
+
+vk::raii::Semaphore& Swapchain::getCurrentPresentCompleteSemaphore()
+{
+	return presentCompleteSemaphores[semaphoreIndex];
+}
+
+vk::raii::Semaphore& Swapchain::getCurrentRenderFinishedSemaphore()
+{
+	return renderFinishedSemaphores[semaphoreIndex];
+}
+
+void Swapchain::createSyncObjects()
+{
+	presentCompleteSemaphores.clear();
+	renderFinishedSemaphores.clear();
+
+	for(std::size_t i = 0; i < swapchainImages.size(); i++)
+	{
+		presentCompleteSemaphores.emplace_back(device.getDevice().createSemaphore({}));
+		renderFinishedSemaphores.emplace_back(device.getDevice().createSemaphore({}));
+	}
+
 }
 
 }

@@ -110,13 +110,9 @@ private:
 	// TODO: Move this even more outside
 	std::vector<vk::raii::CommandBuffer> commandBuffers;
 
-	std::vector<vk::raii::Semaphore> presentCompleteSemaphores;
-	std::vector<vk::raii::Semaphore> renderFinishedSemaphores;
 	std::vector<vk::raii::Fence>     inFlightFences;
 
 	vk::raii::CommandBuffer& getCurrentCommandBuffer();
-	vk::raii::Semaphore&     getCurrentPresentCompleteSemaphore();
-	vk::raii::Semaphore&     getCurrentRenderFinishedSemaphore();
 	vk::raii::Fence&         getCurrentInFlightFence();
 
 };

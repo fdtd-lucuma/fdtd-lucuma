@@ -317,15 +317,10 @@ void Graphics::transitionImageOptimal2PresentSrc(std::uint32_t imageIndex)
 
 void Graphics::createSyncObjects()
 {
-	presentCompleteSemaphores.clear();
-	renderFinishedSemaphores.clear();
 	inFlightFences.clear();
 
 	for(int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 	{
-		presentCompleteSemaphores.emplace_back(device.getDevice().createSemaphore({}));
-		renderFinishedSemaphores.emplace_back(device.getDevice().createSemaphore({}));
-
 		inFlightFences.emplace_back(device.getDevice().createFence({.flags = vk::FenceCreateFlagBits::eSignaled}));
 	}
 
@@ -336,7 +331,7 @@ vk::Result Graphics::acquireNextImage()
 {
 	auto [result, _imageIndex] = swapchain
 		.getSwapchain()
-		.acquireNextImage(std::numeric_limits<std::uint64_t>::max(), getCurrentPresentCompleteSemaphore(), nullptr);
+		.acquireNextImage(std::numeric_limits<std::uint64_t>::max(), swapchain.getCurrentPresentCompleteSemaphore(), nullptr);
 
 	currentImageIndex = _imageIndex;
 	return result;
@@ -352,9 +347,9 @@ void Graphics::draw()
 
 	submitInfo
 		.setWaitDstStageMask(waitDestinationStageMask)
-		.setWaitSemaphores(*getCurrentPresentCompleteSemaphore())
+		.setWaitSemaphores(*swapchain.getCurrentPresentCompleteSemaphore())
 		.setCommandBuffers(*getCurrentCommandBuffer())
-		.setSignalSemaphores(*getCurrentRenderFinishedSemaphore())
+		.setSignalSemaphores(*swapchain.getCurrentRenderFinishedSemaphore())
 	;
 
 	getGraphicsQueue().submit(submitInfo, getCurrentInFlightFence());
@@ -375,7 +370,7 @@ vk::Result Graphics::present()
 	};
 
 	presentInfo
-		.setWaitSemaphores(*getCurrentRenderFinishedSemaphore())
+		.setWaitSemaphores(*swapchain.getCurrentRenderFinishedSemaphore())
 		.setSwapchains(*swapchain.getSwapchain())
 		.setImageIndices(currentImageIndex)
 	;
@@ -397,16 +392,6 @@ vk::raii::CommandBuffer& Graphics::getCurrentCommandBuffer()
 	return commandBuffers[currentFrame];
 }
 
-vk::raii::Semaphore& Graphics::getCurrentPresentCompleteSemaphore()
-{
-	return presentCompleteSemaphores[currentFrame];
-}
-
-vk::raii::Semaphore& Graphics::getCurrentRenderFinishedSemaphore()
-{
-	return renderFinishedSemaphores[currentFrame];
-}
-
 vk::raii::Fence& Graphics::getCurrentInFlightFence()
 {
 	return inFlightFences[currentFrame];
@@ -415,6 +400,7 @@ vk::raii::Fence& Graphics::getCurrentInFlightFence()
 void Graphics::advanceFrame()
 {
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+	swapchain.advanceFrame();
 }
 
 }

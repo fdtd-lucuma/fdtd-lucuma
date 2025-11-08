@@ -59,6 +59,11 @@ public:
 	vk::raii::SwapchainKHR& getSwapchain();
 	const vk::raii::SwapchainKHR& getSwapchain() const;
 
+	vk::raii::Semaphore& getCurrentPresentCompleteSemaphore();
+	vk::raii::Semaphore& getCurrentRenderFinishedSemaphore();
+
+	void advanceFrame();
+
 private:
 	Core&            core;
 	Device&          device;
@@ -72,9 +77,15 @@ private:
 	std::vector<vk::Image>           swapchainImages;
 	std::vector<vk::raii::ImageView> swapchainImageViews;
 
+	int semaphoreIndex = 0;
+
+	std::vector<vk::raii::Semaphore> presentCompleteSemaphores;
+	std::vector<vk::raii::Semaphore> renderFinishedSemaphores;
+
 	void init();
 	void createSwapchain();
 	void createSwapchainImageViews();
+	void createSyncObjects();
 
 	SwapchainDetails getDetails() const;
 
