@@ -23,6 +23,7 @@ import std;
 
 import lucuma.utils;
 import lucuma.utils.vulkan;
+import lucuma.services.window;
 
 namespace lucuma::services::vulkan
 {
@@ -72,6 +73,7 @@ private:
 	Device&       device;
 	ShaderLoader& shaderLoader;
 	Swapchain&    swapchain;
+	window::Glfw& glfw;
 
 	std::uint32_t currentImageIndex;
 
@@ -100,6 +102,7 @@ private:
 	void transitionImageOptimal2PresentSrc(std::uint32_t imageIndex);
 
 	std::uint32_t currentFrame = 0;
+	bool framebufferResized = false;
 
 	void advanceFrame();
 

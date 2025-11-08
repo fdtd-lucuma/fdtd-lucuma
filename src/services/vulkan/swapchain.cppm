@@ -63,6 +63,7 @@ public:
 	vk::raii::Semaphore& getCurrentRenderFinishedSemaphore();
 
 	void advanceFrame();
+	void recreate();
 
 private:
 	Core&            core;
@@ -86,6 +87,8 @@ private:
 	void createSwapchain();
 	void createSwapchainImageViews();
 	void createSyncObjects();
+
+	void cleanupSwapchain();
 
 	SwapchainDetails getDetails() const;
 

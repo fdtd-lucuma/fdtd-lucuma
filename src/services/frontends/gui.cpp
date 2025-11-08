@@ -44,10 +44,7 @@ void Gui::start()
 
 void Gui::drawFrame()
 {
-	graphics.waitFence();
-	graphics.acquireNextImage();
 	graphics.draw();
-	graphics.present();
 }
 
 }

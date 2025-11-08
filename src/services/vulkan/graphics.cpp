@@ -18,7 +18,10 @@ module;
 
 module lucuma.services.vulkan;
 
+import lucuma.services.window;
 import lucuma.services.basic;
+
+import vkfw;
 
 namespace lucuma::services::vulkan
 {
@@ -28,7 +31,8 @@ using namespace lucuma::services;
 Graphics::Graphics([[maybe_unused]] Injector& injector):
 	device(injector.inject<Device>()),
 	shaderLoader(injector.inject<ShaderLoader>()),
-	swapchain(injector.inject<Swapchain>())
+	swapchain(injector.inject<Swapchain>()),
+	glfw(injector.inject<window::Glfw>())
 
 {
 	if(!device.getGraphicsInfo().has_value())
@@ -69,6 +73,13 @@ void Graphics::init()
 	createCommandBuffers();
 
 	createSyncObjects();
+
+	glfw.getWindow().callbacks()->on_framebuffer_resize =
+		[this](const vkfw::Window&, std::size_t, std::size_t)
+		{
+			framebufferResized = true;
+		}
+	;
 }
 
 std::vector<vk::raii::Queue> Graphics::createQueuesCommon(const QueueFamilyInfo& info)
@@ -339,6 +350,20 @@ vk::Result Graphics::acquireNextImage()
 
 void Graphics::draw()
 {
+	waitFence();
+	auto result = acquireNextImage();
+
+	if(result == vk::Result::eErrorOutOfDateKHR)
+	{
+		swapchain.recreate();
+		return;
+	}
+
+	if(result != vk::Result::eSuccess && result != vk::Result::eSuboptimalKHR)
+	{
+		throw std::runtime_error("failed to acquire swap chain image!");
+	}
+
 	device.getDevice().resetFences(*getCurrentInFlightFence());
 	recordCommandBuffer(currentImageIndex);
 
@@ -353,6 +378,20 @@ void Graphics::draw()
 	;
 
 	getGraphicsQueue().submit(submitInfo, getCurrentInFlightFence());
+
+	result = present();
+
+	if(result == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR || framebufferResized)
+	{
+		swapchain.recreate();
+		framebufferResized = false;
+	}
+	else if(result != vk::Result::eSuccess)
+	{
+		throw std::runtime_error("failed to present swap chain image!");
+	}
+
+	advanceFrame();
 }
 
 void Graphics::waitFence()
@@ -375,11 +414,7 @@ vk::Result Graphics::present()
 		.setImageIndices(currentImageIndex)
 	;
 
-	auto result = getPresentQueue().presentKHR(presentInfo);
-
-	advanceFrame();
-
-	return result;
+	return getPresentQueue().presentKHR(presentInfo);
 }
 
 Graphics::~Graphics()

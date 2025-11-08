@@ -46,7 +46,6 @@ void Glfw::init()
 	vkfw::windowHint<vkfw::WindowHint::eClientAPI>(vkfw::ClientAPI::eNone);
 
 	window = vkfw::createWindowUnique(800, 600, "fdtd-lucuma");
-	window->setUserPointer(this);
 
 	// TODO: Framebuffer callback
 	// TODO: Key callback
@@ -66,6 +65,19 @@ void Glfw::pollEvents()
 vkfw::Window& Glfw::getWindow()
 {
 	return window.get();
+}
+
+void Glfw::waitUntilMaximixed()
+{
+	auto [width, height] = window->getFramebufferSize();
+
+	while(width == 0 || height == 0)
+	{
+		std::tie(width, height) = window->getFramebufferSize();
+
+		vkfw::waitEvents();
+	}
+
 }
 
 }

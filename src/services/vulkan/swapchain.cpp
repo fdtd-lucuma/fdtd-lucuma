@@ -258,4 +258,21 @@ void Swapchain::createSyncObjects()
 
 }
 
+void Swapchain::recreate()
+{
+	glfw.waitUntilMaximixed();
+	device.getDevice().waitIdle();
+
+	cleanupSwapchain();
+
+	createSwapchain();
+	createSwapchainImageViews();
+}
+
+void Swapchain::cleanupSwapchain()
+{
+	swapchainImageViews.clear();
+	swapchain = nullptr;
+}
+
 }

@@ -40,6 +40,8 @@ public:
 
 	vkfw::Window& getWindow();
 
+	void waitUntilMaximixed();
+
 private:
 	basic::Settings& settings;
 
@@ -47,7 +49,6 @@ private:
 	vkfw::UniqueWindow   window;
 
 	void init();
-
 };
 
 }
