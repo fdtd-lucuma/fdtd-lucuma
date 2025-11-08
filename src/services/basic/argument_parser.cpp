@@ -159,6 +159,9 @@ void ArgumentParser::parse(int argc, char** argv)
 		{nullptr,       0,                 nullptr, 0},
 	};
 
+	if(argc == 1)
+		_isHeadless = false;
+
 	while((c = getopt_long(argc, argv, shortopts, options, nullptr)) != -1)
 	{
 		handleOption(c);
