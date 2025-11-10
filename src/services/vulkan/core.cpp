@@ -68,11 +68,11 @@ void Core::init()
 
 void Core::createInstance()
 {
-	constexpr vk::ApplicationInfo applicattionInfo {
+	vk::ApplicationInfo applicattionInfo {
 		.applicationVersion = vk::makeVersion(0, 0, 0),
 		.pEngineName        = "Fdtd",
 		.engineVersion      = vk::makeVersion(0, 0, 0),
-		.apiVersion         = vk::ApiVersion13,
+		.apiVersion         = getApiVersion(),
 	};
 
 	auto layers     = getRequiredLayers();
@@ -210,12 +210,17 @@ bool Core::isSuitable(vk::PhysicalDevice physicalDevice)
 	auto properties = physicalDevice.getProperties();
 	//auto features   = physicalDevice.getFeatures();
 
-	if(properties.apiVersion < vk::ApiVersion13)
+	if(properties.apiVersion < getApiVersion())
 		return false;
 
 	// TODO: Check for extensions
 
 	return true;
+}
+
+std::uint32_t Core::getApiVersion() const
+{
+	return vk::ApiVersion13;
 }
 
 }

@@ -43,6 +43,8 @@ public:
 	vk::raii::PhysicalDevice& getPhysicalDevice();
 	vk::raii::SurfaceKHR&     getSurface();
 
+	std::uint32_t getApiVersion() const;
+
 private:
 	Context&           context;
 	DebugRequirements& debugRequirements;

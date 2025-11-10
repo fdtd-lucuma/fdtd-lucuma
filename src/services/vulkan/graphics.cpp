@@ -20,6 +20,7 @@ module lucuma.services.vulkan;
 
 import lucuma.services.window;
 import lucuma.services.basic;
+import lucuma.legacy_headers.entt;
 
 import vkfw;
 
@@ -29,6 +30,7 @@ namespace lucuma::services::vulkan
 using namespace lucuma::services;
 
 Graphics::Graphics([[maybe_unused]] Injector& injector):
+	registry(injector.inject<entt::registry>()),
 	device(injector.inject<Device>()),
 	shaderLoader(injector.inject<ShaderLoader>()),
 	swapchain(injector.inject<Swapchain>()),
@@ -264,6 +266,11 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 	commandBuffer.setScissor(0, swapchain.getCurrentScissor());
 
 	commandBuffer.draw(3, 1, 0, 0);
+
+	for(auto &&[_, onDraw]: registry.view<GraphicsOnDraw>().each())
+	{
+		onDraw.f(commandBuffer);
+	}
 
 	commandBuffer.endRendering();
 

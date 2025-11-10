@@ -30,7 +30,8 @@ namespace lucuma::services::frontends
 Gui::Gui([[maybe_unused]]Injector& injector):
 	registry(injector.inject<entt::registry>()),
 	glfw(injector.inject<window::Glfw>()),
-	graphics(injector.inject<vulkan::Graphics>())
+	graphics(injector.inject<vulkan::Graphics>()),
+	imgui(injector.inject<vulkan::Imgui>())
 { }
 
 void Gui::start()

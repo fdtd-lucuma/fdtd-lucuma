@@ -25,6 +25,7 @@ target_sources(${PROJECT_NAME}
 		debug_requirements.cpp
 		device.cpp
 		graphics.cpp
+		imgui.cpp
 		instantiations.cpp
 		shader_loader.cpp
 		swapchain.cpp
@@ -42,6 +43,7 @@ target_sources(${PROJECT_NAME}
 			debug_requirements.cppm
 			device.cppm
 			graphics.cppm
+			imgui.cppm
 			shader_loader.cppm
 			swapchain.cppm
 			utils.cppm

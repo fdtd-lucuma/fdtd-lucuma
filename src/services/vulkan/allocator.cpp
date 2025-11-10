@@ -68,7 +68,7 @@ void Allocator::createAllocator()
 		.physicalDevice   = core.getPhysicalDevice(),
 		.device           = device.getDevice(),
 		.instance         = core.getInstance(),
-		.vulkanApiVersion = vk::ApiVersion14
+		.vulkanApiVersion = core.getApiVersion(),
 	};
 
 	allocator = vma::createAllocatorUnique(allocatorCreateInfo);

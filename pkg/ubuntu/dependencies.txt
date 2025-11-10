@@ -9,6 +9,7 @@ libglm-dev
 libtaskflow-cpp-dev
 libvulkan-dev
 libvulkan-memory-allocator-dev
+libx11-dev
 libyaml-cpp-dev
 ninja-build
 pkgconf

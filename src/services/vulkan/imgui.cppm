@@ -16,34 +16,50 @@
 
 module;
 
-export module lucuma.services.frontends:gui;
+export module lucuma.services.vulkan:imgui;
 
-import lucuma.utils;
-import lucuma.services.window;
-import lucuma.services.vulkan;
-import lucuma.legacy_headers.entt;
-
+import vulkan_hpp;
 import std;
 
-namespace lucuma::services::frontends
+import lucuma.utils;
+import lucuma.utils.vulkan;
+import lucuma.services.window;
+import lucuma.legacy_headers.entt;
+
+import imgui;
+
+namespace lucuma::services::vulkan
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::vulkan;
+using namespace lucuma::services;
 
-export class Gui
+class Device;
+class Core;
+class Swapchain;
+class Graphics;
+
+export class Imgui
 {
 public:
-	Gui(Injector& injector);
+	Imgui(Injector& injector);
 
-	void start();
+	~Imgui();
 
 private:
-	entt::registry&   registry;
-	window::Glfw&     glfw;
-	vulkan::Graphics& graphics;
-	vulkan::Imgui&    imgui;
+	entt::registry& registry;
+	Core&           core;
+	Device&         device;
+	Swapchain&      swapchain;
+	Graphics&       graphics;
+	window::Glfw&   glfw;
 
-	void drawFrame();
+	void init();
+
+	void initImgui();
+
+	void onDraw(vk::CommandBuffer buffer);
 
 };
 

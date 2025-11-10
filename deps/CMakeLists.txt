@@ -131,6 +131,7 @@ pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET GLOBAL
 		fmt
 		glfw3
+		x11
 		yaml-cpp
 )
 

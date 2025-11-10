@@ -34,6 +34,7 @@ template Debug&             Injector::inject<Debug>();
 template DebugRequirements& Injector::inject<DebugRequirements>();
 template Device&            Injector::inject<Device>();
 template Graphics&          Injector::inject<Graphics>();
+template Imgui&             Injector::inject<Imgui>();
 template ShaderLoader&      Injector::inject<ShaderLoader>();
 template Swapchain&         Injector::inject<Swapchain>();
 

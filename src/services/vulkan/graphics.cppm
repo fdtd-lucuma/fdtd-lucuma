@@ -24,6 +24,7 @@ import std;
 import lucuma.utils;
 import lucuma.utils.vulkan;
 import lucuma.services.window;
+import lucuma.legacy_headers.entt;
 
 namespace lucuma::services::vulkan
 {
@@ -48,6 +49,11 @@ struct TransitionImageLayoutInfo {
 	vk::PipelineStageFlags2 dstStageMask  = {};
 };
 
+export struct GraphicsOnDraw
+{
+	std::function<void (vk::CommandBuffer)> f;
+};
+
 export class Graphics
 {
 public:
@@ -70,10 +76,11 @@ public:
 private:
 	constexpr static int MAX_FRAMES_IN_FLIGHT = 2;
 
-	Device&       device;
-	ShaderLoader& shaderLoader;
-	Swapchain&    swapchain;
-	window::Glfw& glfw;
+	entt::registry& registry;
+	Device&         device;
+	ShaderLoader&   shaderLoader;
+	Swapchain&      swapchain;
+	window::Glfw&   glfw;
 
 	std::uint32_t currentImageIndex;
 

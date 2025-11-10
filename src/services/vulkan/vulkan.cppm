@@ -31,6 +31,7 @@ export import :debug;
 export import :debug_requirements;
 export import :device;
 export import :graphics;
+export import :imgui;
 export import :swapchain;
 
 import :shader_loader;
@@ -52,6 +53,7 @@ extern template Debug&             Injector::inject<Debug>();
 extern template DebugRequirements& Injector::inject<DebugRequirements>();
 extern template Device&            Injector::inject<Device>();
 extern template Graphics&          Injector::inject<Graphics>();
+extern template Imgui&             Injector::inject<Imgui>();
 extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 extern template Swapchain&         Injector::inject<Swapchain>();
 
