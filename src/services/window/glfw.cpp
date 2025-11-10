@@ -44,10 +44,11 @@ void Glfw::init()
 	instance = vkfw::initUnique();
 
 	vkfw::windowHint<vkfw::WindowHint::eClientAPI>(vkfw::ClientAPI::eNone);
+	vkfw::windowHint<vkfw::WindowHint::eSRGBCapable>(true);
+	vkfw::windowHint<vkfw::WindowHint::eResizable>(true);
 
 	window = vkfw::createWindowUnique(800, 600, "fdtd-lucuma");
 
-	// TODO: Framebuffer callback
 	// TODO: Key callback
 }
 
