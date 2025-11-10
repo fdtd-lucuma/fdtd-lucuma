@@ -59,6 +59,26 @@ vk::raii::SurfaceKHR& Core::getSurface()
 	return surface;
 }
 
+const vk::raii::Context& Core::getContext() const
+{
+	return context.getContext();
+}
+
+const vk::raii::Instance& Core::getInstance() const
+{
+	return instance;
+}
+
+const vk::raii::PhysicalDevice& Core::getPhysicalDevice() const
+{
+	return physicalDevice;
+}
+
+const vk::raii::SurfaceKHR& Core::getSurface() const
+{
+	return surface;
+}
+
 void Core::init()
 {
 	createInstance();

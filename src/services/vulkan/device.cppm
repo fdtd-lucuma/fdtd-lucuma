@@ -48,11 +48,16 @@ public:
 	Device(Injector& injector);
 
 	vk::raii::PhysicalDevice& getPhysicalDevice();
-	vk::raii::Device&         getDevice();
+	const vk::raii::PhysicalDevice& getPhysicalDevice() const;
+
+	vk::raii::Device& getDevice();
+	const vk::raii::Device& getDevice() const;
 
 	const std::optional<QueueFamilyInfo>& getGraphicsInfo() const;
 	const std::optional<QueueFamilyInfo>& getComputeInfo() const;
 	const std::optional<QueueFamilyInfo>& getPresentInfo() const;
+
+	void waitIdle() const;
 
 private:
 	Core&            core;

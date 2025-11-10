@@ -32,6 +32,7 @@ public:
 	Context(Injector& injector);
 
 	vk::raii::Context& getContext();
+	const vk::raii::Context& getContext() const;
 
 private:
 	vk::raii::Context context;

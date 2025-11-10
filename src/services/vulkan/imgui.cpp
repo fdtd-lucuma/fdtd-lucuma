@@ -106,7 +106,9 @@ void Imgui::onDraw(vk::CommandBuffer buffer)
 	ImGui_ImplVulkan_NewFrame();
 
 	ImGui::NewFrame();
+
 	ImGui::ShowDemoWindow();
+
 	ImGui::Render();
 
 	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), buffer);
@@ -115,6 +117,8 @@ void Imgui::onDraw(vk::CommandBuffer buffer)
 
 Imgui::~Imgui()
 {
+	device.waitIdle();
+
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();

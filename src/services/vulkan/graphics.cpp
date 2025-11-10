@@ -426,7 +426,7 @@ vk::Result Graphics::present()
 
 Graphics::~Graphics()
 {
-	device.getDevice().waitIdle();
+	device.waitIdle();
 }
 
 vk::raii::CommandBuffer& Graphics::getCurrentCommandBuffer()

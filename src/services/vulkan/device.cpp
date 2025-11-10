@@ -38,7 +38,17 @@ vk::raii::PhysicalDevice& Device::getPhysicalDevice()
 	return core.getPhysicalDevice();
 }
 
+const vk::raii::PhysicalDevice& Device::getPhysicalDevice() const
+{
+	return core.getPhysicalDevice();
+}
+
 vk::raii::Device& Device::getDevice()
+{
+	return device;
+}
+
+const vk::raii::Device& Device::getDevice() const
 {
 	return device;
 }
@@ -194,4 +204,8 @@ std::vector<const char*> Device::getRequiredExtensions()
 	return result;
 }
 
+void Device::waitIdle() const
+{
+	getDevice().waitIdle();
+}
 }

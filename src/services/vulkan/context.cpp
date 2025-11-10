@@ -30,4 +30,9 @@ vk::raii::Context& Context::getContext()
 	return context;
 }
 
+const vk::raii::Context& Context::getContext() const
+{
+	return context;
+}
+
 }
