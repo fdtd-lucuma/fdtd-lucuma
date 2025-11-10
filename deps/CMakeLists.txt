@@ -130,6 +130,7 @@ set_target_properties(mdspan
 pkg_check_modules(libraries
 	REQUIRED IMPORTED_TARGET GLOBAL
 		fmt
+		freetype2
 		glfw3
 		x11
 		yaml-cpp
@@ -226,6 +227,7 @@ target_sources(imgui
 		${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
 		${imgui_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
 		${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
+		${imgui_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp
 )
 
 target_include_directories(imgui
@@ -239,11 +241,14 @@ target_compile_definitions(imgui
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
 		IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+		IMGUI_ENABLE_FREETYPE
 )
 
 target_link_libraries(imgui
 	PUBLIC
 		VkfwModule
+	PRIVATE
+		PkgConfig::libraries
 )
 
 # set up glm C++ module as a library
