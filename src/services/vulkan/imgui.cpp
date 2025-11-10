@@ -62,6 +62,13 @@ void Imgui::initImgui()
 	ImGui::CheckVersion();
 	ImGui::CreateContext();
 
+	auto& io = ImGui::GetIO();
+
+	io.ConfigFlags |=
+		ImGuiConfigFlags_NavEnableKeyboard |
+		ImGuiConfigFlags_NavEnableGamepad |
+		ImGuiConfigFlags_DockingEnable;
+
 	ImGui_ImplGlfw_InitForVulkan(glfw.getWindow(), true);
 
 	const auto swapchainFormat = swapchain.getFormat();
