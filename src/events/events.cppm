@@ -19,4 +19,5 @@ module;
 export module lucuma.events;
 
 export import :draw;
-export import :gui_draw;
+export import :draw;
+export import :frame;

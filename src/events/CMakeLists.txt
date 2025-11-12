@@ -21,6 +21,6 @@ target_sources(${PROJECT_NAME}
 		FILES
 			events.cppm
 			draw.cppm
-			gui_draw.cppm
+			frame.cppm
 )
 

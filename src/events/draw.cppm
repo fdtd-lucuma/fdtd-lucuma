@@ -29,4 +29,11 @@ export struct Draw
 	vk::CommandBuffer commandBuffer = {};
 };
 
+export struct GuiDraw
+{
+	// Command buffer that will be submited to a graphics queue.
+	vk::CommandBuffer commandBuffer = {};
+};
+
+
 }

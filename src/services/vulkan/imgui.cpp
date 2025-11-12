@@ -51,6 +51,9 @@ void Imgui::init()
 	initImgui();
 
 	dispatcher.sink<events::GuiDraw>().connect<&Imgui::onDraw>(*this);
+	dispatcher.sink<events::FrameStart>().connect<&Imgui::onFrameStart>(*this);
+	dispatcher.sink<events::FrameEnd>().connect<&Imgui::onFrameEnd>(*this);
+	dispatcher.sink<events::Update>().connect<&Imgui::onUpdate>(*this);
 }
 
 void Imgui::initImgui()
@@ -104,23 +107,32 @@ void Imgui::initImgui()
 
 void Imgui::onDraw(const events::GuiDraw& event)
 {
-	// TODO: Move this outside buffer recording
+	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), event.commandBuffer);
+}
+
+void Imgui::onFrameStart(const events::FrameStart&)
+{
 	ImGui_ImplGlfw_NewFrame();
 	ImGui_ImplVulkan_NewFrame();
 
 	ImGui::NewFrame();
+}
 
-	ImGui::ShowDemoWindow();
-
+void Imgui::onFrameEnd(const events::FrameEnd&)
+{
 	ImGui::Render();
-
-	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), event.commandBuffer);
-
+}
+void Imgui::onUpdate(const events::Update&)
+{
+	ImGui::ShowDemoWindow();
 }
 
 Imgui::~Imgui()
 {
 	dispatcher.sink<events::GuiDraw>().disconnect<&Imgui::onDraw>(*this);
+	dispatcher.sink<events::FrameStart>().disconnect<&Imgui::onFrameStart>(*this);
+	dispatcher.sink<events::FrameEnd>().disconnect<&Imgui::onFrameEnd>(*this);
+	dispatcher.sink<events::Update>().disconnect<&Imgui::onUpdate>(*this);
 
 	device.waitIdle();
 

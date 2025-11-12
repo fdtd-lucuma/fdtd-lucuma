@@ -38,13 +38,14 @@ public:
 	void start();
 
 private:
+	entt::dispatcher& dispatcher;
 	entt::registry&       registry;
 	window::Glfw&         glfw;
 	vulkan::Graphics&     graphics;
 	vulkan::TriangleDemo& triangleDemo;
 	vulkan::Imgui&        imgui;
 
-	void drawFrame();
+	void drawFrame(float timeDelta);
 
 };
 

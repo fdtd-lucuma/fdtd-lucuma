@@ -22,12 +22,15 @@ import lucuma.utils;
 import lucuma.services.window;
 import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
+import lucuma.events;
+
 import std;
 
 namespace lucuma::services::frontends
 {
 
 Gui::Gui([[maybe_unused]]Injector& injector):
+	dispatcher(injector.inject<entt::dispatcher>()),
 	registry(injector.inject<entt::registry>()),
 	glfw(injector.inject<window::Glfw>()),
 	graphics(injector.inject<vulkan::Graphics>()),
@@ -37,15 +40,30 @@ Gui::Gui([[maybe_unused]]Injector& injector):
 
 void Gui::start()
 {
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	auto lastTime = currentTime;
+
+	float timeDelta = 1.f/60;
+
 	while(!glfw.shouldClose())
 	{
+		lastTime = currentTime;
+
 		glfw.pollEvents();
-		drawFrame();
+
+		drawFrame(timeDelta);
+
+		currentTime = std::chrono::high_resolution_clock::now();
+		timeDelta   = std::chrono::duration<float, std::chrono::seconds::period>(currentTime-lastTime).count();
 	}
 }
 
-void Gui::drawFrame()
+void Gui::drawFrame(float timeDelta)
 {
+	dispatcher.trigger(events::FrameStart{timeDelta});
+	dispatcher.trigger(events::Update{timeDelta});
+	dispatcher.trigger(events::FrameEnd{timeDelta});
+
 	graphics.draw();
 }
 
