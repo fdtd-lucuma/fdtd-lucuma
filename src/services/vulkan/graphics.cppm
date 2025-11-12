@@ -49,11 +49,6 @@ struct TransitionImageLayoutInfo {
 	vk::PipelineStageFlags2 dstStageMask  = {};
 };
 
-export struct GraphicsOnDraw
-{
-	std::function<void (vk::CommandBuffer)> f;
-};
-
 export class Graphics
 {
 public:
@@ -76,11 +71,12 @@ public:
 private:
 	constexpr static int MAX_FRAMES_IN_FLIGHT = 2;
 
-	entt::registry& registry;
-	Device&         device;
-	ShaderLoader&   shaderLoader;
-	Swapchain&      swapchain;
-	window::Glfw&   glfw;
+	entt::dispatcher& dispatcher;
+	entt::registry&   registry;
+	Device&           device;
+	ShaderLoader&     shaderLoader;
+	Swapchain&        swapchain;
+	window::Glfw&     glfw;
 
 	std::uint32_t currentImageIndex;
 

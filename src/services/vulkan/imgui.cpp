@@ -21,6 +21,7 @@ module lucuma.services.vulkan;
 import lucuma.services.window;
 import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
+import lucuma.events;
 
 import imgui;
 import imgui_impl_vulkan;
@@ -33,6 +34,7 @@ namespace lucuma::services::vulkan
 using namespace lucuma::services;
 
 Imgui::Imgui([[maybe_unused]] Injector& injector):
+	dispatcher(injector.inject<entt::dispatcher>()),
 	registry(injector.inject<entt::registry>()),
 	core(injector.inject<Core>()),
 	device(injector.inject<Device>()),
@@ -48,13 +50,7 @@ void Imgui::init()
 {
 	initImgui();
 
-	auto id = registry.create();
-	registry.emplace<GraphicsOnDraw>(id, GraphicsOnDraw{.f =
-		[this](vk::CommandBuffer buffer)
-		{
-			onDraw(buffer);
-		}
-	});
+	dispatcher.sink<events::OnDraw>().connect<&Imgui::onDraw>(*this);
 }
 
 void Imgui::initImgui()
@@ -106,7 +102,7 @@ void Imgui::initImgui()
 	ImGui_ImplVulkan_Init(&initInfo);
 }
 
-void Imgui::onDraw(vk::CommandBuffer buffer)
+void Imgui::onDraw(const events::OnDraw& event)
 {
 	// TODO: Move this outside buffer recording
 	ImGui_ImplGlfw_NewFrame();
@@ -118,12 +114,14 @@ void Imgui::onDraw(vk::CommandBuffer buffer)
 
 	ImGui::Render();
 
-	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), buffer);
+	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), event.commandBuffer);
 
 }
 
 Imgui::~Imgui()
 {
+	dispatcher.sink<events::OnDraw>().disconnect<&Imgui::onDraw>(*this);
+
 	device.waitIdle();
 
 	ImGui_ImplVulkan_Shutdown();

@@ -112,4 +112,10 @@ entt::registry& Injector::inject<entt::registry>()
 	return registry;
 }
 
+template<>
+entt::dispatcher& Injector::inject<entt::dispatcher>()
+{
+	return dispatcher;
+}
+
 }

@@ -70,6 +70,9 @@ public:
 	template<>
 	[[nodiscard]] entt::registry& inject<entt::registry>();
 
+	template<>
+	[[nodiscard]] entt::dispatcher& inject<entt::dispatcher>();
+
 	~Injector();
 
 	/// Prints a directed acyclic graph in dot format
@@ -89,7 +92,8 @@ private:
 		~LinkerWatcher();
 	};
 
-	entt::registry registry;
+	entt::registry   registry;
+	entt::dispatcher dispatcher;
 
 	std::stack<entt::type_info>                              dependencies;
 	std::vector<std::pair<entt::type_info, entt::type_info>> dependenciesEdges;

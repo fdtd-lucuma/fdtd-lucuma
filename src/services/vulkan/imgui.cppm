@@ -25,6 +25,7 @@ import lucuma.utils;
 import lucuma.utils.vulkan;
 import lucuma.services.window;
 import lucuma.legacy_headers.entt;
+import lucuma.events;
 
 import imgui;
 
@@ -48,18 +49,19 @@ public:
 	~Imgui();
 
 private:
-	entt::registry& registry;
-	Core&           core;
-	Device&         device;
-	Swapchain&      swapchain;
-	Graphics&       graphics;
-	window::Glfw&   glfw;
+	entt::dispatcher& dispatcher;
+	entt::registry&   registry;
+	Core&             core;
+	Device&           device;
+	Swapchain&        swapchain;
+	Graphics&         graphics;
+	window::Glfw&     glfw;
 
 	void init();
 
 	void initImgui();
 
-	void onDraw(vk::CommandBuffer buffer);
+	void onDraw(const events::OnDraw& event);
 
 };
 

@@ -21,6 +21,7 @@ module lucuma.services.vulkan;
 import lucuma.services.window;
 import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
+import lucuma.events;
 
 import vkfw;
 
@@ -30,6 +31,7 @@ namespace lucuma::services::vulkan
 using namespace lucuma::services;
 
 Graphics::Graphics([[maybe_unused]] Injector& injector):
+	dispatcher(injector.inject<entt::dispatcher>()),
 	registry(injector.inject<entt::registry>()),
 	device(injector.inject<Device>()),
 	shaderLoader(injector.inject<ShaderLoader>()),
@@ -267,10 +269,7 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 
 	commandBuffer.draw(3, 1, 0, 0);
 
-	for(auto &&[_, onDraw]: registry.view<GraphicsOnDraw>().each())
-	{
-		onDraw.f(commandBuffer);
-	}
+	dispatcher.trigger(events::OnDraw{commandBuffer});
 
 	commandBuffer.endRendering();
 

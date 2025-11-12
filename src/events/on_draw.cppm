@@ -16,28 +16,17 @@
 
 module;
 
-#include <entt/entt.hpp>
+export module lucuma.events:on_draw;
 
-export module lucuma.legacy_headers.entt;
+import vulkan_hpp;
 
-import std;
-
-export namespace entt
+namespace lucuma::events
 {
 
-using entt::registry;
-using entt::entity;
-using entt::null;
-using entt::type_id;
-using entt::type_info;
-using entt::dense_map;
-using entt::dense_set;
-using entt::operator==;
-using entt::operator!=;
-using entt::operator<;
-using entt::operator<=;
-using entt::operator>;
-using entt::operator>=;
-using entt::dispatcher;
-
+export struct OnDraw
+{
+	// Command buffer that will be submited to a graphics queue.
+	vk::CommandBuffer commandBuffer = {};
 };
+
+}
