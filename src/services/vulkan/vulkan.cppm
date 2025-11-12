@@ -33,6 +33,7 @@ export import :device;
 export import :graphics;
 export import :imgui;
 export import :swapchain;
+export import :triangle_demo;
 
 import :shader_loader;
 import :utils;
@@ -56,6 +57,7 @@ extern template Graphics&          Injector::inject<Graphics>();
 extern template Imgui&             Injector::inject<Imgui>();
 extern template ShaderLoader&      Injector::inject<ShaderLoader>();
 extern template Swapchain&         Injector::inject<Swapchain>();
+extern template TriangleDemo&      Injector::inject<TriangleDemo>();
 
 }
 

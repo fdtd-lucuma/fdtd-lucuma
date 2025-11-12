@@ -29,6 +29,7 @@ target_sources(${PROJECT_NAME}
 		instantiations.cpp
 		shader_loader.cpp
 		swapchain.cpp
+		triangle_demo.cpp
 		utils.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -46,6 +47,7 @@ target_sources(${PROJECT_NAME}
 			imgui.cppm
 			shader_loader.cppm
 			swapchain.cppm
+			triangle_demo.cppm
 			utils.cppm
 			vulkan.cppm
 )

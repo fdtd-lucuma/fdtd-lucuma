@@ -16,35 +16,52 @@
 
 module;
 
-export module lucuma.services.frontends:gui;
+export module lucuma.services.vulkan:triangle_demo;
 
-import lucuma.utils;
-import lucuma.services.window;
-import lucuma.services.vulkan;
-import lucuma.legacy_headers.entt;
-
+import vulkan_hpp;
 import std;
 
-namespace lucuma::services::frontends
+import lucuma.utils;
+import lucuma.utils.vulkan;
+import lucuma.services.window;
+import lucuma.legacy_headers.entt;
+import lucuma.events;
+
+namespace lucuma::services::vulkan
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::vulkan;
+using namespace lucuma::services;
 
-export class Gui
+class Buffer;
+class Device;
+class ShaderLoader;
+class Swapchain;
+struct QueueFamilyInfo;
+
+export class TriangleDemo
 {
 public:
-	Gui(Injector& injector);
+	TriangleDemo(Injector& injector);
 
-	void start();
+	~TriangleDemo();
 
 private:
-	entt::registry&       registry;
-	window::Glfw&         glfw;
-	vulkan::Graphics&     graphics;
-	vulkan::TriangleDemo& triangleDemo;
-	vulkan::Imgui&        imgui;
+	entt::dispatcher& dispatcher;
+	entt::registry&   registry;
+	Device&           device;
+	ShaderLoader&     shaderLoader;
+	Swapchain&        swapchain;
 
-	void drawFrame();
+	void init();
+
+	void createGraphicsPipeline();
+
+	vk::raii::PipelineLayout pipelineLayout = nullptr;
+	vk::raii::Pipeline       pipeline       = nullptr;
+
+	void onDraw(const events::Draw& event);
 
 };
 

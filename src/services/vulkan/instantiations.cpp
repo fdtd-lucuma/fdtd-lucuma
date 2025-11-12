@@ -37,6 +37,7 @@ template Graphics&          Injector::inject<Graphics>();
 template Imgui&             Injector::inject<Imgui>();
 template ShaderLoader&      Injector::inject<ShaderLoader>();
 template Swapchain&         Injector::inject<Swapchain>();
+template TriangleDemo&      Injector::inject<TriangleDemo>();
 
 }
 

@@ -74,7 +74,6 @@ private:
 	entt::dispatcher& dispatcher;
 	entt::registry&   registry;
 	Device&           device;
-	ShaderLoader&     shaderLoader;
 	Swapchain&        swapchain;
 	window::Glfw&     glfw;
 
@@ -94,8 +93,7 @@ private:
 	std::vector<vk::raii::Queue> createQueuesCommon(const QueueFamilyInfo& info);
 	vk::raii::CommandPool createCommandPool(const QueueFamilyInfo& info);
 
-	void createGraphicsPipeline(); //TODO: Move this into its own object
-	void createCommandBuffers(); //TODO: Move this into its own object
+	void createCommandBuffers();
 	void createSyncObjects();
 
 	void recordCommandBuffer(std::uint32_t imageIndex);
@@ -109,11 +107,6 @@ private:
 
 	void advanceFrame();
 
-	// Triangle data. TODO: Move this into its own object
-	vk::raii::PipelineLayout pipelineLayout = nullptr;
-	vk::raii::Pipeline       pipeline       = nullptr;
-
-	// TODO: Move this even more outside
 	std::vector<vk::raii::CommandBuffer> commandBuffers;
 
 	std::vector<vk::raii::Fence>     inFlightFences;

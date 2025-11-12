@@ -34,7 +34,6 @@ Graphics::Graphics([[maybe_unused]] Injector& injector):
 	dispatcher(injector.inject<entt::dispatcher>()),
 	registry(injector.inject<entt::registry>()),
 	device(injector.inject<Device>()),
-	shaderLoader(injector.inject<ShaderLoader>()),
 	swapchain(injector.inject<Swapchain>()),
 	glfw(injector.inject<window::Glfw>())
 
@@ -72,8 +71,6 @@ void Graphics::init()
 	createQueues();
 	createCommandPools();
 
-	// TODO: Move this
-	createGraphicsPipeline();
 	createCommandBuffers();
 
 	createSyncObjects();
@@ -114,111 +111,6 @@ vk::raii::CommandPool Graphics::createCommandPool(const QueueFamilyInfo& info)
 	};
 
 	return device.getDevice().createCommandPool(createInfo);
-}
-
-void Graphics::createGraphicsPipeline()
-{
-	auto shaderCode = shaderLoader.createShaderModule("triangle.spv");
-
-	vk::PipelineShaderStageCreateInfo vertShaderStageCreateInfo {
-		.stage  = vk::ShaderStageFlagBits::eVertex,
-		.module = shaderCode,
-		.pName  = "vertMain",
-	};
-
-	vk::PipelineShaderStageCreateInfo fragShaderStageCreateInfo {
-		.stage  = vk::ShaderStageFlagBits::eFragment,
-		.module = shaderCode,
-		.pName  = "fragMain",
-	};
-
-	vk::PipelineShaderStageCreateInfo shaderStages[] = {
-		vertShaderStageCreateInfo,
-		fragShaderStageCreateInfo,
-	};
-
-	std::vector dynamicStates = {
-		vk::DynamicState::eViewport,
-		vk::DynamicState::eScissor,
-	};
-
-	vk::PipelineDynamicStateCreateInfo dynamicState;
-	dynamicState.setDynamicStates(dynamicStates);
-
-	vk::PipelineVertexInputStateCreateInfo vertexInputInfo;
-
-	vk::PipelineInputAssemblyStateCreateInfo inputAssembly {
-		.topology = vk::PrimitiveTopology::eTriangleList,
-	};
-
-	vk::PipelineViewportStateCreateInfo viewportState {
-		.viewportCount = 1,
-		.scissorCount  = 1,
-	};
-
-	vk::PipelineRasterizationStateCreateInfo rasterizer {
-		.depthClampEnable        = false,
-		.rasterizerDiscardEnable = false,
-		.polygonMode             = vk::PolygonMode::eFill,
-		.cullMode                = vk::CullModeFlagBits::eBack,
-		.frontFace               = vk::FrontFace::eClockwise,
-		.depthBiasEnable         = false,
-		.depthBiasSlopeFactor    = 1.0f,
-		.lineWidth               = 1.0f,
-	};
-
-	// TODO: Get from settings
-	vk::PipelineMultisampleStateCreateInfo multisampling {
-		.rasterizationSamples = vk::SampleCountFlagBits::e1,
-		.sampleShadingEnable  = false,
-	};
-
-	vk::PipelineColorBlendAttachmentState colorBlendAttachment {
-		.blendEnable = false,
-		.colorWriteMask =
-			vk::ColorComponentFlagBits::eR |
-			vk::ColorComponentFlagBits::eG |
-			vk::ColorComponentFlagBits::eB |
-			vk::ColorComponentFlagBits::eA,
-	};
-
-	vk::PipelineColorBlendStateCreateInfo colorBlending {
-		.logicOpEnable = false,
-		.logicOp       = vk::LogicOp::eCopy,
-	};
-
-	colorBlending.setAttachments(colorBlendAttachment);
-
-	vk::PipelineLayoutCreateInfo pipelineLayoutInfo {
-		.setLayoutCount         = 0,
-		.pushConstantRangeCount = 0,
-	};
-
-	pipelineLayout = device.getDevice().createPipelineLayout(pipelineLayoutInfo);
-
-	vk::StructureChain chain {
-		vk::GraphicsPipelineCreateInfo {
-			.pVertexInputState   = &vertexInputInfo,
-			.pInputAssemblyState = &inputAssembly,
-			.pViewportState      = &viewportState,
-			.pRasterizationState = &rasterizer,
-			.pMultisampleState   = &multisampling,
-			.pColorBlendState    = &colorBlending,
-			.pDynamicState       = &dynamicState,
-			.layout              = pipelineLayout,
-			.renderPass          = nullptr,
-		},
-		vk::PipelineRenderingCreateInfo{},
-	};
-
-	auto& [pipelineInfo, pipelineRenderingCreateInfo] = chain;
-
-	const auto swapchainFormat = swapchain.getFormat();
-
-	pipelineInfo.setStages(shaderStages);
-	pipelineRenderingCreateInfo.setColorAttachmentFormats(swapchainFormat);
-
-	pipeline = device.getDevice().createGraphicsPipeline(nullptr, pipelineInfo);
 }
 
 void Graphics::createCommandBuffers()
@@ -262,12 +154,6 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 	renderingInfo.setColorAttachments(attachmentInfo);
 
 	commandBuffer.beginRendering(renderingInfo);
-
-	commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
-	commandBuffer.setViewport(0, swapchain.getCurrentViewport());
-	commandBuffer.setScissor(0, swapchain.getCurrentScissor());
-
-	commandBuffer.draw(3, 1, 0, 0);
 
 	dispatcher.trigger(events::Draw{commandBuffer});
 	dispatcher.trigger(events::GuiDraw{commandBuffer});
