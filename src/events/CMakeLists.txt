@@ -20,6 +20,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			events.cppm
-			on_draw.cppm
+			draw.cppm
+			gui_draw.cppm
 )
 

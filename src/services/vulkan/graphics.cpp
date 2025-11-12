@@ -269,7 +269,8 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 
 	commandBuffer.draw(3, 1, 0, 0);
 
-	dispatcher.trigger(events::OnDraw{commandBuffer});
+	dispatcher.trigger(events::Draw{commandBuffer});
+	dispatcher.trigger(events::GuiDraw{commandBuffer});
 
 	commandBuffer.endRendering();
 

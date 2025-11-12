@@ -16,7 +16,17 @@
 
 module;
 
-export module lucuma.events;
+export module lucuma.events:gui_draw;
 
-export import :draw;
-export import :gui_draw;
+import vulkan_hpp;
+
+namespace lucuma::events
+{
+
+export struct GuiDraw
+{
+	// Command buffer that will be submited to a graphics queue.
+	vk::CommandBuffer commandBuffer = {};
+};
+
+}

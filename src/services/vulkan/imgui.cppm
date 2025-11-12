@@ -61,7 +61,7 @@ private:
 
 	void initImgui();
 
-	void onDraw(const events::OnDraw& event);
+	void onDraw(const events::GuiDraw& event);
 
 };
 

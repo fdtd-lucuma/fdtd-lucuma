@@ -50,7 +50,7 @@ void Imgui::init()
 {
 	initImgui();
 
-	dispatcher.sink<events::OnDraw>().connect<&Imgui::onDraw>(*this);
+	dispatcher.sink<events::GuiDraw>().connect<&Imgui::onDraw>(*this);
 }
 
 void Imgui::initImgui()
@@ -102,7 +102,7 @@ void Imgui::initImgui()
 	ImGui_ImplVulkan_Init(&initInfo);
 }
 
-void Imgui::onDraw(const events::OnDraw& event)
+void Imgui::onDraw(const events::GuiDraw& event)
 {
 	// TODO: Move this outside buffer recording
 	ImGui_ImplGlfw_NewFrame();
@@ -120,7 +120,7 @@ void Imgui::onDraw(const events::OnDraw& event)
 
 Imgui::~Imgui()
 {
-	dispatcher.sink<events::OnDraw>().disconnect<&Imgui::onDraw>(*this);
+	dispatcher.sink<events::GuiDraw>().disconnect<&Imgui::onDraw>(*this);
 
 	device.waitIdle();
 
