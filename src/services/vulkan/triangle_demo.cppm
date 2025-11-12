@@ -38,7 +38,6 @@ class Buffer;
 class Device;
 class ShaderLoader;
 class Swapchain;
-struct QueueFamilyInfo;
 
 export class TriangleDemo
 {
