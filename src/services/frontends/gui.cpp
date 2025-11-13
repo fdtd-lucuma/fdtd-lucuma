@@ -25,6 +25,7 @@ import lucuma.legacy_headers.entt;
 import lucuma.events;
 
 import imgui;
+import glm;
 
 import std;
 
@@ -37,7 +38,8 @@ Gui::Gui([[maybe_unused]]Injector& injector):
 	glfw(injector.inject<window::Glfw>()),
 	graphics(injector.inject<vulkan::Graphics>()),
 	triangleDemo(injector.inject<vulkan::TriangleDemo>()),
-	imgui(injector.inject<vulkan::Imgui>())
+	imgui(injector.inject<vulkan::Imgui>()),
+	settings(injector.inject<basic::Settings>())
 {
 	init();
 }
@@ -46,6 +48,18 @@ void Gui::init()
 {
 	// TODO: Wrap this in a raii helper
 	dispatcher.sink<events::Update>().connect<&Gui::update>(*this);
+
+	const auto size = (glm::vec<3, int>)settings.size();
+
+	fdtdInfo = FdtdInfo{
+		.size          = {size.x, size.y, size.z},
+		.gaussPosition = {size.x/2, size.y/2, size.z/2},
+		.deltaT        = 1,
+		.imp0          = 377,
+		.Cr            = (1.f/std::sqrt(3.f)),
+		.maxTime       = (int)settings.time(),
+		.gaussSigma    = 10,
+	};
 }
 
 void Gui::start()
@@ -79,7 +93,22 @@ void Gui::drawFrame(float timeDelta)
 
 void Gui::update(const events::Update&)
 {
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
+	ImGui::Begin("FDTD");
+
+	ImGui::InputInt3("Size", fdtdInfo.size);
+	ImGui::InputInt3("Source position", fdtdInfo.gaussPosition);
+	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
+	ImGui::InputFloat("Imp0", &fdtdInfo.imp0);
+	ImGui::InputFloat("Cr", &fdtdInfo.Cr);
+	ImGui::InputInt("Time steps", &fdtdInfo.maxTime);
+	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
+
+	if(ImGui::Button("Start"))
+	{
+	}
+
+	ImGui::End();
 }
 
 Gui::~Gui()

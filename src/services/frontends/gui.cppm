@@ -21,6 +21,7 @@ export module lucuma.services.frontends:gui;
 import lucuma.utils;
 import lucuma.services.window;
 import lucuma.services.vulkan;
+import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
 import lucuma.events;
 
@@ -30,6 +31,17 @@ namespace lucuma::services::frontends
 {
 
 using namespace lucuma::utils;
+
+struct FdtdInfo
+{
+	int size[3];
+	int gaussPosition[3];
+	float deltaT;
+	float imp0;
+	float Cr;
+	int maxTime;
+	float gaussSigma;
+};
 
 export class Gui
 {
@@ -42,16 +54,19 @@ public:
 	~Gui();
 
 private:
-	entt::dispatcher& dispatcher;
+	entt::dispatcher&     dispatcher;
 	entt::registry&       registry;
 	window::Glfw&         glfw;
 	vulkan::Graphics&     graphics;
 	vulkan::TriangleDemo& triangleDemo;
 	vulkan::Imgui&        imgui;
+	basic::Settings&      settings;
 
 	void drawFrame(float timeDelta);
 
 	void update(const events::Update& event);
+
+	FdtdInfo fdtdInfo;
 
 };
 
