@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=FDTD Lúcuma
+Comment=@PROJECT_DESCRIPTION@
+Keywords=fdtd;
+Exec=@PROJECT_NAME@ %F
+Terminal=false
+Type=Application
+Icon=@PROJECT_NAME@

@@ -1,4 +1,4 @@
-# Una GUI para fdtd
+#Una GUI para fdtd
 # Copyright © 2025 Otreblan
 #
 # fdtd-lucuma is free software: you can redistribute it and/or modify
@@ -14,6 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(applications)
-add_subdirectory(icons/hicolor/scalable/apps)
-add_subdirectory(shaders)
+configure_file(fdtd-lucuma.desktop.in
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop"
+	@ONLY
+)
+
+install(FILES
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop"
+	DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/applications"
+)
