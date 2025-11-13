@@ -14,5 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(shaders)
-add_subdirectory(icons/hicolor/scalable/apps)
+install(FILES
+	fdtd-lucuma.svg
+	DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/icons/hicolor/scalable/apps"
+)
