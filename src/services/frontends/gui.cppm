@@ -22,6 +22,7 @@ import lucuma.utils;
 import lucuma.services.window;
 import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
+import lucuma.events;
 
 import std;
 
@@ -35,7 +36,10 @@ export class Gui
 public:
 	Gui(Injector& injector);
 
+	void init();
 	void start();
+
+	~Gui();
 
 private:
 	entt::dispatcher& dispatcher;
@@ -46,6 +50,8 @@ private:
 	vulkan::Imgui&        imgui;
 
 	void drawFrame(float timeDelta);
+
+	void update(const events::Update& event);
 
 };
 

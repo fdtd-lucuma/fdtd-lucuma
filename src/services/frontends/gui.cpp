@@ -24,6 +24,8 @@ import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
 import lucuma.events;
 
+import imgui;
+
 import std;
 
 namespace lucuma::services::frontends
@@ -36,7 +38,15 @@ Gui::Gui([[maybe_unused]]Injector& injector):
 	graphics(injector.inject<vulkan::Graphics>()),
 	triangleDemo(injector.inject<vulkan::TriangleDemo>()),
 	imgui(injector.inject<vulkan::Imgui>())
-{ }
+{
+	init();
+}
+
+void Gui::init()
+{
+	// TODO: Wrap this in a raii helper
+	dispatcher.sink<events::Update>().connect<&Gui::update>(*this);
+}
 
 void Gui::start()
 {
@@ -65,6 +75,16 @@ void Gui::drawFrame(float timeDelta)
 	dispatcher.trigger(events::FrameEnd{timeDelta});
 
 	graphics.draw();
+}
+
+void Gui::update(const events::Update&)
+{
+	ImGui::ShowDemoWindow();
+}
+
+Gui::~Gui()
+{
+	dispatcher.sink<events::Update>().disconnect<&Gui::update>(*this);
 }
 
 }

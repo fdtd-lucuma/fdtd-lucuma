@@ -53,7 +53,6 @@ void Imgui::init()
 	dispatcher.sink<events::GuiDraw>().connect<&Imgui::onDraw>(*this);
 	dispatcher.sink<events::FrameStart>().connect<&Imgui::onFrameStart>(*this);
 	dispatcher.sink<events::FrameEnd>().connect<&Imgui::onFrameEnd>(*this);
-	dispatcher.sink<events::Update>().connect<&Imgui::onUpdate>(*this);
 }
 
 void Imgui::initImgui()
@@ -122,17 +121,12 @@ void Imgui::onFrameEnd(const events::FrameEnd&)
 {
 	ImGui::Render();
 }
-void Imgui::onUpdate(const events::Update&)
-{
-	ImGui::ShowDemoWindow();
-}
 
 Imgui::~Imgui()
 {
 	dispatcher.sink<events::GuiDraw>().disconnect<&Imgui::onDraw>(*this);
 	dispatcher.sink<events::FrameStart>().disconnect<&Imgui::onFrameStart>(*this);
 	dispatcher.sink<events::FrameEnd>().disconnect<&Imgui::onFrameEnd>(*this);
-	dispatcher.sink<events::Update>().disconnect<&Imgui::onUpdate>(*this);
 
 	device.waitIdle();
 

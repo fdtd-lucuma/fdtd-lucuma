@@ -65,9 +65,6 @@ private:
 	void onFrameStart(const events::FrameStart& event);
 	void onFrameEnd(const events::FrameEnd& event);
 
-	//TODO: Delete this
-	void onUpdate(const events::Update& event);
-
 };
 
 }
