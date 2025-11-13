@@ -34,13 +34,16 @@ using namespace lucuma::utils;
 
 struct FdtdInfo
 {
-	int size[3];
-	int gaussPosition[3];
+	int   size[3];
+	int   gaussPosition[3];
 	float deltaT;
 	float imp0;
 	float Cr;
-	int maxTime;
+	int   maxTime;
 	float gaussSigma;
+
+	Backend   backend;
+	Precision precision;
 };
 
 export class Gui

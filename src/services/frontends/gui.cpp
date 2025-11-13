@@ -19,6 +19,7 @@ module;
 module lucuma.services.frontends;
 
 import lucuma.utils;
+import lucuma.utils.imgui;
 import lucuma.services.window;
 import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
@@ -59,6 +60,9 @@ void Gui::init()
 		.Cr            = (1.f/std::sqrt(3.f)),
 		.maxTime       = (int)settings.time(),
 		.gaussSigma    = 10,
+
+		.backend   = Backend::vulkan,
+		.precision = Precision::f32,
 	};
 }
 
@@ -96,6 +100,8 @@ void Gui::update(const events::Update&)
 	//ImGui::ShowDemoWindow();
 	ImGui::Begin("FDTD");
 
+	ImGui::SeparatorText("Simulation parameters");
+
 	ImGui::InputInt3("Size", fdtdInfo.size);
 	ImGui::InputInt3("Source position", fdtdInfo.gaussPosition);
 	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
@@ -103,6 +109,11 @@ void Gui::update(const events::Update&)
 	ImGui::InputFloat("Cr", &fdtdInfo.Cr);
 	ImGui::InputInt("Time steps", &fdtdInfo.maxTime);
 	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
+
+	ImGui::SeparatorText("Backends");
+
+	utils::imgui::Combo<Backend>("Backend type", &fdtdInfo.backend);
+	utils::imgui::Combo<Precision>("Precision", &fdtdInfo.precision);
 
 	if(ImGui::Button("Start"))
 	{

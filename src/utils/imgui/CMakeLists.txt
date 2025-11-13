@@ -16,26 +16,9 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		copy.cpp
-		exceptions.cpp
-		injector.cpp
-		instantiations.cpp
-	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			alias.cppm
-			backend.cppm
-			copy.cppm
-			dims.cppm
-			exceptions.cppm
-			injector.cppm
-			mdspan.cppm
-			precision.cppm
-			print.cppm
-			save_as.cppm
-			utils.cppm
+			imgui.cppm
+			combo.cppm
 )
-
-add_subdirectory(imgui)
-add_subdirectory(vulkan)
