@@ -34,8 +34,8 @@ using namespace lucuma::utils;
 
 struct FdtdInfo
 {
-	int          size[3];
-	int          gaussPosition[3];
+	unsigned int size[3];
+	unsigned int gaussPosition[3];
 	float        deltaT;
 	float        imp0;
 	float        Cr;

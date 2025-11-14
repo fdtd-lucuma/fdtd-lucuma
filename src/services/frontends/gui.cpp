@@ -50,7 +50,7 @@ void Gui::init()
 	// TODO: Wrap this in a raii helper
 	dispatcher.sink<events::Update>().connect<&Gui::update>(*this);
 
-	const auto size = (glm::vec<3, int>)settings.size();
+	const auto size = (glm::vec<3, unsigned int>)settings.size();
 
 	fdtdInfo = FdtdInfo{
 		.size          = {size.x, size.y, size.z},
@@ -105,8 +105,8 @@ void Gui::update(const events::Update&)
 	static const int step     = 1;
 	static const int fastStep = 100;
 
-	ImGui::InputInt3("Size", fdtdInfo.size);
-	ImGui::InputInt3("Source position", fdtdInfo.gaussPosition);
+	ImGui::InputScalarN("Size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
+	ImGui::InputScalarN("Source position", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
 	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
 	ImGui::InputFloat("Imp0", &fdtdInfo.imp0);
 	ImGui::InputFloat("Cr", &fdtdInfo.Cr);
