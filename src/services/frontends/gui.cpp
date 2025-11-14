@@ -58,7 +58,7 @@ void Gui::init()
 		.deltaT        = 1,
 		.imp0          = 377,
 		.Cr            = (1.f/std::sqrt(3.f)),
-		.maxTime       = (int)settings.time(),
+		.maxTime       = settings.time(),
 		.gaussSigma    = 10,
 
 		.backend   = Backend::vulkan,
@@ -107,7 +107,7 @@ void Gui::update(const events::Update&)
 	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
 	ImGui::InputFloat("Imp0", &fdtdInfo.imp0);
 	ImGui::InputFloat("Cr", &fdtdInfo.Cr);
-	ImGui::InputInt("Time steps", &fdtdInfo.maxTime);
+	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime);
 	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
 
 	ImGui::SeparatorText("Backends");
