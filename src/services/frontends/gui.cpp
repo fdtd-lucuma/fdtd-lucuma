@@ -102,12 +102,15 @@ void Gui::update(const events::Update&)
 
 	ImGui::SeparatorText("Simulation parameters");
 
+	static const int step     = 1;
+	static const int fastStep = 100;
+
 	ImGui::InputInt3("Size", fdtdInfo.size);
 	ImGui::InputInt3("Source position", fdtdInfo.gaussPosition);
 	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
 	ImGui::InputFloat("Imp0", &fdtdInfo.imp0);
 	ImGui::InputFloat("Cr", &fdtdInfo.Cr);
-	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime);
+	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
 	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
 
 	ImGui::SeparatorText("Backends");
