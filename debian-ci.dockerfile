@@ -7,7 +7,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	--mount=type=cache,target=/var/cache/apt,sharing=locked \
 	--mount=type=cache,target=/vcpkg_cache,sharing=locked \
 	apt update && \
-	apt upgrade && \
+	apt upgrade -y && \
 	apt install -y git && \
 	apt install -y curl zip unzip tar cmake ninja-build build-essential && \
 	mkdir -p /vcpkg && \
