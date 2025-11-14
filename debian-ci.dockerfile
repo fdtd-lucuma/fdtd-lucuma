@@ -10,10 +10,8 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	apt upgrade -y && \
 	apt install -y git && \
 	apt install -y curl zip unzip tar cmake ninja-build build-essential && \
-	mkdir -p /vcpkg && \
-	cd /vcpkg && \
-	curl -L https://github.com/microsoft/vcpkg/archive/refs/tags/2025.10.17.tar.gz | tar -C /vcpkg xzv --strip-components=1 && \
-	./bootstrap-vcpkg.sh -disableMetrics
+	git clone https://github.com/microsoft/vcpkg.git /vcpkg && \
+	cd /vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
 RUN  --mount=type=cache,target=/vcpkg_cache,sharing=locked \
 	/vcpkg/vcpkg install shader-slang glm
 COPY ./pkg/ubuntu/ /fdtd-lucuma/pkg/ubuntu/
