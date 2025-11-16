@@ -16,35 +16,25 @@
 
 module;
 
-export module lucuma.utils;
+#include <imgui_graphnode.h>
 
-export import :alias;
-export import :backend;
-export import :copy;
-export import :dims;
-export import :exceptions;
-export import :injector;
-export import :mdspan;
-export import :precision;
-export import :print;
-export import :save_as;
-export import :stream_edge_writer;
-export import :imgui_graphnode_edge_writer;
+export module lucuma.legacy_headers.imgui_graphnode;
 
-import magic_enum;
+import imgui;
 
-namespace lucuma::utils
+export namespace IMGUI_GRAPHNODE_NAMESPACE
 {
 
-template <typename T>
-requires std::is_enum_v<T>
-struct MagicInstantiator
-{
-	constexpr static auto values = magic_enum::enum_values<T>();
+using IMGUI_GRAPHNODE_NAMESPACE::CreateContext;
+using IMGUI_GRAPHNODE_NAMESPACE::DestroyContext;
+using IMGUI_GRAPHNODE_NAMESPACE::BeginNodeGraph;
+using IMGUI_GRAPHNODE_NAMESPACE::NodeGraphAddNode;
+using IMGUI_GRAPHNODE_NAMESPACE::NodeGraphAddNode;
+using IMGUI_GRAPHNODE_NAMESPACE::NodeGraphAddEdge;
+using IMGUI_GRAPHNODE_NAMESPACE::NodeGraphAddEdge;
+using IMGUI_GRAPHNODE_NAMESPACE::EndNodeGraph;
+
 };
 
-extern template struct MagicInstantiator<Backend>;
-extern template struct MagicInstantiator<Precision>;
-extern template struct MagicInstantiator<SaveAs>;
-
-}
+export using ::ImGuiGraphNodeLayout_;
+export using ::ImGuiGraphNodeLayout;

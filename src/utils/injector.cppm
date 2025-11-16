@@ -81,7 +81,7 @@ public:
 
 	/// Prints a directed acyclic graph in dot format
 	template <typename T>
-	void printEdges(T& writer, const std::string_view removePrefix = "") const
+	void printEdges(T& writer, const std::string_view removePrefix = "lucuma::services::") const
 	{
 		const auto name = entt::type_id<decltype(*this)>().name();
 
@@ -107,7 +107,7 @@ public:
 		writer.end();
 	}
 
-	void printEdges(const std::filesystem::path& path, const std::string_view removePrefix = "") const;
+	void printEdges(const std::filesystem::path& path, const std::string_view removePrefix = "lucuma::services::") const;
 
 private:
 	class LinkerWatcher

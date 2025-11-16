@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
 			entt.cppm
 			fmt.cppm
 			glm.cppm
+			imgui_graphnode.cppm
 			mdspan.cppm
 			taskflow.cppm
 			xdg_utils_cxx.cppm

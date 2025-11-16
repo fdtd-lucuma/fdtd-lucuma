@@ -23,6 +23,7 @@ import lucuma.utils.imgui;
 import lucuma.services.window;
 import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
+import lucuma.legacy_headers.imgui_graphnode;
 import lucuma.events;
 
 import imgui;
@@ -34,6 +35,7 @@ namespace lucuma::services::frontends
 {
 
 Gui::Gui([[maybe_unused]]Injector& injector):
+	_injector(injector),
 	dispatcher(injector.inject<entt::dispatcher>()),
 	registry(injector.inject<entt::registry>()),
 	glfw(injector.inject<window::Glfw>()),
@@ -124,7 +126,15 @@ void Gui::update(const events::Update&)
 	{
 	}
 
-	ImGui::End();
+	// This is broken
+	//ImGui::End();
+
+	//ImGui::Begin("Service graph");
+
+	//ImguiGraphnodeEdgeWriter writer;
+	//_injector.printEdges(writer);
+
+	//ImGui::End();
 }
 
 Gui::~Gui()

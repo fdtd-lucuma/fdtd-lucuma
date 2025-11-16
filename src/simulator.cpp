@@ -74,7 +74,7 @@ void Simulator::printGraph()
 	auto& graphPath = injector.inject<services::basic::ArgumentParser>().graphPath();
 
 	if(graphPath.has_value())
-		injector.printEdges(*graphPath, "lucuma::services::");
+		injector.printEdges(*graphPath);
 }
 
 }

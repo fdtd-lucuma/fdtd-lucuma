@@ -99,7 +99,7 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	imgui-graphnode
-	GIT_REPOSITORY https://github.com/bevilla/imgui-graphnode
+	GIT_REPOSITORY https://github.com/otreblan/imgui-graphnode
 	GIT_TAG        master
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
@@ -272,6 +272,7 @@ set_target_properties(imgui-graphnode
 target_sources(imgui-graphnode
 	PRIVATE
 		${imgui-graphnode_SOURCE_DIR}/imgui_graphnode.cpp
+		${imgui-graphnode_SOURCE_DIR}/imgui_graphnode_internal.cpp
 )
 
 target_include_directories(imgui-graphnode

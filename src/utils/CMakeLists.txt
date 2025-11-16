@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME}
 	PRIVATE
 		copy.cpp
 		exceptions.cpp
+		imgui_graphnode_edge_writer.cpp
 		injector.cpp
 		instantiations.cpp
 		stream_edge_writer.cpp
@@ -30,6 +31,7 @@ target_sources(${PROJECT_NAME}
 			copy.cppm
 			dims.cppm
 			exceptions.cppm
+			imgui_graphnode_edge_writer.cppm
 			injector.cppm
 			mdspan.cppm
 			precision.cppm

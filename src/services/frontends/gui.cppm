@@ -57,6 +57,8 @@ public:
 	~Gui();
 
 private:
+	Injector& _injector;
+
 	entt::dispatcher&     dispatcher;
 	entt::registry&       registry;
 	window::Glfw&         glfw;
