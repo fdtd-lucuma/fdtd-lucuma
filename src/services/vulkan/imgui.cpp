@@ -71,7 +71,7 @@ void Imgui::initImgui()
 		ImGuiConfigFlags_NavEnableGamepad |
 		ImGuiConfigFlags_DockingEnable;
 
-#ifndef NDEBUG
+#ifdef NDEBUG
 	iniPath = xdgDirs.cache() / "imgui.ini";
 
 	std::error_code ec;
