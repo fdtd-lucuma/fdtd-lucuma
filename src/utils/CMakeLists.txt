@@ -20,6 +20,7 @@ target_sources(${PROJECT_NAME}
 		exceptions.cpp
 		injector.cpp
 		instantiations.cpp
+		stream_edge_writer.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -34,6 +35,7 @@ target_sources(${PROJECT_NAME}
 			precision.cppm
 			print.cppm
 			save_as.cppm
+			stream_edge_writer.cppm
 			utils.cppm
 )
 

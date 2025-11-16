@@ -61,47 +61,15 @@ Injector::LinkerWatcher::~LinkerWatcher()
 	injector.dependenciesEdges.emplace_back(oldtop, top);
 }
 
-constexpr const std::string_view unPreffix(const std::string_view str, const std::string_view prefix)
-{
-	return std::string_view(std::mismatch(str.begin(), str.end(), prefix.begin()).first, str.end());
-}
-
-void Injector::printEdges(std::ostream& os, const std::string_view removePrefix) const
-{
-	const auto name = entt::type_id<decltype(*this)>().name();
-
-	std::print(os,
-		"strict digraph {:?} {{\n\tlabel={:?}\n",
-		name,
-		std::format("{}{}", name, " graph")
-	);
-
-	auto edgeNames = dependenciesEdges |
-		std::views::transform([=](auto&& x)
-		{
-			auto&& [l, r] = x;
-
-			return std::tuple{
-				unPreffix(l.name(), removePrefix),
-				unPreffix(r.name(), removePrefix),
-			};
-		})
-	;
-
-	for(auto&& [l, r]: edgeNames)
-	{
-		std::println(os, "\t{:?} -> {:?};", l, r);
-	}
-
-	std::println(os, "{}", "}");
-}
-
 void Injector::printEdges(const std::filesystem::path& path, const std::string_view removePrefix) const
 {
 	auto ofs = std::ofstream(path);
 
 	if(ofs.is_open())
-		printEdges(ofs, removePrefix);
+	{
+		StreamEdgeWriter writer{ofs};
+		printEdges(writer, removePrefix);
+	}
 	else
 		perror(path.c_str());
 }

@@ -16,34 +16,34 @@
 
 module;
 
-export module lucuma.utils;
+module lucuma.utils;
 
-export import :alias;
-export import :backend;
-export import :copy;
-export import :dims;
-export import :exceptions;
-export import :injector;
-export import :mdspan;
-export import :precision;
-export import :print;
-export import :save_as;
-export import :stream_edge_writer;
-
-import magic_enum;
+import std;
 
 namespace lucuma::utils
 {
 
-template <typename T>
-requires std::is_enum_v<T>
-struct MagicInstantiator
-{
-	constexpr static auto values = magic_enum::enum_values<T>();
-};
+StreamEdgeWriter::StreamEdgeWriter(std::ostream& _os):
+	os(_os)
+{}
 
-extern template struct MagicInstantiator<Backend>;
-extern template struct MagicInstantiator<Precision>;
-extern template struct MagicInstantiator<SaveAs>;
+void StreamEdgeWriter::start(std::string_view name)
+{
+	std::print(os,
+		"strict digraph {:?} {{\n\tlabel={:?}\n",
+		name,
+		std::format("{}{}", name, " graph")
+	);
+}
+
+void StreamEdgeWriter::writeEdge(std::string_view l, std::string_view r)
+{
+	std::println(os, "\t{:?} -> {:?};", l, r);
+}
+
+void StreamEdgeWriter::end()
+{
+	std::println(os, "{}", "}");
+}
 
 }

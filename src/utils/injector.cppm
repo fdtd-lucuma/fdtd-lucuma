@@ -24,6 +24,10 @@ import lucuma.legacy_headers.entt;
 namespace lucuma::utils
 {
 
+constexpr const std::string_view unPreffix(const std::string_view str, const std::string_view prefix)
+{
+	return std::string_view(std::mismatch(str.begin(), str.end(), prefix.begin()).first, str.end());
+}
 
 export class Injector
 {
@@ -76,7 +80,32 @@ public:
 	~Injector();
 
 	/// Prints a directed acyclic graph in dot format
-	void printEdges(std::ostream& os, const std::string_view removePrefix = "") const;
+	template <typename T>
+	void printEdges(T& writer, const std::string_view removePrefix = "") const
+	{
+		const auto name = entt::type_id<decltype(*this)>().name();
+
+		writer.start(name);
+
+		auto edgeNames = dependenciesEdges |
+			std::views::transform([=](auto&& x)
+			{
+				auto&& [l, r] = x;
+
+				return std::tuple{
+					unPreffix(l.name(), removePrefix),
+					unPreffix(r.name(), removePrefix),
+				};
+			})
+		;
+
+		for(auto&& [l, r]: edgeNames)
+		{
+			writer.writeEdge(l, r);
+		}
+
+		writer.end();
+	}
 
 	void printEdges(const std::filesystem::path& path, const std::string_view removePrefix = "") const;
 
