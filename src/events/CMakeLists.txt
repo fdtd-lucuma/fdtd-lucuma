@@ -19,8 +19,9 @@ target_sources(${PROJECT_NAME}
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			events.cppm
 			draw.cppm
+			events.cppm
 			frame.cppm
+			start.cppm
 )
 

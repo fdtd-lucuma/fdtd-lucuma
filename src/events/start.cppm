@@ -16,9 +16,14 @@
 
 module;
 
-export module lucuma.events;
+export module lucuma.events:start;
 
-export import :start;
-export import :draw;
-export import :draw;
-export import :frame;
+namespace lucuma::events
+{
+
+/// When a system/service starts getting update ticks
+export struct Start
+{
+};
+
+}

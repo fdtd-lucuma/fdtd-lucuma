@@ -88,9 +88,12 @@ void Gui::start()
 
 void Gui::drawFrame(float timeDelta)
 {
+	dispatcher.trigger<events::Start>();
 	dispatcher.trigger(events::FrameStart{timeDelta});
 	dispatcher.trigger(events::Update{timeDelta});
 	dispatcher.trigger(events::FrameEnd{timeDelta});
+
+	dispatcher.sink<events::Start>().disconnect();
 
 	graphics.draw();
 }
