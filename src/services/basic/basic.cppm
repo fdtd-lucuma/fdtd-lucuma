@@ -25,6 +25,7 @@ export import :file_reader;
 export import :path;
 export import :path_common;
 export import :settings;
+export import :xdg_dirs;
 
 namespace lucuma::utils
 {
@@ -34,5 +35,6 @@ extern template ArgumentParser& Injector::inject<ArgumentParser>();
 extern template FileReader&     Injector::inject<FileReader>();
 extern template PathCommon&     Injector::inject<PathCommon>();
 extern template Settings&       Injector::inject<Settings>();
+extern template XdgDirs&        Injector::inject<XdgDirs>();
 
 }

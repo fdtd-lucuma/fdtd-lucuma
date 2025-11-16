@@ -28,6 +28,7 @@ namespace lucuma::services::basic
 using namespace lucuma::utils;
 
 class Settings;
+class XdgDirs;
 
 export class PathCommon
 {
@@ -38,6 +39,7 @@ public:
 
 private:
 	Settings& settings;
+	XdgDirs&  xdgDirs;
 
 	std::vector<std::filesystem::path> basePath;
 	void init();

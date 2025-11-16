@@ -16,11 +16,14 @@
 
 module;
 
+#include <path_config.hpp>
+
 module lucuma.services.vulkan;
 
 import lucuma.services.window;
 import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
+import lucuma.legacy_headers.xdg_utils_cxx;
 import lucuma.events;
 
 import imgui;
@@ -40,7 +43,8 @@ Imgui::Imgui([[maybe_unused]] Injector& injector):
 	device(injector.inject<Device>()),
 	swapchain(injector.inject<Swapchain>()),
 	graphics(injector.inject<Graphics>()),
-	glfw(injector.inject<window::Glfw>())
+	glfw(injector.inject<window::Glfw>()),
+	xdgDirs(injector.inject<basic::XdgDirs>())
 
 {
 	init();
@@ -66,6 +70,20 @@ void Imgui::initImgui()
 		ImGuiConfigFlags_NavEnableKeyboard |
 		ImGuiConfigFlags_NavEnableGamepad |
 		ImGuiConfigFlags_DockingEnable;
+
+#ifndef NDEBUG
+	iniPath = xdgDirs.cache() / "imgui.ini";
+
+	std::error_code ec;
+	std::filesystem::create_directories(xdgDirs.cache(), ec);
+
+	if(ec)
+	{
+		std::perror(xdgDirs.cache().c_str());
+	}
+	else
+		io.IniFilename = iniPath.c_str();
+#endif
 
 	ImGui_ImplGlfw_InitForVulkan(glfw.getWindow(), true);
 

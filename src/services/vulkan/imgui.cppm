@@ -24,6 +24,7 @@ import std;
 import lucuma.utils;
 import lucuma.utils.vulkan;
 import lucuma.services.window;
+import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
 import lucuma.events;
 
@@ -56,6 +57,9 @@ private:
 	Swapchain&        swapchain;
 	Graphics&         graphics;
 	window::Glfw&     glfw;
+	basic::XdgDirs&   xdgDirs;
+
+	std::filesystem::path iniPath;
 
 	void init();
 

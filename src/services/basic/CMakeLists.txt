@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
 		path.cpp
 		path_common.cpp
 		settings.cpp
+		xdg_dirs.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -32,6 +33,7 @@ target_sources(${PROJECT_NAME}
 			path.cppm
 			path_common.cppm
 			settings.cppm
+			xdg_dirs.cppm
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

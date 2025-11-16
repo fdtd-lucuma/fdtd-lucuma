@@ -16,47 +16,32 @@
 
 module;
 
-#include <path_config.hpp>
+export module lucuma.services.basic:xdg_dirs;
 
-module lucuma.services.basic;
-
+import lucuma.utils;
 import std;
-import lucuma.legacy_headers.xdg_utils_cxx;
 
 namespace lucuma::services::basic
 {
 
-PathCommon::PathCommon([[maybe_unused]]Injector& injector):
-	settings(injector.inject<Settings>()),
-	xdgDirs(injector.inject<XdgDirs>())
-{
-	init();
-}
+using namespace lucuma::utils;
 
-std::vector<std::filesystem::path> PathCommon::createPath(std::string_view filePreffix) const
+export class XdgDirs
 {
-	return basePath |
-		std::views::transform([=](auto&& x){
-			return x / filePreffix;
-		}) |
-		std::ranges::to<std::vector>()
-	;
-}
+public:
+	XdgDirs(Injector& injector);
 
-void PathCommon::init()
-{
-	createBasePath();
-}
+	const std::filesystem::path& data() const;
+	const std::filesystem::path& config() const;
+	const std::filesystem::path& cache() const;
 
-void PathCommon::createBasePath()
-{
-	//TODO: Override by config or something. Or maybe only by envars to avoid
-	//dependency loops.
-#ifdef NDEBUG
-	basePath.emplace_back(xdgDirs.data());
-#endif
+private:
+	void init();
 
-	basePath.emplace_back(DATA_DIR);
-}
+	std::filesystem::path _data;
+	std::filesystem::path _config;
+	std::filesystem::path _cache;
+
+};
 
 }

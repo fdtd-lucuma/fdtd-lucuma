@@ -20,43 +20,38 @@ module;
 
 module lucuma.services.basic;
 
-import std;
 import lucuma.legacy_headers.xdg_utils_cxx;
+
+import std;
 
 namespace lucuma::services::basic
 {
 
-PathCommon::PathCommon([[maybe_unused]]Injector& injector):
-	settings(injector.inject<Settings>()),
-	xdgDirs(injector.inject<XdgDirs>())
+XdgDirs::XdgDirs([[maybe_unused]]Injector& injector)
 {
 	init();
 }
 
-std::vector<std::filesystem::path> PathCommon::createPath(std::string_view filePreffix) const
+void XdgDirs::init()
 {
-	return basePath |
-		std::views::transform([=](auto&& x){
-			return x / filePreffix;
-		}) |
-		std::ranges::to<std::vector>()
-	;
+	_data   = std::filesystem::path(XdgUtils::BaseDir::XdgDataHome())   /= PROJECT_NAME;
+	_config = std::filesystem::path(XdgUtils::BaseDir::XdgConfigHome()) /= PROJECT_NAME;
+	_cache  = std::filesystem::path(XdgUtils::BaseDir::XdgCacheHome())  /= PROJECT_NAME;
 }
 
-void PathCommon::init()
+const std::filesystem::path& XdgDirs::data() const
 {
-	createBasePath();
+	return _data;
 }
 
-void PathCommon::createBasePath()
+const std::filesystem::path& XdgDirs::config() const
 {
-	//TODO: Override by config or something. Or maybe only by envars to avoid
-	//dependency loops.
-#ifdef NDEBUG
-	basePath.emplace_back(xdgDirs.data());
-#endif
+	return _config;
+}
 
-	basePath.emplace_back(DATA_DIR);
+const std::filesystem::path& XdgDirs::cache() const
+{
+	return _cache;
 }
 
 }
