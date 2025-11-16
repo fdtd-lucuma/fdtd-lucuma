@@ -88,11 +88,11 @@ void Gui::start()
 
 void Gui::drawFrame(float timeDelta)
 {
-	dispatcher.trigger<events::Start>();
 	dispatcher.trigger(events::FrameStart{timeDelta});
 	dispatcher.trigger(events::Update{timeDelta});
 	dispatcher.trigger(events::FrameEnd{timeDelta});
 
+	dispatcher.trigger<events::Start>();
 	dispatcher.sink<events::Start>().disconnect();
 
 	graphics.draw();
@@ -100,7 +100,6 @@ void Gui::drawFrame(float timeDelta)
 
 void Gui::update(const events::Update&)
 {
-	//ImGui::ShowDemoWindow();
 	ImGui::Begin("FDTD");
 
 	ImGui::SeparatorText("Simulation parameters");

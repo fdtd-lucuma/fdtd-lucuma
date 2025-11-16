@@ -78,9 +78,7 @@ void Imgui::initImgui()
 	std::filesystem::create_directories(xdgDirs.cache(), ec);
 
 	if(ec)
-	{
 		std::perror(xdgDirs.cache().c_str());
-	}
 	else
 		io.IniFilename = iniPath.c_str();
 #endif
