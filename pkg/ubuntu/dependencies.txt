@@ -7,6 +7,7 @@ libfmt-dev
 libfreetype-dev
 libglfw3-dev
 libglm-dev
+libgraphviz-dev
 libtaskflow-cpp-dev
 libvulkan-dev
 libvulkan-memory-allocator-dev

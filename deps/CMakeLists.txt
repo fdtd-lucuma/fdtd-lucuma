@@ -97,6 +97,14 @@ FetchContent_Declare(
 	GIT_PROGRESS   ON
 )
 
+FetchContent_Declare(
+	imgui-graphnode
+	GIT_REPOSITORY https://github.com/bevilla/imgui-graphnode
+	GIT_TAG        master
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+)
+
 FetchContent_MakeAvailable(
 	imgui
 	imgui-module
@@ -105,6 +113,7 @@ FetchContent_MakeAvailable(
 	vkfw
 	magic_enum
 	mdspan
+	imgui-graphnode
 )
 
 # Packages
@@ -132,6 +141,7 @@ pkg_check_modules(libraries
 		fmt
 		freetype2
 		glfw3
+		libgvc
 		x11
 		yaml-cpp
 )
@@ -251,6 +261,36 @@ target_link_libraries(imgui
 		PkgConfig::libraries
 )
 
+add_library(imgui-graphnode)
+
+# C++ version
+set_target_properties(imgui-graphnode
+	PROPERTIES
+		CXX_STANDARD 26
+)
+
+target_sources(imgui-graphnode
+	PRIVATE
+		${imgui-graphnode_SOURCE_DIR}/imgui_graphnode.cpp
+)
+
+target_include_directories(imgui-graphnode
+	PUBLIC
+		${imgui-graphnode_SOURCE_DIR}
+)
+
+target_compile_definitions(imgui-graphnode
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+)
+
+target_link_libraries(imgui-graphnode
+	PUBLIC
+		imgui
+	PRIVATE
+		PkgConfig::libraries
+)
+
 # set up glm C++ module as a library
 get_target_property(GLM_INCLUDE_DIR glm::glm-header-only INTERFACE_INCLUDE_DIRECTORIES)
 
@@ -337,6 +377,7 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		PkgConfig::libraries
 		imgui
+		imgui-graphnode
 		EnTT::EnTT
 		VulkanMemoryAllocator-HppModule
 		GlmModule
