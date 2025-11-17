@@ -56,8 +56,10 @@ source=(
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
 	"mdspan-git::git+https://github.com/kokkos/mdspan#branch=stable"
 	"imgui-graphnode-git::git+https://github.com/otreblan/imgui-graphnode#branch=master"
+	"implot3d-graphnode-git::git+https://github.com/brenocq/implot3d#branch=main"
 )
 sha256sums=(
+	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -93,6 +95,7 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_MAGIC_ENUM="$srcdir/magic-enum-git" \
 		-DFETCHCONTENT_SOURCE_DIR_MDSPAN="$srcdir/mdspan-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI-GRAPHNODE="$srcdir/imgui-graphnode-git" \
+		-DFETCHCONTENT_SOURCE_DIR_IMPLOT3D="$srcdir/implot3d-git" \
 		-DCMAKE_CXX_VISIBILITY_PRESET=hidden \
 		-DCMAKE_C_VISIBILITY_PRESET=hidden \
 

@@ -105,6 +105,14 @@ FetchContent_Declare(
 	GIT_PROGRESS   ON
 )
 
+FetchContent_Declare(
+	implot3d
+	GIT_REPOSITORY https://github.com/brenocq/implot3d
+	GIT_TAG        main
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+)
+
 FetchContent_MakeAvailable(
 	imgui
 	imgui-module
@@ -114,6 +122,7 @@ FetchContent_MakeAvailable(
 	magic_enum
 	mdspan
 	imgui-graphnode
+	implot3d
 )
 
 # Packages
@@ -292,6 +301,38 @@ target_link_libraries(imgui-graphnode
 		PkgConfig::libraries
 )
 
+add_library(implot3d)
+
+# C++ version
+set_target_properties(implot3d
+	PROPERTIES
+		CXX_STANDARD 26
+)
+
+target_sources(implot3d
+	PRIVATE
+		${implot3d_SOURCE_DIR}/implot3d.cpp
+		${implot3d_SOURCE_DIR}/implot3d_demo.cpp
+		${implot3d_SOURCE_DIR}/implot3d_items.cpp
+		${implot3d_SOURCE_DIR}/implot3d_meshes.cpp
+)
+
+target_include_directories(implot3d
+	PUBLIC
+		${implot3d_SOURCE_DIR}
+)
+
+target_compile_definitions(implot3d
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+)
+
+target_link_libraries(implot3d
+	PUBLIC
+		imgui
+)
+
+
 # set up glm C++ module as a library
 get_target_property(GLM_INCLUDE_DIR glm::glm-header-only INTERFACE_INCLUDE_DIRECTORIES)
 
@@ -379,6 +420,7 @@ target_link_libraries(${PROJECT_NAME}
 		PkgConfig::libraries
 		imgui
 		imgui-graphnode
+		implot3d
 		EnTT::EnTT
 		VulkanMemoryAllocator-HppModule
 		GlmModule
