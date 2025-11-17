@@ -24,6 +24,7 @@ import lucuma.services.window;
 import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
 import lucuma.legacy_headers.imgui_graphnode;
+import lucuma.legacy_headers.implot3d;
 import lucuma.events;
 
 import imgui;
@@ -125,6 +126,10 @@ void Gui::update(const events::Update&)
 	if(ImGui::Button("Start"))
 	{
 	}
+
+	ImGui::End();
+
+	ImPlot3D::ShowDemoWindow();
 
 	// This is broken
 	//ImGui::End();
