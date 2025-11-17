@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.2.0.r61.gae31a0c
+pkgver=0.2.0.r64.geb4d495
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -56,7 +56,7 @@ source=(
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
 	"mdspan-git::git+https://github.com/kokkos/mdspan#branch=stable"
 	"imgui-graphnode-git::git+https://github.com/otreblan/imgui-graphnode#branch=master"
-	"implot3d-graphnode-git::git+https://github.com/brenocq/implot3d#branch=main"
+	"implot3d-git::git+https://github.com/brenocq/implot3d#branch=main"
 )
 sha256sums=(
 	'SKIP'
