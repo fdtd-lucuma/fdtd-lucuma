@@ -113,8 +113,6 @@ void Gui::update(const events::Update&)
 	ImGui::InputScalarN("Size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
 	ImGui::InputScalarN("Source position", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
 	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
-	ImGui::InputFloat("Imp0", &fdtdInfo.imp0);
-	ImGui::InputFloat("Cr", &fdtdInfo.Cr);
 	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
 	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
 
