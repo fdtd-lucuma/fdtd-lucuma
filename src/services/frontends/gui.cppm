@@ -37,6 +37,7 @@ struct FdtdInfo
 	// Basic
 	float basicSize[3];
 	float basicGaussPosition[3];
+	float basicTime;
 
 	// Advanced
 	unsigned int size[3];
