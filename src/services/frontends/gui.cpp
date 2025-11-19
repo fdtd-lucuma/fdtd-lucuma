@@ -56,13 +56,13 @@ void Gui::init()
 	const auto size = (glm::vec<3, unsigned int>)settings.size();
 
 	fdtdInfo = FdtdInfo{
-		.size          = {size.x, size.y, size.z},
+		.size		  = {size.x, size.y, size.z},
 		.gaussPosition = {size.x/2, size.y/2, size.z/2},
-		.deltaT        = 1,
-		.imp0          = 377,
-		.Cr            = (1.f/std::sqrt(3.f)),
-		.maxTime       = settings.time(),
-		.gaussSigma    = 10,
+		.deltaT		= 1,
+		.imp0		  = 377,
+		.Cr			= (1.f/std::sqrt(3.f)),
+		.maxTime	   = settings.time(),
+		.gaussSigma	= 10,
 
 		.backend   = Backend::vulkan,
 		.precision = Precision::f32,
@@ -107,14 +107,24 @@ void Gui::update(const events::Update&)
 
 	ImGui::SeparatorText("Simulation parameters");
 
-	static const int step     = 1;
+	static const int step	 = 1;
 	static const int fastStep = 100;
 
-	ImGui::InputScalarN("Size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
-	ImGui::InputScalarN("Source position", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
-	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
-	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
-	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
+	if (ImGui::BeginTabBar("SimulatorParameters")) {
+		if (ImGui::BeginTabItem("Basic")) {
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Advanced")) {
+			ImGui::InputScalarN("Size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
+			ImGui::InputScalarN("Source position", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
+			ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
+			ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
+			ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+
 
 	ImGui::SeparatorText("Backends");
 
