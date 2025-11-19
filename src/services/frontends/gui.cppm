@@ -34,6 +34,11 @@ using namespace lucuma::utils;
 
 struct FdtdInfo
 {
+	// Basic
+	float basicSize[3];
+	float basicGaussPosition[3];
+
+	// Advanced
 	unsigned int size[3];
 	unsigned int gaussPosition[3];
 	float        deltaT;
@@ -70,6 +75,9 @@ private:
 	void drawFrame(float timeDelta);
 
 	void update(const events::Update& event);
+
+	void basicTab();
+	void advancedTab();
 
 	FdtdInfo fdtdInfo;
 

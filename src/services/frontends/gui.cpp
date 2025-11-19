@@ -56,16 +56,19 @@ void Gui::init()
 	const auto size = (glm::vec<3, unsigned int>)settings.size();
 
 	fdtdInfo = FdtdInfo{
-		.size		  = {size.x, size.y, size.z},
-		.gaussPosition = {size.x/2, size.y/2, size.z/2},
-		.deltaT		= 1,
-		.imp0		  = 377,
-		.Cr			= (1.f/std::sqrt(3.f)),
-		.maxTime	   = settings.time(),
-		.gaussSigma	= 10,
+		.basicSize          = {1, 1, 1},
+		.basicGaussPosition = {0.5f, 0.5f, 0.5f},
 
-		.backend   = Backend::vulkan,
-		.precision = Precision::f32,
+		.size          = {size.x, size.y, size.z},
+		.gaussPosition = {size.x/2, size.y/2, size.z/2},
+		.deltaT        = 1,
+		.imp0          = 377,
+		.Cr            = (1.f/std::sqrt(3.f)),
+		.maxTime       = settings.time(),
+		.gaussSigma    = 10,
+
+		.backend       = Backend::vulkan,
+		.precision     = Precision::f32,
 	};
 }
 
@@ -101,27 +104,21 @@ void Gui::drawFrame(float timeDelta)
 	graphics.draw();
 }
 
+static const int step     = 1;
+static const int fastStep = 100;
+
+static const float fStep     = 0.01f;
+static const float fFastStep = fStep*100;
+
 void Gui::update(const events::Update&)
 {
 	ImGui::Begin("FDTD");
 
 	ImGui::SeparatorText("Simulation parameters");
 
-	static const int step	 = 1;
-	static const int fastStep = 100;
-
 	if (ImGui::BeginTabBar("SimulatorParameters")) {
-		if (ImGui::BeginTabItem("Basic")) {
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Advanced")) {
-			ImGui::InputScalarN("Size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
-			ImGui::InputScalarN("Source position", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
-			ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
-			ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
-			ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
-			ImGui::EndTabItem();
-		}
+		basicTab();
+		advancedTab();
 		ImGui::EndTabBar();
 	}
 
@@ -148,6 +145,50 @@ void Gui::update(const events::Update&)
 	//_injector.printEdges(writer);
 
 	//ImGui::End();
+}
+
+template <std::size_t N>
+void clampFPositive(
+	float (&v)[N],
+	const float (&min)[N] = {0.f, 0.f, 0.f},
+	const float (&max)[N] = {
+		std::numeric_limits<float>::max(),
+		std::numeric_limits<float>::max(),
+		std::numeric_limits<float>::max()
+		}
+	)
+{
+	for(std::size_t i = 0; i < N; i++)
+	{
+		v[i] = std::clamp(v[i], min[i], max[i]);
+	}
+}
+
+void Gui::basicTab()
+{
+	constexpr const char* cmFormat = "%.2fcm";
+
+	if (ImGui::BeginTabItem("Basic")) {
+		if(ImGui::InputScalarN("Size", ImGuiDataType_Float, fdtdInfo.basicSize, 3, &fStep, &fFastStep, cmFormat))
+			clampFPositive(fdtdInfo.basicSize);
+
+		if(ImGui::InputScalarN("Source position", ImGuiDataType_Float, fdtdInfo.basicGaussPosition, 3, &fStep, &fFastStep, cmFormat))
+			clampFPositive(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
+		ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
+		ImGui::EndTabItem();
+	}
+}
+
+void Gui::advancedTab()
+{
+	if (ImGui::BeginTabItem("Advanced")) {
+		ImGui::InputScalarN("Size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
+		ImGui::InputScalarN("Source position", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
+		ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
+		ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
+		ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
+		ImGui::EndTabItem();
+	}
 }
 
 Gui::~Gui()
