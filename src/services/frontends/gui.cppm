@@ -38,6 +38,7 @@ struct FdtdInfo
 	float basicSize[3];
 	float basicGaussPosition[3];
 	float basicTime;
+	float basicDeltaSize[3];
 
 	// Advanced
 	unsigned int size[3];
@@ -78,7 +79,6 @@ private:
 	void update(const events::Update& event);
 
 	void basicTab();
-	void advancedTab();
 
 	FdtdInfo fdtdInfo;
 

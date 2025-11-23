@@ -54,6 +54,9 @@ struct FdtdDataCreateInfo
 	svec3 size;
 	svec3 gaussPosition;
 	T deltaT;
+	T deltaX;
+	T deltaY;
+	T deltaZ;
 	T imp0;
 	T Cr;
 	unsigned int maxTime;
@@ -125,6 +128,9 @@ public:
 		size(createInfo.size),
 		gaussPosition(createInfo.gaussPosition),
 		deltaT(createInfo.deltaT),
+		deltaX(createInfo.deltaX),
+		deltaY(createInfo.deltaY),
+		deltaZ(createInfo.deltaZ),
 		imp0(createInfo.imp0),
 		Cr(createInfo.Cr),
 		maxTime(createInfo.maxTime),
@@ -370,6 +376,9 @@ public:
 	const svec3 size;
 	const svec3 gaussPosition;
 	const T deltaT;
+	const T deltaX;
+	const T deltaY;
+	const T deltaZ;
 	const T imp0;
 	const T Cr;
 
@@ -483,7 +492,8 @@ public:
 		mdspan_3d_t Ce,
 		cmdspan_3d_t CM,
 		cmdspan_3d_t mu,
-		const T CrImp0
+		const T CrImp0,
+		T delta
 	)
 	{
 		assert(Ch.extents() == Ce.extents());
@@ -503,7 +513,7 @@ public:
 					const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
 
 					Ch[i,j,k] = ((T)1-c)/((T)1+c);
-					Ce[i,j,k] = ((T)1/((T)1+c))*CrImp0;
+					Ce[i,j,k] = ((T)1/((T)1+c))*CrImp0*deltaT/(mu[i,j,k]*delta);
 				}
 			}
 		}
@@ -516,7 +526,8 @@ public:
 			Chxe(),
 			CMhx(),
 			mux(),
-			Cr/imp0
+			Cr/imp0,
+			deltaX
 		);
 	}
 
@@ -527,7 +538,8 @@ public:
 			Chye(),
 			CMhy(),
 			muy(),
-			Cr/imp0
+			Cr/imp0,
+			deltaY
 		);
 	}
 
@@ -538,7 +550,8 @@ public:
 			Chze(),
 			CMhz(),
 			muz(),
-			Cr/imp0
+			Cr/imp0,
+			deltaZ
 		);
 	}
 
@@ -549,7 +562,8 @@ public:
 			Cexh(),
 			CEEx(),
 			epsx(),
-			Cr*imp0
+			Cr*imp0,
+			deltaX
 		);
 	}
 
@@ -560,7 +574,8 @@ public:
 			Ceyh(),
 			CEEy(),
 			epsy(),
-			Cr*imp0
+			Cr*imp0,
+			deltaY
 		);
 	}
 
@@ -571,7 +586,8 @@ public:
 			Cezh(),
 			CEEz(),
 			epsz(),
-			Cr*imp0
+			Cr*imp0,
+			deltaZ
 		);
 	}
 
@@ -591,7 +607,11 @@ public:
 		cmdspan_3d_t Ch,
 		cmdspan_3d_t Ce,
 		cmdspan_3d_t Ec1,
-		cmdspan_3d_t Ec2
+		cmdspan_3d_t Ec2,
+		cmdspan_3d_t mu1,
+		cmdspan_3d_t mu2,
+		T delta1,
+		T delta2
 	)
 	{
 		const std::size_t x = Hc.extent(0);
@@ -621,7 +641,7 @@ public:
 					const auto Ec2k = k + Ec2Delta.z;
 
 					Hc[i,j,k] = Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
-						((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k]) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k]))
+						deltaT*((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k])/(mu1[i,j,k]*delta1) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k])/(mu2[i,j,k]*delta2))
 					;
 				}
 			}
@@ -635,7 +655,11 @@ public:
 		cmdspan_3d_t Ch,
 		cmdspan_3d_t Hc1,
 		cmdspan_3d_t Hc2,
-		svec3 start
+		svec3 start,
+		cmdspan_3d_t eps1,
+		cmdspan_3d_t eps2,
+		T delta1,
+		T delta2
 	)
 	{
 		const std::size_t x = size.x-1;
@@ -665,7 +689,7 @@ public:
 					const auto Hc2k = k + Hc2Delta.z;
 
 					Ec[i,j,k] = Ce[i,j,k]*Ec[i,j,k] + Ch[i,j,k] *
-						((Hc1[i,j,k]-Hc1[Hc1i,Hc1j,Hc1k]) - (Hc2[i,j,k]-Hc2[Hc2i,Hc2j,Hc2k]))
+						deltaT*((Hc1[i,j,k]-Hc1[Hc1i,Hc1j,Hc1k])/(eps1[i,j,k]*delta1) - (Hc2[i,j,k]-Hc2[Hc2i,Hc2j,Hc2k])/(eps2[i,j,k]*delta2))
 					;
 				}
 			}
@@ -679,7 +703,11 @@ public:
 			Chxh(),
 			Chxe(),
 			Ey(),
-			Ez()
+			Ez(),
+			muy(),
+			muz(),
+			deltaY,
+			deltaZ
 		);
 	}
 
@@ -690,7 +718,11 @@ public:
 			Chyh(),
 			Chye(),
 			Ez(),
-			Ex()
+			Ex(),
+			muz(),
+			mux(),
+			deltaZ,
+			deltaX
 		);
 	}
 
@@ -701,7 +733,11 @@ public:
 			Chzh(),
 			Chze(),
 			Ex(),
-			Ey()
+			Ey(),
+			mux(),
+			muy(),
+			deltaX,
+			deltaY
 		);
 	}
 
@@ -713,7 +749,11 @@ public:
 			Cexh(),
 			Hz(),
 			Hy(),
-			-HxDimsDelta
+			-HxDimsDelta,
+			epsz(),
+			epsy(),
+			deltaZ,
+			deltaY
 		);
 	}
 
@@ -725,7 +765,11 @@ public:
 			Ceyh(),
 			Hx(),
 			Hz(),
-			-HyDimsDelta
+			-HyDimsDelta,
+			epsx(),
+			epsz(),
+			deltaX,
+			deltaY
 		);
 	}
 
@@ -737,7 +781,11 @@ public:
 			Cezh(),
 			Hy(),
 			Hx(),
-			-HzDimsDelta
+			-HzDimsDelta,
+			epsy(),
+			epsx(),
+			deltaY,
+			deltaX
 		);
 	}
 

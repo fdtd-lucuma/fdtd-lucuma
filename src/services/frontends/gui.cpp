@@ -59,6 +59,7 @@ void Gui::init()
 		.basicSize          = {1, 1, 1},
 		.basicGaussPosition = {0.5f, 0.5f, 0.5f},
 		.basicTime          = 1.f,
+		.basicDeltaSize     = {1.f,1.f,1.f},
 
 		.size          = {size.x, size.y, size.z},
 		.gaussPosition = {size.x/2, size.y/2, size.z/2},
@@ -117,12 +118,7 @@ void Gui::update(const events::Update&)
 
 	ImGui::SeparatorText("Simulation parameters");
 
-	if (ImGui::BeginTabBar("SimulatorParameters")) {
-		basicTab();
-		advancedTab();
-		ImGui::EndTabBar();
-	}
-
+	basicTab();
 
 	ImGui::SeparatorText("Backends");
 
@@ -170,37 +166,22 @@ void Gui::basicTab()
 	constexpr const char* cmFormat = "%.2fcm";
 	constexpr const char* sFormat = "%.2fs";
 
-	if (ImGui::BeginTabItem("Basic")) {
-		if(ImGui::InputScalarN("Size", ImGuiDataType_Float, fdtdInfo.basicSize, 3, &fStep, &fFastStep, cmFormat))
-			clampFPositive(fdtdInfo.basicSize);
+	if(ImGui::InputScalarN("Size", ImGuiDataType_Float, fdtdInfo.basicSize, 3, &fStep, &fFastStep, cmFormat))
+		clampFPositive(fdtdInfo.basicSize);
 
-		ImGui::InputScalarN("Matrix size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
+	ImGui::InputScalarN("Matrix size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
 
-		if(ImGui::InputScalarN("Source position", ImGuiDataType_Float, fdtdInfo.basicGaussPosition, 3, &fStep, &fFastStep, cmFormat))
-			clampFPositive(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
+	if(ImGui::InputScalarN("Source position", ImGuiDataType_Float, fdtdInfo.basicGaussPosition, 3, &fStep, &fFastStep, cmFormat))
+		clampFPositive(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
 
-		ImGui::InputFloat("Time", &fdtdInfo.basicTime, fStep, fFastStep, sFormat);
+	ImGui::InputFloat("Time", &fdtdInfo.basicTime, fStep, fFastStep, sFormat);
 
-		ImGui::BeginDisabled();
-		ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
-		ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
-		ImGui::EndDisabled();
+	ImGui::BeginDisabled();
+	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
+	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
+	ImGui::EndDisabled();
 
-		ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
-		ImGui::EndTabItem();
-	}
-}
-
-void Gui::advancedTab()
-{
-	if (ImGui::BeginTabItem("Advanced")) {
-		ImGui::InputScalarN("Size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
-		ImGui::InputScalarN("Source position", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
-		ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
-		ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
-		ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
-		ImGui::EndTabItem();
-	}
+	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
 }
 
 Gui::~Gui()
