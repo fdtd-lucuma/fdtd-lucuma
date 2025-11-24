@@ -60,6 +60,7 @@ void Gui::init()
 		.basicGaussPosition = {0.5f, 0.5f, 0.5f},
 		.basicTime          = 1.f,
 		.basicDeltaSize     = {1.f,1.f,1.f},
+		.epsilon = 1.f,
 
 		.size          = {size.x, size.y, size.z},
 		.gaussPosition = {size.x/2, size.y/2, size.z/2},
@@ -161,7 +162,7 @@ void clampFPositive(
 	}
 }
 
-// Idk the units
+// Return max deltaT in m/s
 float maxDeltaTime(float deltaX, float deltaY, float deltaZ, float c)
 {
 	return 1.f/(c*std::sqrt((1/(deltaX*deltaX))+(1/(deltaY*deltaY))+(1/(deltaZ*deltaZ))));
@@ -169,18 +170,18 @@ float maxDeltaTime(float deltaX, float deltaY, float deltaZ, float c)
 
 void updateInputs(FdtdInfo& info)
 {
-	for(auto& d: info.basicDeltaSize)
-		d = std::min(d, 10.f);
+	for(std::size_t i = 0; i < 3; i++)
+		info.basicDeltaSize[i] = info.basicSize[i]/info.size[i];
 
-	info.maxTime = info.basicTime/1000.f/info.deltaT;
-	info.deltaT = std::min(info.deltaT, maxDeltaTime(info.basicDeltaSize[0], info.basicDeltaSize[1], info.basicDeltaSize[2], 3.f*std::pow(10.f, 8.f)));
+	info.maxTime = info.basicTime/info.deltaT;
+	info.deltaT = std::min(info.deltaT, maxDeltaTime(info.basicDeltaSize[0]/1000, info.basicDeltaSize[1]/1000, info.basicDeltaSize[2]/1000, 3.f*std::pow(10.f, 8.f))*1000000000);
 }
 
 void Gui::basicTab()
 {
 	constexpr const char* cmFormat = "%.2fcm";
 	constexpr const char* mmFormat = "%.2fmm";
-	constexpr const char* nsFormat = "%.2fns";
+	constexpr const char* nsFormat = "%.6fns";
 
 	if(ImGui::InputScalarN("Size", ImGuiDataType_Float, fdtdInfo.basicSize, 3, &fStep, &fFastStep, cmFormat))
 		clampFPositive(fdtdInfo.basicSize);
@@ -191,11 +192,14 @@ void Gui::basicTab()
 		clampFPositive(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
 
 	ImGui::InputFloat("Time", &fdtdInfo.basicTime, fStep, fFastStep, nsFormat);
-	ImGui::InputFloat("Delta X", &fdtdInfo.basicDeltaSize[0], fStep, fFastStep, mmFormat); // TODO: Find out in what unit is this
+	ImGui::BeginDisabled();
+	ImGui::InputFloat("Delta X", &fdtdInfo.basicDeltaSize[0], fStep, fFastStep, mmFormat); // TODO: Send everything as meters
 	ImGui::InputFloat("Delta Y", &fdtdInfo.basicDeltaSize[1], fStep, fFastStep, mmFormat);
 	ImGui::InputFloat("Delta Z", &fdtdInfo.basicDeltaSize[2], fStep, fFastStep, mmFormat);
+	ImGui::EndDisabled();
 
-	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT, 0.0f, 0.0f, "%f");
+	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT, 0.0f, 0.0f, nsFormat);
+	ImGui::InputFloat("Epsilon", &fdtdInfo.epsilon, fStep, fFastStep);
 
 	ImGui::BeginDisabled();
 	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);

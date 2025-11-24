@@ -51,12 +51,12 @@ MatrixData<T> initMat(svec2 dims, T defaultValue = 0)
 export template <class T>
 struct FdtdDataCreateInfo
 {
-	svec3 size;
-	svec3 gaussPosition;
-	T deltaT;
-	T deltaX;
-	T deltaY;
-	T deltaZ;
+	svec3 size; // index
+	svec3 gaussPosition; // index
+	T deltaT; // s
+	T deltaX; // m
+	T deltaY; // m
+	T deltaZ; // m
 	T imp0;
 	T Cr;
 	unsigned int maxTime;

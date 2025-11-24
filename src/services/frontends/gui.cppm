@@ -38,7 +38,8 @@ struct FdtdInfo
 	float basicSize[3];
 	float basicGaussPosition[3];
 	float basicTime; // In ns
-	float basicDeltaSize[3];
+	float basicDeltaSize[3]; // In mm
+	float epsilon;
 
 	// Advanced
 	unsigned int size[3];
