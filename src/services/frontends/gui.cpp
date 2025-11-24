@@ -161,10 +161,26 @@ void clampFPositive(
 	}
 }
 
+// Idk the units
+float maxDeltaTime(float deltaX, float deltaY, float deltaZ, float c)
+{
+	return 1.f/(c*std::sqrt((1/(deltaX*deltaX))+(1/(deltaY*deltaY))+(1/(deltaZ*deltaZ))));
+}
+
+void updateInputs(FdtdInfo& info)
+{
+	for(auto& d: info.basicDeltaSize)
+		d = std::min(d, 10.f);
+
+	info.maxTime = info.basicTime/1000.f/info.deltaT;
+	info.deltaT = std::min(info.deltaT, maxDeltaTime(info.basicDeltaSize[0], info.basicDeltaSize[1], info.basicDeltaSize[2], 3.f*std::pow(10.f, 8.f)));
+}
+
 void Gui::basicTab()
 {
 	constexpr const char* cmFormat = "%.2fcm";
-	constexpr const char* sFormat = "%.2fs";
+	constexpr const char* mmFormat = "%.2fmm";
+	constexpr const char* nsFormat = "%.2fns";
 
 	if(ImGui::InputScalarN("Size", ImGuiDataType_Float, fdtdInfo.basicSize, 3, &fStep, &fFastStep, cmFormat))
 		clampFPositive(fdtdInfo.basicSize);
@@ -174,14 +190,20 @@ void Gui::basicTab()
 	if(ImGui::InputScalarN("Source position", ImGuiDataType_Float, fdtdInfo.basicGaussPosition, 3, &fStep, &fFastStep, cmFormat))
 		clampFPositive(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
 
-	ImGui::InputFloat("Time", &fdtdInfo.basicTime, fStep, fFastStep, sFormat);
+	ImGui::InputFloat("Time", &fdtdInfo.basicTime, fStep, fFastStep, nsFormat);
+	ImGui::InputFloat("Delta X", &fdtdInfo.basicDeltaSize[0], fStep, fFastStep, mmFormat); // TODO: Find out in what unit is this
+	ImGui::InputFloat("Delta Y", &fdtdInfo.basicDeltaSize[1], fStep, fFastStep, mmFormat);
+	ImGui::InputFloat("Delta Z", &fdtdInfo.basicDeltaSize[2], fStep, fFastStep, mmFormat);
+
+	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT, 0.0f, 0.0f, "%f");
 
 	ImGui::BeginDisabled();
-	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT);
 	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
 	ImGui::EndDisabled();
 
 	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
+
+	updateInputs(fdtdInfo);
 }
 
 Gui::~Gui()

@@ -37,7 +37,7 @@ struct FdtdInfo
 	// Basic
 	float basicSize[3];
 	float basicGaussPosition[3];
-	float basicTime;
+	float basicTime; // In ns
 	float basicDeltaSize[3];
 
 	// Advanced
