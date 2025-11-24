@@ -16,6 +16,8 @@
 
 module;
 
+#include <cassert>
+
 export module lucuma.services.backends.vulkan_components:update_e_pipeline;
 
 import lucuma.utils;
@@ -23,16 +25,21 @@ import lucuma.services.vulkan;
 import vulkan_hpp;
 import std;
 
+import :utils;
+
 namespace lucuma::services::backends::vulkan_components
 {
 
 using namespace lucuma::utils;
 
+template <typename T>
 struct UpdateEPipelineCreateInfo
 {
 	svec3 paddedEDims;
 	svec3 paddedHc1Dims;
 	svec3 paddedHc2Dims;
+	svec3 paddedEps1Dims;
+	svec3 paddedEps2Dims;
 	svec3 dims;
 	svec3 start;
 
@@ -44,6 +51,12 @@ struct UpdateEPipelineCreateInfo
 	vulkan::Buffer& Ch;
 	vulkan::Buffer& Hc1;
 	vulkan::Buffer& Hc2;
+	vulkan::Buffer& eps1;
+	vulkan::Buffer& eps2;
+
+	T deltaT;
+	T delta1;
+	T delta2;
 
 	std::filesystem::path shaderPath;
 	std::string_view      entrypoint = "main";
@@ -52,6 +65,7 @@ struct UpdateEPipelineCreateInfo
 	vulkan::Compute& compute;
 };
 
+template <typename T>
 class UpdateEPipeline
 {
 private:
@@ -60,8 +74,13 @@ private:
 		alignas(sizeof(svec4)) svec3 paddedEDims;
 		alignas(sizeof(svec4)) svec3 paddedHc1Dims;
 		alignas(sizeof(svec4)) svec3 paddedHc2Dims;
+		alignas(sizeof(svec4)) svec3 paddedEps1Dims;
+		alignas(sizeof(svec4)) svec3 paddedEps2Dims;
 		alignas(sizeof(svec4)) svec3 dims;
 		alignas(sizeof(svec4)) svec3 start;
+		T deltaT;
+		T delta1;
+		T delta2;
 	} pushConstants;
 
 	svec3 groupCount;
@@ -69,17 +88,66 @@ private:
 	vulkan::ComputePipeline pipeline;
 
 public:
-	UpdateEPipeline(const UpdateEPipelineCreateInfo& createInfo);
+	UpdateEPipeline(const UpdateEPipelineCreateInfo<T>& createInfo):
+		pushConstants({
+			.paddedEDims   = createInfo.paddedEDims,
+			.paddedHc1Dims = createInfo.paddedHc1Dims,
+			.paddedHc2Dims = createInfo.paddedHc2Dims,
+			.paddedEps1Dims = createInfo.paddedEps1Dims,
+			.paddedEps2Dims = createInfo.paddedEps2Dims,
+			.dims          = createInfo.dims,
+			.start         = createInfo.start,
+			.deltaT = createInfo.deltaT,
+			.delta1 = createInfo.delta1,
+			.delta2 = createInfo.delta2,
+		}),
+		groupCount(workGroupCount(createInfo.paddedEDims, createInfo.workGroupSize)),
+		pipeline(createInfo.compute.createPipeline({
+			.shaderPath = createInfo.shaderPath,
+			.setLayouts = {
+				{
+					.bindings = simpleStorageBuffersLayout<7>(),
+					.buffers = {
+						createInfo.Ec,
+						createInfo.Ce,
+						createInfo.Ch,
+						createInfo.Hc1,
+						createInfo.Hc2,
+						createInfo.eps1,
+						createInfo.eps2,
+					}
+				}
+			},
+			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
+			.specializationConstants = workgroupSizeWithDeltas(
+				createInfo.workGroupSize,
+				createInfo.Hc1Delta,
+				createInfo.Hc2Delta
+			),
+		}))
+	{
+		assert(groupCount*createInfo.workGroupSize == createInfo.paddedEDims);
+	}
 
-	void dispatch(vk::CommandBuffer commandBuffer);
+
+	void dispatch(vk::CommandBuffer commandBuffer)
+	{
+		pipeline.bind(commandBuffer);
+		pipeline.pushConstants(commandBuffer, pushConstants);
+		commandBuffer.dispatch(groupCount.x, groupCount.y, groupCount.z);
+	}
+
 
 };
 
+template <typename T>
 struct UpdateEPipelineInfo
 {
 	svec3 paddedEDims;
 	svec3 paddedHc1Dims;
 	svec3 paddedHc2Dims;
+	svec3 paddedEps1Dims;
+	svec3 paddedEps2Dims;
 	svec3 start;
 
 	svec3Delta Hc1Delta;
@@ -90,10 +158,16 @@ struct UpdateEPipelineInfo
 	vulkan::Buffer& Ch;
 	vulkan::Buffer& Hc1;
 	vulkan::Buffer& Hc2;
+	vulkan::Buffer& eps1;
+	vulkan::Buffer& eps2;
+
+	T delta1;
+	T delta2;
 
 	std::string_view entrypoint = "main";
 };
 
+template <typename T>
 struct UpdateEPipelinesCreateInfo
 {
 	std::filesystem::path shaderPath;
@@ -102,25 +176,70 @@ struct UpdateEPipelinesCreateInfo
 
 	vulkan::Compute& compute;
 
-	UpdateEPipelineInfo x;
-	UpdateEPipelineInfo y;
-	UpdateEPipelineInfo z;
+	T deltaT;
+
+	UpdateEPipelineInfo<T> x;
+	UpdateEPipelineInfo<T> y;
+	UpdateEPipelineInfo<T> z;
 
 };
 
+
+template <typename T>
+UpdateEPipelineCreateInfo<T> map(const UpdateEPipelinesCreateInfo<T>& createInfo, UpdateEPipelineInfo<T> UpdateEPipelinesCreateInfo<T>::* _pipelineInfo)
+{
+	auto& pipelineInfo = createInfo.*_pipelineInfo;
+
+	return {
+		.paddedEDims    = pipelineInfo.paddedEDims,
+		.paddedHc1Dims  = pipelineInfo.paddedHc1Dims,
+		.paddedHc2Dims  = pipelineInfo.paddedHc2Dims,
+		.paddedEps1Dims = pipelineInfo.paddedEps1Dims,
+		.paddedEps2Dims = pipelineInfo.paddedEps2Dims,
+		.dims           = createInfo.dims,
+		.start          = pipelineInfo.start,
+		.Hc1Delta       = pipelineInfo.Hc1Delta,
+		.Hc2Delta       = pipelineInfo.Hc2Delta,
+		.Ec             = pipelineInfo.Ec,
+		.Ce             = pipelineInfo.Ce,
+		.Ch             = pipelineInfo.Ch,
+		.Hc1            = pipelineInfo.Hc1,
+		.Hc2            = pipelineInfo.Hc2,
+		.eps1           = pipelineInfo.eps1,
+		.eps2           = pipelineInfo.eps2,
+		.deltaT         = createInfo.deltaT,
+		.delta1         = pipelineInfo.delta1,
+		.delta2         = pipelineInfo.delta2,
+		.shaderPath     = createInfo.shaderPath,
+		.entrypoint     = pipelineInfo.entrypoint,
+		.workGroupSize  = createInfo.workGroupSize,
+		.compute        = createInfo.compute,
+	};
+}
+
+template <typename T>
 class UpdateEPipelines
 {
 public:
-	using create_info_t = UpdateEPipelinesCreateInfo;
+	using create_info_t = UpdateEPipelinesCreateInfo<T>;
 
-	UpdateEPipelines(create_info_t createInfo);
+	UpdateEPipelines(create_info_t createInfo):
+		x(map(createInfo, &create_info_t::x)),
+		y(map(createInfo, &create_info_t::y)),
+		z(map(createInfo, &create_info_t::z))
+	{ }
 
-	void dispatch(vk::CommandBuffer commandBuffer);
+	void dispatch(vk::CommandBuffer commandBuffer)
+	{
+		x.dispatch(commandBuffer);
+		y.dispatch(commandBuffer);
+		z.dispatch(commandBuffer);
+	}
 
 private:
-	UpdateEPipeline x;
-	UpdateEPipeline y;
-	UpdateEPipeline z;
+	UpdateEPipeline<T> x;
+	UpdateEPipeline<T> y;
+	UpdateEPipeline<T> z;
 };
 
 }

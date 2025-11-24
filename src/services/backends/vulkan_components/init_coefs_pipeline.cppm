@@ -44,6 +44,7 @@ struct InitCoefPipelineCreateInfo
 	svec3 dims;
 	T CrImp;
 	T deltaT;
+	T delta;
 
 	vulkan::Buffer& Ch;
 	vulkan::Buffer& Ce;
@@ -67,6 +68,7 @@ private:
 		alignas(sizeof(svec4)) svec3 dims;
 		T CrImp;
 		T deltaT;
+		T delta;
 	} pushConstants;
 
 	svec3 groupCount;
@@ -80,6 +82,7 @@ public:
 			.dims = createInfo.dims,
 			.CrImp = createInfo.CrImp,
 			.deltaT = createInfo.deltaT,
+			.delta = createInfo.delta,
 		}),
 		groupCount(workGroupCount(createInfo.paddedDims, createInfo.workGroupSize)),
 		pipeline(createInfo.compute.createPipeline({
@@ -111,6 +114,7 @@ public:
 
 };
 
+template <typename T>
 struct InitCoefPipelineInfo
 {
 	svec3 paddedDims;
@@ -120,6 +124,8 @@ struct InitCoefPipelineInfo
 	vulkan::Buffer& Ce;
 	vulkan::Buffer& CM;
 	vulkan::Buffer& mu;
+
+	T delta;
 
 	std::string_view entrypoint = "main";
 };
@@ -136,18 +142,18 @@ struct InitCoefPipelinesCreateInfo
 
 	vulkan::Compute& compute;
 
-	InitCoefPipelineInfo Hx;
-	InitCoefPipelineInfo Hy;
-	InitCoefPipelineInfo Hz;
+	InitCoefPipelineInfo<T> Hx;
+	InitCoefPipelineInfo<T> Hy;
+	InitCoefPipelineInfo<T> Hz;
 
-	InitCoefPipelineInfo Ex;
-	InitCoefPipelineInfo Ey;
-	InitCoefPipelineInfo Ez;
+	InitCoefPipelineInfo<T> Ex;
+	InitCoefPipelineInfo<T> Ey;
+	InitCoefPipelineInfo<T> Ez;
 
 };
 
 template <FieldType F, typename T>
-InitCoefPipelineCreateInfo<T> map(const InitCoefPipelinesCreateInfo<T> createInfo, InitCoefPipelineInfo InitCoefPipelinesCreateInfo<T>::* _pipelineInfo)
+InitCoefPipelineCreateInfo<T> map(const InitCoefPipelinesCreateInfo<T> createInfo, InitCoefPipelineInfo<T> InitCoefPipelinesCreateInfo<T>::* _pipelineInfo)
 {
 	auto& pipelineInfo = createInfo.*_pipelineInfo;
 
@@ -156,6 +162,7 @@ InitCoefPipelineCreateInfo<T> map(const InitCoefPipelinesCreateInfo<T> createInf
 		.dims          = pipelineInfo.dims,
 		.CrImp         = crImp<F>(createInfo.Cr,createInfo.Imp0),
 		.deltaT        = createInfo.deltaT,
+		.delta         = pipelineInfo.delta,
 		.Ch            = pipelineInfo.Ch,
 		.Ce            = pipelineInfo.Ce,
 		.CM            = pipelineInfo.CM,

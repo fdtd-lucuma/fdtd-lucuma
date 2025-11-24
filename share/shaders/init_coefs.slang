@@ -7,6 +7,7 @@ struct PushConstants<T = FDTD_FLOAT_T>
 	svec3 dims;
 	T CrImp;
 	T deltaT;
+	T delta;
 };
 
 [[vk::constant_id(0)]] const uint wgX;
@@ -43,6 +44,6 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	const FDTD_FLOAT_T c = (CM[i,j,k]*pushConstants.deltaT)/(2*mu[i,j,k]);
 
 	Ch[i,j,k] = (1-c)/(1+c);
-	Ce[i,j,k] = (1/(1+c))*pushConstants.CrImp;
+	Ce[i,j,k] = (1/(1+c))*pushConstants.CrImp/(mu[i,j,k]*pushConstants.delta);
 
 }

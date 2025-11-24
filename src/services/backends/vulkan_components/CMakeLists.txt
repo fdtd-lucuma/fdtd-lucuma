@@ -17,8 +17,6 @@
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		instantiations.cpp
-		update_h_pipeline.cpp
-		update_e_pipeline.cpp
 		utils.cpp
 	PRIVATE
 		FILE_SET fdtd

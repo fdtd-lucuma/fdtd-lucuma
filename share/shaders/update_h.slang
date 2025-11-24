@@ -1,12 +1,17 @@
 #include "utils/types.slang"
 #include "utils/matrix.slang"
 
-struct PushConstants
+struct PushConstants<T = FDTD_FLOAT_T>
 {
 	svec3 paddedHDims;
 	svec3 paddedEc1Dims;
 	svec3 paddedEc2Dims;
+	svec3 paddedMu1Dims;
+	svec3 paddedMu2Dims;
 	svec3 Hdims;
+	T deltaT;
+	T delta1;
+	T delta2;
 };
 
 [[vk::constant_id(0)]] const uint wgX;
@@ -26,6 +31,8 @@ StructuredBuffer<FDTD_FLOAT_T> _Ch;
 StructuredBuffer<FDTD_FLOAT_T> _Ce;
 StructuredBuffer<FDTD_FLOAT_T> _Ec1;
 StructuredBuffer<FDTD_FLOAT_T> _Ec2;
+StructuredBuffer<FDTD_FLOAT_T> _mu1;
+StructuredBuffer<FDTD_FLOAT_T> _mu2;
 
 bool outside(uint3 threadId, svec3 dims)
 {
@@ -47,6 +54,9 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	cmatrix3d Ec1 = cmatrix3d<FDTD_FLOAT_T>(_Ec1, pushConstants.paddedEc1Dims);
 	cmatrix3d Ec2 = cmatrix3d<FDTD_FLOAT_T>(_Ec2, pushConstants.paddedEc2Dims);
 
+	cmatrix3d mu1 = cmatrix3d<FDTD_FLOAT_T>(_mu1, pushConstants.paddedMu1Dims);
+	cmatrix3d mu2 = cmatrix3d<FDTD_FLOAT_T>(_mu2, pushConstants.paddedMu2Dims);
+
 	const uint i = threadId.x;
 	const uint j = threadId.y;
 	const uint k = threadId.z;
@@ -60,6 +70,6 @@ void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConsta
 	const uint Ec2k = k + Ec2DeltaZ;
 
 	Hc[i,j,k] = Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
-		((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k]) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k]))
+		pushConstants.deltaT*((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k])/(mu1[i,j,k]*pushConstants.delta1) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k])/(mu2[i,j,k]*pushConstants.delta2))
 	;
 }

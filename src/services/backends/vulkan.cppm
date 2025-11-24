@@ -84,6 +84,9 @@ public:
 
 				//TODO: Get from settings
 				.deltaT = (T)1,
+				.deltaX = (T)1,
+				.deltaY = (T)1,
+				.deltaZ = (T)1,
 				.imp0 = (T)377,
 				.Cr = (T)(1.f/std::sqrt(3.f)),
 
