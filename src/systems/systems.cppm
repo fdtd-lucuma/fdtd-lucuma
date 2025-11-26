@@ -22,3 +22,4 @@ import lucuma.utils;
 
 export import :base;
 export import :simulation_parameters;
+export import :simulation;

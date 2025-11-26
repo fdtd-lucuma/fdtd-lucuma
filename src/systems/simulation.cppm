@@ -16,7 +16,7 @@
 
 module;
 
-export module lucuma.systems:simulation_parameters;
+export module lucuma.systems:simulation;
 
 import lucuma.services.basic;
 import lucuma.events;
@@ -25,54 +25,47 @@ import lucuma.utils;
 import :base;
 
 import std;
+import imgui;
 
 namespace lucuma::systems
 {
 
 using namespace lucuma::utils;
-
-struct FdtdInfo
-{
-	// Basic
-	float basicSize[3];
-	float basicGaussPosition[3];
-	float basicTime; // In ns
-	float basicDeltaSize[3]; // In mm
-	float epsilon;
-
-	// Advanced
-	unsigned int size[3];
-	unsigned int gaussPosition[3];
-	float        deltaT;
-	float        imp0;
-	float        Cr;
-	unsigned int maxTime;
-	float        gaussSigma;
-
-	Backend   backend;
-	Precision precision;
-};
-
-
 using namespace services::basic;
 
-export
-class SimulationParameters: public Base<SimulationParameters>
+export template<Backend backend, Precision precision>
+class Simulation: public Base<Simulation<backend, precision>>
 {
 public:
-	SimulationParameters(Systems& _systems);
+	using base_t = Base<Simulation<backend, precision>>;
 
-	void update(const events::Update& event);
+	Simulation(Systems& _systems):
+		base_t(_systems)
+	{
+		std::println("Create {} {} simulation", backend, precision);
+	}
+
+	void update(const events::Update& event)
+	{
+		progress = std::min(1.0f, progress+event.deltaTime/1000);
+
+		drawProgressBar();
+
+		if(progress >= 1.0f)
+			base_t::selfStop();
+	}
 
 private:
-	Settings&       settings;
-	entt::registry& registry;
+	float progress = 0.0f;
 
-	void init();
-	void basicTab();
+	void drawProgressBar()
+	{
+		ImGui::Begin("Progress");
 
-	FdtdInfo fdtdInfo;
-	entt::entity simulationId = entt::null;
+		ImGui::ProgressBar(progress);
+
+		ImGui::End();
+	}
 
 };
 

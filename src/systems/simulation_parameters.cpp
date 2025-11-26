@@ -25,7 +25,7 @@ import std;
 import glm;
 import imgui;
 import glm;
-
+import magic_enum;
 
 namespace lucuma::systems
 {
@@ -34,7 +34,8 @@ using namespace lucuma::utils;
 
 SimulationParameters::SimulationParameters(Systems& _systems):
 	Base(_systems),
-	settings(_systems.inject<Settings>())
+	settings(_systems.inject<Settings>()),
+	registry(_systems.inject<entt::registry>())
 { 
 	init();
 }
@@ -82,8 +83,16 @@ void SimulationParameters::update(const events::Update&)
 	utils::imgui::Combo<Backend>("Backend type", &fdtdInfo.backend);
 	utils::imgui::Combo<Precision>("Precision", &fdtdInfo.precision);
 
-	if(ImGui::Button("Start"))
+	if(ImGui::Button("Start") && !registry.valid(simulationId))
 	{
+		magic_enum::enum_switch([&](auto precision)
+		{
+			magic_enum::enum_switch([&](auto backend)
+			{
+				simulationId = systems.start<Simulation<backend, precision>>();
+
+			}, fdtdInfo.backend);
+		}, fdtdInfo.precision);
 	}
 
 	ImGui::End();

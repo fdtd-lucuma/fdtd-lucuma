@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			base.cppm
+			simulation.cppm
 			simulation_parameters.cppm
 			systems.cppm
 )
