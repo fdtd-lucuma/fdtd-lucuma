@@ -19,23 +19,51 @@ module;
 export module lucuma.systems:base;
 
 import lucuma.services.basic;
+import lucuma.events;
 
 import std;
 
 namespace lucuma::systems
 {
 
+template <typename T>
+constexpr bool hasUpdate = requires (T t, const lucuma::events::Update& u) {t.update(u);};
+
+template <typename T>
+constexpr bool hasStart = requires (T t, const lucuma::events::Start& s) {t.start(s);};
+
+using namespace services::basic;
+
 export template <typename T>
 class Base
 {
 public:
-	Base();
+	static constexpr auto in_place_delete = true;
 
-	void init();
+	Base(Systems& _systems):
+		systems(_systems)
+	{
+		init();
+	}
 
-	~Base();
+	void init()
+	{
+		if constexpr(hasUpdate<T>)
+			systems.connectUpdate(*(T*)this);
+		if constexpr(hasStart<T>)
+			systems.connectStart(*(T*)this);
+	}
+
+	virtual ~Base()
+	{
+		if constexpr(hasUpdate<T>)
+			systems.disconnectUpdate(*(T*)this);
+		if constexpr(hasStart<T>)
+			systems.disconnectStart(*(T*)this);
+	}
 
 protected:
+	Systems& systems;
 
 };
 
