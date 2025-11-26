@@ -16,44 +16,30 @@
 
 module;
 
-module lucuma.services.basic;
+export module lucuma.systems:simulation_parameters;
+
+import lucuma.services.basic;
+import lucuma.events;
+
+import :base;
 
 import std;
 
-namespace lucuma::services::basic
+namespace lucuma::systems
 {
 
-Systems::Systems([[maybe_unused]]Injector& injector):
-	dispatcher(injector.inject<entt::dispatcher>()),
-	registry(injector.inject<entt::registry>())
-{ }
+using namespace services::basic;
 
-void Systems::stop(entt::entity e)
+export
+class SimulationParameters: public Base<SimulationParameters>
 {
-	registry.emplace<toStop>(e);
-}
+public:
+	SimulationParameters(Systems& _systems);
 
-void Systems::cleanStopped()
-{
-	auto view = registry.view<toStop>();
+	void update(const events::Update& event);
 
-	registry.destroy(view.begin(), view.end());
-}
+private:
 
-entt::entity Systems::createEntity()
-{
-	entt::entity e = registry.create();
-
-	registry.emplace<mine>(e);
-
-	return e;
-}
-
-Systems::~Systems()
-{
-	auto view = registry.view<mine>();
-
-	registry.destroy(view.begin(), view.end());
-}
+};
 
 }

@@ -34,12 +34,12 @@ public:
 	Systems(Injector& injector);
 
 	template <typename T, typename... Args>
-	requires std::is_constructible_v<T, Systems, Args...>
+	requires std::is_constructible_v<T, Systems&, Args...>
 	entt::entity start(Args &&...args)
 	{
-		entt::entity e = registry.create();
+		entt::entity e = createEntity();
 
-		T& system = registry.emplace<T>(e, *this, std::forward<Args>(args)...);
+		registry.emplace<T>(e, *this, std::forward<Args>(args)...);
 
 		return e;
 	}
@@ -47,36 +47,41 @@ public:
 	template <typename T>
 	void connectUpdate(T& system)
 	{
-		dispatcher.sink<events::Update>().connect<&T::update>(*system);
+		dispatcher.sink<events::Update>().connect<&T::update>(system);
 	}
 
 	template <typename T>
 	void connectStart(T& system)
 	{
-		dispatcher.sink<events::Start>().connect<&T::update>(*system);
+		dispatcher.sink<events::Start>().connect<&T::update>(system);
 	}
 
 	template <typename T>
 	void disconnectUpdate(T& system)
 	{
-		dispatcher.sink<events::Update>().disconnect<&T::update>(*system);
+		dispatcher.sink<events::Update>().disconnect<&T::update>(system);
 	}
 
 	template <typename T>
 	void disconnectStart(T& system)
 	{
-		dispatcher.sink<events::Start>().disconnect<&T::update>(*system);
+		dispatcher.sink<events::Start>().disconnect<&T::update>(system);
 	}
 
 	void stop(entt::entity e);
 
 	void cleanStopped();
 
+	~Systems();
+
 private:
 	entt::dispatcher& dispatcher;
 	entt::registry&   registry;
 
+	entt::entity createEntity();
+
 	struct toStop {};
+	struct mine {};
 
 };
 

@@ -23,9 +23,8 @@ import lucuma.utils.imgui;
 import lucuma.services.window;
 import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
-import lucuma.legacy_headers.imgui_graphnode;
-import lucuma.legacy_headers.implot3d;
 import lucuma.events;
+import lucuma.systems;
 
 import imgui;
 import glm;
@@ -74,6 +73,8 @@ void Gui::init()
 		.backend       = Backend::vulkan,
 		.precision     = Precision::f32,
 	};
+
+	systems.start<systems::SimulationParameters>();
 }
 
 void Gui::start()
@@ -101,6 +102,8 @@ void Gui::drawFrame(float timeDelta)
 	dispatcher.trigger(events::FrameStart{timeDelta});
 	dispatcher.trigger(events::Update{timeDelta});
 	dispatcher.trigger(events::FrameEnd{timeDelta});
+
+	systems.cleanStopped(); //TODO: Move this into frameEnd
 
 	dispatcher.trigger<events::Start>();
 	dispatcher.sink<events::Start>().disconnect();
@@ -132,8 +135,6 @@ void Gui::update(const events::Update&)
 	}
 
 	ImGui::End();
-
-	ImPlot3D::ShowDemoWindow();
 
 	// This is broken
 	//ImGui::End();

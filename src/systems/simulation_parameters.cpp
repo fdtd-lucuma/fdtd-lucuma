@@ -16,44 +16,21 @@
 
 module;
 
-module lucuma.services.basic;
+module lucuma.systems;
+import lucuma.legacy_headers.implot3d;
 
 import std;
 
-namespace lucuma::services::basic
+namespace lucuma::systems
 {
 
-Systems::Systems([[maybe_unused]]Injector& injector):
-	dispatcher(injector.inject<entt::dispatcher>()),
-	registry(injector.inject<entt::registry>())
+SimulationParameters::SimulationParameters(Systems& _systems):
+	Base(_systems)
 { }
 
-void Systems::stop(entt::entity e)
+void SimulationParameters::update(const events::Update& event)
 {
-	registry.emplace<toStop>(e);
-}
-
-void Systems::cleanStopped()
-{
-	auto view = registry.view<toStop>();
-
-	registry.destroy(view.begin(), view.end());
-}
-
-entt::entity Systems::createEntity()
-{
-	entt::entity e = registry.create();
-
-	registry.emplace<mine>(e);
-
-	return e;
-}
-
-Systems::~Systems()
-{
-	auto view = registry.view<mine>();
-
-	registry.destroy(view.begin(), view.end());
+	ImPlot3D::ShowDemoWindow();
 }
 
 }
