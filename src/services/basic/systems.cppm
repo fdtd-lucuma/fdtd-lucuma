@@ -39,7 +39,8 @@ public:
 	{
 		entt::entity e = createEntity();
 
-		registry.emplace<T>(e, *this, std::forward<Args>(args)...);
+		T& s = registry.emplace<T>(e, *this, std::forward<Args>(args)...);
+		s.entity = e;
 
 		return e;
 	}

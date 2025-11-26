@@ -18,6 +18,7 @@ module;
 
 export module lucuma.systems:base;
 
+import lucuma.legacy_headers.entt;
 import lucuma.services.basic;
 import lucuma.events;
 
@@ -62,8 +63,22 @@ public:
 			systems.disconnectStart(*(T*)this);
 	}
 
+	entt::entity getEntity() const
+	{
+		return entity;
+	}
+
+	friend class lucuma::services::basic::Systems;
+
 protected:
-	Systems& systems;
+	Systems&     systems;
+	entt::entity entity;
+
+	void selfStop()
+	{
+		systems.stop(getEntity());
+	}
+
 
 };
 
