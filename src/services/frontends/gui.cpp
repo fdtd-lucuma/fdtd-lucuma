@@ -43,7 +43,8 @@ Gui::Gui([[maybe_unused]]Injector& injector):
 	graphics(injector.inject<vulkan::Graphics>()),
 	triangleDemo(injector.inject<vulkan::TriangleDemo>()),
 	imgui(injector.inject<vulkan::Imgui>()),
-	settings(injector.inject<basic::Settings>())
+	settings(injector.inject<basic::Settings>()),
+	systems(injector.inject<basic::Systems>())
 {
 	init();
 }

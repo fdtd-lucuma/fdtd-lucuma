@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
 		path.cpp
 		path_common.cpp
 		settings.cpp
+		systems.cpp
 		xdg_dirs.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -33,6 +34,7 @@ target_sources(${PROJECT_NAME}
 			path.cppm
 			path_common.cppm
 			settings.cppm
+			systems.cppm
 			xdg_dirs.cppm
 )
 

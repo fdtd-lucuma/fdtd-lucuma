@@ -74,6 +74,7 @@ private:
 	vulkan::TriangleDemo& triangleDemo;
 	vulkan::Imgui&        imgui;
 	basic::Settings&      settings;
+	basic::Systems&       systems;
 
 	void drawFrame(float timeDelta);
 

@@ -27,6 +27,7 @@ template ArgumentParser& Injector::inject<ArgumentParser>();
 template FileReader&     Injector::inject<FileReader>();
 template PathCommon&     Injector::inject<PathCommon>();
 template Settings&       Injector::inject<Settings>();
+template Systems&        Injector::inject<Systems>();
 template XdgDirs&        Injector::inject<XdgDirs>();
 
 }

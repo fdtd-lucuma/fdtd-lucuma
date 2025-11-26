@@ -16,27 +16,24 @@
 
 module;
 
-export module lucuma.services.basic;
+export module lucuma.services.basic:systems;
 
 import lucuma.utils;
+import std;
 
-export import :argument_parser;
-export import :file_reader;
-export import :path;
-export import :path_common;
-export import :settings;
-export import :systems;
-export import :xdg_dirs;
-
-namespace lucuma::utils
+namespace lucuma::services::basic
 {
-using namespace lucuma::services::basic;
 
-extern template ArgumentParser& Injector::inject<ArgumentParser>();
-extern template FileReader&     Injector::inject<FileReader>();
-extern template PathCommon&     Injector::inject<PathCommon>();
-extern template Settings&       Injector::inject<Settings>();
-extern template Systems&        Injector::inject<Systems>();
-extern template XdgDirs&        Injector::inject<XdgDirs>();
+using namespace lucuma::utils;
+
+export class Systems
+{
+public:
+	Systems(Injector& injector);
+
+
+private:
+
+};
 
 }
