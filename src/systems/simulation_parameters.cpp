@@ -36,7 +36,7 @@ SimulationParameters::SimulationParameters(Systems& _systems):
 	Base(_systems),
 	settings(_systems.inject<Settings>()),
 	registry(_systems.inject<entt::registry>())
-{ 
+{
 	init();
 }
 
@@ -83,17 +83,10 @@ void SimulationParameters::update(const events::Update&)
 	utils::imgui::Combo<Backend>("Backend type", &fdtdInfo.backend);
 	utils::imgui::Combo<Precision>("Precision", &fdtdInfo.precision);
 
-	if(ImGui::Button("Start") && !registry.valid(simulationId))
-	{
-		magic_enum::enum_switch([&](auto precision)
-		{
-			magic_enum::enum_switch([&](auto backend)
-			{
-				simulationId = systems.start<Simulation<backend, precision>>();
+	if(ImGui::Button("Start"))
+		startSimulation();
 
-			}, fdtdInfo.backend);
-		}, fdtdInfo.precision);
-	}
+	alreadyRunningModal();
 
 	ImGui::End();
 
@@ -108,6 +101,42 @@ void SimulationParameters::update(const events::Update&)
 	//ImGui::End();
 
 	ImPlot3D::ShowDemoWindow();
+}
+
+void SimulationParameters::startSimulation()
+{
+	if(registry.valid(simulationId))
+	{
+		ImGui::OpenPopup("Warning");
+		return;
+	}
+
+	magic_enum::enum_switch([&](auto precision)
+	{
+		magic_enum::enum_switch([&](auto backend)
+		{
+			simulationId = systems.start<Simulation<backend, precision>>();
+
+		}, fdtdInfo.backend);
+	}, fdtdInfo.precision);
+}
+
+void SimulationParameters::alreadyRunningModal()
+{
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+	if(ImGui::BeginPopupModal("Warning", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("The simulation is already running");
+
+		if(ImGui::Button("OK"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
 }
 
 template <std::size_t N>

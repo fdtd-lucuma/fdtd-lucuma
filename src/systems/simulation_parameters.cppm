@@ -70,6 +70,8 @@ private:
 
 	void init();
 	void basicTab();
+	void startSimulation();
+	void alreadyRunningModal();
 
 	FdtdInfo fdtdInfo;
 	entt::entity simulationId = entt::null;

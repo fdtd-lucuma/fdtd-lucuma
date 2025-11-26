@@ -47,7 +47,7 @@ public:
 
 	void update(const events::Update& event)
 	{
-		progress = std::min(1.0f, progress+event.deltaTime/1000);
+		progress = std::min(1.0f, progress+event.deltaTime/10);
 
 		drawProgressBar();
 

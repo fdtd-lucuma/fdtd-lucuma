@@ -31,6 +31,9 @@ Systems::Systems([[maybe_unused]]Injector& _injector):
 
 void Systems::stop(entt::entity e)
 {
+	if(!registry.valid(e))
+		return;
+
 	registry.emplace<toStop>(e);
 }
 
