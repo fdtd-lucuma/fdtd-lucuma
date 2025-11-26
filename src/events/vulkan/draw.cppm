@@ -16,11 +16,11 @@
 
 module;
 
-export module lucuma.events:draw;
+export module lucuma.events.vulkan:draw;
 
 import vulkan_hpp;
 
-namespace lucuma::events
+namespace lucuma::events::vulkan
 {
 
 export struct Draw

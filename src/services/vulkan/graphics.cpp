@@ -21,7 +21,7 @@ module lucuma.services.vulkan;
 import lucuma.services.window;
 import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
-import lucuma.events;
+import lucuma.events.vulkan;
 
 import vkfw;
 
@@ -155,8 +155,8 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 
 	commandBuffer.beginRendering(renderingInfo);
 
-	dispatcher.trigger(events::Draw{commandBuffer});
-	dispatcher.trigger(events::GuiDraw{commandBuffer});
+	dispatcher.trigger(events::vulkan::Draw{commandBuffer});
+	dispatcher.trigger(events::vulkan::GuiDraw{commandBuffer});
 
 	commandBuffer.endRendering();
 

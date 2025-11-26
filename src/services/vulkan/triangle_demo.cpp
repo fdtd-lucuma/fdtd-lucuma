@@ -21,7 +21,7 @@ module lucuma.services.vulkan;
 import lucuma.services.window;
 import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
-import lucuma.events;
+import lucuma.events.vulkan;
 
 import vkfw;
 
@@ -45,7 +45,7 @@ void TriangleDemo::init()
 {
 	createGraphicsPipeline();
 
-	dispatcher.sink<events::Draw>().connect<&TriangleDemo::onDraw>(*this);
+	dispatcher.sink<events::vulkan::Draw>().connect<&TriangleDemo::onDraw>(*this);
 }
 
 void TriangleDemo::createGraphicsPipeline()
@@ -153,7 +153,7 @@ void TriangleDemo::createGraphicsPipeline()
 	pipeline = device.getDevice().createGraphicsPipeline(nullptr, pipelineInfo);
 }
 
-void TriangleDemo::onDraw(const events::Draw& event)
+void TriangleDemo::onDraw(const events::vulkan::Draw& event)
 {
 	event.commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
 	event.commandBuffer.setViewport(0, swapchain.getCurrentViewport());
@@ -164,7 +164,7 @@ void TriangleDemo::onDraw(const events::Draw& event)
 
 TriangleDemo::~TriangleDemo()
 {
-	dispatcher.sink<events::Draw>().disconnect<&TriangleDemo::onDraw>(*this);
+	dispatcher.sink<events::vulkan::Draw>().disconnect<&TriangleDemo::onDraw>(*this);
 }
 
 }

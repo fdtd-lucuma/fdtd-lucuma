@@ -26,6 +26,7 @@ import lucuma.utils.vulkan;
 import lucuma.services.window;
 import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
+import lucuma.events.vulkan;
 import lucuma.events;
 
 import imgui;
@@ -65,7 +66,7 @@ private:
 
 	void initImgui();
 
-	void onDraw(const events::GuiDraw& event);
+	void onDraw(const events::vulkan::GuiDraw& event);
 	void onFrameStart(const events::FrameStart& event);
 	void onFrameEnd(const events::FrameEnd& event);
 

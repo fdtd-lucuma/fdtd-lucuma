@@ -16,7 +16,6 @@
 
 module;
 
-export module lucuma.events;
+export module lucuma.events.vulkan;
 
-export import :start;
-export import :frame;
+export import :draw;

@@ -25,7 +25,7 @@ import lucuma.utils;
 import lucuma.utils.vulkan;
 import lucuma.services.window;
 import lucuma.legacy_headers.entt;
-import lucuma.events;
+import lucuma.events.vulkan;
 
 namespace lucuma::services::vulkan
 {
@@ -60,7 +60,7 @@ private:
 	vk::raii::PipelineLayout pipelineLayout = nullptr;
 	vk::raii::Pipeline       pipeline       = nullptr;
 
-	void onDraw(const events::Draw& event);
+	void onDraw(const events::vulkan::Draw& event);
 
 };
 

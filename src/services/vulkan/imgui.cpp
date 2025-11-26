@@ -27,6 +27,7 @@ import lucuma.legacy_headers.xdg_utils_cxx;
 import lucuma.legacy_headers.imgui_graphnode;
 import lucuma.legacy_headers.implot3d;
 import lucuma.events;
+import lucuma.events.vulkan;
 
 import imgui;
 import imgui_impl_vulkan;
@@ -56,7 +57,7 @@ void Imgui::init()
 {
 	initImgui();
 
-	dispatcher.sink<events::GuiDraw>().connect<&Imgui::onDraw>(*this);
+	dispatcher.sink<events::vulkan::GuiDraw>().connect<&Imgui::onDraw>(*this);
 	dispatcher.sink<events::FrameStart>().connect<&Imgui::onFrameStart>(*this);
 	dispatcher.sink<events::FrameEnd>().connect<&Imgui::onFrameEnd>(*this);
 }
@@ -126,7 +127,7 @@ void Imgui::initImgui()
 	ImGui_ImplVulkan_Init(&initInfo);
 }
 
-void Imgui::onDraw(const events::GuiDraw& event)
+void Imgui::onDraw(const events::vulkan::GuiDraw& event)
 {
 	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), event.commandBuffer);
 }
@@ -146,7 +147,7 @@ void Imgui::onFrameEnd(const events::FrameEnd&)
 
 Imgui::~Imgui()
 {
-	dispatcher.sink<events::GuiDraw>().disconnect<&Imgui::onDraw>(*this);
+	dispatcher.sink<events::vulkan::GuiDraw>().disconnect<&Imgui::onDraw>(*this);
 	dispatcher.sink<events::FrameStart>().disconnect<&Imgui::onFrameStart>(*this);
 	dispatcher.sink<events::FrameEnd>().disconnect<&Imgui::onFrameEnd>(*this);
 

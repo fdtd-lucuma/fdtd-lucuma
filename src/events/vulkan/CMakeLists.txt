@@ -19,9 +19,6 @@ target_sources(${PROJECT_NAME}
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			events.cppm
-			frame.cppm
-			start.cppm
+			draw.cppm
+			vulkan.cppm
 )
-
-add_subdirectory(vulkan)
