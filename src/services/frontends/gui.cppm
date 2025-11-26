@@ -32,37 +32,12 @@ namespace lucuma::services::frontends
 
 using namespace lucuma::utils;
 
-struct FdtdInfo
-{
-	// Basic
-	float basicSize[3];
-	float basicGaussPosition[3];
-	float basicTime; // In ns
-	float basicDeltaSize[3]; // In mm
-	float epsilon;
-
-	// Advanced
-	unsigned int size[3];
-	unsigned int gaussPosition[3];
-	float        deltaT;
-	float        imp0;
-	float        Cr;
-	unsigned int maxTime;
-	float        gaussSigma;
-
-	Backend   backend;
-	Precision precision;
-};
-
 export class Gui
 {
 public:
 	Gui(Injector& injector);
 
-	void init();
 	void start();
-
-	~Gui();
 
 private:
 	Injector& _injector;
@@ -77,12 +52,6 @@ private:
 	basic::Systems&       systems;
 
 	void drawFrame(float timeDelta);
-
-	void update(const events::Update& event);
-
-	void basicTab();
-
-	FdtdInfo fdtdInfo;
 
 };
 

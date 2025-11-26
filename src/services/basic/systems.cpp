@@ -23,9 +23,10 @@ import std;
 namespace lucuma::services::basic
 {
 
-Systems::Systems([[maybe_unused]]Injector& injector):
-	dispatcher(injector.inject<entt::dispatcher>()),
-	registry(injector.inject<entt::registry>())
+Systems::Systems([[maybe_unused]]Injector& _injector):
+	dispatcher(_injector.inject<entt::dispatcher>()),
+	registry(_injector.inject<entt::registry>()),
+	injector(_injector)
 { }
 
 void Systems::stop(entt::entity e)

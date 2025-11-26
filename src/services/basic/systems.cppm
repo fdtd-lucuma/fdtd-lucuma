@@ -31,7 +31,7 @@ using namespace lucuma::utils;
 export class Systems
 {
 public:
-	Systems(Injector& injector);
+	Systems(Injector& _injector);
 
 	template <typename T, typename... Args>
 	requires std::is_constructible_v<T, Systems&, Args...>
@@ -42,6 +42,13 @@ public:
 		registry.emplace<T>(e, *this, std::forward<Args>(args)...);
 
 		return e;
+	}
+
+	template<typename Type, typename BaseType = Type>
+	requires std::is_base_of_v<BaseType, Type>
+	[[nodiscard]] BaseType& inject()
+	{
+		return injector.inject<Type, BaseType>();
 	}
 
 	template <typename T>
@@ -77,6 +84,7 @@ public:
 private:
 	entt::dispatcher& dispatcher;
 	entt::registry&   registry;
+	Injector&         injector;
 
 	entt::entity createEntity();
 

@@ -20,6 +20,7 @@ export module lucuma.systems:simulation_parameters;
 
 import lucuma.services.basic;
 import lucuma.events;
+import lucuma.utils;
 
 import :base;
 
@@ -27,6 +28,31 @@ import std;
 
 namespace lucuma::systems
 {
+
+using namespace lucuma::utils;
+
+struct FdtdInfo
+{
+	// Basic
+	float basicSize[3];
+	float basicGaussPosition[3];
+	float basicTime; // In ns
+	float basicDeltaSize[3]; // In mm
+	float epsilon;
+
+	// Advanced
+	unsigned int size[3];
+	unsigned int gaussPosition[3];
+	float        deltaT;
+	float        imp0;
+	float        Cr;
+	unsigned int maxTime;
+	float        gaussSigma;
+
+	Backend   backend;
+	Precision precision;
+};
+
 
 using namespace services::basic;
 
@@ -39,6 +65,12 @@ public:
 	void update(const events::Update& event);
 
 private:
+	Settings& settings;
+
+	void init();
+	void basicTab();
+
+	FdtdInfo fdtdInfo;
 
 };
 
