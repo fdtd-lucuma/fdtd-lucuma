@@ -68,6 +68,7 @@ public:
 
 	~Simulation()
 	{
+		std::println("Destroy {} {} simulation", backend, precision);
 		registry.destroy(simulationId);
 	}
 
