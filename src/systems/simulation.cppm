@@ -39,7 +39,7 @@ export template<Backend backend, Precision precision>
 class Simulation: public Base<Simulation<backend, precision>>
 {
 public:
-	using base_t    = Base<Simulation<backend, precision>>;
+	using base_t = Base<Simulation<backend, precision>>;
 
 	Simulation(Systems& _systems):
 		base_t(_systems),
@@ -66,7 +66,7 @@ public:
 		drawProgressBar();
 	}
 
-	~Simulation()
+	virtual ~Simulation()
 	{
 		std::println("Destroy {} {} simulation", backend, precision);
 		registry.destroy(simulationId);
