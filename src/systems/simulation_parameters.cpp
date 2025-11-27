@@ -19,6 +19,7 @@ module;
 module lucuma.systems;
 import lucuma.legacy_headers.implot3d;
 import lucuma.utils;
+import lucuma.services.backends;
 import lucuma.utils.imgui;
 
 import std;

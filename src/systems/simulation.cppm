@@ -19,6 +19,7 @@ module;
 export module lucuma.systems:simulation;
 
 import lucuma.services.basic;
+import lucuma.services.backends;
 import lucuma.events;
 import lucuma.utils;
 
@@ -32,37 +33,55 @@ namespace lucuma::systems
 
 using namespace lucuma::utils;
 using namespace services::basic;
+using namespace services::backends;
 
 export template<Backend backend, Precision precision>
 class Simulation: public Base<Simulation<backend, precision>>
 {
 public:
-	using base_t = Base<Simulation<backend, precision>>;
+	using base_t    = Base<Simulation<backend, precision>>;
 
 	Simulation(Systems& _systems):
-		base_t(_systems)
+		base_t(_systems),
+		iBackend(_systems.inject<Instantiator>().get(backend, precision)),
+		registry(_systems.inject<entt::registry>())
 	{
 		std::println("Create {} {} simulation", backend, precision);
+
+		// TODO: Input from here
+		simulationId = iBackend.init();
 	}
 
-	void update(const events::Update& event)
+	void update([[maybe_unused]] const events::Update& event)
 	{
-		progress = std::min(1.0f, progress+event.deltaTime/10);
+		// TODO: Async step
+		if(!iBackend.step(simulationId))
+		{
+			base_t::selfStop();
+			return;
+		}
+
+		iBackend.saveFiles(simulationId);
 
 		drawProgressBar();
+	}
 
-		if(progress >= 1.0f)
-			base_t::selfStop();
+	~Simulation()
+	{
+		registry.destroy(simulationId);
 	}
 
 private:
-	float progress = 0.0f;
+	IBackend&       iBackend;
+	entt::registry& registry;
+
+	entt::entity simulationId = entt::null;
 
 	void drawProgressBar()
 	{
 		ImGui::Begin("Progress");
 
-		ImGui::ProgressBar(progress);
+		ImGui::ProgressBar(-1.f*(float)ImGui::GetTime());
 
 		ImGui::End();
 	}

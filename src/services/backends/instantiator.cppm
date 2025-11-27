@@ -37,6 +37,8 @@ public:
 	IBackend& instantiate();
 	void instantiateAll();
 
+	IBackend& get(Backend backend, Precision precision);
+
 private:
 	Injector&        injector;
 	basic::Settings& settings;

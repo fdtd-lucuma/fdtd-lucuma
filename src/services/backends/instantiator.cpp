@@ -17,6 +17,7 @@
 module;
 
 #include <cstdlib>
+#include <cassert>
 
 module lucuma.services.backends;
 
@@ -142,6 +143,25 @@ void Instantiator::instantiateAll()
 		});
 	});
 
+}
+
+IBackend& Instantiator::get(Backend backend, Precision precision)
+{
+	IBackend* result = nullptr;
+	magic_enum::enum_switch([&](auto precision)
+	{
+		magic_enum::enum_switch([&](auto backend)
+		{
+			using backend_t = typename BackendTraits<backend>::template type<precision>;
+
+			result = &injector.inject<backend_t>();
+
+		}, backend);
+	}, precision);
+
+	assert(result != nullptr);
+
+	return *result;
 }
 
 }
