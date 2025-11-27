@@ -58,6 +58,8 @@ Systems::~Systems()
 	auto view = registry.view<mine>();
 
 	registry.destroy(view.begin(), view.end());
+
+	cleanStopped();
 }
 
 }

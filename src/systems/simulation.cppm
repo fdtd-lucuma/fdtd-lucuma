@@ -69,7 +69,9 @@ public:
 	virtual ~Simulation()
 	{
 		std::println("Destroy {} {} simulation", backend, precision);
-		registry.destroy(simulationId);
+
+		//TODO: Find a way to destroy in a destroyer
+		base_t::systems.stop(simulationId);
 	}
 
 private:
