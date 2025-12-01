@@ -33,4 +33,14 @@ export namespace ImPlot3D {
 	// Demo
 	using ImPlot3D::ShowDemoWindow;
 
+	using ImPlot3D::BeginPlot;
+	using ImPlot3D::PlotScatter;
+	using ImPlot3D::PushStyleVar;
+	using ImPlot3D::SetNextMarkerStyle;
+	using ImPlot3D::PlotScatter;
+	using ImPlot3D::PopStyleVar;
+	using ImPlot3D::EndPlot;
+	using ImPlot3D::SetupAxesLimits;
+	using ImPlot3D::PlotText;
+
 };

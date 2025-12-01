@@ -23,11 +23,13 @@ import lucuma.services.backends;
 import lucuma.events;
 import lucuma.utils;
 import lucuma.components;
+import lucuma.legacy_headers.implot3d;
 
 import :base;
 
 import std.compat;
 import imgui;
+import glm;
 
 namespace lucuma::systems
 {
@@ -46,6 +48,7 @@ public:
 		base_t(_systems),
 		iBackend(_systems.inject<Instantiator>().get(backend, precision)),
 		registry(_systems.inject<entt::registry>()),
+		gaussPosition(createInfo.gaussPosition),
 		maxTime(createInfo.maxTime)
 	{
 		std::println("Create {} {} simulation", backend, precision);
@@ -82,6 +85,7 @@ private:
 
 	entt::entity simulationId = entt::null;
 
+	svec3 gaussPosition;
 	const unsigned int maxTime;
 	unsigned int timeI = 0;
 
@@ -95,7 +99,24 @@ private:
 
 		ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), buffer);
 
+		plot3d();
+
 		ImGui::End();
+	}
+
+	void plot3d()
+	{
+		if(!ImPlot3D::BeginPlot("FDTD"))
+			return;
+
+		glm::vec<3, float> gaussF = gaussPosition;
+
+		ImPlot3D::PlotScatter("Source", &gaussF.x, &gaussF.y, &gaussF.z, 1);
+		ImPlot3D::PlotText("Gaussian source", gaussF.x, gaussF.y, gaussF.z);
+
+		//TODO: Plot plane
+
+		ImPlot3D::EndPlot();
 	}
 
 };
