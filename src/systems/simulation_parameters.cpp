@@ -112,11 +112,24 @@ void SimulationParameters::startSimulation()
 		return;
 	}
 
+	components::FdtdDataCreateInfo<float> createInfo {
+		.size          = {fdtdInfo.size[0], fdtdInfo.size[1], fdtdInfo.size[2]},
+		.gaussPosition = {fdtdInfo.gaussPosition[0], fdtdInfo.gaussPosition[1], fdtdInfo.gaussPosition[2]},
+		.deltaT        = fdtdInfo.deltaT,
+		.deltaX        = fdtdInfo.basicDeltaSize[0]/1000,
+		.deltaY        = fdtdInfo.basicDeltaSize[1]/1000,
+		.deltaZ        = fdtdInfo.basicDeltaSize[2]/1000,
+		.imp0          = fdtdInfo.imp0,
+		.Cr            = fdtdInfo.Cr,
+		.maxTime       = fdtdInfo.maxTime,
+		.gaussSigma    = fdtdInfo.gaussSigma,
+	};
+
 	magic_enum::enum_switch([&](auto precision)
 	{
 		magic_enum::enum_switch([&](auto backend)
 		{
-			simulationId = systems.start<Simulation<backend, precision>>();
+			simulationId = systems.start<Simulation<backend, precision>>(createInfo);
 
 		}, fdtdInfo.backend);
 	}, fdtdInfo.precision);

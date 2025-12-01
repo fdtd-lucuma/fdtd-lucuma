@@ -22,10 +22,11 @@ import lucuma.services.basic;
 import lucuma.services.backends;
 import lucuma.events;
 import lucuma.utils;
+import lucuma.components;
 
 import :base;
 
-import std;
+import std.compat;
 import imgui;
 
 namespace lucuma::systems
@@ -41,10 +42,11 @@ class Simulation: public Base<Simulation<backend, precision>>
 public:
 	using base_t = Base<Simulation<backend, precision>>;
 
-	Simulation(Systems& _systems):
+	Simulation(Systems& _systems, const components::FdtdDataCreateInfo<float>& createInfo):
 		base_t(_systems),
 		iBackend(_systems.inject<Instantiator>().get(backend, precision)),
-		registry(_systems.inject<entt::registry>())
+		registry(_systems.inject<entt::registry>()),
+		maxTime(createInfo.maxTime)
 	{
 		std::println("Create {} {} simulation", backend, precision);
 
@@ -80,11 +82,18 @@ private:
 
 	entt::entity simulationId = entt::null;
 
+	const unsigned int maxTime;
+	unsigned int timeI = 0;
+
 	void drawProgressBar()
 	{
 		ImGui::Begin("Progress");
 
-		ImGui::ProgressBar(-1.f*(float)ImGui::GetTime());
+		float progress = (float)timeI++/maxTime;
+		char buffer[32];
+		snprintf(buffer, sizeof(buffer)/sizeof(*buffer), "%d/%d", (int)(progress*maxTime), maxTime);
+
+		ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), buffer);
 
 		ImGui::End();
 	}
