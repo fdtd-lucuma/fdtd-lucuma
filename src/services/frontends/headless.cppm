@@ -20,6 +20,7 @@ export module lucuma.services.frontends:headless;
 
 import lucuma.utils;
 import lucuma.services.backends;
+import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
 
 import std;
@@ -38,6 +39,7 @@ public:
 
 private:
 	backends::IBackend& backend;
+	basic::Settings&    settings;
 	entt::registry&     registry;
 
 };

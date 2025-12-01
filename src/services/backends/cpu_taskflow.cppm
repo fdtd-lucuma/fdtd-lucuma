@@ -54,9 +54,9 @@ public:
 		CpuTaskflowBase(injector)
 	{ }
 
-	virtual entt::entity init()
+	virtual entt::entity init(const components::FdtdDataCreateInfo& createInfo)
 	{
-		return common.init<T>();
+		return common.init<T>(createInfo);
 	}
 
 	virtual bool step(entt::entity id)

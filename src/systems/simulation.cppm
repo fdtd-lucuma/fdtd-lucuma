@@ -42,7 +42,7 @@ class Simulation: public Base<Simulation<backend, precision>>
 public:
 	using base_t = Base<Simulation<backend, precision>>;
 
-	Simulation(Systems& _systems, const components::FdtdDataCreateInfo<float>& createInfo):
+	Simulation(Systems& _systems, const components::FdtdDataCreateInfo& createInfo):
 		base_t(_systems),
 		iBackend(_systems.inject<Instantiator>().get(backend, precision)),
 		registry(_systems.inject<entt::registry>()),
@@ -51,7 +51,7 @@ public:
 		std::println("Create {} {} simulation", backend, precision);
 
 		// TODO: Input from here
-		simulationId = iBackend.init();
+		simulationId = iBackend.init(createInfo);
 	}
 
 	void update([[maybe_unused]] const events::Update& event)

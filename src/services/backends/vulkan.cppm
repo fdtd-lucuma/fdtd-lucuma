@@ -73,26 +73,12 @@ public:
 	{ }
 
 
-	virtual entt::entity init()
+	virtual entt::entity init(const components::FdtdDataCreateInfo& createInfo)
 	{
 		auto id = registry.create();
 
-		create_info_t createInfo {
-			.fdtdDataCreateInfo = {
-				.size          = settings.size(),
-				.gaussPosition = settings.size()/(std::uint64_t)2,
-
-				//TODO: Get from settings
-				.deltaT = (T)1,
-				.deltaX = (T)1,
-				.deltaY = (T)1,
-				.deltaZ = (T)1,
-				.imp0 = (T)377,
-				.Cr = (T)(1.f/std::sqrt(3.f)),
-
-				.maxTime = settings.time(),
-				.gaussSigma = 10,
-			},
+		create_info_t vulkanCreateInfo {
+			.fdtdDataCreateInfo = createInfo,
 			.compute = vulkanCompute,
 			.allocator = vulkanAllocator,
 		};
@@ -101,7 +87,7 @@ public:
 			.basePath = ".",
 		};
 
-		data_t& data = registry.emplace<data_t>(id, createInfo);
+		data_t& data = registry.emplace<data_t>(id, vulkanCreateInfo);
 
 		{
 			auto recorder = createCommandRecorder();

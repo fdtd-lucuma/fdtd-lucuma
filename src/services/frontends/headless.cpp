@@ -21,19 +21,40 @@ module lucuma.services.frontends;
 import lucuma.utils;
 import lucuma.services.backends;
 import lucuma.legacy_headers.entt;
+import lucuma.components;
+
 import std;
+import glm;
 
 namespace lucuma::services::frontends
 {
 
 Headless::Headless([[maybe_unused]]Injector& injector):
 	backend(injector.inject<backends::IBackend>()),
+	settings(injector.inject<basic::Settings>()),
 	registry(injector.inject<entt::registry>())
 { }
 
 void Headless::compute()
 {
-	auto id = backend.init();
+
+	components::FdtdDataCreateInfo createInfo {
+		.size          = settings.size(),
+		.gaussPosition = settings.size()/(std::uint64_t)2,
+
+		//TODO: Get from settings
+		.deltaT = 1,
+		.deltaX = 1,
+		.deltaY = 1,
+		.deltaZ = 1,
+		.imp0 = 377,
+		.Cr = 1.f/std::sqrt(3.f),
+
+		.maxTime = settings.time(),
+		.gaussSigma = 10,
+	};
+
+	auto id = backend.init(createInfo);
 
 	while(backend.step(id))
 	{

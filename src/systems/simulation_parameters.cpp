@@ -112,7 +112,7 @@ void SimulationParameters::startSimulation()
 		return;
 	}
 
-	components::FdtdDataCreateInfo<float> createInfo {
+	components::FdtdDataCreateInfo createInfo {
 		.size          = {fdtdInfo.size[0], fdtdInfo.size[1], fdtdInfo.size[2]},
 		.gaussPosition = {fdtdInfo.gaussPosition[0], fdtdInfo.gaussPosition[1], fdtdInfo.gaussPosition[2]},
 		.deltaT        = fdtdInfo.deltaT,

@@ -44,7 +44,7 @@ using namespace lucuma::utils;
 export template <typename T>
 struct FdtdDataCreateInfo
 {
-	components::FdtdDataCreateInfo<T> fdtdDataCreateInfo;
+	components::FdtdDataCreateInfo fdtdDataCreateInfo;
 	vulkan::Compute& compute;
 	vulkan::Allocator& allocator;
 };

@@ -38,25 +38,9 @@ public:
 	CpuCommon(Injector& injector);
 
 	template <typename T, typename data_t = components::FdtdData<T>, typename saver_t = Saver<data_t>>
-	entt::entity init()
+	entt::entity init(const components::FdtdDataCreateInfo& createInfo)
 	{
 		auto id = registry.create();
-
-		components::FdtdDataCreateInfo<T> createInfo {
-			.size          = settings.size(),
-			.gaussPosition = settings.size()/(std::uint64_t)2,
-
-			//TODO: Get from settings
-			.deltaT = (T)1,
-			.deltaX = (T)1,
-			.deltaY = (T)1,
-			.deltaZ = (T)1,
-			.imp0 = (T)377,
-			.Cr = (T)(1.f/std::sqrt(3.f)),
-
-			.maxTime = settings.time(),
-			.gaussSigma = 10,
-		};
 
 		SaverCreateInfo saverCreateInfo {
 			.basePath = ".",

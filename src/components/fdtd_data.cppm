@@ -48,19 +48,19 @@ MatrixData<T> initMat(svec2 dims, T defaultValue = 0)
 	return MatrixData<T>(dims.x*dims.y, defaultValue);
 }
 
-export template <class T>
+export
 struct FdtdDataCreateInfo
 {
 	svec3 size; // index
 	svec3 gaussPosition; // index
-	T deltaT; // s
-	T deltaX; // m
-	T deltaY; // m
-	T deltaZ; // m
-	T imp0;
-	T Cr;
+	float deltaT; // s
+	float deltaX; // m
+	float deltaY; // m
+	float deltaZ; // m
+	float imp0;
+	float Cr;
 	unsigned int maxTime;
-	T gaussSigma;
+	float gaussSigma;
 };
 
 export template <class T>
@@ -124,7 +124,7 @@ private:
 
 
 public:
-	FdtdData(const FdtdDataCreateInfo<T>& createInfo):
+	FdtdData(const FdtdDataCreateInfo& createInfo):
 		size(createInfo.size),
 		gaussPosition(createInfo.gaussPosition),
 		deltaT(createInfo.deltaT),

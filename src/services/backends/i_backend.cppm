@@ -20,6 +20,7 @@ export module lucuma.services.backends:base;
 
 import std;
 import lucuma.legacy_headers.entt;
+import lucuma.components;
 
 namespace lucuma::services::backends
 {
@@ -30,7 +31,7 @@ public:
 	IBackend() = default;
 	virtual ~IBackend() = default;
 
-	virtual entt::entity init() = 0;
+	virtual entt::entity init(const components::FdtdDataCreateInfo& createInfo) = 0;
 	virtual bool step(entt::entity id) = 0;
 	virtual void saveFiles(entt::entity id) = 0;
 
