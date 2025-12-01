@@ -72,6 +72,7 @@ private:
 	void basicTab();
 	void startSimulation();
 	void alreadyRunningModal();
+	void clampSizes();
 
 	FdtdInfo fdtdInfo;
 	entt::entity simulationId = entt::null;

@@ -153,20 +153,34 @@ void SimulationParameters::alreadyRunningModal()
 	}
 }
 
-template <std::size_t N>
-void clampFPositive(
-	float (&v)[N],
-	const float (&min)[N] = {0.f, 0.f, 0.f},
-	const float (&max)[N] = {
-		std::numeric_limits<float>::max(),
-		std::numeric_limits<float>::max(),
-		std::numeric_limits<float>::max()
+template <typename T, std::size_t N>
+void clamp(
+	T (&v)[N],
+	const T (&min)[N] = {(T)0, (T)0, (T)0},
+	const T (&max)[N] = {
+		std::numeric_limits<T>::max(),
+		std::numeric_limits<T>::max(),
+		std::numeric_limits<T>::max()
 		}
 	)
 {
 	for(std::size_t i = 0; i < N; i++)
 	{
 		v[i] = std::clamp(v[i], min[i], max[i]);
+	}
+}
+
+template <std::size_t N>
+void calculatePosition(
+	unsigned int (&position)[N],
+	const float (&basicPosition)[N],
+	const float (&basicSize)[N],
+	const unsigned int (&size)[N]
+	)
+{
+	for(std::size_t i = 0; i < N; i++)
+	{
+		position[i] = (basicPosition[i]/basicSize[i])*size[i];
 	}
 }
 
@@ -185,6 +199,14 @@ void updateInputs(FdtdInfo& info)
 	info.deltaT = std::min(info.deltaT, maxDeltaTime(info.basicDeltaSize[0]/1000, info.basicDeltaSize[1]/1000, info.basicDeltaSize[2]/1000, 3.f*std::pow(10.f, 8.f))*1000000000);
 }
 
+void SimulationParameters::clampSizes()
+{
+	clamp(fdtdInfo.basicSize);
+	clamp(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
+	calculatePosition(fdtdInfo.gaussPosition, fdtdInfo.basicGaussPosition, fdtdInfo.basicSize, fdtdInfo.size);
+	clamp(fdtdInfo.gaussPosition, {0u, 0u, 0u}, fdtdInfo.size);
+}
+
 void SimulationParameters::basicTab()
 {
 	constexpr const char* cmFormat = "%.2fcm";
@@ -192,26 +214,31 @@ void SimulationParameters::basicTab()
 	constexpr const char* nsFormat = "%.6fns";
 
 	if(ImGui::InputScalarN("Size", ImGuiDataType_Float, fdtdInfo.basicSize, 3, &fStep, &fFastStep, cmFormat))
-		clampFPositive(fdtdInfo.basicSize);
+		clampSizes();
 
-	ImGui::InputScalarN("Matrix size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep);
+	if(ImGui::InputScalarN("Matrix size", ImGuiDataType_U32, fdtdInfo.size, 3, &step, &fastStep))
+		clampSizes();
 
 	if(ImGui::InputScalarN("Source position", ImGuiDataType_Float, fdtdInfo.basicGaussPosition, 3, &fStep, &fFastStep, cmFormat))
-		clampFPositive(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
+		clampSizes();
+
+	ImGui::BeginDisabled();
+	ImGui::InputScalarN("Source position (in matrix)", ImGuiDataType_U32, fdtdInfo.gaussPosition, 3, &step, &fastStep);
+	ImGui::EndDisabled();
 
 	ImGui::InputFloat("Time", &fdtdInfo.basicTime, fStep, fFastStep, nsFormat);
+	ImGui::BeginDisabled();
+	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
+	ImGui::EndDisabled();
+	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT, 0.0f, 0.0f, nsFormat);
 	ImGui::BeginDisabled();
 	ImGui::InputFloat("Delta X", &fdtdInfo.basicDeltaSize[0], fStep, fFastStep, mmFormat); // TODO: Send everything as meters
 	ImGui::InputFloat("Delta Y", &fdtdInfo.basicDeltaSize[1], fStep, fFastStep, mmFormat);
 	ImGui::InputFloat("Delta Z", &fdtdInfo.basicDeltaSize[2], fStep, fFastStep, mmFormat);
 	ImGui::EndDisabled();
 
-	ImGui::InputFloat("DeltaT", &fdtdInfo.deltaT, 0.0f, 0.0f, nsFormat);
 	ImGui::InputFloat("Epsilon", &fdtdInfo.epsilon, fStep, fFastStep);
 
-	ImGui::BeginDisabled();
-	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &fdtdInfo.maxTime, &step, &fastStep);
-	ImGui::EndDisabled();
 
 	ImGui::InputFloat("Gaussian sigma", &fdtdInfo.gaussSigma);
 
