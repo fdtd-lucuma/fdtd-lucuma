@@ -197,13 +197,14 @@ void updateInputs(FdtdInfo& info)
 
 	info.maxTime = info.basicTime/info.deltaT;
 	info.deltaT = std::min(info.deltaT, maxDeltaTime(info.basicDeltaSize[0]/1000, info.basicDeltaSize[1]/1000, info.basicDeltaSize[2]/1000, 3.f*std::pow(10.f, 8.f))*1000000000);
+
+	calculatePosition(info.gaussPosition, info.basicGaussPosition, info.basicSize, info.size);
 }
 
 void SimulationParameters::clampSizes()
 {
 	clamp(fdtdInfo.basicSize);
 	clamp(fdtdInfo.basicGaussPosition, {0.f, 0.f, 0.f}, fdtdInfo.basicSize);
-	calculatePosition(fdtdInfo.gaussPosition, fdtdInfo.basicGaussPosition, fdtdInfo.basicSize, fdtdInfo.size);
 	clamp(fdtdInfo.gaussPosition, {0u, 0u, 0u}, fdtdInfo.size);
 }
 
