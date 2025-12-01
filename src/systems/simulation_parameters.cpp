@@ -115,7 +115,7 @@ void SimulationParameters::startSimulation()
 	components::FdtdDataCreateInfo createInfo {
 		.size          = {fdtdInfo.size[0], fdtdInfo.size[1], fdtdInfo.size[2]},
 		.gaussPosition = {fdtdInfo.gaussPosition[0], fdtdInfo.gaussPosition[1], fdtdInfo.gaussPosition[2]},
-		.deltaT        = fdtdInfo.deltaT,
+		.deltaT        = fdtdInfo.deltaT/1000000000,
 		.deltaX        = fdtdInfo.basicDeltaSize[0]/1000,
 		.deltaY        = fdtdInfo.basicDeltaSize[1]/1000,
 		.deltaZ        = fdtdInfo.basicDeltaSize[2]/1000,
