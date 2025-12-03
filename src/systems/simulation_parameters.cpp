@@ -18,6 +18,7 @@ module;
 
 module lucuma.systems;
 import lucuma.legacy_headers.implot3d;
+import lucuma.legacy_headers.implot;
 import lucuma.utils;
 import lucuma.services.backends;
 import lucuma.utils.imgui;
@@ -102,6 +103,7 @@ void SimulationParameters::update(const events::Update&)
 	//ImGui::End();
 
 	ImPlot3D::ShowDemoWindow();
+	ImPlot::ShowDemoWindow();
 }
 
 void SimulationParameters::startSimulation()

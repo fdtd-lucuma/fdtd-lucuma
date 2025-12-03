@@ -26,6 +26,7 @@ import lucuma.legacy_headers.entt;
 import lucuma.legacy_headers.xdg_utils_cxx;
 import lucuma.legacy_headers.imgui_graphnode;
 import lucuma.legacy_headers.implot3d;
+import lucuma.legacy_headers.implot;
 import lucuma.events;
 import lucuma.events.vulkan;
 
@@ -70,6 +71,7 @@ void Imgui::initImgui()
 	// ImGui's extensions
 	ImGuiGraphNode::CreateContext();
 	ImPlot3D::CreateContext();
+	ImPlot::CreateContext();
 
 	auto& io = ImGui::GetIO();
 
@@ -157,6 +159,7 @@ Imgui::~Imgui()
 	ImGui_ImplGlfw_Shutdown();
 
 	// ImGui's extensions
+	ImPlot::DestroyContext();
 	ImPlot3D::DestroyContext();
 	ImGuiGraphNode::DestroyContext();
 
