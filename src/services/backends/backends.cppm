@@ -24,6 +24,9 @@ import magic_enum;
 
 export import :base;
 export import :instantiator;
+export import :cpu_taskflow;
+export import :sequential;
+export import :vulkan;
 
 namespace lucuma::utils
 {
@@ -32,4 +35,27 @@ using namespace lucuma::services::backends;
 extern template IBackend&     Injector::inject<IBackend>();
 extern template Instantiator& Injector::inject<Instantiator>();
 
+template<>
+struct BackendTraits<Backend::sequential>
+{
+	template<Precision p>
+	using type = Sequential<p>;
+};
+
+template<>
+struct BackendTraits<Backend::taskflow>
+{
+	template<Precision p>
+	using type = CpuTaskflow<p>;
+};
+
+template<>
+struct BackendTraits<Backend::vulkan>
+{
+	template<Precision p>
+	using type = Vulkan<p>;
+};
+
 }
+
+

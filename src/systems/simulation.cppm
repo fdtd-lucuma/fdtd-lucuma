@@ -24,6 +24,7 @@ import lucuma.events;
 import lucuma.utils;
 import lucuma.utils.imgui;
 import lucuma.components;
+import lucuma.services.backends.vulkan_components;
 import lucuma.legacy_headers.implot3d;
 import lucuma.legacy_headers.implot;
 
@@ -47,6 +48,16 @@ enum class Dimension
 	Z,
 };
 
+enum class Plane
+{
+	XY,
+	XZ,
+	YX,
+	YZ,
+	ZX,
+	ZY,
+};
+
 enum class Field
 {
 	Electric,
@@ -66,17 +77,22 @@ struct PlotInfo
 	Dimension       dimension;
 	Field           field;
 	VectorComponent vectorComponent;
+	Plane           plane;
+	int             planeIndex;
 };
 
 export template<Backend backend, Precision precision>
 class Simulation: public Base<Simulation<backend, precision>>
 {
 public:
+	using T = PrecisionTraits<precision>::type;
 	using base_t = Base<Simulation<backend, precision>>;
+	using backend_t = BackendTraits<backend>::template type<precision>;
+	using data_t = backend_t::data_t;
 
 	Simulation(Systems& _systems, const components::FdtdDataCreateInfo& createInfo):
 		base_t(_systems),
-		iBackend(_systems.inject<Instantiator>().get(backend, precision)),
+		backendService(_systems.inject<backend_t>()),
 		registry(_systems.inject<entt::registry>()),
 		gaussPosition(createInfo.gaussPosition),
 		maxTime(createInfo.maxTime)
@@ -84,19 +100,19 @@ public:
 		std::println("Create {} {} simulation", backend, precision);
 
 		// TODO: Input from here
-		simulationId = iBackend.init(createInfo);
+		simulationId = backendService.init(createInfo);
 	}
 
 	void update([[maybe_unused]] const events::Update& event)
 	{
 		// TODO: Async step
-		if(!iBackend.step(simulationId))
+		if(!backendService.step(simulationId))
 		{
 			base_t::selfStop();
 			return;
 		}
 
-		iBackend.saveFiles(simulationId);
+		backendService.saveFiles(simulationId);
 
 		drawProgressBar();
 	}
@@ -110,7 +126,7 @@ public:
 	}
 
 private:
-	IBackend&       iBackend;
+	backend_t&      backendService;
 	entt::registry& registry;
 
 	entt::entity simulationId = entt::null;
@@ -129,12 +145,15 @@ private:
 		char buffer[32];
 		snprintf(buffer, sizeof(buffer)/sizeof(*buffer), "%d/%d", (int)(progress*maxTime), maxTime);
 
+		ImGui::SeparatorText("Plotting options");
 		plotParameters();
 
+		ImGui::SeparatorText("Plot");
 		// TODO: 3D
 		//plot3d();
 		plotHeatmap();
 
+		ImGui::SeparatorText("Time steps");
 		ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), buffer);
 
 		ImGui::End();
@@ -145,10 +164,13 @@ private:
 		utils::imgui::Combo("Dimension", &plotInfo.dimension);
 		utils::imgui::Combo("Field type", &plotInfo.field);
 		utils::imgui::Combo("Field component", &plotInfo.vectorComponent);
+		utils::imgui::Combo("Plane", &plotInfo.plane);
+		ImGui::SliderInt("Plane index", &plotInfo.planeIndex, 0, getMaxPlaneIndex());
 	}
 
 	void plotHeatmap()
 	{
+		fillHeatmap();
 	}
 
 	void plot3d()
@@ -166,6 +188,48 @@ private:
 		ImPlot3D::EndPlot();
 	}
 
+	const data_t& getData()
+	{
+		return registry.get<data_t>(simulationId);
+	}
+
+	void fillHeatmap()
+	{
+		fillHeatmap(getData());
+	}
+
+	template <template<typename> typename data_t>
+	void fillHeatmap(const data_t<typename PrecisionTraits<precision>::type>& data);
+
+	template <>
+	void fillHeatmap(const components::FdtdData<T>& data)
+	{
+	}
+
+	template <>
+	void fillHeatmap(const vulkan_components::FdtdData<T>& data)
+	{
+	}
+
+	int getMaxPlaneIndex()
+	{
+		return getMaxPlaneIndex(getData());
+	}
+
+	template <template<typename> typename data_tt>
+	int getMaxPlaneIndex(const data_tt<typename PrecisionTraits<precision>::type>& data);
+
+	template <>
+	int getMaxPlaneIndex(const components::FdtdData<T>& data)
+	{
+		return 10;
+	}
+
+	template <>
+	int getMaxPlaneIndex(const vulkan_components::FdtdData<T>& data)
+	{
+		return 10;
+	}
 };
 
 }
