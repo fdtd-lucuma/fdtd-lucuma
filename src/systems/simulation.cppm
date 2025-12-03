@@ -164,9 +164,7 @@ private:
 		utils::imgui::Combo("Field type", &plotInfo.field);
 		utils::imgui::Combo("Field component", &plotInfo.vectorComponent);
 		utils::imgui::Combo("Plane", &plotInfo.plane);
-		ImGui::SliderInt("Plane index", &plotInfo.planeIndex, 0, getMaxPlaneIndex());
-
-		clampInputs();
+		ImGui::SliderInt("Plane index", &plotInfo.planeIndex, 0, getMaxPlaneIndex(), "%d", ImGuiSliderFlags_AlwaysClamp);
 	}
 
 	void plotHeatmap()
@@ -259,10 +257,6 @@ private:
 		}
 	}
 
-	void clampInputs()
-	{
-		plotInfo.planeIndex = std::clamp(plotInfo.planeIndex, 0, getMaxPlaneIndex());
-	}
 };
 
 }
