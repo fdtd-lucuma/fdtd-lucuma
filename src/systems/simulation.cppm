@@ -22,8 +22,10 @@ import lucuma.services.basic;
 import lucuma.services.backends;
 import lucuma.events;
 import lucuma.utils;
+import lucuma.utils.imgui;
 import lucuma.components;
 import lucuma.legacy_headers.implot3d;
+import lucuma.legacy_headers.implot;
 
 import :base;
 
@@ -37,6 +39,34 @@ namespace lucuma::systems
 using namespace lucuma::utils;
 using namespace services::basic;
 using namespace services::backends;
+
+enum class Dimension
+{
+	X,
+	Y,
+	Z,
+};
+
+enum class Field
+{
+	Electric,
+	Magnetic,
+};
+
+enum class VectorComponent
+{
+	Magnitude,
+	X,
+	Y,
+	Z,
+};
+
+struct PlotInfo
+{
+	Dimension       dimension;
+	Field           field;
+	VectorComponent vectorComponent;
+};
 
 export template<Backend backend, Precision precision>
 class Simulation: public Base<Simulation<backend, precision>>
@@ -85,6 +115,8 @@ private:
 
 	entt::entity simulationId = entt::null;
 
+	PlotInfo plotInfo;
+
 	svec3 gaussPosition;
 	const unsigned int maxTime;
 	unsigned int timeI = 0;
@@ -97,11 +129,26 @@ private:
 		char buffer[32];
 		snprintf(buffer, sizeof(buffer)/sizeof(*buffer), "%d/%d", (int)(progress*maxTime), maxTime);
 
+		plotParameters();
+
+		// TODO: 3D
+		//plot3d();
+		plotHeatmap();
+
 		ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), buffer);
 
-		plot3d();
-
 		ImGui::End();
+	}
+
+	void plotParameters()
+	{
+		utils::imgui::Combo("Dimension", &plotInfo.dimension);
+		utils::imgui::Combo("Field type", &plotInfo.field);
+		utils::imgui::Combo("Field component", &plotInfo.vectorComponent);
+	}
+
+	void plotHeatmap()
+	{
 	}
 
 	void plot3d()
