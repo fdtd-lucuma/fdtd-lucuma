@@ -27,12 +27,14 @@ import lucuma.components;
 import lucuma.services.backends.vulkan_components;
 import lucuma.legacy_headers.implot3d;
 import lucuma.legacy_headers.implot;
+import lucuma.legacy_headers.mdspan;
 
 import :base;
 
 import std.compat;
 import imgui;
 import glm;
+import magic_enum;
 
 namespace lucuma::systems
 {
@@ -52,10 +54,7 @@ enum class Plane
 {
 	XY,
 	XZ,
-	YX,
 	YZ,
-	ZX,
-	ZY,
 };
 
 enum class Field
@@ -166,6 +165,8 @@ private:
 		utils::imgui::Combo("Field component", &plotInfo.vectorComponent);
 		utils::imgui::Combo("Plane", &plotInfo.plane);
 		ImGui::SliderInt("Plane index", &plotInfo.planeIndex, 0, getMaxPlaneIndex());
+
+		clampInputs();
 	}
 
 	void plotHeatmap()
@@ -217,18 +218,50 @@ private:
 	}
 
 	template <template<typename> typename data_tt>
-	int getMaxPlaneIndex(const data_tt<typename PrecisionTraits<precision>::type>& data);
-
-	template <>
-	int getMaxPlaneIndex(const components::FdtdData<T>& data)
+	int getMaxPlaneIndex(const data_tt<typename PrecisionTraits<precision>::type>& data)
 	{
-		return 10;
+		getMaxPlaneIndex(getMatrix(data));
 	}
 
-	template <>
-	int getMaxPlaneIndex(const vulkan_components::FdtdData<T>& data)
+	template <template<typename> typename data_tt>
+	data_tt<typename PrecisionTraits<precision>::type>::cmdspan_3d_t getMatrix(const data_tt<typename PrecisionTraits<precision>::type>& data)
 	{
-		return 10;
+		switch(magic_enum::enum_fuse(plotInfo.field, plotInfo.dimension).value())
+		{
+			case magic_enum::enum_fuse(Field::Electric, Dimension::X).value():
+				return data.Ex();
+			case magic_enum::enum_fuse(Field::Electric, Dimension::Y).value():
+				return data.Ey();
+			case magic_enum::enum_fuse(Field::Electric, Dimension::Z).value():
+				return data.Ez();
+			case magic_enum::enum_fuse(Field::Magnetic, Dimension::X).value():
+				return data.Hx();
+			case magic_enum::enum_fuse(Field::Magnetic, Dimension::Y).value():
+				return data.Hy();
+			case magic_enum::enum_fuse(Field::Magnetic, Dimension::Z).value():
+				return data.Hz();
+		}
+	}
+
+	template <typename T2, typename E, typename L, typename A>
+	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 3)
+	int getMaxPlaneIndex(Kokkos::mdspan<T2,E,L,A> matrix)
+	{
+		// TODO: Handle weird layouts
+		switch(plotInfo.plane)
+		{
+			case Plane::XY:
+				return matrix.extent(2);
+			case Plane::XZ:
+				return matrix.extent(1);
+			case Plane::YZ:
+				return matrix.extent(0);
+		}
+	}
+
+	void clampInputs()
+	{
+		plotInfo.planeIndex = std::clamp(plotInfo.planeIndex, 0, getMaxPlaneIndex());
 	}
 };
 
