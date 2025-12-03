@@ -113,6 +113,14 @@ FetchContent_Declare(
 	GIT_PROGRESS   ON
 )
 
+FetchContent_Declare(
+	implot
+	GIT_REPOSITORY https://github.com/epezent/implot
+	GIT_TAG        master
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+)
+
 FetchContent_MakeAvailable(
 	imgui
 	imgui-module
@@ -123,6 +131,7 @@ FetchContent_MakeAvailable(
 	mdspan
 	imgui-graphnode
 	implot3d
+	implot
 )
 
 # Packages
@@ -332,6 +341,35 @@ target_link_libraries(implot3d
 		imgui
 )
 
+add_library(implot)
+
+# C++ version
+set_target_properties(implot
+	PROPERTIES
+		CXX_STANDARD 26
+)
+
+target_sources(implot
+	PRIVATE
+		${implot_SOURCE_DIR}/implot.cpp
+		${implot_SOURCE_DIR}/implot_demo.cpp
+		${implot_SOURCE_DIR}/implot_items.cpp
+)
+
+target_include_directories(implot
+	PUBLIC
+		${implot_SOURCE_DIR}
+)
+
+target_compile_definitions(implot
+	PRIVATE
+		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+)
+
+target_link_libraries(implot
+	PUBLIC
+		imgui
+)
 
 # set up glm C++ module as a library
 get_target_property(GLM_INCLUDE_DIR glm::glm-header-only INTERFACE_INCLUDE_DIRECTORIES)
@@ -421,6 +459,7 @@ target_link_libraries(${PROJECT_NAME}
 		imgui
 		imgui-graphnode
 		implot3d
+		implot
 		EnTT::EnTT
 		VulkanMemoryAllocator-HppModule
 		GlmModule
