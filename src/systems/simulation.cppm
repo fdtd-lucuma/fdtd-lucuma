@@ -220,7 +220,7 @@ private:
 	template <template<typename> typename data_tt>
 	int getMaxPlaneIndex(const data_tt<typename PrecisionTraits<precision>::type>& data)
 	{
-		getMaxPlaneIndex(getMatrix(data));
+		return getMaxPlaneIndex(getMatrix(data));
 	}
 
 	template <template<typename> typename data_tt>
