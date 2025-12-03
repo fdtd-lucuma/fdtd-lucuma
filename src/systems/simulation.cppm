@@ -251,11 +251,11 @@ private:
 		switch(plotInfo.plane)
 		{
 			case Plane::XY:
-				return matrix.extent(2);
+				return matrix.extent(2)-1;
 			case Plane::XZ:
-				return matrix.extent(1);
+				return matrix.extent(1)-1;
 			case Plane::YZ:
-				return matrix.extent(0);
+				return matrix.extent(0)-1;
 		}
 	}
 
