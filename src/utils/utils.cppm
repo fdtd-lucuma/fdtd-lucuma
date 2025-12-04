@@ -23,13 +23,16 @@ export import :backend;
 export import :copy;
 export import :dims;
 export import :exceptions;
+export import :field;
+export import :imgui_graphnode_edge_writer;
 export import :injector;
 export import :mdspan;
+export import :plane;
 export import :precision;
 export import :print;
 export import :save_as;
 export import :stream_edge_writer;
-export import :imgui_graphnode_edge_writer;
+export import :vector_component;
 
 import magic_enum;
 
@@ -41,10 +44,15 @@ requires std::is_enum_v<T>
 struct MagicInstantiator
 {
 	constexpr static auto values = magic_enum::enum_values<T>();
+	constexpr static auto names  = magic_enum::enum_names<T>();
 };
 
 extern template struct MagicInstantiator<Backend>;
+extern template struct MagicInstantiator<Dim>;
+extern template struct MagicInstantiator<Field>;
+extern template struct MagicInstantiator<Plane>;
 extern template struct MagicInstantiator<Precision>;
 extern template struct MagicInstantiator<SaveAs>;
+extern template struct MagicInstantiator<VectorComponent>;
 
 }

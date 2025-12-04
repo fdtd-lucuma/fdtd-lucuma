@@ -31,14 +31,17 @@ target_sources(${PROJECT_NAME}
 			copy.cppm
 			dims.cppm
 			exceptions.cppm
+			field.cppm
 			imgui_graphnode_edge_writer.cppm
 			injector.cppm
 			mdspan.cppm
+			plane.cppm
 			precision.cppm
 			print.cppm
 			save_as.cppm
 			stream_edge_writer.cppm
 			utils.cppm
+			vector_component.cppm
 )
 
 add_subdirectory(imgui)

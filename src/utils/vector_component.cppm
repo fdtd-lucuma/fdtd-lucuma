@@ -1,3 +1,4 @@
+// Una GUI para fdtd
 // Copyright © 2025 Otreblan
 //
 // fdtd-lucuma is free software: you can redistribute it and/or modify
@@ -15,17 +16,20 @@
 
 module;
 
-module lucuma.utils;
+export module lucuma.utils:vector_component;
 
 namespace lucuma::utils
 {
 
-template struct MagicInstantiator<Backend>;
-template struct MagicInstantiator<Dim>;
-template struct MagicInstantiator<Field>;
-template struct MagicInstantiator<Plane>;
-template struct MagicInstantiator<Precision>;
-template struct MagicInstantiator<SaveAs>;
-template struct MagicInstantiator<VectorComponent>;
+export enum class VectorComponent
+{
+	Magnitude,
+	X,
+	Y,
+	Z,
+};
+
+
 
 }
+

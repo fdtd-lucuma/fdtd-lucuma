@@ -43,37 +43,9 @@ using namespace lucuma::utils;
 using namespace services::basic;
 using namespace services::backends;
 
-enum class Dimension
-{
-	X,
-	Y,
-	Z,
-};
-
-enum class Plane
-{
-	XY,
-	XZ,
-	YZ,
-};
-
-enum class Field
-{
-	Electric,
-	Magnetic,
-};
-
-enum class VectorComponent
-{
-	Magnitude,
-	X,
-	Y,
-	Z,
-};
-
 struct PlotInfo
 {
-	Dimension       dimension;
+	Dim             dimension;
 	Field           field;
 	VectorComponent vectorComponent;
 	Plane           plane;
@@ -226,17 +198,17 @@ private:
 	{
 		switch(magic_enum::enum_fuse(plotInfo.field, plotInfo.dimension).value())
 		{
-			case magic_enum::enum_fuse(Field::Electric, Dimension::X).value():
+			case magic_enum::enum_fuse(Field::Electric, Dim::X).value():
 				return data.Ex();
-			case magic_enum::enum_fuse(Field::Electric, Dimension::Y).value():
+			case magic_enum::enum_fuse(Field::Electric, Dim::Y).value():
 				return data.Ey();
-			case magic_enum::enum_fuse(Field::Electric, Dimension::Z).value():
+			case magic_enum::enum_fuse(Field::Electric, Dim::Z).value():
 				return data.Ez();
-			case magic_enum::enum_fuse(Field::Magnetic, Dimension::X).value():
+			case magic_enum::enum_fuse(Field::Magnetic, Dim::X).value():
 				return data.Hx();
-			case magic_enum::enum_fuse(Field::Magnetic, Dimension::Y).value():
+			case magic_enum::enum_fuse(Field::Magnetic, Dim::Y).value():
 				return data.Hy();
-			case magic_enum::enum_fuse(Field::Magnetic, Dimension::Z).value():
+			case magic_enum::enum_fuse(Field::Magnetic, Dim::Z).value():
 				return data.Hz();
 		}
 	}
