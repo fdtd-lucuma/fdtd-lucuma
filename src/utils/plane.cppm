@@ -18,6 +18,8 @@ module;
 
 export module lucuma.utils:plane;
 
+import :dims;
+
 namespace lucuma::utils
 {
 
@@ -27,6 +29,19 @@ export enum class Plane
 	XZ,
 	YZ,
 };
+
+export constexpr Dim toDim(Plane plane)
+{
+	switch(plane)
+	{
+		case Plane::XY:
+			return Dim::Z;
+		case Plane::XZ:
+			return Dim::Y;
+		case Plane::YZ:
+			return Dim::X;
+	}
+}
 
 
 }

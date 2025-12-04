@@ -262,6 +262,7 @@ target_include_directories(imgui
 	PUBLIC
 		${imgui_SOURCE_DIR}
 		${imgui_SOURCE_DIR}/backends
+		${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_compile_definitions(imgui
@@ -270,6 +271,7 @@ target_compile_definitions(imgui
 	PUBLIC
 		IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 		IMGUI_ENABLE_FREETYPE
+		IMGUI_USER_CONFIG="imconfig.hpp"
 )
 
 target_link_libraries(imgui

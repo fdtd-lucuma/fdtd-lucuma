@@ -1,4 +1,3 @@
-
 // Una GUI para fdtd
 // Copyright © 2025 Otreblan
 //
@@ -15,36 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
-module;
+#pragma once
 
-#include <implot.h>
-
-export module lucuma.legacy_headers.implot;
-
-import imgui;
-
-export namespace ImPlot
-{
-
-using ImPlot::CreateContext;
-using ImPlot::DestroyContext;
-using ImPlot::ShowDemoWindow;
-using ImPlot::BeginPlot;
-using ImPlot::PlotHeatmap;
-using ImPlot::EndPlot;
-using ImPlot::SetupAxes;
-using ImPlot::SetupAxesLimits;
-using ImPlot::PushColormap;
-using ImPlot::PopColormap;
-
-};
-
-export using ::ImPlotAxisFlags;
-export using ::ImPlotFlags;
-export using ::ImPlotColormap;
-export using ::ImPlotHeatmapFlags;
-
-export using ::ImPlotAxisFlags_;
-export using ::ImPlotFlags_;
-export using ::ImPlotColormap_;
-export using ::ImPlotHeatmapFlags_;
+#define IMPLOT_CUSTOM_NUMERIC_TYPES (ImS8)(ImU8)(ImS16)(ImU16)(ImS32)(ImU32)(ImS64)(ImU64)(float)(double)(_Float16)

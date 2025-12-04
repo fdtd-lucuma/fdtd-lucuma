@@ -108,6 +108,10 @@ private:
 	const unsigned int maxTime;
 	unsigned int timeI = 0;
 
+	std::vector<T> heatmapData;
+	std::size_t sizeX = 0;
+	std::size_t sizeY = 0;
+
 	void drawProgressBar()
 	{
 		ImGui::Begin("Progress");
@@ -141,7 +145,22 @@ private:
 
 	void plotHeatmap()
 	{
-		fillHeatmap();
+		fillHeatmapData();
+
+		constexpr auto colormap  = ImPlotColormap_Jet;
+		constexpr auto axisFlags = ImPlotAxisFlags_NoDecorations;
+
+		ImPlot::PushColormap(colormap);
+
+		if(ImPlot::BeginPlot("##Heatmap", ImVec2(225,225)))
+		{
+			ImPlot::SetupAxes(nullptr, nullptr, axisFlags, axisFlags);
+			ImPlot::PlotHeatmap("heat", heatmapData.data(), (int)sizeX, (int)sizeY);
+
+			ImPlot::EndPlot();
+		}
+
+		ImPlot::PopColormap();
 	}
 
 	void plot3d()
@@ -164,22 +183,30 @@ private:
 		return registry.get<data_t>(simulationId);
 	}
 
-	void fillHeatmap()
+	void fillHeatmapData()
 	{
-		fillHeatmap(getData());
+		fillHeatmapData(getData());
 	}
 
 	template <template<typename> typename data_t>
-	void fillHeatmap(const data_t<typename PrecisionTraits<precision>::type>& data);
+	void fillHeatmapData(const data_t<typename PrecisionTraits<precision>::type>& data);
 
 	template <>
-	void fillHeatmap(const components::FdtdData<T>& data)
+	void fillHeatmapData(const components::FdtdData<T>& data)
 	{
+		//TODO: Handle Magnitude
+		auto matrix = getMatrix(data);
+
+		magic_enum::enum_switch([&](auto dim)
+		{
+			auto plane = slice<dim>(matrix, plotInfo.planeIndex);
+		}, toDim(plotInfo.plane));
 	}
 
 	template <>
-	void fillHeatmap(const vulkan_components::FdtdData<T>& data)
+	void fillHeatmapData(const vulkan_components::FdtdData<T>& data)
 	{
+		//TODO
 	}
 
 	int getMaxPlaneIndex()
@@ -194,9 +221,9 @@ private:
 	}
 
 	template <template<typename> typename data_tt>
-	data_tt<typename PrecisionTraits<precision>::type>::cmdspan_3d_t getMatrix(const data_tt<typename PrecisionTraits<precision>::type>& data)
+	data_tt<typename PrecisionTraits<precision>::type>::cmdspan_3d_t getMatrix(const data_tt<typename PrecisionTraits<precision>::type>& data, Field field, Dim dimension)
 	{
-		switch(magic_enum::enum_fuse(plotInfo.field, plotInfo.dimension).value())
+		switch(magic_enum::enum_fuse(field, dimension).value())
 		{
 			case magic_enum::enum_fuse(Field::Electric, Dim::X).value():
 				return data.Ex();
@@ -211,6 +238,12 @@ private:
 			case magic_enum::enum_fuse(Field::Magnetic, Dim::Z).value():
 				return data.Hz();
 		}
+	}
+
+	template <template<typename> typename data_tt>
+	data_tt<typename PrecisionTraits<precision>::type>::cmdspan_3d_t getMatrix(const data_tt<typename PrecisionTraits<precision>::type>& data)
+	{
+		return getMatrix(data, plotInfo.field, plotInfo.dimension);
 	}
 
 	template <typename T2, typename E, typename L, typename A>
