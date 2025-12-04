@@ -19,6 +19,7 @@ module;
 export module lucuma.utils:mdspan;
 
 import :alias;
+import :dims;
 
 import lucuma.legacy_headers.mdspan;
 
@@ -55,5 +56,18 @@ auto unpad(Kokkos::mdspan<T,E,L,A> matrix, svec2 dims)
 		zeroToDim(dims.y)
 	);
 }
+
+export template <Dim dim, typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
+auto slice(Kokkos::mdspan<T, E, L, A> mat, std::size_t index = 0)
+{
+	if constexpr(dim == Dim::X)
+		return Kokkos::submdspan(mat, index, Kokkos::full_extent, Kokkos::full_extent);
+	if constexpr(dim == Dim::Y)
+		return Kokkos::submdspan(mat, Kokkos::full_extent, index, Kokkos::full_extent);
+	if constexpr(dim == Dim::Z)
+		return Kokkos::submdspan(mat, Kokkos::full_extent, Kokkos::full_extent, index);
+}
+
 
 }

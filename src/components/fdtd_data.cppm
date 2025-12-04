@@ -819,17 +819,6 @@ public:
 			gauss(time, gaussSigma);
 	}
 
-	template <Dim dim, typename T2, typename E, typename L, typename A>
-	static auto slice(Kokkos::mdspan<T2, E, L, A> mat, std::size_t index = 0)
-	{
-		if constexpr(dim == Dim::X)
-			return Kokkos::submdspan(mat, index, Kokkos::full_extent, Kokkos::full_extent);
-		if constexpr(dim == Dim::Y)
-			return Kokkos::submdspan(mat, Kokkos::full_extent, index, Kokkos::full_extent);
-		if constexpr(dim == Dim::Z)
-			return Kokkos::submdspan(mat, Kokkos::full_extent, Kokkos::full_extent, index);
-	}
-
 	template <typename T2 = T>
 	inline static T2 calculateSc(T2 Cr, T2 mu, T2 eps)
 	{
