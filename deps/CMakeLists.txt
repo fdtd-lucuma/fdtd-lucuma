@@ -48,8 +48,8 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	VulkanMemoryAllocator
-	GIT_REPOSITORY         https://github.com/M2-TE/VulkanMemoryAllocator
-	GIT_TAG                origin/fixing-static-export # clang 21 fix
+	GIT_REPOSITORY         https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+	GIT_TAG                origin/master
 	GIT_SHALLOW            ON
 	GIT_PROGRESS           ON
 	GIT_SUBMODULES         ""
@@ -61,7 +61,7 @@ FetchContent_Declare(
 	VulkanMemoryAllocator-Hpp
 	#GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git # Wait until https://github.com/YaaZ/VulkanMemoryAllocator-Hpp/issues/61
 	GIT_REPOSITORY         https://github.com/otreblan/VulkanMemoryAllocator-Hpp.git
-	GIT_TAG                master
+	GIT_TAG                origin/master
 	#GIT_TAG                v3.2.1
 	GIT_SHALLOW            ON
 	GIT_PROGRESS           ON
