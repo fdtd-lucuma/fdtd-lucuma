@@ -52,6 +52,58 @@ struct PlotInfo
 	int             planeIndex;
 };
 
+template <typename T>
+class HeatmapData
+{
+public:
+	HeatmapData() = default;
+
+	template <typename T2, typename E, typename L, typename A>
+	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
+	void fill(Kokkos::mdspan<T2,E,L,A> plane)
+	{
+		sizeX = plane.extent(0);
+		sizeY = plane.extent(1);
+
+		buffer.resize(sizeX*sizeY);
+
+		// TODO: Weird layouts
+
+		for(std::size_t i = 0; i < sizeX; i++)
+		{
+			for(std::size_t j = 0; j < sizeY; j++)
+			{
+				buffer[i*sizeY+j] = plane[i,j];
+			}
+		}
+	}
+
+	const T* data() const
+	{
+		return buffer.data();
+	}
+
+	std::span<const T> getBuffer() const
+	{
+		return buffer;
+	}
+
+	std::size_t getSizeX() const
+	{
+		return sizeX;
+	}
+
+	std::size_t getSizeY() const
+	{
+		return sizeY;
+	}
+
+private:
+	std::vector<T> buffer;
+	std::size_t sizeX = 0;
+	std::size_t sizeY = 0;
+};
+
 export template<Backend backend, Precision precision>
 class Simulation: public Base<Simulation<backend, precision>>
 {
@@ -108,9 +160,7 @@ private:
 	const unsigned int maxTime;
 	unsigned int timeI = 0;
 
-	std::vector<T> heatmapData;
-	std::size_t sizeX = 0;
-	std::size_t sizeY = 0;
+	HeatmapData<T> heatmapData;
 
 	void drawProgressBar()
 	{
@@ -155,7 +205,7 @@ private:
 		if(ImPlot::BeginPlot("##Heatmap", ImVec2(225,225)))
 		{
 			ImPlot::SetupAxes(nullptr, nullptr, axisFlags, axisFlags);
-			ImPlot::PlotHeatmap("heat", heatmapData.data(), (int)sizeX, (int)sizeY);
+			ImPlot::PlotHeatmap("heat", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY());
 
 			ImPlot::EndPlot();
 		}
@@ -189,10 +239,7 @@ private:
 	}
 
 	template <template<typename> typename data_t>
-	void fillHeatmapData(const data_t<typename PrecisionTraits<precision>::type>& data);
-
-	template <>
-	void fillHeatmapData(const components::FdtdData<T>& data)
+	void fillHeatmapData(const data_t<typename PrecisionTraits<precision>::type>& data)
 	{
 		//TODO: Handle Magnitude
 		auto matrix = getMatrix(data);
@@ -200,14 +247,15 @@ private:
 		magic_enum::enum_switch([&](auto dim)
 		{
 			auto plane = slice<dim>(matrix, plotInfo.planeIndex);
+			heatmapData.fill(plane);
 		}, toDim(plotInfo.plane));
 	}
 
-	template <>
-	void fillHeatmapData(const vulkan_components::FdtdData<T>& data)
-	{
-		//TODO
-	}
+	//template <>
+	//void fillHeatmapData(const vulkan_components::FdtdData<T>& data)
+	//{
+	//	//TODO
+	//}
 
 	int getMaxPlaneIndex()
 	{
