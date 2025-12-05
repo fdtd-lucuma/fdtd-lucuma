@@ -98,10 +98,13 @@ public:
 	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
 	void fill(Kokkos::mdspan<T2,E,L,A> plane, T multiplier)
 	{
-		sizeX = plane.extent(0);
-		sizeY = plane.extent(1);
+		if(plane.empty())
+		{
+			resize(0, 0);
+			return;
+		}
 
-		buffer.resize(sizeX*sizeY);
+		resize(plane.extent(0), plane.extent(1));
 
 		// TODO: Weird layouts
 
@@ -141,10 +144,13 @@ public:
 			T multiplier
 			)
 	{
-		sizeX = std::min(std::min(xPlane.extent(0), yPlane.extent(0)), zPlane.extent(0));
-		sizeY = std::min(std::min(xPlane.extent(1), yPlane.extent(1)), zPlane.extent(1));
+		if(xPlane.empty() || yPlane.empty() || zPlane.empty())
+		{
+			resize(0, 0);
+			return;
+		}
 
-		buffer.resize(sizeX*sizeY);
+		resize(std::min(std::min(xPlane.extent(0), yPlane.extent(0)), zPlane.extent(0)), std::min(std::min(xPlane.extent(1), yPlane.extent(1)), zPlane.extent(1)));
 
 		// TODO: Weird layouts
 
@@ -174,7 +180,7 @@ public:
 
 	const T* data() const
 	{
-		return buffer.data();
+		return buffer.empty() ? nullptr : buffer.data();
 	}
 
 	std::span<const T> getBuffer() const
@@ -196,6 +202,14 @@ private:
 	std::vector<T> buffer;
 	std::size_t sizeX = 0;
 	std::size_t sizeY = 0;
+
+	void resize(std::size_t x, std::size_t y)
+	{
+		sizeX = x;
+		sizeY = y;
+
+		buffer.resize(sizeX*sizeY);
+	}
 };
 
 export template<Backend backend, Precision precision>
