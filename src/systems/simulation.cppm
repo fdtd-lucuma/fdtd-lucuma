@@ -69,11 +69,12 @@ public:
 
 		// TODO: Weird layouts
 
+		std::size_t bi = 0;
 		for(std::size_t i = 0; i < sizeX; i++)
 		{
 			for(std::size_t j = 0; j < sizeY; j++)
 			{
-				buffer[i*sizeY+j] = plane[i,j];
+				buffer[bi++] = plane[i,j];
 			}
 		}
 	}
