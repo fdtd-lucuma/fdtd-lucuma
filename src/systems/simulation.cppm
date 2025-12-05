@@ -45,12 +45,41 @@ using namespace services::backends;
 
 struct PlotInfo
 {
-	Dim             dimension;
 	Field           field;
 	VectorComponent vectorComponent;
 	Plane           plane;
 	int             planeIndex;
 };
+
+template <typename T>
+T normalizeMinfToInf(T x)
+{
+	return tanh(x);
+}
+
+template <>
+_Float16 normalizeMinfToInf(_Float16 x)
+{
+	return normalizeMinfToInf<float>(x);
+}
+
+template <typename T>
+T normalize0ToInf(T x)
+{
+	return x/((T)1+x);
+}
+
+template <typename T>
+T magnitude(T x, T y, T z)
+{
+	return normalize0ToInf(std::sqrt(x*x+y*y+z*z));
+}
+
+template <>
+_Float16 magnitude(_Float16 x, _Float16 y, _Float16 z)
+{
+	return magnitude<float>(x, y, z);
+}
 
 template <typename T>
 class HeatmapData
@@ -74,10 +103,40 @@ public:
 		{
 			for(std::size_t j = 0; j < sizeY; j++)
 			{
-				buffer[bi++] = plane[i,j];
+				buffer[bi++] = normalizeMinfToInf(plane[i,j]);
 			}
 		}
 	}
+
+	template <typename T2,
+			 typename E, typename L, typename A,
+			 typename E2, typename L2, typename A2,
+			 typename E3, typename L3, typename A3
+		>
+	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
+	void fill(
+			Kokkos::mdspan<T2,E,L,A> xPlane,
+			Kokkos::mdspan<T2,E2,L2,A2> yPlane,
+			Kokkos::mdspan<T2,E3,L3,A3> zPlane
+			)
+	{
+		sizeX = std::min(std::min(xPlane.extent(0), yPlane.extent(0)), zPlane.extent(0));
+		sizeY = std::min(std::min(xPlane.extent(1), yPlane.extent(1)), zPlane.extent(1));
+
+		buffer.resize(sizeX*sizeY);
+
+		// TODO: Weird layouts
+
+		std::size_t bi = 0;
+		for(std::size_t i = 0; i < sizeX; i++)
+		{
+			for(std::size_t j = 0; j < sizeY; j++)
+			{
+				buffer[bi++] = magnitude(xPlane[i,j], yPlane[i,j], zPlane[i,j]);
+			}
+		}
+	}
+
 
 	const T* data() const
 	{
@@ -187,7 +246,6 @@ private:
 
 	void plotParameters()
 	{
-		utils::imgui::Combo("Dimension", &plotInfo.dimension);
 		utils::imgui::Combo("Field type", &plotInfo.field);
 		utils::imgui::Combo("Field component", &plotInfo.vectorComponent);
 		utils::imgui::Combo("Plane", &plotInfo.plane);
@@ -242,14 +300,34 @@ private:
 	template <template<typename> typename data_t>
 	void fillHeatmapData(const data_t<typename PrecisionTraits<precision>::type>& data)
 	{
-		//TODO: Handle Magnitude
-		auto matrix = getMatrix(data);
+		const auto dim = toDim(plotInfo.vectorComponent);
 
-		magic_enum::enum_switch([&](auto dim)
+		if(dim.has_value())
 		{
-			auto plane = slice<dim>(matrix, plotInfo.planeIndex);
-			heatmapData.fill(plane);
-		}, toDim(plotInfo.plane));
+			auto matrix = getMatrix(data, plotInfo.field, dim.value());
+
+			magic_enum::enum_switch([&](auto dim)
+			{
+				auto plane = slice<dim>(matrix, plotInfo.planeIndex);
+				heatmapData.fill(plane);
+			}, toDim(plotInfo.plane));
+		}
+		else
+		{
+
+			auto xMatrix = getMatrix(data, plotInfo.field, Dim::X);
+			auto yMatrix = getMatrix(data, plotInfo.field, Dim::Y);
+			auto zMatrix = getMatrix(data, plotInfo.field, Dim::Z);
+
+			magic_enum::enum_switch([&](auto dim)
+			{
+				auto xPlane = slice<dim>(xMatrix, plotInfo.planeIndex);
+				auto yPlane = slice<dim>(yMatrix, plotInfo.planeIndex);
+				auto zPlane = slice<dim>(zMatrix, plotInfo.planeIndex);
+
+				heatmapData.fill(xPlane, yPlane, zPlane);
+			}, toDim(plotInfo.plane));
+		}
 	}
 
 	//template <>
@@ -266,7 +344,22 @@ private:
 	template <template<typename> typename data_tt>
 	int getMaxPlaneIndex(const data_tt<typename PrecisionTraits<precision>::type>& data)
 	{
-		return getMaxPlaneIndex(getMatrix(data));
+		const auto dim = toDim(plotInfo.vectorComponent);
+
+		if(dim.has_value())
+		{
+			return getMaxPlaneIndex(getMatrix(data, plotInfo.field, dim.value()));
+		}
+		else
+		{
+			int max = std::numeric_limits<int>::max();
+
+			magic_enum::enum_for_each<Dim>([&, this] (auto dim) {
+				max = std::min(max, getMaxPlaneIndex(getMatrix(data, plotInfo.field, dim)));
+			});
+
+			return max;
+		}
 	}
 
 	template <template<typename> typename data_tt>
@@ -287,12 +380,7 @@ private:
 			case magic_enum::enum_fuse(Field::Magnetic, Dim::Z).value():
 				return data.Hz();
 		}
-	}
-
-	template <template<typename> typename data_tt>
-	data_tt<typename PrecisionTraits<precision>::type>::cmdspan_3d_t getMatrix(const data_tt<typename PrecisionTraits<precision>::type>& data)
-	{
-		return getMatrix(data, plotInfo.field, plotInfo.dimension);
+		return {};
 	}
 
 	template <typename T2, typename E, typename L, typename A>

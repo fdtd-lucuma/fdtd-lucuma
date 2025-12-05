@@ -18,6 +18,10 @@ module;
 
 export module lucuma.utils:vector_component;
 
+import :dims;
+
+import std;
+
 namespace lucuma::utils
 {
 
@@ -29,6 +33,20 @@ export enum class VectorComponent
 	Z,
 };
 
+export constexpr std::optional<Dim> toDim(VectorComponent vectorComponent)
+{
+	switch(vectorComponent)
+	{
+		case VectorComponent::Magnitude:
+			return std::nullopt;
+		case VectorComponent::X:
+			return Dim::X;
+		case VectorComponent::Y:
+			return Dim::Y;
+		case VectorComponent::Z:
+			return Dim::Z;
+	}
+}
 
 
 }
