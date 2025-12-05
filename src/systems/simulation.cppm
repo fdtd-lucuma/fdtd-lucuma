@@ -49,6 +49,7 @@ struct PlotInfo
 	VectorComponent vectorComponent;
 	Plane           plane;
 	int             planeIndex;
+	float           multiplier = 1000;
 };
 
 template <typename T>
@@ -70,15 +71,15 @@ T normalize0ToInf(T x)
 }
 
 template <typename T>
-T magnitude(T x, T y, T z)
+T magnitude(T x, T y, T z, T multiplier)
 {
-	return normalize0ToInf(std::sqrt(x*x+y*y+z*z));
+	return normalize0ToInf(multiplier*std::sqrt(x*x+y*y+z*z));
 }
 
 template <>
-_Float16 magnitude(_Float16 x, _Float16 y, _Float16 z)
+_Float16 magnitude(_Float16 x, _Float16 y, _Float16 z, _Float16 multiplier)
 {
-	return magnitude<float>(x, y, z);
+	return magnitude<float>(x, y, z, multiplier);
 }
 
 template <typename T>
@@ -89,7 +90,7 @@ public:
 
 	template <typename T2, typename E, typename L, typename A>
 	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
-	void fill(Kokkos::mdspan<T2,E,L,A> plane)
+	void fill(Kokkos::mdspan<T2,E,L,A> plane, T multiplier)
 	{
 		sizeX = plane.extent(0);
 		sizeY = plane.extent(1);
@@ -103,7 +104,7 @@ public:
 		{
 			for(std::size_t j = 0; j < sizeY; j++)
 			{
-				buffer[bi++] = normalizeMinfToInf(plane[i,j]);
+				buffer[bi++] = normalizeMinfToInf(multiplier*plane[i,j]);
 			}
 		}
 	}
@@ -117,7 +118,8 @@ public:
 	void fill(
 			Kokkos::mdspan<T2,E,L,A> xPlane,
 			Kokkos::mdspan<T2,E2,L2,A2> yPlane,
-			Kokkos::mdspan<T2,E3,L3,A3> zPlane
+			Kokkos::mdspan<T2,E3,L3,A3> zPlane,
+			T multiplier
 			)
 	{
 		sizeX = std::min(std::min(xPlane.extent(0), yPlane.extent(0)), zPlane.extent(0));
@@ -132,7 +134,7 @@ public:
 		{
 			for(std::size_t j = 0; j < sizeY; j++)
 			{
-				buffer[bi++] = magnitude(xPlane[i,j], yPlane[i,j], zPlane[i,j]);
+				buffer[bi++] = magnitude(xPlane[i,j], yPlane[i,j], zPlane[i,j], multiplier);
 			}
 		}
 	}
@@ -250,6 +252,7 @@ private:
 		utils::imgui::Combo("Field component", &plotInfo.vectorComponent);
 		utils::imgui::Combo("Plane", &plotInfo.plane);
 		ImGui::SliderInt("Plane index", &plotInfo.planeIndex, 0, getMaxPlaneIndex(), "%d", ImGuiSliderFlags_AlwaysClamp);
+		ImGui::InputFloat("Multiplier", &plotInfo.multiplier, 10.f, 100.f);
 	}
 
 	void plotHeatmap()
@@ -261,10 +264,10 @@ private:
 
 		ImPlot::PushColormap(colormap);
 
-		if(ImPlot::BeginPlot("##Heatmap", ImVec2(225,225)))
+		if(ImPlot::BeginPlot("##Heatmap", ImVec2(225*2,225*2)))
 		{
 			ImPlot::SetupAxes(nullptr, nullptr, axisFlags, axisFlags);
-			ImPlot::PlotHeatmap("heat", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY());
+			ImPlot::PlotHeatmap("heat", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY(), 0, 1, nullptr);
 
 			ImPlot::EndPlot();
 		}
@@ -309,7 +312,7 @@ private:
 			magic_enum::enum_switch([&](auto dim)
 			{
 				auto plane = slice<dim>(matrix, plotInfo.planeIndex);
-				heatmapData.fill(plane);
+				heatmapData.fill(plane, plotInfo.multiplier);
 			}, toDim(plotInfo.plane));
 		}
 		else
@@ -325,7 +328,7 @@ private:
 				auto yPlane = slice<dim>(yMatrix, plotInfo.planeIndex);
 				auto zPlane = slice<dim>(zMatrix, plotInfo.planeIndex);
 
-				heatmapData.fill(xPlane, yPlane, zPlane);
+				heatmapData.fill(xPlane, yPlane, zPlane, plotInfo.multiplier);
 			}, toDim(plotInfo.plane));
 		}
 	}
