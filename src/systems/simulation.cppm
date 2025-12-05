@@ -45,11 +45,11 @@ using namespace services::backends;
 
 struct PlotInfo
 {
-	Field           field;
-	VectorComponent vectorComponent;
-	Plane           plane;
-	int             planeIndex;
-	float           multiplier = 1000;
+	Field           field           = Field::Electric;
+	VectorComponent vectorComponent = VectorComponent::Magnitude;
+	Plane           plane           = Plane::XY;
+	int             planeIndex      = 0;
+	float           multiplier      = 1000;
 };
 
 template <typename T>
