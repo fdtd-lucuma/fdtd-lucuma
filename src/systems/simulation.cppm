@@ -141,10 +141,6 @@ public:
 			T multiplier
 			)
 	{
-		std::println("{}", entt::type_id<typeof(xPlane)>().name());
-		std::println("{}", entt::type_id<typeof(yPlane)>().name());
-		std::println("{}", entt::type_id<typeof(zPlane)>().name());
-
 		sizeX = std::min(std::min(xPlane.extent(0), yPlane.extent(0)), zPlane.extent(0));
 		sizeY = std::min(std::min(xPlane.extent(1), yPlane.extent(1)), zPlane.extent(1));
 
