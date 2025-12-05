@@ -267,7 +267,7 @@ private:
 		if(ImPlot::BeginPlot("##Heatmap", ImVec2(225*2,225*2)))
 		{
 			ImPlot::SetupAxes(nullptr, nullptr, axisFlags, axisFlags);
-			ImPlot::PlotHeatmap("heat", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY(), 0, 1, nullptr);
+			ImPlot::PlotHeatmap("##heatmap", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY(), 0, 1, nullptr);
 
 			ImPlot::EndPlot();
 		}
