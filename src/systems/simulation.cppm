@@ -82,6 +82,12 @@ _Float16 magnitude(_Float16 x, _Float16 y, _Float16 z, _Float16 multiplier)
 	return magnitude<float>(x, y, z, multiplier);
 }
 
+template<typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
+constexpr bool fastestFromLeft(Kokkos::mdspan<T,E,L,A> plane) {
+    return plane.mapping().stride(0) < plane.mapping().stride(1);
+}
+
 template <typename T>
 class HeatmapData
 {
@@ -100,11 +106,24 @@ public:
 		// TODO: Weird layouts
 
 		std::size_t bi = 0;
-		for(std::size_t i = 0; i < sizeX; i++)
+
+		if(fastestFromLeft(plane))
+		{
+			for(std::size_t i = 0; i < sizeX; i++)
+			{
+				for(std::size_t j = 0; j < sizeY; j++)
+				{
+					buffer[bi++] = normalizeMinfToInf(multiplier*plane[i,j]);
+				}
+			}
+		}
 		{
 			for(std::size_t j = 0; j < sizeY; j++)
 			{
-				buffer[bi++] = normalizeMinfToInf(multiplier*plane[i,j]);
+				for(std::size_t i = 0; i < sizeX; i++)
+				{
+					buffer[bi++] = normalizeMinfToInf(multiplier*plane[i,j]);
+				}
 			}
 		}
 	}
@@ -122,6 +141,10 @@ public:
 			T multiplier
 			)
 	{
+		std::println("{}", entt::type_id<typeof(xPlane)>().name());
+		std::println("{}", entt::type_id<typeof(yPlane)>().name());
+		std::println("{}", entt::type_id<typeof(zPlane)>().name());
+
 		sizeX = std::min(std::min(xPlane.extent(0), yPlane.extent(0)), zPlane.extent(0));
 		sizeY = std::min(std::min(xPlane.extent(1), yPlane.extent(1)), zPlane.extent(1));
 
@@ -130,11 +153,24 @@ public:
 		// TODO: Weird layouts
 
 		std::size_t bi = 0;
-		for(std::size_t i = 0; i < sizeX; i++)
+		if(fastestFromLeft(xPlane))
+		{
+			for(std::size_t i = 0; i < sizeX; i++)
+			{
+				for(std::size_t j = 0; j < sizeY; j++)
+				{
+					buffer[bi++] = magnitude(xPlane[i,j], yPlane[i,j], zPlane[i,j], multiplier);
+				}
+			}
+		}
+		else //TODO: Change heatmap row major column major
 		{
 			for(std::size_t j = 0; j < sizeY; j++)
 			{
-				buffer[bi++] = magnitude(xPlane[i,j], yPlane[i,j], zPlane[i,j], multiplier);
+				for(std::size_t i = 0; i < sizeX; i++)
+				{
+					buffer[bi++] = magnitude(xPlane[i,j], yPlane[i,j], zPlane[i,j], multiplier);
+				}
 			}
 		}
 	}
