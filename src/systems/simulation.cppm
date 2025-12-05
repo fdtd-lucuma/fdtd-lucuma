@@ -390,6 +390,9 @@ private:
 	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 3)
 	int getMaxPlaneIndex(Kokkos::mdspan<T2,E,L,A> matrix)
 	{
+		if(matrix.empty())
+			return std::numeric_limits<int>::max();
+
 		// TODO: Handle weird layouts
 		switch(plotInfo.plane)
 		{
