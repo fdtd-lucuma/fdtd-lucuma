@@ -311,7 +311,9 @@ private:
 
 		ImPlot::PushColormap(colormap);
 
-		if(ImPlot::BeginPlot("##Heatmap", ImVec2(225*2,225*2)))
+		const auto availSize = ImGui::GetContentRegionAvail();
+
+		if(ImPlot::BeginPlot("##Heatmap", ImVec2(availSize.x, availSize.x)))
 		{
 			ImPlot::SetupAxes(nullptr, nullptr, axisFlags, axisFlags);
 			ImPlot::PlotHeatmap("##heatmap", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY(), 0, 1, nullptr);
