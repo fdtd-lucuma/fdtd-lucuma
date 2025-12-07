@@ -85,7 +85,7 @@ _Float16 magnitude(_Float16 x, _Float16 y, _Float16 z, _Float16 multiplier)
 template<typename T, typename E, typename L, typename A>
 requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
 constexpr bool fastestFromLeft(Kokkos::mdspan<T,E,L,A> plane) {
-    return plane.mapping().stride(0) < plane.mapping().stride(1);
+	return plane.mapping().stride(0) > plane.mapping().stride(1);
 }
 
 template <typename T>
@@ -133,9 +133,9 @@ public:
 	}
 
 	template <typename T2,
-			 typename E, typename L, typename A,
-			 typename E2, typename L2, typename A2,
-			 typename E3, typename L3, typename A3
+			typename E, typename L, typename A,
+			typename E2, typename L2, typename A2,
+			typename E3, typename L3, typename A3
 		>
 	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
 	void fill(
