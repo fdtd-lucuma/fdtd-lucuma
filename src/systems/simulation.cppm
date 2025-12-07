@@ -50,7 +50,14 @@ struct PlotInfo
 	Plane           plane           = Plane::XY;
 	int             planeIndex      = 0;
 	float           multiplier      = 1000;
+	int             nThStep         = 1;
 };
+
+template <typename T>
+void clampPositive(T& x, const T& lo = (T)1)
+{
+	x = std::clamp(x, lo, std::numeric_limits<T>::max());
+}
 
 template <typename T>
 T normalizeMinfToInf(T x)
@@ -300,11 +307,16 @@ private:
 		utils::imgui::Combo("Plane", &plotInfo.plane);
 		ImGui::SliderInt("Plane index", &plotInfo.planeIndex, 0, getMaxPlaneIndex(), "%d", ImGuiSliderFlags_AlwaysClamp);
 		ImGui::InputFloat("Multiplier", &plotInfo.multiplier, 10.f, 100.f);
+		ImGui::InputInt("Plot every nTh step", &plotInfo.nThStep);
+
+		clampPositive(plotInfo.nThStep);
+		clampPositive(plotInfo.multiplier, 0.f);
 	}
 
 	void plotHeatmap()
 	{
-		fillHeatmapData();
+		if(timeI % plotInfo.nThStep == 0)
+			fillHeatmapData();
 
 		constexpr auto colormap  = ImPlotColormap_Jet;
 		constexpr auto axisFlags = ImPlotAxisFlags_NoDecorations;
