@@ -89,12 +89,6 @@ _Float16 magnitude(_Float16 x, _Float16 y, _Float16 z, _Float16 multiplier)
 	return magnitude<float>(x, y, z, multiplier);
 }
 
-template<typename T, typename E, typename L, typename A>
-requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
-constexpr bool fastestFromLeft(Kokkos::mdspan<T,E,L,A> plane) {
-	return plane.mapping().stride(0) > plane.mapping().stride(1);
-}
-
 template <typename T>
 class HeatmapData
 {
@@ -111,13 +105,12 @@ public:
 			return;
 		}
 
+		updateColMajor(plane);
 		resize(plane.extent(0), plane.extent(1));
-
-		// TODO: Weird layouts
 
 		std::size_t bi = 0;
 
-		if(fastestFromLeft(plane))
+		if(!colMajor())
 		{
 			for(std::size_t i = 0; i < sizeX; i++)
 			{
@@ -158,12 +151,11 @@ public:
 			return;
 		}
 
+		updateColMajor(xPlane);
 		resize(std::min(std::min(xPlane.extent(0), yPlane.extent(0)), zPlane.extent(0)), std::min(std::min(xPlane.extent(1), yPlane.extent(1)), zPlane.extent(1)));
 
-		// TODO: Weird layouts
-
 		std::size_t bi = 0;
-		if(fastestFromLeft(xPlane))
+		if(!colMajor())
 		{
 			for(std::size_t i = 0; i < sizeX; i++)
 			{
@@ -206,10 +198,22 @@ public:
 		return sizeY;
 	}
 
+	bool colMajor() const
+	{
+		return _colMajor;
+	}
+
 private:
 	std::vector<T> buffer;
 	std::size_t sizeX = 0;
 	std::size_t sizeY = 0;
+	bool _colMajor;
+
+	template<typename T2, typename E, typename L, typename A>
+	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
+	void updateColMajor(Kokkos::mdspan<T2,E,L,A> plane) {
+		_colMajor = plane.mapping().stride(0) < plane.mapping().stride(1);
+	}
 
 	void resize(std::size_t x, std::size_t y)
 	{
@@ -328,7 +332,7 @@ private:
 		if(ImPlot::BeginPlot("##Heatmap", ImVec2(availSize.x, availSize.x)))
 		{
 			ImPlot::SetupAxes(nullptr, nullptr, axisFlags, axisFlags);
-			ImPlot::PlotHeatmap("##heatmap", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY(), 0, 1, nullptr);
+			ImPlot::PlotHeatmap("##heatmap", heatmapData.data(), heatmapData.getSizeX(), heatmapData.getSizeY(), 0, 1, nullptr, ImPlotPoint(0,0), ImPlotPoint(1,1), heatmapData.colMajor() ? ImPlotHeatmapFlags_ColMajor : 0);
 
 			ImPlot::EndPlot();
 		}

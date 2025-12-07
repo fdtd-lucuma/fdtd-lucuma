@@ -39,6 +39,8 @@ using ImPlot::PopColormap;
 
 };
 
+export using ::ImPlotPoint;
+
 export using ::ImPlotAxisFlags;
 export using ::ImPlotFlags;
 export using ::ImPlotColormap;
