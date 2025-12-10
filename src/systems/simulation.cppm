@@ -165,7 +165,7 @@ public:
 				}
 			}
 		}
-		else //TODO: Change heatmap row major column major
+		else
 		{
 			for(std::size_t j = 0; j < sizeY; j++)
 			{

@@ -68,6 +68,7 @@ void Gui::drawFrame(float timeDelta)
 {
 	dispatcher.trigger(events::FrameStart{timeDelta});
 	dispatcher.trigger(events::Update{timeDelta});
+	dispatcher.trigger(events::PostUpdate{timeDelta});
 	dispatcher.trigger(events::FrameEnd{timeDelta});
 
 	systems.cleanStopped(); //TODO: Move this into frameEnd

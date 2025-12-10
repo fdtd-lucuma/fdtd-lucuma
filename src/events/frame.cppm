@@ -31,6 +31,11 @@ export struct Update
 	float deltaTime;
 };
 
+export struct PostUpdate
+{
+	float deltaTime;
+};
+
 export struct FrameEnd
 {
 	float deltaTime;

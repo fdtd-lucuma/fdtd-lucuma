@@ -59,6 +59,12 @@ public:
 	}
 
 	template <typename T>
+	void connectPostUpdate(T& system)
+	{
+		dispatcher.sink<events::PostUpdate>().connect<&T::postUpdate>(system);
+	}
+
+	template <typename T>
 	void connectStart(T& system)
 	{
 		dispatcher.sink<events::Start>().connect<&T::update>(system);
@@ -68,6 +74,12 @@ public:
 	void disconnectUpdate(T& system)
 	{
 		dispatcher.sink<events::Update>().disconnect<&T::update>(system);
+	}
+
+	template <typename T>
+	void disconnectPostUpdate(T& system)
+	{
+		dispatcher.sink<events::PostUpdate>().disconnect<&T::postUpdate>(system);
 	}
 
 	template <typename T>

@@ -31,6 +31,9 @@ template <typename T>
 constexpr bool hasUpdate = requires (T t, const lucuma::events::Update& u) {t.update(u);};
 
 template <typename T>
+constexpr bool hasPostUpdate = requires (T t, const lucuma::events::PostUpdate& p) {t.postUpdate(p);};
+
+template <typename T>
 constexpr bool hasStart = requires (T t, const lucuma::events::Start& s) {t.start(s);};
 
 using namespace services::basic;
@@ -51,6 +54,8 @@ public:
 	{
 		if constexpr(hasUpdate<T>)
 			systems.connectUpdate(*(T*)this);
+		if constexpr(hasPostUpdate<T>)
+			systems.connectPostUpdate(*(T*)this);
 		if constexpr(hasStart<T>)
 			systems.connectStart(*(T*)this);
 	}
@@ -59,6 +64,8 @@ public:
 	{
 		if constexpr(hasUpdate<T>)
 			systems.disconnectUpdate(*(T*)this);
+		if constexpr(hasPostUpdate<T>)
+			systems.disconnectPostUpdate(*(T*)this);
 		if constexpr(hasStart<T>)
 			systems.disconnectStart(*(T*)this);
 	}
