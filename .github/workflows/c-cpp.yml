@@ -102,6 +102,8 @@ jobs:
 
     - run: /opt/homebrew/opt/llvm/bin/clang --version
 
+    - run: find / -name libc++.modules.json -print -quit 2> /dev/null
+
     - name: configure
       env:
         CC: "/opt/homebrew/opt/llvm/bin/clang"
