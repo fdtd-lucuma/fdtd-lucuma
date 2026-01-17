@@ -64,7 +64,7 @@ jobs:
   apple:
     runs-on: macos-26
     env:
-      VCPKG_ROOT: "$HOME/vcpkg"
+      VCPKG_ROOT: ${{ env.HOME }}/vcpkg
 
     steps:
     - uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
       run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
 
     - name: vcpkg deps
-      run: vcpkg install glm shader-slang
+      run: vcpkg install shader-slang
 
     - name: configure
       run: cmake -B build -G Ninja
