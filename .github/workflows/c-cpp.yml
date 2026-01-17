@@ -64,7 +64,7 @@ jobs:
   apple:
     runs-on: macos-26
     env:
-      VCPKG_ROOT: /vcpkg
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
     steps:
     - uses: actions/checkout@v4
