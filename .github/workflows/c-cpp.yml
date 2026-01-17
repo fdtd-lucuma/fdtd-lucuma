@@ -98,11 +98,12 @@ jobs:
     - name: vcpkg deps
       run: vcpkg install shader-slang
 
-    - run: clang --version
-
-    - run: /opt/homebrew/opt/llvm/bin/clang --version
-
     - run: brew --prefix llvm
+
+    - run: ls -lh "$(brew --prefix llvm)"
+
+    - run: ls -lh "$(brew --prefix llvm)/lib/c++"
+
     - run: find / -name libc++.modules.json 2> /dev/null || true
 
     - name: configure
@@ -110,7 +111,7 @@ jobs:
         CC: "/opt/homebrew/opt/llvm/bin/clang"
         CXX: "/opt/homebrew/opt/llvm/bin/clang++"
       run: cmake -B build -G Ninja
-        -DCMAKE_CXX_STDLIB_MODULES_JSON="$(find "$(brew --prefix llvm)" -name libc++.modules.json -print -quit)"
+        -DCMAKE_CXX_STDLIB_MODULES_JSON="$(brew --prefix llvm)/lib/c++/libc++.modules.json"
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_BUILD_TYPE=None
