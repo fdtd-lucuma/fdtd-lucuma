@@ -100,10 +100,12 @@ jobs:
 
     - run: clang --version
 
+    - run: /opt/homebrew/opt/llvm/bin/clang --version
+
     - name: configure
       env:
-        CC: "clang"
-        CXX: "clang++"
+        CC: "/opt/homebrew/opt/llvm/bin/clang"
+        CXX: "/opt/homebrew/opt/llvm/bin/clang++"
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
