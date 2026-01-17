@@ -63,6 +63,8 @@ jobs:
 
   apple:
     runs-on: macos-26
+    env:
+      VCPKG_ROOT: "$HOME/vcpkg"
 
     steps:
     - uses: actions/checkout@v4
@@ -90,16 +92,12 @@ jobs:
         vcpkg
 
     - name: vcpkg root
-      run: git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
+      run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
 
     - name: vcpkg deps
-      env:
-        VCPKG_ROOT="$HOME/vcpkg"
       run: vcpkg install glm shader-slang
 
     - name: configure
-      env:
-        VCPKG_ROOT="$HOME/vcpkg"
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
@@ -110,8 +108,6 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 
     - name: build
-      env:
-        VCPKG_ROOT="$HOME/vcpkg"
       run: |
           export MAKEFLAGS=-j$(nproc)
           cmake --build build
