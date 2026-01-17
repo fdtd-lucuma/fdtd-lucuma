@@ -102,7 +102,7 @@ jobs:
 
     - run: /opt/homebrew/opt/llvm/bin/clang --version
 
-    - run: find / -name libc++.modules.json -print -quit 2> /dev/null
+    - run: find / -name libc++.modules.json 2> /dev/null || true
 
     - name: configure
       env:
