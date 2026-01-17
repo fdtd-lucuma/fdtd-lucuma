@@ -90,6 +90,7 @@ jobs:
         libx11
         molten-vk
         vcpkg
+        bash-completion@2
 
     - name: vcpkg root
       run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
