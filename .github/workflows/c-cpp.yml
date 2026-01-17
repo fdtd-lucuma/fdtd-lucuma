@@ -87,13 +87,19 @@ jobs:
         pkg-config
         libx11
         molten-vk
+        vcpkg
 
-    - uses: lukka/run-vcpkg@v11
+    - name: vcpkg root
+      run: git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
 
     - name: vcpkg deps
+      env:
+        VCPKG_ROOT="$HOME/vcpkg"
       run: vcpkg install glm shader-slang
 
     - name: configure
+      env:
+        VCPKG_ROOT="$HOME/vcpkg"
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
@@ -101,9 +107,11 @@ jobs:
         -DCMAKE_INSTALL_PREFIX=/usr
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
         -DCMAKE_UNITY_BUILD=ON
-        -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 
     - name: build
+      env:
+        VCPKG_ROOT="$HOME/vcpkg"
       run: |
           export MAKEFLAGS=-j$(nproc)
           cmake --build build
