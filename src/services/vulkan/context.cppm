@@ -19,7 +19,7 @@ module;
 export module lucuma.services.vulkan:context;
 
 import lucuma.utils;
-import vulkan_hpp;
+import vulkan;
 
 namespace lucuma::services::vulkan
 {

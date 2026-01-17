@@ -18,7 +18,7 @@ module;
 
 module lucuma.utils.vulkan;
 
-import vulkan_hpp;
+import vulkan;
 import std;
 
 namespace lucuma::utils::vulkan

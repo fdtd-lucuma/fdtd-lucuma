@@ -24,7 +24,7 @@ import glm;
 import lucuma.utils;
 import lucuma.utils.vulkan;
 import lucuma.services.vulkan;
-import vulkan_hpp;
+import vulkan;
 
 import std;
 

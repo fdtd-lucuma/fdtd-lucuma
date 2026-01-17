@@ -23,7 +23,7 @@ import std;
 import lucuma.utils;
 import lucuma.utils.vulkan;
 
-import vulkan_hpp;
+import vulkan;
 
 namespace lucuma::services::backends::vulkan_components
 {

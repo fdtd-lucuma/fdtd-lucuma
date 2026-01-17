@@ -22,7 +22,7 @@ export module lucuma.services.backends.vulkan_components:update_e_pipeline;
 
 import lucuma.utils;
 import lucuma.services.vulkan;
-import vulkan_hpp;
+import vulkan;
 import std;
 
 import :utils;

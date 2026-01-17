@@ -20,7 +20,7 @@ module;
 
 export module lucuma.services.vulkan:debug;
 
-import vulkan_hpp;
+import vulkan;
 import std;
 
 import lucuma.utils;

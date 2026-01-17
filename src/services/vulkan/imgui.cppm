@@ -18,7 +18,7 @@ module;
 
 export module lucuma.services.vulkan:imgui;
 
-import vulkan_hpp;
+import vulkan;
 import std;
 
 import lucuma.utils;

@@ -18,7 +18,7 @@ module;
 
 export module lucuma.events.vulkan:draw;
 
-import vulkan_hpp;
+import vulkan;
 
 namespace lucuma::events::vulkan
 {

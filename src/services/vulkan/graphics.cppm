@@ -18,7 +18,7 @@ module;
 
 export module lucuma.services.vulkan:graphics;
 
-import vulkan_hpp;
+import vulkan;
 import std;
 
 import lucuma.utils;

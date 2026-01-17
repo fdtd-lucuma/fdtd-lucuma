@@ -24,7 +24,7 @@ import lucuma.legacy_headers.glm;
 import lucuma.utils;
 import lucuma.components;
 import lucuma.services.vulkan;
-import vulkan_hpp;
+import vulkan;
 import vk_mem_alloc_hpp;
 
 import std;

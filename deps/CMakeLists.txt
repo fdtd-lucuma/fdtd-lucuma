@@ -169,7 +169,9 @@ add_library(VulkanHppModule)
 target_sources(VulkanHppModule PUBLIC
 	FILE_SET CXX_MODULES
 	BASE_DIRS ${Vulkan_INCLUDE_DIR}
-	FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+	FILES
+		${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+		${Vulkan_INCLUDE_DIR}/vulkan/vulkan_video.cppm
 )
 set_target_properties(VulkanHppModule
 	PROPERTIES
@@ -206,14 +208,14 @@ target_compile_definitions(VkfwModule
 		# TODO: Find out how to dedup vulkan module target
 		#VKFW_NO_INCLUDE_VULKAN
 		#VKFW_NO_INCLUDE_VULKAN_HPP
-		VKFW_ENABLE_VULKAN_HPP_MODULE
+		#VKFW_ENABLE_VULKAN_HPP_MODULE
 		#VKFW_ENABLE_STD_MODULE
 		VKFW_NO_STRUCT_CONSTRUCTORS
 )
 
 target_link_libraries(VkfwModule
 	PUBLIC
-		VulkanHppModule
+		Vulkan::Vulkan
 		vkfw
 )
 
@@ -418,7 +420,8 @@ target_compile_definitions(VulkanMemoryAllocator-HppModule
 	PUBLIC
 		VMA_DYNAMIC_VULKAN_FUNCTIONS=0
 		VMA_STATIC_VULKAN_FUNCTIONS=1
-		VMA_ENABLE_VULKAN_HPP_MODULE
+		#VMA_ENABLE_VULKAN_HPP_MODULE
+		VULKAN_HPP_STD_MODULE=std
 		VMA_ENABLE_STD_MODULE
 )
 

@@ -26,7 +26,7 @@ import lucuma.components;
 import lucuma.services.basic;
 import lucuma.services.vulkan;
 import lucuma.services.backends.vulkan_components;
-import vulkan_hpp;
+import vulkan;
 
 import :base;
 import :saver;

@@ -33,7 +33,7 @@ import lucuma.events.vulkan;
 import imgui;
 import imgui_impl_vulkan;
 import imgui_impl_glfw;
-import vulkan_hpp;
+import vulkan;
 
 namespace lucuma::services::vulkan
 {

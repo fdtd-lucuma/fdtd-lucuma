@@ -20,7 +20,7 @@ export module lucuma.services.vulkan:allocator;
 
 import std;
 import vk_mem_alloc_hpp;
-import vulkan_hpp;
+import vulkan;
 
 import lucuma.utils;
 

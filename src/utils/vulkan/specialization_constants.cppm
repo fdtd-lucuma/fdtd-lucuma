@@ -18,7 +18,7 @@ module;
 
 export module lucuma.utils.vulkan:specialization_constants;
 
-import vulkan_hpp;
+import vulkan;
 import std;
 
 import lucuma.utils;

@@ -19,7 +19,7 @@ module;
 export module lucuma.services.vulkan;
 
 import std;
-import vulkan_hpp;
+import vulkan;
 import lucuma.utils;
 
 export import :all;
