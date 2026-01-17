@@ -16,16 +16,54 @@
 
 module;
 
+#ifndef NO_XDG
 #include <XdgUtils/BaseDir/BaseDir.h>
+#endif
 
 export module lucuma.legacy_headers.xdg_utils_cxx;
+
+#ifdef NO_XDG
+import std;
+#endif
 
 export namespace XdgUtils::BaseDir
 {
 
+#ifndef NO_XDG
 using XdgUtils::BaseDir::Home;
 using XdgUtils::BaseDir::XdgDataHome;
 using XdgUtils::BaseDir::XdgConfigHome;
 using XdgUtils::BaseDir::XdgCacheHome;
+#else
+
+inline std::filesystem::path Home()
+{
+    if (const char* home = std::getenv("HOME"))
+        return home;
+    return {};
+}
+
+inline std::filesystem::path XdgDataHome()
+{
+    if (const char* xdg = std::getenv("XDG_DATA_HOME"))
+        return xdg;
+    return Home() / ".local" / "share";
+}
+
+inline std::filesystem::path XdgConfigHome()
+{
+    if (const char* xdg = std::getenv("XDG_CONFIG_HOME"))
+        return xdg;
+    return Home() / ".config";
+}
+
+inline std::filesystem::path XdgCacheHome()
+{
+    if (const char* xdg = std::getenv("XDG_CACHE_HOME"))
+        return xdg;
+    return Home() / ".cache";
+}
+
+#endif
 
 };
