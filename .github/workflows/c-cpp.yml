@@ -98,7 +98,12 @@ jobs:
     - name: vcpkg deps
       run: vcpkg install shader-slang
 
+    - run: clang --version
+
     - name: configure
+      env:
+        CC: "clang"
+        CXX: "clang++"
       run: cmake -B build -G Ninja
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
