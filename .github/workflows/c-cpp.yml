@@ -107,6 +107,7 @@ jobs:
         CC: "/opt/homebrew/opt/llvm/bin/clang"
         CXX: "/opt/homebrew/opt/llvm/bin/clang++"
       run: cmake -B build -G Ninja
+        -DCMAKE_CXX_STDLIB_MODULES_JSON="$(find /opt/homebrew/opt/llvm -name libc++.modules.json -print -quit)"
         -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
         -DCMAKE_BUILD_TYPE=None
