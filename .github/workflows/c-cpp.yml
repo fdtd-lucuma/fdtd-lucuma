@@ -98,6 +98,8 @@ jobs:
     - name: vcpkg deps
       run: vcpkg install shader-slang
 
+    - run: cat /opt/homebrew/include/vulkan/vulkan.cppm
+
     - name: configure
       env:
         CC: "/opt/homebrew/opt/llvm/bin/clang"
