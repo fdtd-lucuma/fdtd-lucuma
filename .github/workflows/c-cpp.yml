@@ -60,3 +60,51 @@ jobs:
 
     - name: build
       run: cmake --build build --parallel $(nproc)
+
+  apple:
+    runs-on: macos-26
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: deps
+      run: brew install
+        llvm
+        cmake
+        file
+        fmt
+        freetype
+        glfw
+        glm
+        graphviz
+        taskflow
+        vulkan-loader
+        vulkan-validationlayers
+        yaml-cpp
+        ninja
+        pkg-config
+        libx11
+        molten-vk
+
+    - name: vcpkg
+        uses: lukka/run-vcpkg@v11
+
+    - name: vcpkg deps
+      run: vcpkg install glm shader-slang
+
+    - name: configure
+      run: cmake -B build -G Ninja
+        -DCMAKE_CXX_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
+        -DCMAKE_C_FLAGS="-O2 -pipe -fno-plt -Wall -Wextra"
+        -DCMAKE_BUILD_TYPE=None
+        -DCMAKE_INSTALL_PREFIX=/usr
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+        -DCMAKE_UNITY_BUILD=ON
+        -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+    - name: build
+      run: |
+          export MAKEFLAGS=-j$(nproc)
+          cmake --build build
