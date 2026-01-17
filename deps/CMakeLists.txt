@@ -37,7 +37,8 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	imgui-module
-	GIT_REPOSITORY         https://github.com/stripe2933/imgui-module.git
+	#GIT_REPOSITORY         https://github.com/stripe2933/imgui-module.git
+	GIT_REPOSITORY         https://github.com/otreblan/imgui-module.git
 	GIT_TAG                origin/docking
 	GIT_SHALLOW            ON
 	GIT_PROGRESS           ON
