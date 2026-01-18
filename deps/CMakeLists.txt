@@ -182,7 +182,7 @@ set_target_properties(VulkanHppModule
 target_compile_definitions(VulkanHppModule
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
-		$<$<PLATFORM_ID:Darwin>:std=std.compat>
+		$<$<PLATFORM_ID:Darwin>:getenv=std::getenv>
 	PUBLIC
 		VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
 		VULKAN_HPP_ENABLE_STD_MODULE
