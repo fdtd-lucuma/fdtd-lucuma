@@ -98,7 +98,9 @@ jobs:
     - name: vcpkg deps
       run: vcpkg install shader-slang
 
-    - run: cat /opt/homebrew/include/vulkan/vulkan.cppm
+    - run: cat /opt/homebrew/include/vulkan/vulkan_video.cppm
+
+    - run: cat /opt/homebrew/include/vulkan/vulkan.hpp
 
     - name: configure
       env:
