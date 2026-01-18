@@ -16,7 +16,7 @@
 
 module;
 
-#ifdef __APPLE_
+#ifdef __APPLE__
 #include <bit>
 #endif
 
