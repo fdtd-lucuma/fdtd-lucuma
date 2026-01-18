@@ -723,7 +723,7 @@ public:
 		return time;
 	}
 
-	std::generator<std::tuple<const char*, cmdspan_3d_t>> zippedFields() const {
+	auto zippedFields() const {
 		static constexpr std::array names {
 			"Hx",
 			"Hy",
@@ -742,11 +742,10 @@ public:
 			Ez(),
 		};
 
-		for(auto&& p: std::views::zip(names, mats))
-			co_yield p;
+		return std::views::zip(names, mats);
 	}
 
-	std::generator<std::tuple<const char*, cmdspan_3d_t>> chZippedFields() const {
+	auto chZippedFields() const {
 		static constexpr std::array names {
 			"Chxh()",
 			"Chyh()",
@@ -765,11 +764,10 @@ public:
 			Chze(),
 		};
 
-		for(auto&& p: std::views::zip(names, mats))
-			co_yield p;
+		return std::views::zip(names, mats);
 	}
 
-	std::generator<std::tuple<const char*, cmdspan_3d_t>> ceZippedFields() const {
+	auto ceZippedFields() const {
 		static constexpr std::array names {
 			"Cexe()",
 			"Ceye()",
@@ -788,8 +786,7 @@ public:
 			Cezh(),
 		};
 
-		for(auto&& p: std::views::zip(names, mats))
-			co_yield p;
+		return std::views::zip(names, mats);
 	}
 
 	void initCoefs(vk::CommandBuffer commandBuffer)

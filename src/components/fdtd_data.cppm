@@ -295,7 +295,7 @@ public:
 	cmdspan_2d_t exz1()  const { return toMdspan(_exz1,  exzDims); }
 	cmdspan_2d_t eyz1()  const { return toMdspan(_eyz1,  eyzDims); }
 
-	std::generator<std::tuple<const char*, cmdspan_3d_t>> zippedFields() const {
+	auto zippedFields() const {
 		static constexpr std::array names {
 			"Hx",
 			"Hy",
@@ -314,11 +314,10 @@ public:
 			Ez(),
 		};
 
-		for(auto&& p: std::views::zip(names, mats))
-			co_yield p;
+		return std::views::zip(names, mats);
 	}
 
-	std::generator<std::tuple<const char*, cmdspan_3d_t>> chZippedFields() const {
+	auto chZippedFields() const {
 		static constexpr std::array names {
 			"Chxh()",
 			"Chyh()",
@@ -337,11 +336,10 @@ public:
 			Chze(),
 		};
 
-		for(auto&& p: std::views::zip(names, mats))
-			co_yield p;
+		return std::views::zip(names, mats);
 	}
 
-	std::generator<std::tuple<const char*, cmdspan_3d_t>> ceZippedFields() const {
+	auto ceZippedFields() const {
 		static constexpr std::array names {
 			"Cexe()",
 			"Ceye()",
@@ -360,8 +358,7 @@ public:
 			Cezh(),
 		};
 
-		for(auto&& p: std::views::zip(names, mats))
-			co_yield p;
+		return std::views::zip(names, mats);
 	}
 
 	/// Returns true and increments the counter by +1 if it can still continue.
