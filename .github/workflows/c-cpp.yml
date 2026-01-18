@@ -99,11 +99,13 @@ jobs:
       run: vcpkg install shader-slang
 
     - name: configure
-      env:
-        CC: "/opt/homebrew/opt/llvm/bin/clang"
-        CXX: "/opt/homebrew/opt/llvm/bin/clang++"
-      run: export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)" ; cmake -B build -G Ninja
-        -DCMAKE_CXX_STDLIB_MODULES_JSON="$(brew --prefix llvm)/lib/c++/libc++.modules.json"
+      run: export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)" ;
+        export LLVM_PREFIX="$(brew --prefic llvm)" ;
+        export CC="$LLVM_PREFIX/bin/clang" ;
+        export CXX="$LLVM_PREFIX/bin/clang++" ;
+        export LDFLAGS="-L$LLVM_PREFIX/lib/c++" ;
+        cmake -B build -G Ninja
+        -DCMAKE_CXX_STDLIB_MODULES_JSON="$LLVM_PREFIX/lib/c++/libc++.modules.json"
         -DCMAKE_CXX_FLAGS="-O2 -pipe -Wall -Wextra"
         -DCMAKE_C_FLAGS="-O2 -pipe -Wall -Wextra"
         -DCMAKE_BUILD_TYPE=None
