@@ -237,7 +237,7 @@ void ComputePipeline::initDescriptorSets(vk::raii::Device& device, const Compute
 
 	auto bindingDescriptors = std::views::zip(
 		info.setLayouts | std::views::transform([](auto&& x) { return x.bindings; }),
-		getDescriptorSets() | std::views::as_const
+		getDescriptorSets()
 	);
 
 	auto cartesianDescriptors = bindingDescriptors |
