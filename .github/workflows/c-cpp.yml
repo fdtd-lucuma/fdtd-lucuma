@@ -100,7 +100,7 @@ jobs:
 
     - name: configure
       run: export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)" ;
-        export LLVM_PREFIX="$(brew --prefic llvm)" ;
+        export LLVM_PREFIX="$(brew --prefix llvm)" ;
         export CC="$LLVM_PREFIX/bin/clang" ;
         export CXX="$LLVM_PREFIX/bin/clang++" ;
         export LDFLAGS="-L$LLVM_PREFIX/lib/c++" ;
