@@ -115,6 +115,4 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 
     - name: build
-      run: |
-          export MAKEFLAGS=-j$(nproc)
-          cmake --build build
+      run: cmake --build build

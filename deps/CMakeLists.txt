@@ -170,7 +170,9 @@ add_library(VulkanHppModule)
 target_sources(VulkanHppModule PUBLIC
 	FILE_SET CXX_MODULES
 	BASE_DIRS ${Vulkan_INCLUDE_DIR}
-	FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+	FILES
+		${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+		${Vulkan_INCLUDE_DIR}/vulkan/vulkan_video.cppm
 )
 set_target_properties(VulkanHppModule
 	PROPERTIES
