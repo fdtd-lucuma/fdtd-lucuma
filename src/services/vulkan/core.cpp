@@ -121,9 +121,7 @@ void Core::createSurface()
 
 std::vector<const char*> Core::getRequiredLayers()
 {
-	auto result = std::views::concat(
-		debugRequirements.getRequiredLayers()
-		) | std::ranges::to<std::vector>();
+	auto result = debugRequirements.getRequiredLayers();
 
 	checkLayers(result);
 
@@ -132,11 +130,12 @@ std::vector<const char*> Core::getRequiredLayers()
 
 std::vector<const char*> Core::getRequiredExtensions()
 {
-	auto result = std::views::concat(
-		debugRequirements.getRequiredExtensions(),
-		glfw == nullptr ? std::span<const char*>() : vkfw::getRequiredInstanceExtensions()
-		// TODO: Make glfw more maintainable
-		) | std::ranges::to<std::vector>();
+	auto result = debugRequirements.getRequiredExtensions();
+
+	if(glfw != nullptr)
+		result.append_range(vkfw::getRequiredInstanceExtensions());
+
+	// TODO: Make glfw more maintainable
 
 	checkExtensions(result);
 

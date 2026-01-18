@@ -232,8 +232,7 @@ void ComputePipeline::initDescriptorSets(vk::raii::Device& device, const Compute
 				.offset = 0,
 				.range  = vk::WholeSize,
 			};
-		}) |
-		std::ranges::to<std::vector>()
+		})
 	;
 
 	auto bindingDescriptors = std::views::zip(
@@ -246,10 +245,20 @@ void ComputePipeline::initDescriptorSets(vk::raii::Device& device, const Compute
 		{
 			auto&& [bindings, descriptorSet] = t;
 
+
+#ifdef __APPLE__
+			std::vector<std::pair<vk::DescriptorSetLayoutBinding, std::reference_wrapper<const vk::raii::DescriptorSet>>> result;
+
+			for(auto&& x: bindings)
+				result.emplace_back(x, std::ref(descriptorSet));
+
+			return result;
+#else
 			return std::views::cartesian_product(
 				bindings,
 				std::views::single(std::ref(descriptorSet))
 			);
+#endif
 		}) |
 		std::views::join
 	;
