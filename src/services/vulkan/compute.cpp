@@ -232,7 +232,8 @@ void ComputePipeline::initDescriptorSets(vk::raii::Device& device, const Compute
 				.offset = 0,
 				.range  = vk::WholeSize,
 			};
-		})
+		}) |
+		std::ranges::to<std::vector>()
 	;
 
 	auto bindingDescriptors = std::views::zip(
