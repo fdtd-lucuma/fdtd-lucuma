@@ -99,6 +99,9 @@ void Core::createInstance()
 	auto extensions = getRequiredExtensions();
 
 	vk::InstanceCreateInfo instanceCreateInfo {
+#ifdef __APPLE__
+		.flags = vk::InstanceCreateFlagBits::eEnumeratePortabilityKHR,
+#endif
 		.pApplicationInfo = &applicattionInfo,
 	};
 
@@ -134,6 +137,10 @@ std::vector<const char*> Core::getRequiredExtensions()
 
 	if(glfw != nullptr)
 		result.append_range(vkfw::getRequiredInstanceExtensions());
+
+#ifdef __APPLE__
+	result.emplace_back(vk::KHRPortabilityEnumerationExtensionName);
+#endif
 
 	// TODO: Make glfw more maintainable
 
