@@ -2,7 +2,9 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/fdtd-lucuma/fdtd-lucuma?logo=github)
 ![GitHub](https://img.shields.io/github/license/fdtd-lucuma/fdtd-lucuma?logo=gnu)
 
-# Una GUI para fdtd
+# FDTD GUI
+<img width="2560" height="1440" alt="imagen" src="https://github.com/user-attachments/assets/476a970a-898c-4e6d-bfdb-7d93127fa948" />
+
 
 ## Now with a pretty fast compilation (thanks to C++20 modules)
 <img width="1366" height="768" alt="imagen" src="https://github.com/user-attachments/assets/f2020b2c-6a15-4262-b4d8-fc24c8a6fcbc" />
