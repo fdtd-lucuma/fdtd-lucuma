@@ -245,7 +245,7 @@ public:
 
 		// TODO: Input from here
 		simulationId = backendService.init(createInfo);
-		title = std::format("Progress##{}", (std::underlying_type_t<typeof simulationId>)simulationId);
+		title = std::format("Progress##{}", (std::underlying_type_t<entt::entity>)simulationId);
 	}
 
 	void update([[maybe_unused]] const events::Update& event)
