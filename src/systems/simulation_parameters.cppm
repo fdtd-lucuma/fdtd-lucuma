@@ -75,7 +75,7 @@ private:
 	void clampSizes();
 
 	FdtdInfo fdtdInfo;
-	entt::entity simulationId = entt::null;
+	//entt::entity simulationId = entt::null;
 
 };
 

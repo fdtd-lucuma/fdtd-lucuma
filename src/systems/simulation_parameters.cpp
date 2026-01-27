@@ -108,11 +108,11 @@ void SimulationParameters::update(const events::Update&)
 
 void SimulationParameters::startSimulation()
 {
-	if(registry.valid(simulationId))
-	{
-		ImGui::OpenPopup("Warning");
-		return;
-	}
+	//if(registry.valid(simulationId))
+	//{
+	//	ImGui::OpenPopup("Warning");
+	//	return;
+	//}
 
 	components::FdtdDataCreateInfo createInfo {
 		.size          = {fdtdInfo.size[0], fdtdInfo.size[1], fdtdInfo.size[2]},
@@ -131,7 +131,7 @@ void SimulationParameters::startSimulation()
 	{
 		magic_enum::enum_switch([&](auto backend)
 		{
-			simulationId = systems.start<Simulation<backend, precision>>(createInfo);
+			systems.start<Simulation<backend, precision>>(createInfo);
 
 		}, fdtdInfo.backend);
 	}, fdtdInfo.precision);

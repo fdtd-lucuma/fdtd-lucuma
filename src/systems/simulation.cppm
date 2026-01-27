@@ -31,10 +31,11 @@ import lucuma.legacy_headers.mdspan;
 
 import :base;
 
-import std.compat;
-import imgui;
 import glm;
+import imgui;
 import magic_enum;
+import std.compat;
+import std;
 
 namespace lucuma::systems
 {
@@ -244,6 +245,7 @@ public:
 
 		// TODO: Input from here
 		simulationId = backendService.init(createInfo);
+		title = std::format("Progress##{}", (std::underlying_type_t<typeof simulationId>)simulationId);
 	}
 
 	void update([[maybe_unused]] const events::Update& event)
@@ -281,10 +283,11 @@ private:
 	unsigned int timeI = 0;
 
 	HeatmapData<T> heatmapData;
+	std::string title;
 
 	void drawProgressBar()
 	{
-		ImGui::Begin("Progress");
+		ImGui::Begin(title.c_str());
 
 		float progress = (float)timeI++/maxTime;
 		char buffer[32];
