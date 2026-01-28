@@ -238,6 +238,7 @@ public:
 		base_t(_systems),
 		backendService(_systems.inject<backend_t>()),
 		registry(_systems.inject<entt::registry>()),
+		settings(_systems.inject<Settings>()),
 		gaussPosition(createInfo.gaussPosition),
 		maxTime(createInfo.maxTime)
 	{
@@ -273,6 +274,7 @@ public:
 private:
 	backend_t&      backendService;
 	entt::registry& registry;
+	Settings&       settings;
 
 	entt::entity simulationId = entt::null;
 
@@ -380,6 +382,10 @@ private:
 			magic_enum::enum_switch([&](auto dim)
 			{
 				auto plane = slice<dim>(matrix, plotInfo.planeIndex);
+
+				if(settings.debug())
+					debugPrint("plane", plane);
+
 				heatmapData.fill(plane, plotInfo.multiplier);
 			}, toDim(plotInfo.plane));
 		}
@@ -395,6 +401,13 @@ private:
 				auto xPlane = slice<dim>(xMatrix, plotInfo.planeIndex);
 				auto yPlane = slice<dim>(yMatrix, plotInfo.planeIndex);
 				auto zPlane = slice<dim>(zMatrix, plotInfo.planeIndex);
+
+				if(settings.debug())
+				{
+					debugPrint("xPlane", xPlane);
+					debugPrint("yPlane", yPlane);
+					debugPrint("zPlane", zPlane);
+				}
 
 				heatmapData.fill(xPlane, yPlane, zPlane, plotInfo.multiplier);
 			}, toDim(plotInfo.plane));
