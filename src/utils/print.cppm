@@ -75,7 +75,7 @@ template<typename T, typename E, typename L, typename A>
 requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
 void printMatInfo(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
 {
-	std::println("{}: {}, size = {},{},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1),mat.extent(2));
+	std::println("\e[1;31m{}\e[0m: \e[2;39m{}, size = {},{},{}\e[0m", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1),mat.extent(2));
 }
 
 
@@ -83,7 +83,7 @@ template<typename T, typename E, typename L, typename A>
 requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
 void printMatInfo(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
 {
-	std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
+	std::println("\e[1;31m{}\e[0m: \e[2;39m{}, size = {},{}\e[0m", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
 }
 
 export template<typename T, typename E, typename L, typename A>
