@@ -723,70 +723,37 @@ public:
 		return time;
 	}
 
-	auto zippedFields() const {
-		static constexpr std::array names {
-			"Hx",
-			"Hy",
-			"Hz",
-			"Ex",
-			"Ey",
-			"Ez",
+	std::vector<std::pair<std::string, cmdspan_3d_t>> zippedFields() const {
+		return {
+			{"Hx",Hx()},
+			{"Hy",Hy()},
+			{"Hz",Hz()},
+			{"Ex",Ex()},
+			{"Ey",Ey()},
+			{"Ez",Ez()},
 		};
-
-		std::array mats {
-			Hx(),
-			Hy(),
-			Hz(),
-			Ex(),
-			Ey(),
-			Ez(),
-		};
-
-		return std::views::zip(names, mats);
 	}
 
-	auto chZippedFields() const {
-		static constexpr std::array names {
-			"Chxh()",
-			"Chyh()",
-			"Chzh()",
-			"Chxe()",
-			"Chye()",
-			"Chze()",
+	std::vector<std::pair<std::string, cmdspan_3d_t>> chZippedFields() const {
+		return {
+			{"Chxh()",Chxh()},
+			{"Chyh()",Chyh()},
+			{"Chzh()",Chzh()},
+			{"Chxe()",Chxe()},
+			{"Chye()",Chye()},
+			{"Chze()",Chze()},
 		};
-
-		std::array mats {
-			Chxh(),
-			Chyh(),
-			Chzh(),
-			Chxe(),
-			Chye(),
-			Chze(),
-		};
-
-		return std::views::zip(names, mats);
 	}
 
-	auto ceZippedFields() const {
-		static constexpr std::array names {
-			"Cexe()",
-			"Ceye()",
-			"Ceze()",
-			"Cexh()",
-			"Ceyh()",
-			"Cezh()",
+	std::vector<std::pair<std::string, cmdspan_3d_t>> ceZippedFields() const {
+		return {
+			{"Cexe()",Cexe()},
+			{"Ceye()",Ceye()},
+			{"Ceze()",Ceze()},
+			{"Cexh()",Cexh()},
+			{"Ceyh()",Ceyh()},
+			{"Cezh()",Cezh()},
 		};
-
-		std::array mats {
-			Cexe(),
-			Ceye(),
-			Ceze(),
-			Cexh(),
-			Ceyh(),
-			Cezh(),
-		};
-
-		return std::views::zip(names, mats);
 	}
 
 	void initCoefs(vk::CommandBuffer commandBuffer)
