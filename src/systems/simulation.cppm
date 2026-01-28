@@ -98,8 +98,11 @@ public:
 
 	template <typename T2, typename E, typename L, typename A>
 	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
-	void fill(Kokkos::mdspan<T2,E,L,A> plane, T multiplier)
+	void fill(Kokkos::mdspan<T2,E,L,A> plane, T multiplier, bool debug)
 	{
+		if(debug)
+			debugPrint("plane", plane);
+
 		if(plane.empty())
 		{
 			resize(0, 0);
@@ -131,6 +134,12 @@ public:
 				}
 			}
 		}
+
+		if constexpr (std::is_same_v<T, float>)
+		{
+			if(debug)
+				std::println("{}", buffer);
+		}
 	}
 
 	template <typename T2,
@@ -143,13 +152,22 @@ public:
 			Kokkos::mdspan<T2,E,L,A> xPlane,
 			Kokkos::mdspan<T2,E2,L2,A2> yPlane,
 			Kokkos::mdspan<T2,E3,L3,A3> zPlane,
-			T multiplier
+			T multiplier,
+			bool debug
 			)
 	{
 		if(xPlane.empty() || yPlane.empty() || zPlane.empty())
 		{
 			resize(0, 0);
 			return;
+		}
+
+
+		if(debug)
+		{
+			debugPrint("xPlane", xPlane);
+			debugPrint("yPlane", yPlane);
+			debugPrint("zPlane", zPlane);
 		}
 
 		updateColMajor(xPlane);
@@ -175,6 +193,12 @@ public:
 					buffer[bi++] = magnitude(xPlane[i,j], yPlane[i,j], zPlane[i,j], multiplier);
 				}
 			}
+		}
+
+		if constexpr (std::is_same_v<T, float>)
+		{
+			if(debug)
+				std::println("{}", buffer);
 		}
 	}
 
@@ -383,10 +407,7 @@ private:
 			{
 				auto plane = slice<dim>(matrix, plotInfo.planeIndex);
 
-				if(settings.debug())
-					debugPrint("plane", plane);
-
-				heatmapData.fill(plane, plotInfo.multiplier);
+				heatmapData.fill(plane, plotInfo.multiplier, settings.debug());
 			}, toDim(plotInfo.plane));
 		}
 		else
@@ -402,14 +423,7 @@ private:
 				auto yPlane = slice<dim>(yMatrix, plotInfo.planeIndex);
 				auto zPlane = slice<dim>(zMatrix, plotInfo.planeIndex);
 
-				if(settings.debug())
-				{
-					debugPrint("xPlane", xPlane);
-					debugPrint("yPlane", yPlane);
-					debugPrint("zPlane", zPlane);
-				}
-
-				heatmapData.fill(xPlane, yPlane, zPlane, plotInfo.multiplier);
+				heatmapData.fill(xPlane, yPlane, zPlane, plotInfo.multiplier, settings.debug());
 			}, toDim(plotInfo.plane));
 		}
 	}
