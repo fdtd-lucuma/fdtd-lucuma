@@ -36,6 +36,7 @@ public:
 	std::span<const std::string> positionalArguments() const;
 
 	bool isHeadless() const;
+	bool debug() const;
 	const std::optional<std::filesystem::path>& graphPath() const;
 
 	std::optional<std::size_t> sizeX() const;
@@ -53,6 +54,7 @@ private:
 	std::vector<std::string> _positionalArguments;
 
 	bool                                 _isHeadless = true;
+	bool                                 _debug      = false;
 	std::optional<std::filesystem::path> _graphPath   = std::nullopt;
 
 	std::optional<std::size_t> _sizeX = std::nullopt;

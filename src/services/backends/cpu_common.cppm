@@ -56,12 +56,13 @@ public:
 			saver.start(data);
 		}
 
-#ifndef NDEBUG
-		//for(auto&& [name, mat]: data.chZippedFields())
-		//	debugPrintSlice(name, mat, data.size);
-		//for(auto&& [name, mat]: data.ceZippedFields())
-		//	debugPrintSlice(name, mat, data.size);
-#endif
+		if(settings.debug())
+		{
+			for(auto&& [name, mat]: data.chZippedFields())
+				debugPrintSlice(name, mat, data.size);
+			for(auto&& [name, mat]: data.ceZippedFields())
+				debugPrintSlice(name, mat, data.size);
+		}
 
 		return id;
 	}
@@ -79,10 +80,12 @@ public:
 
 			f(data);
 
-#ifndef NDEBUG
-			//for(auto&& [name, mat]: data.zippedFields())
-			//	debugPrintSlice(name, mat, data.size);
-#endif
+			if(settings.debug())
+			{
+				for(auto&& [name, mat]: data.zippedFields())
+					debugPrintSlice(name, mat, data.size);
+			}
+
 		}
 
 		return canContinue;

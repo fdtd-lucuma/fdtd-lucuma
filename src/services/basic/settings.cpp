@@ -33,6 +33,11 @@ bool Settings::isHeadless() const
 	return argumentParser.isHeadless();
 }
 
+bool Settings::debug() const
+{
+	return argumentParser.debug();
+}
+
 std::size_t Settings::sizeX() const
 {
 	return argumentParser.sizeX().value_or(defaultSizeX);

@@ -49,6 +49,11 @@ bool ArgumentParser::isHeadless() const
 	return _isHeadless;
 }
 
+bool ArgumentParser::debug() const
+{
+	return _debug;
+}
+
 const std::optional<std::filesystem::path>& ArgumentParser::graphPath() const
 {
 	return _graphPath;
@@ -106,7 +111,9 @@ void ArgumentParser::usage(int exit_code)
 		"\t-p, --precision=fN Floating point precision as N bits [default={:?}].\n"
 		"\t                   Values: {}.\n"
 		"\t-s, --save-as=NAME Save as [default={:?}].\n"
-		"\t                   Values: {}.\n",
+		"\t                   Values: {}.\n"
+		"\t-d, --debug        Print debug values.\n"
+		"\t-D, --no-debug     Don't print debug values.\n",
 		argv0(),
 		Settings::defaultSizeX,
 		Settings::defaultSizeY,
@@ -138,12 +145,14 @@ enum class Argument: int
 	backend     = 'b',
 	precision   = 'p',
 	save_as     = 's',
+	debug       = 'd',
+	no_debug    = 'D',
 };
 
 void ArgumentParser::parse(int argc, char** argv)
 {
 	int c;
-	static const char shortopts[] = "hHgG:x:y:z:t:b:p:s:";
+	static const char shortopts[] = "hHgG:x:y:z:t:b:p:s:dD";
 	static const option options[] {
 		{"help",        no_argument,       nullptr, (int)Argument::help},
 		{"headless",    no_argument,       nullptr, (int)Argument::headless},
@@ -156,6 +165,8 @@ void ArgumentParser::parse(int argc, char** argv)
 		{"backend",     required_argument, nullptr, (int)Argument::backend},
 		{"precision",   required_argument, nullptr, (int)Argument::precision},
 		{"save_as",     required_argument, nullptr, (int)Argument::save_as},
+		{"debug",       no_argument,       nullptr, (int)Argument::debug},
+		{"no-debug",    no_argument,       nullptr, (int)Argument::no_debug},
 		{nullptr,       0,                 nullptr, 0},
 	};
 
@@ -184,6 +195,14 @@ void ArgumentParser::handleOption(int shortopt)
 
 		case Argument::no_headless:
 			_isHeadless = false;
+			break;
+
+		case Argument::debug:
+			_debug = true;
+			break;
+
+		case Argument::no_debug:
+			_debug = false;
 			break;
 
 		case Argument::graph:
