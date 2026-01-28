@@ -81,7 +81,7 @@ void debugPrint(Kokkos::mdspan<T,E,L,A> mat)
 		{
 			for(std::size_t k = 0; k < mat.extent(2); k++)
 			{
-				std::print("{:.2f} ", toPrintable(mat[i,j,k]));
+				std::print("{} ", toPrintable(mat[i,j,k]));
 			}
 			std::println();
 		}
@@ -101,7 +101,7 @@ void debugPrint(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
 		{
 			for(std::size_t k = 0; k < mat.extent(2); k++)
 			{
-				std::print("{:.2f} ", toPrintable(mat[i,j,k]));
+				std::print("{} ", toPrintable(mat[i,j,k]));
 			}
 			std::println();
 		}
