@@ -273,7 +273,6 @@ public:
 				.Ce = _Chxe,
 				.CM = _CMhx,
 				.mu = _mux,
-				.delta = deltaX,
 			},
 			.Hy = {
 				.paddedDims = paddedHyDims,
@@ -282,7 +281,6 @@ public:
 				.Ce = _Chye,
 				.CM = _CMhy,
 				.mu = _muy,
-				.delta = deltaY,
 			},
 			.Hz = {
 				.paddedDims = paddedHzDims,
@@ -291,7 +289,6 @@ public:
 				.Ce = _Chze,
 				.CM = _CMhz,
 				.mu = _muz,
-				.delta = deltaZ,
 			},
 			.Ex = {
 				.paddedDims = paddedExDims,
@@ -300,7 +297,6 @@ public:
 				.Ce = _Cexh,
 				.CM = _CEEx,
 				.mu = _epsx,
-				.delta = deltaX,
 			},
 			.Ey = {
 				.paddedDims = paddedEyDims,
@@ -309,7 +305,6 @@ public:
 				.Ce = _Ceyh,
 				.CM = _CEEy,
 				.mu = _epsy,
-				.delta = deltaY,
 			},
 			.Ez = {
 				.paddedDims = paddedEzDims,
@@ -318,7 +313,6 @@ public:
 				.Ce = _Cezh,
 				.CM = _CEEz,
 				.mu = _epsz,
-				.delta = deltaZ,
 			},
 		}),
 		updateHPipelines(UpdateHPipelinesCreateInfo<T>{
@@ -331,8 +325,6 @@ public:
 				.paddedHDims   = paddedHxDims,
 				.paddedEc1Dims = paddedEyDims,
 				.paddedEc2Dims = paddedEzDims,
-				.paddedMu1Dims = paddedHyDims,
-				.paddedMu2Dims = paddedHzDims,
 				.HDims         = HxDims,
 
 				.Ec1Delta = -EzDimsDelta,
@@ -343,8 +335,6 @@ public:
 				.Ce  = _Chxe,
 				.Ec1 = _Ey,
 				.Ec2 = _Ez,
-				.mu1 = _muy,
-				.mu2 = _muz,
 				.delta1 = deltaY,
 				.delta2 = deltaZ,
 
@@ -354,8 +344,6 @@ public:
 				.paddedHDims   = paddedHyDims,
 				.paddedEc1Dims = paddedEzDims,
 				.paddedEc2Dims = paddedExDims,
-				.paddedMu1Dims = paddedHzDims,
-				.paddedMu2Dims = paddedHxDims,
 				.HDims         = HyDims,
 
 				.Ec1Delta = -ExDimsDelta,
@@ -366,8 +354,6 @@ public:
 				.Ce  = _Chye,
 				.Ec1 = _Ez,
 				.Ec2 = _Ex,
-				.mu1 = _muz,
-				.mu2 = _mux,
 				.delta1 = deltaZ,
 				.delta2 = deltaX,
 
@@ -377,8 +363,6 @@ public:
 				.paddedHDims   = paddedHzDims,
 				.paddedEc1Dims = paddedExDims,
 				.paddedEc2Dims = paddedEyDims,
-				.paddedMu1Dims = paddedHxDims,
-				.paddedMu2Dims = paddedHyDims,
 				.HDims         = HzDims,
 
 				.Ec1Delta = -EyDimsDelta,
@@ -389,8 +373,6 @@ public:
 				.Ce  = _Chze,
 				.Ec1 = _Ex,
 				.Ec2 = _Ey,
-				.mu1 = _mux,
-				.mu2 = _muy,
 				.delta1 = deltaX,
 				.delta2 = deltaY,
 
@@ -407,8 +389,6 @@ public:
 				.paddedEDims    = paddedExDims,
 				.paddedHc1Dims  = paddedHzDims,
 				.paddedHc2Dims  = paddedHyDims,
-				.paddedEps1Dims = paddedEzDims,
-				.paddedEps2Dims = paddedEyDims,
 				.start          = -HxDimsDelta,
 
 				.Hc1Delta = EyDimsDelta,
@@ -419,8 +399,6 @@ public:
 				.Ch  = _Cexh,
 				.Hc1 = _Hz,
 				.Hc2 = _Hy,
-				.eps1 = _epsz,
-				.eps2 = _epsy,
 				.delta1 = deltaZ,
 				.delta2 = deltaY,
 
@@ -430,8 +408,6 @@ public:
 				.paddedEDims   = paddedEyDims,
 				.paddedHc1Dims = paddedHxDims,
 				.paddedHc2Dims = paddedHzDims,
-				.paddedEps1Dims = paddedExDims,
-				.paddedEps2Dims = paddedEzDims,
 				.start         = -HyDimsDelta,
 
 				.Hc1Delta = EzDimsDelta,
@@ -442,8 +418,6 @@ public:
 				.Ch  = _Ceyh,
 				.Hc1 = _Hx,
 				.Hc2 = _Hz,
-				.eps1 = _epsx,
-				.eps2 = _epsz,
 				.delta1 = deltaX,
 				.delta2 = deltaZ,
 
@@ -453,8 +427,6 @@ public:
 				.paddedEDims    = paddedEzDims,
 				.paddedHc1Dims  = paddedHyDims,
 				.paddedHc2Dims  = paddedHxDims,
-				.paddedEps1Dims = paddedEyDims,
-				.paddedEps2Dims = paddedExDims,
 				.start          = -HzDimsDelta,
 
 				.Hc1Delta = ExDimsDelta,
@@ -465,8 +437,6 @@ public:
 				.Ch  = _Cezh,
 				.Hc1 = _Hy,
 				.Hc2 = _Hx,
-				.eps1 = _epsy,
-				.eps2 = _epsx,
 				.delta1 = deltaY,
 				.delta2 = deltaX,
 

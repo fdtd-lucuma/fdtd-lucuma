@@ -38,8 +38,6 @@ struct UpdateHPipelineCreateInfo
 	svec3 paddedHDims;
 	svec3 paddedEc1Dims;
 	svec3 paddedEc2Dims;
-	svec3 paddedMu1Dims;
-	svec3 paddedMu2Dims;
 	svec3 HDims;
 
 	svec3Delta Ec1Delta;
@@ -50,8 +48,6 @@ struct UpdateHPipelineCreateInfo
 	vulkan::Buffer& Ce;
 	vulkan::Buffer& Ec1;
 	vulkan::Buffer& Ec2;
-	vulkan::Buffer& mu1;
-	vulkan::Buffer& mu2;
 
 	T deltaT;
 	T delta1;
@@ -73,8 +69,6 @@ private:
 		alignas(sizeof(svec4)) svec3 paddedHDims;
 		alignas(sizeof(svec4)) svec3 paddedEc1Dims;
 		alignas(sizeof(svec4)) svec3 paddedEc2Dims;
-		alignas(sizeof(svec4)) svec3 paddedMu1Dims;
-		alignas(sizeof(svec4)) svec3 paddedMu2Dims;
 		alignas(sizeof(svec4)) svec3 HDims;
 		T deltaT;
 		T delta1;
@@ -91,8 +85,6 @@ public:
 			.paddedHDims   = createInfo.paddedHDims,
 			.paddedEc1Dims = createInfo.paddedEc1Dims,
 			.paddedEc2Dims = createInfo.paddedEc2Dims,
-			.paddedMu1Dims = createInfo.paddedMu1Dims,
-			.paddedMu2Dims = createInfo.paddedMu2Dims,
 			.HDims         = createInfo.HDims,
 			.deltaT         = createInfo.deltaT,
 			.delta1         = createInfo.delta1,
@@ -110,8 +102,6 @@ public:
 						createInfo.Ce,
 						createInfo.Ec1,
 						createInfo.Ec2,
-						createInfo.mu1,
-						createInfo.mu2,
 					}
 				}
 			},
@@ -141,8 +131,6 @@ struct UpdateHPipelineInfo
 	svec3 paddedHDims;
 	svec3 paddedEc1Dims;
 	svec3 paddedEc2Dims;
-	svec3 paddedMu1Dims;
-	svec3 paddedMu2Dims;
 	svec3 HDims;
 
 	svec3Delta Ec1Delta;
@@ -153,8 +141,6 @@ struct UpdateHPipelineInfo
 	vulkan::Buffer& Ce;
 	vulkan::Buffer& Ec1;
 	vulkan::Buffer& Ec2;
-	vulkan::Buffer& mu1;
-	vulkan::Buffer& mu2;
 
 	T delta1;
 	T delta2;
@@ -187,8 +173,6 @@ UpdateHPipelineCreateInfo<T> map(const UpdateHPipelinesCreateInfo<T>& createInfo
 		.paddedHDims   = pipelineInfo.paddedHDims,
 		.paddedEc1Dims = pipelineInfo.paddedEc1Dims,
 		.paddedEc2Dims = pipelineInfo.paddedEc2Dims,
-		.paddedMu1Dims = pipelineInfo.paddedMu1Dims,
-		.paddedMu2Dims = pipelineInfo.paddedMu2Dims,
 		.HDims         = pipelineInfo.HDims,
 		.Ec1Delta      = pipelineInfo.Ec1Delta,
 		.Ec2Delta      = pipelineInfo.Ec2Delta,
@@ -197,8 +181,6 @@ UpdateHPipelineCreateInfo<T> map(const UpdateHPipelinesCreateInfo<T>& createInfo
 		.Ce            = pipelineInfo.Ce,
 		.Ec1           = pipelineInfo.Ec1,
 		.Ec2           = pipelineInfo.Ec2,
-		.mu1           = pipelineInfo.mu1,
-		.mu2           = pipelineInfo.mu2,
 		.deltaT        = createInfo.deltaT,
 		.delta1        = pipelineInfo.delta1,
 		.delta2        = pipelineInfo.delta2,

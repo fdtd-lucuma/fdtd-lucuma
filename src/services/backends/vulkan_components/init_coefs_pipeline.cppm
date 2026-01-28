@@ -44,7 +44,6 @@ struct InitCoefPipelineCreateInfo
 	svec3 dims;
 	T CrImp;
 	T deltaT;
-	T delta;
 
 	vulkan::Buffer& Ch;
 	vulkan::Buffer& Ce;
@@ -68,7 +67,6 @@ private:
 		alignas(sizeof(svec4)) svec3 dims;
 		T CrImp;
 		T deltaT;
-		T delta;
 	} pushConstants;
 
 	svec3 groupCount;
@@ -82,7 +80,6 @@ public:
 			.dims = createInfo.dims,
 			.CrImp = createInfo.CrImp,
 			.deltaT = createInfo.deltaT,
-			.delta = createInfo.delta,
 		}),
 		groupCount(workGroupCount(createInfo.paddedDims, createInfo.workGroupSize)),
 		pipeline(createInfo.compute.createPipeline({
@@ -125,8 +122,6 @@ struct InitCoefPipelineInfo
 	vulkan::Buffer& CM;
 	vulkan::Buffer& mu;
 
-	T delta;
-
 	std::string_view entrypoint = "main";
 };
 
@@ -162,7 +157,6 @@ InitCoefPipelineCreateInfo<T> map(const InitCoefPipelinesCreateInfo<T> createInf
 		.dims          = pipelineInfo.dims,
 		.CrImp         = crImp<F>(createInfo.Cr,createInfo.Imp0),
 		.deltaT        = createInfo.deltaT,
-		.delta         = pipelineInfo.delta,
 		.Ch            = pipelineInfo.Ch,
 		.Ce            = pipelineInfo.Ce,
 		.CM            = pipelineInfo.CM,
