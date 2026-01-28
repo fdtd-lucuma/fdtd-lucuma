@@ -72,6 +72,7 @@ inline auto toPrintable(T x)
 }
 
 export template<typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
 void debugPrint(Kokkos::mdspan<T,E,L,A> mat)
 {
 	for(std::size_t i = 0; i < mat.extent(0); i++)
@@ -91,6 +92,43 @@ void debugPrint(Kokkos::mdspan<T,E,L,A> mat)
 }
 
 export template<typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
+void debugPrint(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
+{
+	for(std::size_t i = 0; i < mat.extent(0); i++)
+	{
+		for(std::size_t j = 0; j < mat.extent(1); j++)
+		{
+			for(std::size_t k = 0; k < mat.extent(2); k++)
+			{
+				std::print("{:.2f} ", toPrintable(mat[i,j,k]));
+			}
+			std::println();
+		}
+		std::println();
+	}
+
+	std::println("{}: {}, size = {},{},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1),mat.extent(2));
+}
+
+export template<typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
+void debugPrint(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
+{
+	for(std::size_t i = 0; i < mat.extent(0); i++)
+	{
+		for(std::size_t j = 0; j < mat.extent(1); j++)
+		{
+			std::print("{:.2f} ", toPrintable(mat[i,j]));
+		}
+		std::println();
+	}
+
+	std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
+}
+
+export template<typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
 void debugPrintSlice(std::string_view name, Kokkos::mdspan<T,E,L,A> _mat, svec3 size)
 {
 	auto sliceIndex = size.x/2;
@@ -109,16 +147,5 @@ void debugPrintSlice(std::string_view name, Kokkos::mdspan<T,E,L,A> _mat, svec3 
 
 	std::println("{}", entt::type_id<typeof(mat)>().name());
 }
-
-export template <typename T, typename E, typename L, typename A>
-void debugPrint(std::string_view name, Kokkos::mdspan<T, E, L, A> mat)
-{
-	static_assert(mat.rank() == 2);
-
-	std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
-
-}
-
-
 
 }
