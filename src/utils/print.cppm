@@ -71,30 +71,27 @@ inline auto toPrintable(T x)
 		return (float)x;
 }
 
-export template<typename T, typename E, typename L, typename A>
+template<typename T, typename E, typename L, typename A>
 requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
-void debugPrint(Kokkos::mdspan<T,E,L,A> mat)
+void printMatInfo(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
 {
-	for(std::size_t i = 0; i < mat.extent(0); i++)
-	{
-		for(std::size_t j = 0; j < mat.extent(1); j++)
-		{
-			for(std::size_t k = 0; k < mat.extent(2); k++)
-			{
-				std::print("{} ", toPrintable(mat[i,j,k]));
-			}
-			std::println();
-		}
-		std::println();
-	}
+	std::println("{}: {}, size = {},{},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1),mat.extent(2));
+}
 
-	std::println("{}", entt::type_id<typeof(mat)>().name());
+
+template<typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
+void printMatInfo(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
+{
+	std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
 }
 
 export template<typename T, typename E, typename L, typename A>
 requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
 void debugPrint(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
 {
+	printMatInfo(name, mat);
+
 	for(std::size_t i = 0; i < mat.extent(0); i++)
 	{
 		for(std::size_t j = 0; j < mat.extent(1); j++)
@@ -107,34 +104,13 @@ void debugPrint(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
 		}
 		std::println();
 	}
-
-	std::println("{}: {}, size = {},{},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1),mat.extent(2));
 }
 
 export template<typename T, typename E, typename L, typename A>
 requires (Kokkos::mdspan<T,E,L,A>::rank() == 2)
 void debugPrint(std::string_view name, Kokkos::mdspan<T,E,L,A> mat)
 {
-	for(std::size_t i = 0; i < mat.extent(0); i++)
-	{
-		for(std::size_t j = 0; j < mat.extent(1); j++)
-		{
-			std::print("{:.2f} ", toPrintable(mat[i,j]));
-		}
-		std::println();
-	}
-
-	std::println("{}: {}, size = {},{}", name, entt::type_id<typeof(mat)>().name(), mat.extent(0), mat.extent(1));
-}
-
-export template<typename T, typename E, typename L, typename A>
-requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
-void debugPrintSlice(std::string_view name, Kokkos::mdspan<T,E,L,A> _mat, svec3 size)
-{
-	auto sliceIndex = size.x/2;
-	auto mat = Kokkos::submdspan(_mat, sliceIndex, Kokkos::full_extent, Kokkos::full_extent);
-
-	std::println("{} slice x={}", name, sliceIndex);
+	printMatInfo(name, mat);
 
 	for(std::size_t i = 0; i < mat.extent(0); i++)
 	{
@@ -145,7 +121,26 @@ void debugPrintSlice(std::string_view name, Kokkos::mdspan<T,E,L,A> _mat, svec3 
 		std::println();
 	}
 
-	std::println("{}", entt::type_id<typeof(mat)>().name());
+}
+
+export template<typename T, typename E, typename L, typename A>
+requires (Kokkos::mdspan<T,E,L,A>::rank() == 3)
+void debugPrintSlice(std::string_view name, Kokkos::mdspan<T,E,L,A> _mat, svec3 size)
+{
+	auto sliceIndex = size.x/2;
+	auto mat = Kokkos::submdspan(_mat, sliceIndex, Kokkos::full_extent, Kokkos::full_extent);
+
+	printMatInfo(std::format("{} slice x={}", name, sliceIndex), mat);
+
+	for(std::size_t i = 0; i < mat.extent(0); i++)
+	{
+		for(std::size_t j = 0; j < mat.extent(1); j++)
+		{
+			std::print("{} ", toPrintable(mat[i,j]));
+		}
+		std::println();
+	}
+
 }
 
 }
