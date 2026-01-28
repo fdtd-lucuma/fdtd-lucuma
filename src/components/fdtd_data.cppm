@@ -489,8 +489,7 @@ public:
 		mdspan_3d_t Ce,
 		cmdspan_3d_t CM,
 		cmdspan_3d_t mu,
-		const T CrImp0,
-		T delta
+		const T CrImp0
 	)
 	{
 		assert(Ch.extents() == Ce.extents());
@@ -510,7 +509,7 @@ public:
 					const T c = (CM[i,j,k]*deltaT)/((T)2*mu[i,j,k]);
 
 					Ch[i,j,k] = ((T)1-c)/((T)1+c);
-					Ce[i,j,k] = ((T)1/((T)1+c))*CrImp0*deltaT/(mu[i,j,k]*delta);
+					Ce[i,j,k] = ((T)1/((T)1+c))*CrImp0*deltaT/mu[i,j,k];
 				}
 			}
 		}
@@ -523,8 +522,7 @@ public:
 			Chxe(),
 			CMhx(),
 			mux(),
-			Cr/imp0,
-			deltaX
+			Cr/imp0
 		);
 	}
 
@@ -535,8 +533,7 @@ public:
 			Chye(),
 			CMhy(),
 			muy(),
-			Cr/imp0,
-			deltaY
+			Cr/imp0
 		);
 	}
 
@@ -547,8 +544,7 @@ public:
 			Chze(),
 			CMhz(),
 			muz(),
-			Cr/imp0,
-			deltaZ
+			Cr/imp0
 		);
 	}
 
@@ -559,8 +555,7 @@ public:
 			Cexh(),
 			CEEx(),
 			epsx(),
-			Cr*imp0,
-			deltaX
+			Cr*imp0
 		);
 	}
 
@@ -571,8 +566,7 @@ public:
 			Ceyh(),
 			CEEy(),
 			epsy(),
-			Cr*imp0,
-			deltaY
+			Cr*imp0
 		);
 	}
 
@@ -583,8 +577,7 @@ public:
 			Cezh(),
 			CEEz(),
 			epsz(),
-			Cr*imp0,
-			deltaZ
+			Cr*imp0
 		);
 	}
 
@@ -605,8 +598,6 @@ public:
 		cmdspan_3d_t Ce,
 		cmdspan_3d_t Ec1,
 		cmdspan_3d_t Ec2,
-		cmdspan_3d_t mu1,
-		cmdspan_3d_t mu2,
 		T delta1,
 		T delta2
 	)
@@ -638,7 +629,7 @@ public:
 					const auto Ec2k = k + Ec2Delta.z;
 
 					Hc[i,j,k] = Ch[i,j,k]*Hc[i,j,k] + Ce[i,j,k] *
-						deltaT*((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k])/(mu1[i,j,k]*delta1) - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k])/(mu2[i,j,k]*delta2))
+						deltaT*((Ec1[Ec1i,Ec1j,Ec1k]-Ec1[i,j,k])/delta2 - (Ec2[Ec2i,Ec2j,Ec2k]-Ec2[i,j,k])/delta1)
 					;
 				}
 			}
@@ -653,8 +644,6 @@ public:
 		cmdspan_3d_t Hc1,
 		cmdspan_3d_t Hc2,
 		svec3 start,
-		cmdspan_3d_t eps1,
-		cmdspan_3d_t eps2,
 		T delta1,
 		T delta2
 	)
@@ -686,7 +675,7 @@ public:
 					const auto Hc2k = k + Hc2Delta.z;
 
 					Ec[i,j,k] = Ce[i,j,k]*Ec[i,j,k] + Ch[i,j,k] *
-						deltaT*((Hc1[i,j,k]-Hc1[Hc1i,Hc1j,Hc1k])/(eps1[i,j,k]*delta1) - (Hc2[i,j,k]-Hc2[Hc2i,Hc2j,Hc2k])/(eps2[i,j,k]*delta2))
+						deltaT*((Hc1[i,j,k]-Hc1[Hc1i,Hc1j,Hc1k])/delta2 - (Hc2[i,j,k]-Hc2[Hc2i,Hc2j,Hc2k])/delta1)
 					;
 				}
 			}
@@ -701,8 +690,6 @@ public:
 			Chxe(),
 			Ey(),
 			Ez(),
-			muy(),
-			muz(),
 			deltaY,
 			deltaZ
 		);
@@ -716,8 +703,6 @@ public:
 			Chye(),
 			Ez(),
 			Ex(),
-			muz(),
-			mux(),
 			deltaZ,
 			deltaX
 		);
@@ -731,8 +716,6 @@ public:
 			Chze(),
 			Ex(),
 			Ey(),
-			mux(),
-			muy(),
 			deltaX,
 			deltaY
 		);
@@ -747,8 +730,6 @@ public:
 			Hz(),
 			Hy(),
 			-HxDimsDelta,
-			epsz(),
-			epsy(),
 			deltaZ,
 			deltaY
 		);
@@ -763,8 +744,6 @@ public:
 			Hx(),
 			Hz(),
 			-HyDimsDelta,
-			epsx(),
-			epsz(),
 			deltaX,
 			deltaZ
 		);
@@ -779,8 +758,6 @@ public:
 			Hy(),
 			Hx(),
 			-HzDimsDelta,
-			epsy(),
-			epsx(),
 			deltaY,
 			deltaX
 		);
