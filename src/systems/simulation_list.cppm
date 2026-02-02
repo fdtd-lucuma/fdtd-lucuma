@@ -75,6 +75,7 @@ private:
 	void resetNewSimulationInfo();
 	void startSimulation();
 	void clampSizes();
+	void simulationTable();
 };
 
 }

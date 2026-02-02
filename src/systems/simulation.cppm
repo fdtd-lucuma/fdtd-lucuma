@@ -263,9 +263,9 @@ public:
 		backendService(_systems.inject<backend_t>()),
 		registry(_systems.inject<entt::registry>()),
 		settings(_systems.inject<Settings>()),
+		simulationId(id),
 		gaussPosition(createInfo.gaussPosition),
-		maxTime(createInfo.maxTime),
-		simulationId(id)
+		maxTime(createInfo.maxTime)
 	{
 		std::println("Create {} {} simulation", backend, precision);
 

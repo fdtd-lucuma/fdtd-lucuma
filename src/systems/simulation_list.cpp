@@ -21,8 +21,9 @@ import lucuma.utils;
 import lucuma.services.backends;
 import lucuma.utils.imgui;
 
-import std;
 import imgui;
+import magic_enum;
+import std;
 
 namespace lucuma::systems
 {
@@ -51,9 +52,34 @@ void SimulationList::update([[maybe_unused]]const events::Update& event)
 		ImGui::OpenPopup("New simulation");
 	}
 
+	simulationTable();
+
 	newSimulationPopup();
 
 	ImGui::End();
+}
+
+void SimulationList::simulationTable()
+{
+	if(ImGui::BeginTable("Simulations", 1))
+	{
+
+		for(auto &&[id, info]: registry.view<FdtdSimulationInfo>().each())
+		{
+			ImGui::TableNextRow();
+
+			ImGui::TableNextColumn();
+			ImGui::Text("%d", id);
+
+			ImGui::TableNextColumn();
+			utils::imgui::Enum(info.backend);
+
+			ImGui::TableNextColumn();
+			utils::imgui::Enum(info.precision);
+		}
+
+		ImGui::EndTable();
+	}
 }
 
 template <typename T, std::size_t N>

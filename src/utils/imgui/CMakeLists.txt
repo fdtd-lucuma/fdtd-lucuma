@@ -19,6 +19,7 @@ target_sources(${PROJECT_NAME}
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			imgui.cppm
 			combo.cppm
+			imgui.cppm
+			text.cppm
 )

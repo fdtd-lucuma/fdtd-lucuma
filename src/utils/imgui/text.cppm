@@ -16,7 +16,21 @@
 
 module;
 
-export module lucuma.utils.imgui;
+export module lucuma.utils.imgui:text;
 
-export import :combo;
-export import :text;
+import imgui;
+import magic_enum;
+import std;
+
+namespace lucuma::utils::imgui
+{
+
+export template <typename T>
+requires std::is_enum_v<T>
+void Enum(T v)
+{
+	ImGui::Text("%s", magic_enum::enum_name(v).begin());
+}
+
+}
+
