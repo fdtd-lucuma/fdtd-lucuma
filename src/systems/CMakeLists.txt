@@ -16,12 +16,14 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		root.cpp
 		simulation_parameters.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
 			base.cppm
+			root.cppm
 			simulation.cppm
 			simulation_parameters.cppm
 			systems.cppm

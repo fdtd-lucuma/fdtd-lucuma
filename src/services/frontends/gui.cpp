@@ -36,7 +36,6 @@ Gui::Gui([[maybe_unused]]Injector& injector):
 	registry(injector.inject<entt::registry>()),
 	glfw(injector.inject<window::Glfw>()),
 	graphics(injector.inject<vulkan::Graphics>()),
-	triangleDemo(injector.inject<vulkan::TriangleDemo>()),
 	imgui(injector.inject<vulkan::Imgui>()),
 	settings(injector.inject<basic::Settings>()),
 	systems(injector.inject<basic::Systems>())
@@ -49,7 +48,7 @@ void Gui::start()
 
 	float timeDelta = 1.f/60;
 
-	systems.start<systems::SimulationParameters>();
+	systems.start<systems::Root>();
 
 	while(!glfw.shouldClose())
 	{

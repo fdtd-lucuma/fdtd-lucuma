@@ -21,5 +21,6 @@ export module lucuma.systems;
 import lucuma.utils;
 
 export import :base;
-export import :simulation_parameters;
+export import :root;
 export import :simulation;
+export import :simulation_parameters;

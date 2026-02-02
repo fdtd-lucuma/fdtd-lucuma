@@ -16,42 +16,33 @@
 
 module;
 
-export module lucuma.services.frontends:gui;
+export module lucuma.systems:root;
 
-import lucuma.utils;
-import lucuma.services.window;
-import lucuma.services.vulkan;
 import lucuma.services.basic;
-import lucuma.legacy_headers.entt;
-import lucuma.events;
+import lucuma.utils;
+
+import :base;
 
 import std;
 
-namespace lucuma::services::frontends
+namespace lucuma::systems
 {
 
 using namespace lucuma::utils;
 
-export class Gui
+using namespace services::basic;
+
+export
+class Root: public Base<Root>
 {
 public:
-	Gui(Injector& injector);
-
-	void start();
+	Root(Systems& _systems);
 
 private:
-	Injector& _injector;
+	Settings&       settings;
+	entt::registry& registry;
 
-	entt::dispatcher&     dispatcher;
-	entt::registry&       registry;
-	window::Glfw&         glfw;
-	vulkan::Graphics&     graphics;
-	vulkan::Imgui&        imgui;
-	basic::Settings&      settings;
-	basic::Systems&       systems;
-
-	void drawFrame(float timeDelta);
-
+	void init();
 };
 
 }
