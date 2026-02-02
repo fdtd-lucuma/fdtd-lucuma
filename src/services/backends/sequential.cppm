@@ -53,9 +53,9 @@ public:
 		SequentialBase(injector)
 	{ }
 
-	virtual entt::entity init(const components::FdtdDataCreateInfo& createInfo)
+	virtual void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
 	{
-		return common.init<T>(createInfo);
+		common.init<T>(createInfo, id);
 	}
 
 	virtual bool step(entt::entity id)

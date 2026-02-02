@@ -73,10 +73,8 @@ public:
 	{ }
 
 
-	virtual entt::entity init(const components::FdtdDataCreateInfo& createInfo)
+	virtual void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
 	{
-		auto id = registry.create();
-
 		create_info_t vulkanCreateInfo {
 			.fdtdDataCreateInfo = createInfo,
 			.compute = vulkanCompute,
@@ -110,8 +108,6 @@ public:
 			for(auto&& [name, mat]: data.ceZippedFields())
 				debugPrintSlice(name, mat, data.size);
 		}
-
-		return id;
 	}
 
 	virtual bool step(entt::entity id)

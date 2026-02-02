@@ -258,18 +258,19 @@ public:
 	using backend_t = BackendTraits<backend>::template type<precision>;
 	using data_t = backend_t::data_t;
 
-	Simulation(Systems& _systems, const components::FdtdDataCreateInfo& createInfo):
+	Simulation(Systems& _systems, const components::FdtdDataCreateInfo& createInfo, entt::entity id):
 		base_t(_systems),
 		backendService(_systems.inject<backend_t>()),
 		registry(_systems.inject<entt::registry>()),
 		settings(_systems.inject<Settings>()),
 		gaussPosition(createInfo.gaussPosition),
-		maxTime(createInfo.maxTime)
+		maxTime(createInfo.maxTime),
+		simulationId(id)
 	{
 		std::println("Create {} {} simulation", backend, precision);
 
 		// TODO: Input from here
-		simulationId = backendService.init(createInfo);
+		backendService.init(createInfo, id);
 		title = std::format("Progress##{}", (std::underlying_type_t<entt::entity>)simulationId);
 	}
 
@@ -300,7 +301,7 @@ private:
 	entt::registry& registry;
 	Settings&       settings;
 
-	entt::entity simulationId = entt::null;
+	entt::entity simulationId;
 
 	PlotInfo plotInfo;
 

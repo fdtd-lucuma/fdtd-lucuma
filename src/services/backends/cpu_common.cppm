@@ -38,10 +38,8 @@ public:
 	CpuCommon(Injector& injector);
 
 	template <typename T, typename data_t = components::FdtdData<T>, typename saver_t = Saver<data_t>>
-	entt::entity init(const components::FdtdDataCreateInfo& createInfo)
+	void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
 	{
-		auto id = registry.create();
-
 		SaverCreateInfo saverCreateInfo {
 			.basePath = ".",
 		};
@@ -63,8 +61,6 @@ public:
 			for(auto&& [name, mat]: data.ceZippedFields())
 				debugPrintSlice(name, mat, data.size);
 		}
-
-		return id;
 	}
 
 	template <typename T, typename data_t = components::FdtdData<T>, typename F>

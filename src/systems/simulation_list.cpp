@@ -41,7 +41,7 @@ void SimulationList::init()
 {
 }
 
-void SimulationList::update(const events::Update& event)
+void SimulationList::update([[maybe_unused]]const events::Update& event)
 {
 	ImGui::Begin("FDTD");
 
@@ -233,12 +233,16 @@ void SimulationList::startSimulation()
 		.gaussSigma    = newSimulationInfo.gaussSigma,
 	};
 
+	const auto newId = registry.create();
+
+	registry.emplace<FdtdSimulationInfo>(newId, newSimulationInfo);
+
 	magic_enum::enum_switch([&](auto precision)
 	{
 		magic_enum::enum_switch([&](auto backend)
 		{
 			// TODO: No system, but entity
-			systems.start<Simulation<backend, precision>>(createInfo);
+			systems.start<Simulation<backend, precision>>(createInfo, newId);
 
 		}, newSimulationInfo.backend);
 	}, newSimulationInfo.precision);

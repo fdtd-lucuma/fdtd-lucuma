@@ -37,6 +37,8 @@ Headless::Headless([[maybe_unused]]Injector& injector):
 
 void Headless::compute()
 {
+	const auto id = registry.create();
+
 
 	components::FdtdDataCreateInfo createInfo {
 		.size          = settings.size(),
@@ -54,7 +56,7 @@ void Headless::compute()
 		.gaussSigma = 10,
 	};
 
-	auto id = backend.init(createInfo);
+	backend.init(createInfo, id);
 
 	while(backend.step(id))
 	{

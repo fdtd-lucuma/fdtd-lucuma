@@ -31,7 +31,7 @@ public:
 	IBackend() = default;
 	virtual ~IBackend() = default;
 
-	virtual entt::entity init(const components::FdtdDataCreateInfo& createInfo) = 0;
+	virtual void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id) = 0;
 	virtual bool step(entt::entity id) = 0;
 	virtual void saveFiles(entt::entity id) = 0;
 
