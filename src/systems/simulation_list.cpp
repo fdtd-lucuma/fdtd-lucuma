@@ -46,13 +46,15 @@ void SimulationList::update([[maybe_unused]]const events::Update& event)
 {
 	ImGui::Begin("FDTD");
 
+	ImGui::Text("%s", "Simulations:");
+
+	simulationTable();
+
 	if(ImGui::Button("New simulation"))
 	{
 		resetNewSimulationInfo();
 		ImGui::OpenPopup("New simulation");
 	}
-
-	simulationTable();
 
 	newSimulationPopup();
 
@@ -61,8 +63,14 @@ void SimulationList::update([[maybe_unused]]const events::Update& event)
 
 void SimulationList::simulationTable()
 {
-	if(ImGui::BeginTable("Simulations", 1))
+	constexpr ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+
+	if(ImGui::BeginTable("Simulations", 3, flags))
 	{
+		ImGui::TableSetupColumn("Id");
+		ImGui::TableSetupColumn("Backend type");
+		ImGui::TableSetupColumn("Precision");
+		ImGui::TableHeadersRow();
 
 		for(auto &&[id, info]: registry.view<FdtdSimulationInfo>().each())
 		{
