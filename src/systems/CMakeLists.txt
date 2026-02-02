@@ -17,7 +17,7 @@
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		root.cpp
-		simulation_parameters.cpp
+		simulation_list.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -25,6 +25,6 @@ target_sources(${PROJECT_NAME}
 			base.cppm
 			root.cppm
 			simulation.cppm
-			simulation_parameters.cppm
+			simulation_list.cppm
 			systems.cppm
 )

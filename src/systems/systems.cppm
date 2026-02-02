@@ -23,4 +23,4 @@ import lucuma.utils;
 export import :base;
 export import :root;
 export import :simulation;
-export import :simulation_parameters;
+export import :simulation_list;

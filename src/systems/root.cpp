@@ -38,6 +38,7 @@ Root::Root(Systems& _systems):
 
 void Root::init()
 {
+	systems.start<systems::SimulationList>();
 }
 
 
