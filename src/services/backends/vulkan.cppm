@@ -112,6 +112,9 @@ public:
 
 	virtual bool step(entt::entity id)
 	{
+		if(!registry.valid(id))
+			return false;
+
 		data_t& data = registry.get<data_t>(id);
 
 		bool canContinue = data.step();

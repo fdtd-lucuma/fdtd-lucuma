@@ -16,8 +16,29 @@
 
 module;
 
-export module lucuma.utils.imgui;
+export module lucuma.utils.imgui:entity_ctx;
 
-export import :combo;
-export import :entity_ctx;
-export import :text;
+import imgui;
+import std;
+
+namespace lucuma::utils::imgui
+{
+
+export template <typename T>
+requires std::is_enum_v<T>
+class EntityCtx
+{
+public:
+	EntityCtx(T id)
+	{
+		ImGui::PushID((int)id);
+	}
+
+	~EntityCtx()
+	{
+		ImGui::PopID();
+	}
+};
+
+}
+

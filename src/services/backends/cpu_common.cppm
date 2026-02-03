@@ -66,6 +66,9 @@ public:
 	template <typename T, typename data_t = components::FdtdData<T>, typename F>
 	bool step(entt::entity id, F&& f)
 	{
+		if(!registry.valid(id))
+			return false;
+
 		data_t& data = registry.get<data_t>(id);
 
 		bool canContinue = data.step();

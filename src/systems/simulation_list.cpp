@@ -63,21 +63,33 @@ void SimulationList::update([[maybe_unused]]const events::Update& event)
 
 void SimulationList::simulationTable()
 {
-	constexpr ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+	constexpr ImGuiTableFlags flags =
+		ImGuiTableFlags_Borders |
+		ImGuiTableFlags_RowBg |
+		ImGuiTableFlags_Resizable |
+		ImGuiTableFlags_Reorderable |
+		ImGuiTableFlags_HighlightHoveredColumn
+	;
 
-	if(ImGui::BeginTable("Simulations", 3, flags))
+	if(ImGui::BeginTable("Simulations", 4, flags))
 	{
 		ImGui::TableSetupColumn("Id");
+		ImGui::TableSetupColumn("Actions");
 		ImGui::TableSetupColumn("Backend type");
 		ImGui::TableSetupColumn("Precision");
 		ImGui::TableHeadersRow();
 
 		for(auto &&[id, info]: registry.view<FdtdSimulationInfo>().each())
 		{
+			utils::imgui::EntityCtx ctx(id);
+
 			ImGui::TableNextRow();
 
 			ImGui::TableNextColumn();
 			ImGui::Text("%d", id);
+
+			ImGui::TableNextColumn();
+			rowActions(id);
 
 			ImGui::TableNextColumn();
 			utils::imgui::Enum(info.backend);
@@ -88,6 +100,36 @@ void SimulationList::simulationTable()
 
 		ImGui::EndTable();
 	}
+}
+
+void SimulationList::rowActions(entt::entity id)
+{
+	ImGui::BeginDisabled(true);
+	if(ImGui::Button("Start"))
+	{
+		//TODO
+	}
+	ImGui::EndDisabled();
+
+	ImGui::SameLine();
+
+	ImGui::BeginDisabled(false);
+
+	if(ImGui::Button("Stop"))
+	{
+		//TODO
+	}
+
+	ImGui::EndDisabled();
+
+	ImGui::SameLine();
+
+	ImGui::BeginDisabled(false);
+	if(ImGui::Button("Cancel"))
+	{
+		systems.stop(id);
+	}
+	ImGui::EndDisabled();
 }
 
 template <typename T, std::size_t N>

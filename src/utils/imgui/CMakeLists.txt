@@ -20,6 +20,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			combo.cppm
+			entity_ctx.cppm
 			imgui.cppm
 			text.cppm
 )

@@ -76,6 +76,8 @@ private:
 	void startSimulation();
 	void clampSizes();
 	void simulationTable();
+
+	void rowActions(entt::entity id);
 };
 
 }
