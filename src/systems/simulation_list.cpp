@@ -44,19 +44,20 @@ void SimulationList::init()
 
 void SimulationList::update([[maybe_unused]]const events::Update& event)
 {
-	ImGui::Begin("FDTD");
-
-	ImGui::Text("%s", "Simulations:");
-
-	simulationTable();
-
-	if(ImGui::Button("New simulation"))
+	if(ImGui::Begin("FDTD"))
 	{
-		resetNewSimulationInfo();
-		ImGui::OpenPopup("New simulation");
-	}
+		ImGui::Text("%s", "Simulations:");
 
-	newSimulationPopup();
+		simulationTable();
+
+		if(ImGui::Button("New simulation"))
+		{
+			resetNewSimulationInfo();
+			ImGui::OpenPopup("New simulation");
+		}
+
+		newSimulationPopup();
+	}
 
 	ImGui::End();
 }
