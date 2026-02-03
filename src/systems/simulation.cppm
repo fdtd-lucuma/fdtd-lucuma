@@ -317,9 +317,6 @@ private:
 	{
 		if(ImGui::Begin(title.c_str(), &openWindow))
 		{
-			if(!openWindow)
-				base_t::selfStop();
-
 			float progress = (float)timeI++/maxTime;
 			char buffer[32];
 			snprintf(buffer, sizeof(buffer)/sizeof(*buffer), "%d/%d", (int)(progress*maxTime), maxTime);
@@ -335,6 +332,9 @@ private:
 			ImGui::SeparatorText("Time steps");
 			ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), buffer);
 		}
+
+		if(!openWindow)
+			base_t::selfStop();
 
 		ImGui::End();
 	}
