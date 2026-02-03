@@ -22,5 +22,6 @@ target_sources(${PROJECT_NAME}
 			combo.cppm
 			entity_ctx.cppm
 			imgui.cppm
+			progress.cppm
 			text.cppm
 )

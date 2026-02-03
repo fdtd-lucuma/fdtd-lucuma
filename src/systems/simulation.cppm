@@ -317,10 +317,6 @@ private:
 	{
 		if(ImGui::Begin(title.c_str(), &openWindow))
 		{
-			float progress = (float)timeI++/maxTime;
-			char buffer[32];
-			snprintf(buffer, sizeof(buffer)/sizeof(*buffer), "%d/%d", (int)(progress*maxTime), maxTime);
-
 			ImGui::SeparatorText("Plotting options");
 			plotParameters();
 
@@ -330,7 +326,7 @@ private:
 			plotHeatmap();
 
 			ImGui::SeparatorText("Time steps");
-			ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), buffer);
+			utils::imgui::ProgressBar(timeI++, maxTime);
 		}
 
 		if(!openWindow)
