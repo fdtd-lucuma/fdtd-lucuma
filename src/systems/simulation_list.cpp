@@ -46,8 +46,16 @@ void SimulationList::init()
 
 void pickFile(std::string_view label, std::filesystem::path& path)
 {
-	ImGui::InputText(label.begin(), &path);
-	ImGui::SameLine();
+	//TODO: Make then button like inputScalar
+
+	ImGui::BeginGroup();
+	ImGui::PushID(label.begin());
+	ImGui::InputText("", &path);
+	ImGui::SameLine(0, ImGui::GetStyle().ItemInnerSpacing.x);
+
+	if(!path.empty() && !std::filesystem::exists(path)) //TODO: Style
+		std::println(std::cerr, "{} does not exists", path.native());
+
 	if(ImGui::Button("Search"))
 	{
 		NFD::UniquePathN outPath;
@@ -64,6 +72,12 @@ void pickFile(std::string_view label, std::filesystem::path& path)
 				break;
 		}
 	}
+
+	ImGui::SameLine();
+	ImGui::Text("%s", label.begin());
+
+	ImGui::PopID();
+	ImGui::EndGroup();
 
 }
 
