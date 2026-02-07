@@ -16,22 +16,29 @@
 
 module;
 
-export module lucuma.services.window;
+export module lucuma.services.window:filedialog;
 
-import std;
 import lucuma.utils;
 
-export import :filedialog;
-export import :glfw;
-
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+namespace lucuma::services::window
 {
-using namespace lucuma::services::window;
 
-//TODO: Find a way to automate this
+using namespace lucuma::utils;
+using namespace lucuma::services;
 
-extern template Filedialog& Injector::inject<Filedialog>();
-extern template Glfw& Injector::inject<Glfw>();
+class Glfw;
+
+export class Filedialog
+{
+public:
+	Filedialog(Injector& injector);
+
+	~Filedialog();
+
+private:
+	Glfw& glfw;
+
+	void init();
+};
 
 }

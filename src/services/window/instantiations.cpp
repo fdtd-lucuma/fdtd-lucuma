@@ -25,6 +25,7 @@ using namespace lucuma::services::window;
 
 //TODO: Find a way to automate this
 
+template Filedialog& Injector::inject<Filedialog>();
 template Glfw& Injector::inject<Glfw>();
 
 }

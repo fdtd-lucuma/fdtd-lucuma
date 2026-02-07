@@ -16,22 +16,14 @@
 
 module;
 
-export module lucuma.services.window;
+#include <nfd.hpp>
 
-import std;
-import lucuma.utils;
+export module lucuma.legacy_headers.nativefiledialog_extended;
 
-export import :filedialog;
-export import :glfw;
-
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+export namespace NFD
 {
-using namespace lucuma::services::window;
 
-//TODO: Find a way to automate this
+using NFD::Init;
+using NFD::Quit;
 
-extern template Filedialog& Injector::inject<Filedialog>();
-extern template Glfw& Injector::inject<Glfw>();
-
-}
+};

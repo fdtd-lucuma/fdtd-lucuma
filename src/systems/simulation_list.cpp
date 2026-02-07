@@ -33,6 +33,7 @@ using namespace lucuma::utils;
 SimulationList::SimulationList(Systems& _systems):
 	Base(_systems),
 	settings(_systems.inject<Settings>()),
+	filedialog(_systems.inject<Filedialog>()),
 	registry(_systems.inject<entt::registry>())
 {
 	init();

@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME}
 			implot.cppm
 			implot3d.cppm
 			mdspan.cppm
+			nativefiledialog_extended.cppm
 			taskflow.cppm
 			xdg_utils_cxx.cppm
 			yaml_cpp.cppm

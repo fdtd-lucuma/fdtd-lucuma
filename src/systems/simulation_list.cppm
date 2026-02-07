@@ -19,6 +19,7 @@ module;
 export module lucuma.systems:simulation_list;
 
 import lucuma.services.basic;
+import lucuma.services.window;
 import lucuma.utils;
 
 import :base;
@@ -31,6 +32,7 @@ namespace lucuma::systems
 using namespace lucuma::utils;
 
 using namespace services::basic;
+using namespace services::window;
 
 struct FdtdSimulationInfo
 {
@@ -64,6 +66,7 @@ public:
 
 private:
 	Settings&       settings;
+	Filedialog&     filedialog;
 	entt::registry& registry;
 
 	FdtdSimulationInfo newSimulationInfo = {};

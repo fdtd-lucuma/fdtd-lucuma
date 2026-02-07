@@ -16,22 +16,29 @@
 
 module;
 
-export module lucuma.services.window;
+module lucuma.services.window;
 
-import std;
-import lucuma.utils;
+import lucuma.legacy_headers.nativefiledialog_extended;
 
-export import :filedialog;
-export import :glfw;
-
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+namespace lucuma::services::window
 {
-using namespace lucuma::services::window;
 
-//TODO: Find a way to automate this
+using namespace lucuma::services;
 
-extern template Filedialog& Injector::inject<Filedialog>();
-extern template Glfw& Injector::inject<Glfw>();
+Filedialog::Filedialog([[maybe_unused]] Injector& injector):
+	glfw(injector.inject<Glfw>())
+{
+	init();
+}
+
+void Filedialog::init()
+{
+	NFD::Init();
+}
+
+Filedialog::~Filedialog()
+{
+	NFD::Quit();
+}
 
 }
