@@ -12,6 +12,7 @@ url="https://github.com/fdtd-lucuma/fdtd-lucuma"
 license=('GPL-3.0-or-later')
 groups=()
 depends=(
+	'dbus'
 	'fmt'
 	'freetype2'
 	'gcc-libs'
@@ -59,8 +60,10 @@ source=(
 	"imgui-graphnode-git::git+https://github.com/otreblan/imgui-graphnode#branch=master"
 	"implot3d-git::git+https://github.com/brenocq/implot3d#branch=main"
 	"implot-git::git+https://github.com/epezent/implot#branch=master"
+	"nativefiledialog-extended-git::git+https://github.com/btzy/nativefiledialog-extended#branch=master"
 )
 sha256sums=(
+	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -100,6 +103,7 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI-GRAPHNODE="$srcdir/imgui-graphnode-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMPLOT3D="$srcdir/implot3d-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMPLOT="$srcdir/implot-git" \
+		-DFETCHCONTENT_SOURCE_DIR_NATIVEFILEDIALOG-EXTENDED="$srcdir/nativefiledialog-extended-git" \
 		-DCMAKE_CXX_VISIBILITY_PRESET=hidden \
 		-DCMAKE_C_VISIBILITY_PRESET=hidden \
 

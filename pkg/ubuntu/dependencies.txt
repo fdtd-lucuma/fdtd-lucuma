@@ -3,6 +3,7 @@ build-essential
 clang
 cmake
 file
+libdbus-1-dev
 libfmt-dev
 libfreetype-dev
 libglfw3-dev

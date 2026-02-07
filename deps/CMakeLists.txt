@@ -122,6 +122,16 @@ FetchContent_Declare(
 	GIT_PROGRESS   ON
 )
 
+set(NFD_PORTAL ON CACHE BOOL "Use xdg-desktop-portal instead of GTK" FORCE)
+FetchContent_Declare(
+	nativefiledialog-extended
+	GIT_REPOSITORY https://github.com/btzy/nativefiledialog-extended
+	GIT_TAG        master
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+	OVERRIDE_FIND_PACKAGE
+)
+
 FetchContent_MakeAvailable(
 	imgui
 	imgui-module
@@ -133,6 +143,7 @@ FetchContent_MakeAvailable(
 	imgui-graphnode
 	implot3d
 	implot
+	nativefiledialog-extended
 )
 
 # Packages
@@ -147,6 +158,7 @@ find_package(magic_enum REQUIRED)
 find_package(XdgUtils COMPONENTS BaseDir)
 find_package(Taskflow REQUIRED)
 find_package(Threads REQUIRED)
+find_package(nativefiledialog-extended REQUIRED)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
@@ -473,6 +485,7 @@ target_link_libraries(${PROJECT_NAME}
 		magic_enumModule
 		Taskflow::Taskflow
 		Threads::Threads
+		nfd
 )
 
 if (XdgUtils_FOUND)
