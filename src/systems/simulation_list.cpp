@@ -20,6 +20,7 @@ module lucuma.systems;
 import lucuma.utils;
 import lucuma.services.backends;
 import lucuma.utils.imgui;
+import lucuma.legacy_headers.nativefiledialog_extended;
 
 import imgui;
 import magic_enum;
@@ -41,6 +42,29 @@ SimulationList::SimulationList(Systems& _systems):
 
 void SimulationList::init()
 {
+}
+
+void pickFile(std::string_view label, std::filesystem::path& path)
+{
+	ImGui::InputText(label.begin(), &path);
+	ImGui::SameLine();
+	if(ImGui::Button("Search"))
+	{
+		NFD::UniquePathN outPath;
+		switch(NFD::OpenDialog(outPath, nullptr, 0, path.parent_path().c_str()))
+		{
+			case NFD_OKAY:
+				path.assign(outPath.get());
+				break;
+			case NFD_CANCEL:
+				std::println(std::cerr, "Cancel");
+				break;
+			case NFD_ERROR:
+				std::println(std::cerr, "Error: {}", NFD::GetError());
+				break;
+		}
+	}
+
 }
 
 void SimulationList::update([[maybe_unused]]const events::Update& event)
@@ -202,6 +226,9 @@ void SimulationList::newSimulationPopup()
 		ImGui::SeparatorText("Backends");
 		newSimulationBackends();
 
+		ImGui::SeparatorText("Starting values");
+		pickFile("Hx0", newSimulationInfo.Hx0);
+
 		if(ImGui::Button("Cancel"))
 		{
 			ImGui::CloseCurrentPopup();
@@ -293,6 +320,8 @@ void SimulationList::resetNewSimulationInfo()
 
 		.backend   = Backend::vulkan,
 		.precision = Precision::f32,
+
+		.Hx0 = {},
 	};
 }
 

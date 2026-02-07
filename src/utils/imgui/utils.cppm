@@ -16,30 +16,12 @@
 
 module;
 
-module lucuma.services.window;
+export module lucuma.utils.imgui:utils;
 
-import lucuma.legacy_headers.nativefiledialog_extended;
+import imgui;
+import std;
 
-namespace lucuma::services::window
+export namespace ImGui
 {
-
-using namespace lucuma::services;
-
-Filedialog::Filedialog([[maybe_unused]] Injector& injector):
-	glfw(injector.inject<Glfw>())
-{
-	init();
-}
-
-void Filedialog::init()
-{
-	NFD::Init();
-	// TODO: Parent window in wayland and X11
-}
-
-Filedialog::~Filedialog()
-{
-	NFD::Quit();
-}
-
+    bool InputText(const char* label, std::filesystem::path* path, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
 }

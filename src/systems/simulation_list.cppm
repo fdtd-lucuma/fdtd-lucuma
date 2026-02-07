@@ -54,6 +54,8 @@ struct FdtdSimulationInfo
 
 	Backend   backend;
 	Precision precision;
+
+	std::filesystem::path Hx0;
 };
 
 export

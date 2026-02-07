@@ -26,4 +26,18 @@ export namespace NFD
 using NFD::Init;
 using NFD::Quit;
 
+using NFD::UniquePathN;
+using NFD::UniquePathSetPathN;
+using NFD::UniquePathSet;
+
+using NFD::OpenDialog;
+using NFD::OpenDialogMultiple;
+using NFD::SaveDialog;
+using NFD::PickFolder;
+using NFD::PickFolderMultiple;
+using NFD::GetError;
+using NFD::ClearError;
+
 };
+
+export using enum ::nfdresult_t;

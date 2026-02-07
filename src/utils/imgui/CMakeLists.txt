@@ -16,6 +16,8 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
+		utils.cpp
+	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
@@ -24,4 +26,5 @@ target_sources(${PROJECT_NAME}
 			imgui.cppm
 			progress.cppm
 			text.cppm
+			utils.cppm
 )

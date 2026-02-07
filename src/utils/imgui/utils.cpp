@@ -1,4 +1,3 @@
-// Una GUI para fdtd
 // Copyright © 2025 Otreblan
 //
 // fdtd-lucuma is free software: you can redistribute it and/or modify
@@ -16,30 +15,15 @@
 
 module;
 
-module lucuma.services.window;
+module lucuma.utils.imgui;
 
-import lucuma.legacy_headers.nativefiledialog_extended;
-
-namespace lucuma::services::window
+namespace ImGui
 {
 
-using namespace lucuma::services;
-
-Filedialog::Filedialog([[maybe_unused]] Injector& injector):
-	glfw(injector.inject<Glfw>())
+bool InputText(const char* label, std::filesystem::path* path, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
 {
-	init();
-}
-
-void Filedialog::init()
-{
-	NFD::Init();
-	// TODO: Parent window in wayland and X11
-}
-
-Filedialog::~Filedialog()
-{
-	NFD::Quit();
+	// This will probably break on windows
+	return InputText(label, (std::string*)&path->native(), flags, callback, user_data);
 }
 
 }
