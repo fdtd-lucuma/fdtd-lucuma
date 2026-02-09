@@ -77,6 +77,11 @@ public:
 
 	friend class lucuma::services::basic::Systems;
 
+	void end([[maybe_unused]]const lucuma::events::End& e)
+	{
+		systems.stopMine<mine>();
+	}
+
 protected:
 	Systems&     systems;
 	entt::entity entity;
@@ -86,6 +91,13 @@ protected:
 		systems.stop(getEntity());
 	}
 
+	struct mine {};
+
+	/// Entities created by this function will be deleted when the system is deleted.
+	entt::entity createEntity()
+	{
+		return systems.createMine<mine>();
+	}
 
 };
 

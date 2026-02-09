@@ -151,20 +151,22 @@ void SimulationList::simulationTable()
 
 void SimulationList::rowActions(entt::entity id)
 {
-	ImGui::BeginDisabled(true);
+	bool isPaused = registry.view<components::Paused>().contains(id);
+
+	ImGui::BeginDisabled(!isPaused);
 	if(ImGui::Button("Start"))
 	{
-		//TODO
+		registry.remove<components::Paused>(id);
 	}
 	ImGui::EndDisabled();
 
 	ImGui::SameLine();
 
-	ImGui::BeginDisabled(false);
+	ImGui::BeginDisabled(isPaused);
 
 	if(ImGui::Button("Stop"))
 	{
-		//TODO
+		registry.emplace<components::Paused>(id);
 	}
 
 	ImGui::EndDisabled();
@@ -361,7 +363,7 @@ void SimulationList::startSimulation()
 		.gaussSigma    = newSimulationInfo.gaussSigma,
 	};
 
-	const auto newId = registry.create();
+	const auto newId = createEntity();
 
 	registry.emplace<components::SimulationInfo>(newId, components::SimulationInfo({
 		.maxTime   = createInfo.maxTime,
@@ -372,13 +374,6 @@ void SimulationList::startSimulation()
 	registry.emplace<components::SimulationPlotInfo>(newId);
 
 	instantiator.get(newSimulationInfo.backend, newSimulationInfo.precision).init(createInfo, newId);
-}
-
-SimulationList::~SimulationList()
-{
-	auto view = registry.view<FdtdSimulationInfo>();
-
-	registry.destroy(view.begin(), view.end());
 }
 
 }

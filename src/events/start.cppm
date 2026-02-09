@@ -26,4 +26,9 @@ export struct Start
 {
 };
 
+/// When an stopped system/service gets deleted
+export struct End
+{
+};
+
 }

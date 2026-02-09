@@ -39,6 +39,11 @@ void Systems::stop(entt::entity e)
 
 void Systems::cleanStopped()
 {
+	for(auto&& [id, on]: registry.view<toStop, OnSystemEnd>().each())
+	{
+		on.f(registry, id);
+	}
+
 	auto view = registry.view<toStop>();
 
 	registry.destroy(view.begin(), view.end());
@@ -46,18 +51,12 @@ void Systems::cleanStopped()
 
 entt::entity Systems::createEntity()
 {
-	entt::entity e = registry.create();
-
-	registry.emplace<mine>(e);
-
-	return e;
+	return createMine<mine>();
 }
 
 Systems::~Systems()
 {
-	auto view = registry.view<mine>();
-
-	registry.destroy(view.begin(), view.end());
+	stopMine<mine>();
 
 	cleanStopped();
 }

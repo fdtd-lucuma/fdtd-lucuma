@@ -68,8 +68,6 @@ public:
 
 	void update(const events::Update& event);
 
-	~SimulationList();
-
 private:
 	Settings&       settings;
 	Filedialog&     filedialog;

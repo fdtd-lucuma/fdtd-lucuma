@@ -26,6 +26,14 @@ import lucuma.events;
 namespace lucuma::services::basic
 {
 
+struct OnSystemEnd
+{
+	std::function<void(entt::registry&, entt::entity)> f;
+};
+
+template <typename T>
+constexpr bool hasEnd = requires (T t, const lucuma::events::End& e) {t.end(e);};
+
 using namespace lucuma::utils;
 
 export class Systems
@@ -41,6 +49,13 @@ public:
 
 		T& s = registry.emplace<T>(e, *this, std::forward<Args>(args)...);
 		s.entity = e;
+
+		if constexpr(hasEnd<T>)
+		{
+			registry.emplace<OnSystemEnd>(e, [](entt::registry& registry, entt::entity e){
+				registry.get<T>(e).end({});
+			});
+		}
 
 		return e;
 	}
@@ -67,7 +82,7 @@ public:
 	template <typename T>
 	void connectStart(T& system)
 	{
-		dispatcher.sink<events::Start>().connect<&T::update>(system);
+		dispatcher.sink<events::Start>().connect<&T::start>(system);
 	}
 
 	template <typename T>
@@ -85,10 +100,33 @@ public:
 	template <typename T>
 	void disconnectStart(T& system)
 	{
-		dispatcher.sink<events::Start>().disconnect<&T::update>(system);
+		dispatcher.sink<events::Start>().disconnect<&T::start>(system);
 	}
 
 	void stop(entt::entity e);
+
+	template<typename It>
+	void stop(It first, It last)
+	{
+		registry.insert<toStop>(first, last);
+	}
+
+	template<typename T>
+	void stopMine()
+	{
+		auto view = registry.view<T>();
+		registry.insert<toStop>(view.begin(), view.end());
+	}
+
+	template<typename T>
+	entt::entity createMine()
+	{
+		entt::entity e = registry.create();
+
+		registry.emplace<T>(e);
+
+		return e;
+	}
 
 	void cleanStopped();
 
