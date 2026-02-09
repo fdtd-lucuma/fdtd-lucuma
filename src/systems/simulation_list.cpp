@@ -22,6 +22,7 @@ import lucuma.services.backends;
 import lucuma.utils.imgui;
 import lucuma.legacy_headers.nativefiledialog_extended;
 import lucuma.components;
+import lucuma.services.window;
 
 import imgui;
 import glm;
@@ -36,7 +37,6 @@ using namespace lucuma::utils;
 SimulationList::SimulationList(Systems& _systems):
 	Base(_systems),
 	settings(_systems.inject<Settings>()),
-	filedialog(_systems.inject<Filedialog>()),
 	instantiator(_systems.inject<Instantiator>()),
 	registry(_systems.inject<entt::registry>())
 {

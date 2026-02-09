@@ -62,7 +62,7 @@ public:
 
 	template<typename Type, typename BaseType = Type>
 	requires std::is_base_of_v<BaseType, Type>
-	[[nodiscard]] BaseType& inject()
+	BaseType& inject()
 	{
 		return injector.inject<Type, BaseType>();
 	}

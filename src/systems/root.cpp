@@ -19,6 +19,7 @@ module;
 module lucuma.systems;
 import lucuma.utils;
 import lucuma.services.backends;
+import lucuma.services.window;
 import lucuma.utils.imgui;
 
 import std;
@@ -38,6 +39,8 @@ Root::Root(Systems& _systems):
 
 void Root::init()
 {
+	systems.inject<lucuma::services::window::Filedialog>();
+
 	systems.start<systems::SimulationList>();
 	systems.start<systems::SimulationStepper>();
 }
