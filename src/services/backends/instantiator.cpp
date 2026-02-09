@@ -29,6 +29,32 @@ import :cpu_taskflow;
 import :sequential;
 import :vulkan;
 
+namespace lucuma::utils
+{
+
+template<>
+struct BackendTraits<Backend::sequential>
+{
+	template<Precision p>
+	using type = Sequential<p>;
+};
+
+template<>
+struct BackendTraits<Backend::taskflow>
+{
+	template<Precision p>
+	using type = CpuTaskflow<p>;
+};
+
+template<>
+struct BackendTraits<Backend::vulkan>
+{
+	template<Precision p>
+	using type = Vulkan<p>;
+};
+
+};
+
 namespace lucuma::services::backends
 {
 
