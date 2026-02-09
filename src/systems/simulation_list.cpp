@@ -21,8 +21,10 @@ import lucuma.utils;
 import lucuma.services.backends;
 import lucuma.utils.imgui;
 import lucuma.legacy_headers.nativefiledialog_extended;
+import lucuma.components;
 
 import imgui;
+import glm;
 import magic_enum;
 import std;
 
@@ -35,6 +37,7 @@ SimulationList::SimulationList(Systems& _systems):
 	Base(_systems),
 	settings(_systems.inject<Settings>()),
 	filedialog(_systems.inject<Filedialog>()),
+	instantiator(_systems.inject<Instantiator>()),
 	registry(_systems.inject<entt::registry>())
 {
 	init();
@@ -358,15 +361,14 @@ void SimulationList::startSimulation()
 
 	registry.emplace<FdtdSimulationInfo>(newId, newSimulationInfo);
 
-	magic_enum::enum_switch([&](auto precision)
-	{
-		magic_enum::enum_switch([&](auto backend)
-		{
-			// TODO: No system, but entity
-			systems.start<Simulation<backend, precision>>(createInfo, newId);
+	instantiator.get(newSimulationInfo.backend, newSimulationInfo.precision).init(createInfo, newId);
+}
 
-		}, newSimulationInfo.backend);
-	}, newSimulationInfo.precision);
+SimulationList::~SimulationList()
+{
+	auto view = registry.view<FdtdSimulationInfo>();
+
+	registry.destroy(view.begin(), view.end());
 }
 
 }

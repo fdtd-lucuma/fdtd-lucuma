@@ -20,6 +20,7 @@ export module lucuma.systems:simulation_list;
 
 import lucuma.services.basic;
 import lucuma.services.window;
+import lucuma.services.backends;
 import lucuma.utils;
 
 import :base;
@@ -33,6 +34,7 @@ using namespace lucuma::utils;
 
 using namespace services::basic;
 using namespace services::window;
+using namespace services::backends;
 
 struct FdtdSimulationInfo
 {
@@ -66,9 +68,12 @@ public:
 
 	void update(const events::Update& event);
 
+	~SimulationList();
+
 private:
 	Settings&       settings;
 	Filedialog&     filedialog;
+	Instantiator&   instantiator;
 	entt::registry& registry;
 
 	FdtdSimulationInfo newSimulationInfo = {};
