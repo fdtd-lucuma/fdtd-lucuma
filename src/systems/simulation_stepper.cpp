@@ -18,9 +18,11 @@ module;
 
 module lucuma.systems;
 import lucuma.utils;
-import lucuma.services.backends;
 import lucuma.utils.imgui;
+import lucuma.components;
 
+import imgui;
+import magic_enum;
 import std;
 
 namespace lucuma::systems
@@ -28,20 +30,33 @@ namespace lucuma::systems
 
 using namespace lucuma::utils;
 
-Root::Root(Systems& _systems):
+SimulationStepper::SimulationStepper(Systems& _systems):
 	Base(_systems),
 	settings(_systems.inject<Settings>()),
+	instantiator(_systems.inject<Instantiator>()),
 	registry(_systems.inject<entt::registry>())
 {
 	init();
 }
 
-void Root::init()
+void SimulationStepper::init()
 {
-	systems.start<systems::SimulationList>();
-	systems.start<systems::SimulationStepper>();
 }
 
+void SimulationStepper::update([[maybe_unused]]const events::Update& event)
+{
+	// TODO: Find a way to decouple this from the frame rate
+	for(auto&& [id, info]: registry.view<components::SimulationInfo>(entt::exclude<components::Paused>).each())
+	{
+		if(!instantiator.get(info.backend, info.precision).step(id))
+		{
+			registry.emplace<components::Paused>(id);
+			continue;
+		}
+
+		info.timeI++;
+	}
+}
 
 
 }

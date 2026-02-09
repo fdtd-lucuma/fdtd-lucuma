@@ -121,7 +121,8 @@ public:
 
 		if(canContinue)
 		{
-			std::println("Step #{}", data.getTime());
+			if(settings.debug())
+				std::println("Step #{}", data.getTime());
 
 			{
 				auto recorder = createCommandRecorder();

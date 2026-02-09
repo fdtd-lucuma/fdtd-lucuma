@@ -75,7 +75,9 @@ public:
 
 		if(canContinue)
 		{
-			std::println("Step #{}", data.getTime());
+			if(settings.debug())
+				std::println("Step #{}", data.getTime());
+
 
 			f(data);
 

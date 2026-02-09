@@ -113,11 +113,14 @@ vk::DeviceQueueCreateInfo Device::getComputeQueueCreateInfo(std::span<const vk::
 {
 	computeInfo.emplace(selectComputeQueueFamily(properties));
 
-	std::cout
-		<< "Selected queue family for compute:\n"
-		<< "Queue family " << computeInfo->index << ":\n"
-		<< properties[computeInfo->index]
-	;
+	if(settings.debug())
+	{
+		std::cout
+			<< "Selected queue family for compute:\n"
+			<< "Queue family " << computeInfo->index << ":\n"
+			<< properties[computeInfo->index]
+			;
+	}
 
 	vk::DeviceQueueCreateInfo computeQueueCreateInfo {
 		.queueFamilyIndex = computeInfo->index,
@@ -137,11 +140,14 @@ vk::DeviceQueueCreateInfo Device::getGraphicsQueueCreateInfo(std::span<const vk:
 
 	presentInfo = graphicsInfo; //TODO: support graphics != present?
 
-	std::cout
-		<< "Selected queue family for graphics:\n"
-		<< "Queue family " << graphicsInfo->index << ":\n"
-		<< properties[graphicsInfo->index]
-	;
+	if(settings.debug())
+	{
+		std::cout
+			<< "Selected queue family for graphics:\n"
+			<< "Queue family " << graphicsInfo->index << ":\n"
+			<< properties[graphicsInfo->index]
+			;
+	}
 
 	vk::DeviceQueueCreateInfo graphicsQueueCreateInfo {
 		.queueFamilyIndex = graphicsInfo->index,

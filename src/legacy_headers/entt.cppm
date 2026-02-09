@@ -39,5 +39,6 @@ using entt::operator<=;
 using entt::operator>;
 using entt::operator>=;
 using entt::dispatcher;
+using entt::exclude;
 
 };

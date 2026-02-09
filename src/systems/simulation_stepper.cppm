@@ -16,10 +16,13 @@
 
 module;
 
-module lucuma.systems;
-import lucuma.utils;
+export module lucuma.systems:simulation_stepper;
+
+import lucuma.services.basic;
 import lucuma.services.backends;
-import lucuma.utils.imgui;
+import lucuma.utils;
+
+import :base;
 
 import std;
 
@@ -28,20 +31,23 @@ namespace lucuma::systems
 
 using namespace lucuma::utils;
 
-Root::Root(Systems& _systems):
-	Base(_systems),
-	settings(_systems.inject<Settings>()),
-	registry(_systems.inject<entt::registry>())
+using namespace services::basic;
+using namespace services::backends;
+
+export
+class SimulationStepper: public Base<SimulationStepper>
 {
-	init();
-}
+public:
+	SimulationStepper(Systems& _systems);
 
-void Root::init()
-{
-	systems.start<systems::SimulationList>();
-	systems.start<systems::SimulationStepper>();
-}
+	void update(const events::Update& event);
 
+private:
+	Settings&       settings;
+	Instantiator&   instantiator;
+	entt::registry& registry;
 
+	void init();
+};
 
 }

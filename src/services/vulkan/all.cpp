@@ -28,11 +28,15 @@ All::All(Injector& injector):
 	debug(injector.inject<Debug>()),
 	device(injector.inject<Device>()),
 	allocator(injector.inject<Allocator>()),
-	shaderLoader(injector.inject<ShaderLoader>())
+	shaderLoader(injector.inject<ShaderLoader>()),
+	settings(injector.inject<basic::Settings>())
 {
 
-	list_vulkan_extensions();
-	std::cout << device.getPhysicalDevice();
+	if(settings.debug())
+	{
+		list_vulkan_extensions();
+		std::cout << device.getPhysicalDevice();
+	}
 
 }
 

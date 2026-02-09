@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME}
 	PRIVATE
 		root.cpp
 		simulation_list.cpp
+		simulation_stepper.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
@@ -25,5 +26,6 @@ target_sources(${PROJECT_NAME}
 			base.cppm
 			root.cppm
 			simulation_list.cppm
+			simulation_stepper.cppm
 			systems.cppm
 )

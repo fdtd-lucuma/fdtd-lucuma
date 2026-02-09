@@ -19,6 +19,7 @@ module;
 export module lucuma.services.vulkan:all;
 
 import lucuma.utils;
+import lucuma.services.basic;
 
 namespace lucuma::services::vulkan
 {
@@ -37,11 +38,12 @@ public:
 	All(Injector& injector);
 
 private:
-	Core&         core;
-	Debug&        debug;
-	Device&       device;
-	Allocator&    allocator;
-	ShaderLoader& shaderLoader;
+	Core&            core;
+	Debug&           debug;
+	Device&          device;
+	Allocator&       allocator;
+	ShaderLoader&    shaderLoader;
+	basic::Settings& settings;
 };
 
 }
