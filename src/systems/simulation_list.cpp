@@ -114,15 +114,16 @@ void SimulationList::simulationTable()
 		ImGuiTableFlags_HighlightHoveredColumn
 	;
 
-	if(ImGui::BeginTable("Simulations", 4, flags))
+	if(ImGui::BeginTable("Simulations", 5, flags))
 	{
 		ImGui::TableSetupColumn("Id");
 		ImGui::TableSetupColumn("Actions");
 		ImGui::TableSetupColumn("Backend type");
 		ImGui::TableSetupColumn("Precision");
+		ImGui::TableSetupColumn("Progress");
 		ImGui::TableHeadersRow();
 
-		for(auto &&[id, info]: registry.view<FdtdSimulationInfo>().each())
+		for(auto &&[id, info]: registry.view<components::SimulationInfo>().each())
 		{
 			utils::imgui::EntityCtx ctx(id);
 
@@ -139,6 +140,9 @@ void SimulationList::simulationTable()
 
 			ImGui::TableNextColumn();
 			utils::imgui::Enum(info.precision);
+
+			ImGui::TableNextColumn();
+			utils::imgui::ProgressBar(info.timeI, info.maxTime);
 		}
 
 		ImGui::EndTable();
@@ -359,7 +363,13 @@ void SimulationList::startSimulation()
 
 	const auto newId = registry.create();
 
-	registry.emplace<FdtdSimulationInfo>(newId, newSimulationInfo);
+	registry.emplace<components::SimulationInfo>(newId, components::SimulationInfo({
+		.maxTime   = createInfo.maxTime,
+		.backend   = newSimulationInfo.backend,
+		.precision = newSimulationInfo.precision,
+	}));
+
+	registry.emplace<components::SimulationPlotInfo>(newId);
 
 	instantiator.get(newSimulationInfo.backend, newSimulationInfo.precision).init(createInfo, newId);
 }

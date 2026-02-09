@@ -21,6 +21,7 @@ target_sources(${PROJECT_NAME}
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			fdtd_data.cppm
 			components.cppm
+			fdtd_data.cppm
+			simulation.cppm
 )

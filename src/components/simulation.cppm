@@ -16,7 +16,35 @@
 
 module;
 
-export module lucuma.components;
+export module lucuma.components:simulation;
 
-export import :fdtd_data;
-export import :simulation;
+import lucuma.utils;
+
+namespace lucuma::components
+{
+
+using namespace lucuma::utils;
+
+export struct SimulationInfo
+{
+	unsigned int timeI = 0;
+	const unsigned int maxTime;
+
+	Backend   backend;
+	Precision precision;
+};
+
+export struct SimulationPlotInfo
+{
+	bool            openWindow      = true;
+	Field           field           = Field::Electric;
+	VectorComponent vectorComponent = VectorComponent::Magnitude;
+	Plane           plane           = Plane::XY;
+	int             planeIndex      = 0;
+	float           multiplier      = 1000;
+	int             nThStep         = 1;
+};
+
+export struct Paused {};
+
+};
