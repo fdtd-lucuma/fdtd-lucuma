@@ -20,6 +20,7 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			entt.cppm
+			fast_float.cppm
 			fmt.cppm
 			glm.cppm
 			imgui_graphnode.cppm

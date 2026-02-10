@@ -27,6 +27,7 @@ module;
 export module lucuma.services.basic:file_reader;
 
 import lucuma.utils;
+import lucuma.legacy_headers.fast_float;
 
 import std;
 
@@ -97,12 +98,52 @@ private:
 
 };
 
+export template <typename T>
+class FileToFloat
+{
+public:
+	struct Iterator
+	{
+		using iterator_category = std::input_iterator_tag;
+		using difference_type   = std::ptrdiff_t;
+		using value_type        = T;
+		using pointer           = T*;
+		using reference         = T&;
+
+		// TODO: Iterate readOne() until it returns false
+	};
+
+	FileToFloat(FileBuffer&& buffer):
+		buffer(std::move(buffer)),
+		currentPtr(buffer.getBuffer().begin().base())
+	{}
+
+	bool readOne(T& result)
+	{
+		auto answer = fast_float::from_chars<T, char>(currentPtr, buffer.getBuffer().end().base(), result);
+
+		currentPtr = answer.ptr+1;
+
+		return (bool)answer;
+	}
+
+private:
+	FileBuffer  buffer;
+	const char* currentPtr;
+};
+
 export class FileReader
 {
 public:
 	FileReader(Injector& injector);
 
 	FileBuffer read(const std::filesystem::path& path);
+
+	template <typename T>
+	FileToFloat<T> readIntoFloats(const std::filesystem::path& path)
+	{
+		return FileToFloat<T>(read(path));
+	}
 private:
 };
 
