@@ -574,6 +574,75 @@ void SimulationList::startSimulation()
 		.Cr            = newSimulationInfo.Cr,
 		.maxTime       = newSimulationInfo.maxTime,
 		.gaussSigma    = newSimulationInfo.gaussSigma,
+
+		// Magnetic fields
+
+		.Hx0 = newSimulationInfo.Hx0,
+		.Hy0 = newSimulationInfo.Hy0,
+		.Hz0 = newSimulationInfo.Hz0,
+
+		.Chxh0 = newSimulationInfo.Chxh0,
+		.Chyh0 = newSimulationInfo.Chyh0,
+		.Chzh0 = newSimulationInfo.Chzh0,
+
+		.Chxe0 = newSimulationInfo.Chxe0,
+		.Chye0 = newSimulationInfo.Chye0,
+		.Chze0 = newSimulationInfo.Chze0,
+
+		.CMhx0 = newSimulationInfo.CMhx0,
+		.CMhy0 = newSimulationInfo.CMhy0,
+		.CMhz0 = newSimulationInfo.CMhz0,
+
+		.mux0 = newSimulationInfo.mux0,
+		.muy0 = newSimulationInfo.muy0,
+		.muz0 = newSimulationInfo.muz0,
+
+		.muxR0 = newSimulationInfo.muxR0,
+		.muyR0 = newSimulationInfo.muyR0,
+		.muzR0 = newSimulationInfo.muzR0,
+
+		// Electric fields
+
+		.Ex0 = newSimulationInfo.Ex0,
+		.Ey0 = newSimulationInfo.Ey0,
+		.Ez0 = newSimulationInfo.Ez0,
+
+		.Cexe0 = newSimulationInfo.Cexe0,
+		.Ceye0 = newSimulationInfo.Ceye0,
+		.Ceze0 = newSimulationInfo.Ceze0,
+
+		.Cexh0 = newSimulationInfo.Cexh0,
+		.Ceyh0 = newSimulationInfo.Ceyh0,
+		.Cezh0 = newSimulationInfo.Cezh0,
+
+		.CEEx0 = newSimulationInfo.CEEx0,
+		.CEEy0 = newSimulationInfo.CEEy0,
+		.CEEz0 = newSimulationInfo.CEEz0,
+
+		.epsx0 = newSimulationInfo.epsx0,
+		.epsy0 = newSimulationInfo.epsy0,
+		.epsz0 = newSimulationInfo.epsz0,
+
+		.epsxR0 = newSimulationInfo.epsxR0,
+		.epsyR0 = newSimulationInfo.epsyR0,
+		.epszR0 = newSimulationInfo.epszR0,
+
+		// ABC's
+
+		.eyx00 = newSimulationInfo.eyx00,
+		.ezx00 = newSimulationInfo.ezx00,
+		.eyx10 = newSimulationInfo.eyx10,
+		.ezx10 = newSimulationInfo.ezx10,
+
+		.exy00 = newSimulationInfo.exy00,
+		.ezy00 = newSimulationInfo.ezy00,
+		.exy10 = newSimulationInfo.exy10,
+		.ezy10 = newSimulationInfo.ezy10,
+
+		.exz00 = newSimulationInfo.exz00,
+		.eyz00 = newSimulationInfo.eyz00,
+		.exz10 = newSimulationInfo.exz10,
+		.eyz10 = newSimulationInfo.eyz10,
 	};
 
 	const auto newId = createEntity();
