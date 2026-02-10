@@ -51,6 +51,13 @@ void pickFile(std::string_view label, std::filesystem::path& path)
 {
 	//TODO: Make then button like inputScalar
 
+	constexpr std::array<nfdnfilteritem_t, 1> filters = {
+		{{
+			.name = "Plain text",
+			.spec = "txt",
+		}}
+	};
+
 	ImGui::BeginGroup();
 	ImGui::PushID(label.begin());
 	ImGui::InputText("", &path);
@@ -62,7 +69,7 @@ void pickFile(std::string_view label, std::filesystem::path& path)
 	if(ImGui::Button("Search"))
 	{
 		NFD::UniquePathN outPath;
-		switch(NFD::OpenDialog(outPath, nullptr, 0, path.parent_path().c_str()))
+		switch(NFD::OpenDialog(outPath, filters.data(), filters.size(), path.parent_path().c_str()))
 		{
 			case NFD_OKAY:
 				path.assign(outPath.get());

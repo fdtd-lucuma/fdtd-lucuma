@@ -41,3 +41,4 @@ using NFD::ClearError;
 };
 
 export using enum ::nfdresult_t;
+export using ::nfdnfilteritem_t;
