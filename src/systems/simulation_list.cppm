@@ -143,6 +143,7 @@ private:
 	void newSimulationPopup();
 	void newSimulationInputs();
 	void newSimulationBackends();
+	void newSimulationStartingValues();
 	void resetNewSimulationInfo();
 	void startSimulation();
 	void clampSizes();

@@ -250,141 +250,8 @@ void SimulationList::newSimulationPopup()
 		newSimulationBackends();
 
 		ImGui::SeparatorText("Starting values");
+		newSimulationStartingValues();
 
-		constexpr ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DrawLinesFull;
-
-		if(ImGui::TreeNodeEx("Magnetic", flags))
-		{
-			if(ImGui::TreeNodeEx("Field", flags))
-			{
-				pickFile("Hx_0", newSimulationInfo.Hx0);
-				pickFile("Hy_0", newSimulationInfo.Hy0);
-				pickFile("Hz_0", newSimulationInfo.Hz0);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Coefficient", flags))
-			{
-				pickFile("Chxh_0", newSimulationInfo.Chxh0);
-				pickFile("Chyh_0", newSimulationInfo.Chyh0);
-				pickFile("Chzh_0", newSimulationInfo.Chzh0);
-
-				pickFile("Chxe_0", newSimulationInfo.Chxe0);
-				pickFile("Chye_0", newSimulationInfo.Chye0);
-				pickFile("Chze_0", newSimulationInfo.Chze0);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Conductivity", flags))
-			{
-				pickFile("CMhx_0", newSimulationInfo.CMhx0);
-				pickFile("CMhy_0", newSimulationInfo.CMhy0);
-				pickFile("CMhz_0", newSimulationInfo.CMhz0);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Permeability", flags))
-			{
-				pickFile("mux_0", newSimulationInfo.mux0);
-				pickFile("muy_0", newSimulationInfo.muy0);
-				pickFile("muz_0", newSimulationInfo.muz0);
-
-				pickFile("muxR_0", newSimulationInfo.muxR0);
-				pickFile("muyR_0", newSimulationInfo.muyR0);
-				pickFile("muzR_0", newSimulationInfo.muzR0);
-
-				ImGui::TreePop();
-			}
-
-			ImGui::TreePop();
-		}
-
-		if(ImGui::TreeNodeEx("Electric", flags))
-		{
-			if(ImGui::TreeNodeEx("Field", flags))
-			{
-				pickFile("Ex_0", newSimulationInfo.Ex0);
-				pickFile("Ey_0", newSimulationInfo.Ey0);
-				pickFile("Ez_0", newSimulationInfo.Ez0);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Coefficient", flags))
-			{
-				pickFile("Cexe_0", newSimulationInfo.Cexe0);
-				pickFile("Ceye_0", newSimulationInfo.Ceye0);
-				pickFile("Ceze_0", newSimulationInfo.Ceze0);
-
-				pickFile("Cexh_0", newSimulationInfo.Cexh0);
-				pickFile("Ceyh_0", newSimulationInfo.Ceyh0);
-				pickFile("Cezh_0", newSimulationInfo.Cezh0);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Conductivity", flags))
-			{
-				pickFile("CEEx_0", newSimulationInfo.CEEx0);
-				pickFile("CEEy_0", newSimulationInfo.CEEy0);
-				pickFile("CEEz_0", newSimulationInfo.CEEz0);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Permittivity", flags))
-			{
-				pickFile("epsx_0", newSimulationInfo.epsx0);
-				pickFile("epsy_0", newSimulationInfo.epsy0);
-				pickFile("epsz_0", newSimulationInfo.epsz0);
-
-				pickFile("epsxR_0", newSimulationInfo.epsxR0);
-				pickFile("epsyR_0", newSimulationInfo.epsyR0);
-				pickFile("epszR_0", newSimulationInfo.epszR0);
-
-				ImGui::TreePop();
-			}
-
-			ImGui::TreePop();
-		}
-
-		if(ImGui::TreeNodeEx("ABC", flags))
-		{
-			if(ImGui::TreeNodeEx("X", flags))
-			{
-				pickFile("eyx00", newSimulationInfo.eyx00);
-				pickFile("ezx00", newSimulationInfo.ezx00);
-				pickFile("eyx10", newSimulationInfo.eyx10);
-				pickFile("ezx10", newSimulationInfo.ezx10);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Y", flags))
-			{
-				pickFile("exy00", newSimulationInfo.exy00);
-				pickFile("ezy00", newSimulationInfo.ezy00);
-				pickFile("exy10", newSimulationInfo.exy10);
-				pickFile("ezy10", newSimulationInfo.ezy10);
-
-				ImGui::TreePop();
-			}
-
-			if(ImGui::TreeNodeEx("Z", flags))
-			{
-				pickFile("exz00", newSimulationInfo.exz00);
-				pickFile("eyz00", newSimulationInfo.eyz00);
-				pickFile("exz10", newSimulationInfo.exz10);
-				pickFile("eyz10", newSimulationInfo.eyz10);
-
-				ImGui::TreePop();
-			}
-
-			ImGui::TreePop();
-		}
 
 		if(ImGui::Button("Cancel"))
 		{
@@ -454,6 +321,144 @@ void SimulationList::newSimulationBackends()
 {
 	utils::imgui::Combo<Backend>("Backend type", &newSimulationInfo.backend);
 	utils::imgui::Combo<Precision>("Precision", &newSimulationInfo.precision);
+}
+
+void SimulationList::newSimulationStartingValues()
+{
+	constexpr ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DrawLinesFull;
+
+	if(ImGui::TreeNodeEx("Magnetic", flags))
+	{
+		if(ImGui::TreeNodeEx("Field", flags))
+		{
+			pickFile("Hx_0", newSimulationInfo.Hx0);
+			pickFile("Hy_0", newSimulationInfo.Hy0);
+			pickFile("Hz_0", newSimulationInfo.Hz0);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Coefficient", flags))
+		{
+			pickFile("Chxh_0", newSimulationInfo.Chxh0);
+			pickFile("Chyh_0", newSimulationInfo.Chyh0);
+			pickFile("Chzh_0", newSimulationInfo.Chzh0);
+
+			pickFile("Chxe_0", newSimulationInfo.Chxe0);
+			pickFile("Chye_0", newSimulationInfo.Chye0);
+			pickFile("Chze_0", newSimulationInfo.Chze0);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Conductivity", flags))
+		{
+			pickFile("CMhx_0", newSimulationInfo.CMhx0);
+			pickFile("CMhy_0", newSimulationInfo.CMhy0);
+			pickFile("CMhz_0", newSimulationInfo.CMhz0);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Permeability", flags))
+		{
+			pickFile("mux_0", newSimulationInfo.mux0);
+			pickFile("muy_0", newSimulationInfo.muy0);
+			pickFile("muz_0", newSimulationInfo.muz0);
+
+			pickFile("muxR_0", newSimulationInfo.muxR0);
+			pickFile("muyR_0", newSimulationInfo.muyR0);
+			pickFile("muzR_0", newSimulationInfo.muzR0);
+
+			ImGui::TreePop();
+		}
+
+		ImGui::TreePop();
+	}
+
+	if(ImGui::TreeNodeEx("Electric", flags))
+	{
+		if(ImGui::TreeNodeEx("Field", flags))
+		{
+			pickFile("Ex_0", newSimulationInfo.Ex0);
+			pickFile("Ey_0", newSimulationInfo.Ey0);
+			pickFile("Ez_0", newSimulationInfo.Ez0);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Coefficient", flags))
+		{
+			pickFile("Cexe_0", newSimulationInfo.Cexe0);
+			pickFile("Ceye_0", newSimulationInfo.Ceye0);
+			pickFile("Ceze_0", newSimulationInfo.Ceze0);
+
+			pickFile("Cexh_0", newSimulationInfo.Cexh0);
+			pickFile("Ceyh_0", newSimulationInfo.Ceyh0);
+			pickFile("Cezh_0", newSimulationInfo.Cezh0);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Conductivity", flags))
+		{
+			pickFile("CEEx_0", newSimulationInfo.CEEx0);
+			pickFile("CEEy_0", newSimulationInfo.CEEy0);
+			pickFile("CEEz_0", newSimulationInfo.CEEz0);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Permittivity", flags))
+		{
+			pickFile("epsx_0", newSimulationInfo.epsx0);
+			pickFile("epsy_0", newSimulationInfo.epsy0);
+			pickFile("epsz_0", newSimulationInfo.epsz0);
+
+			pickFile("epsxR_0", newSimulationInfo.epsxR0);
+			pickFile("epsyR_0", newSimulationInfo.epsyR0);
+			pickFile("epszR_0", newSimulationInfo.epszR0);
+
+			ImGui::TreePop();
+		}
+
+		ImGui::TreePop();
+	}
+
+	if(ImGui::TreeNodeEx("ABC", flags))
+	{
+		if(ImGui::TreeNodeEx("X", flags))
+		{
+			pickFile("eyx00", newSimulationInfo.eyx00);
+			pickFile("ezx00", newSimulationInfo.ezx00);
+			pickFile("eyx10", newSimulationInfo.eyx10);
+			pickFile("ezx10", newSimulationInfo.ezx10);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Y", flags))
+		{
+			pickFile("exy00", newSimulationInfo.exy00);
+			pickFile("ezy00", newSimulationInfo.ezy00);
+			pickFile("exy10", newSimulationInfo.exy10);
+			pickFile("ezy10", newSimulationInfo.ezy10);
+
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNodeEx("Z", flags))
+		{
+			pickFile("exz00", newSimulationInfo.exz00);
+			pickFile("eyz00", newSimulationInfo.eyz00);
+			pickFile("exz10", newSimulationInfo.exz10);
+			pickFile("eyz10", newSimulationInfo.eyz10);
+
+			ImGui::TreePop();
+		}
+
+		ImGui::TreePop();
+	}
 }
 
 void SimulationList::resetNewSimulationInfo()
