@@ -55,7 +55,73 @@ struct FdtdSimulationInfo
 	Backend   backend;
 	Precision precision;
 
+	// Magnetic fields
 	std::filesystem::path Hx0;
+	std::filesystem::path Hy0;
+	std::filesystem::path Hz0;
+
+	std::filesystem::path Chxh0;
+	std::filesystem::path Chyh0;
+	std::filesystem::path Chzh0;
+
+	std::filesystem::path Chxe0;
+	std::filesystem::path Chye0;
+	std::filesystem::path Chze0;
+
+	std::filesystem::path CMhx0;
+	std::filesystem::path CMhy0;
+	std::filesystem::path CMhz0;
+
+	std::filesystem::path mux0;
+	std::filesystem::path muy0;
+	std::filesystem::path muz0;
+
+	std::filesystem::path muxR0;
+	std::filesystem::path muyR0;
+	std::filesystem::path muzR0;
+
+	// Electric fields
+
+	std::filesystem::path Ex0;
+	std::filesystem::path Ey0;
+	std::filesystem::path Ez0;
+
+	std::filesystem::path Cexe0;
+	std::filesystem::path Ceye0;
+	std::filesystem::path Ceze0;
+
+	std::filesystem::path Cexh0;
+	std::filesystem::path Ceyh0;
+	std::filesystem::path Cezh0;
+
+	std::filesystem::path CEEx0;
+	std::filesystem::path CEEy0;
+	std::filesystem::path CEEz0;
+
+	std::filesystem::path epsx0;
+	std::filesystem::path epsy0;
+	std::filesystem::path epsz0;
+
+	std::filesystem::path epsxR0;
+	std::filesystem::path epsyR0;
+	std::filesystem::path epszR0;
+
+	// ABC's
+
+	std::filesystem::path eyx00;
+	std::filesystem::path ezx00;
+	std::filesystem::path eyx10;
+	std::filesystem::path ezx10;
+
+	std::filesystem::path exy00;
+	std::filesystem::path ezy00;
+	std::filesystem::path exy10;
+	std::filesystem::path ezy10;
+
+	std::filesystem::path exz00;
+	std::filesystem::path eyz00;
+	std::filesystem::path exz10;
+	std::filesystem::path eyz10;
 };
 
 export
