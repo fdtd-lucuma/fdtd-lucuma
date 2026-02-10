@@ -4,6 +4,7 @@ clang
 cmake
 file
 libdbus-1-dev
+libfast-float-dev
 libfmt-dev
 libfreetype-dev
 libglfw3-dev

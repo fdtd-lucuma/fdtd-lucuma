@@ -91,6 +91,7 @@ jobs:
         molten-vk
         vcpkg
         bash-completion@2
+        fast_float
 
     - name: vcpkg root
       run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"

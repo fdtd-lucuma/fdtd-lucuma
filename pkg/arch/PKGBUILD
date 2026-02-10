@@ -24,18 +24,19 @@ depends=(
 	'yaml-cpp'
 )
 makedepends=(
+	#'vulkan-memory-allocator'
 	'bash-completion'
 	'clang'
 	'cmake'
 	'cpp-taskflow'
 	'entt'
+	'fast_float'
 	'git'
 	'glm'
 	'llvm'
 	'ninja'
 	'shader-slang'
 	'vulkan-headers'
-	#'vulkan-memory-allocator'
 	'vulkan-validation-layers'
 	'xdg-utils-cxx'
 )

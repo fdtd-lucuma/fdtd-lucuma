@@ -159,6 +159,7 @@ find_package(XdgUtils COMPONENTS BaseDir)
 find_package(Taskflow REQUIRED)
 find_package(Threads REQUIRED)
 find_package(nativefiledialog-extended REQUIRED)
+find_package(FastFloat REQUIRED)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
@@ -473,18 +474,19 @@ target_include_directories(magic_enumModule
 # Linking
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
-		PkgConfig::libraries
-		imgui
-		imgui-graphnode
-		implot3d
-		implot
 		EnTT::EnTT
-		VulkanMemoryAllocator-HppModule
+		FastFloat::fast_float
 		GlmModule
-		VkfwModule
-		magic_enumModule
+		PkgConfig::libraries
 		Taskflow::Taskflow
 		Threads::Threads
+		VkfwModule
+		VulkanMemoryAllocator-HppModule
+		imgui
+		imgui-graphnode
+		implot
+		implot3d
+		magic_enumModule
 		nfd
 )
 
