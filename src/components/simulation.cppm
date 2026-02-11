@@ -22,6 +22,7 @@ import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
 
 import std;
+import glm;
 
 namespace lucuma::components
 {
@@ -58,7 +59,7 @@ T normalize0ToInf(T x)
 template <typename T>
 T magnitude(T x, T y, T z, T multiplier)
 {
-	return normalize0ToInf(multiplier*std::sqrt(x*x+y*y+z*z));
+	return normalize0ToInf(multiplier*glm::length(glm::vec<3,T>(x,y,z)));
 }
 
 template <>
