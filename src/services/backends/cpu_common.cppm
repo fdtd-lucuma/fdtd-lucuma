@@ -103,6 +103,11 @@ public:
 		saver.snapshot(data);
 	}
 
+	bool debug() const
+	{
+		return settings.debug();
+	}
+
 private:
 	basic::Settings& settings;
 	entt::registry& registry;

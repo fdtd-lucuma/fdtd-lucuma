@@ -55,6 +55,9 @@ public:
 
 	virtual void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
 	{
+		if(common.debug())
+			std::println("Starting Sequential simulation with:\n{}", createInfo);
+
 		common.init<T>(createInfo, id);
 	}
 

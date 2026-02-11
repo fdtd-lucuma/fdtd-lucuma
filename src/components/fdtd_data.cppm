@@ -960,3 +960,34 @@ extern template class FdtdData<PrecisionTraits<Precision::f32>::type>;
 extern template class FdtdData<PrecisionTraits<Precision::f64>::type>;
 
 }
+
+export template<>
+struct std::formatter<lucuma::components::FdtdDataCreateInfo>: std::formatter<int>
+{
+	template<class FmtContext>
+	FmtContext::iterator format(const lucuma::components::FdtdDataCreateInfo& info, FmtContext& ctx) const
+	{
+		return std::format_to(ctx.out(),
+			"size:          {}m, {}m, {}m\n"
+			"gaussPosition: {}m, {}m, {}m\n"
+			"deltaT:        {}s\n"
+			"deltaX:        {}m\n"
+			"deltaY:        {}m\n"
+			"deltaZ:        {}m\n"
+			"imp0:          {}\n"
+			"Cr:            {}\n"
+			"maxTime:       {}steps\n"
+			"gaussSigma:    {}\n",
+			info.size.x, info.size.y, info.size.z,
+			info.gaussPosition.x, info.gaussPosition.y, info.gaussPosition.z,
+			info.deltaT,
+			info.deltaX,
+			info.deltaY,
+			info.deltaZ,
+			info.imp0,
+			info.Cr,
+			info.maxTime,
+			info.gaussSigma
+		);
+	}
+};

@@ -75,6 +75,9 @@ public:
 
 	virtual void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
 	{
+		if(settings.debug())
+			std::println("Starting Vulkan simulation with:\n{}", createInfo);
+
 		create_info_t vulkanCreateInfo {
 			.fdtdDataCreateInfo = createInfo,
 			.compute = vulkanCompute,
