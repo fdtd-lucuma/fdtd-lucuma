@@ -968,8 +968,8 @@ struct std::formatter<lucuma::components::FdtdDataCreateInfo>: std::formatter<in
 	FmtContext::iterator format(const lucuma::components::FdtdDataCreateInfo& info, FmtContext& ctx) const
 	{
 		return std::format_to(ctx.out(),
-			"size:          {}m, {}m, {}m\n"
-			"gaussPosition: {}m, {}m, {}m\n"
+			"size:          {}, {}, {}\n"
+			"gaussPosition: {}, {}, {}\n"
 			"deltaT:        {}s\n"
 			"deltaX:        {}m\n"
 			"deltaY:        {}m\n"

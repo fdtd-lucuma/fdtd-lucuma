@@ -57,6 +57,8 @@ protected:
 	static void computeComputeBarrier(vk::CommandBuffer commandBuffer);
 	static void computeCpuBarrier(vk::CommandBuffer commandBuffer);
 
+	void initCommon(const components::FdtdDataCreateInfo& createInfo, entt::entity id);
+
 };
 
 export template<Precision precision>
@@ -75,8 +77,7 @@ public:
 
 	virtual void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
 	{
-		if(settings.debug())
-			std::println("Starting Vulkan simulation with:\n{}", createInfo);
+		initCommon(createInfo, id);
 
 		create_info_t vulkanCreateInfo {
 			.fdtdDataCreateInfo = createInfo,

@@ -30,6 +30,12 @@ CpuTaskflowBase::CpuTaskflowBase([[maybe_unused]]Injector& injector):
 	common(injector.inject<CpuCommon>())
 { }
 
+void CpuTaskflowBase::initCommon(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
+{
+	if(common.debug())
+		std::println("Starting Taskflow simulation #{} with:\n{}", id, createInfo);
+}
+
 }
 
 // Explicit template instantiations for faster compilation

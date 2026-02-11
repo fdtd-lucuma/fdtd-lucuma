@@ -42,3 +42,13 @@ using entt::dispatcher;
 using entt::exclude;
 
 };
+
+export template<>
+struct std::formatter<entt::entity>: std::formatter<int>
+{
+	template<class FmtContext>
+	FmtContext::iterator format(entt::entity id, FmtContext& ctx) const
+	{
+		return std::format_to(ctx.out(), "{}", (std::underlying_type_t<entt::entity>)id);
+	}
+};

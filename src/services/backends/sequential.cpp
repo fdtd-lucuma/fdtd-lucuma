@@ -30,6 +30,12 @@ SequentialBase::SequentialBase([[maybe_unused]]Injector& injector):
 	common(injector.inject<CpuCommon>())
 { }
 
+void SequentialBase::initCommon(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
+{
+	if(common.debug())
+		std::println("Starting Sequential simulation #{} with:\n{}", id, createInfo);
+}
+
 }
 
 // Explicit template instantiations for faster compilation

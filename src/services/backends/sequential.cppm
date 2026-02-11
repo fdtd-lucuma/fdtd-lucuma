@@ -39,6 +39,8 @@ protected:
 
 	CpuCommon& common;
 
+	void initCommon(const components::FdtdDataCreateInfo& createInfo, entt::entity id);
+
 };
 
 export template<Precision precision>
@@ -55,9 +57,7 @@ public:
 
 	virtual void init(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
 	{
-		if(common.debug())
-			std::println("Starting Sequential simulation with:\n{}", createInfo);
-
+		initCommon(createInfo, id);
 		common.init<T>(createInfo, id);
 	}
 

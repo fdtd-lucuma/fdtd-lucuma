@@ -105,6 +105,12 @@ void VulkanBase::computeCpuBarrier(vk::CommandBuffer commandBuffer)
 	writeReadBarrier(commandBuffer, eComputeShader, eHost);
 }
 
+void VulkanBase::initCommon(const components::FdtdDataCreateInfo& createInfo, entt::entity id)
+{
+	if(settings.debug())
+		std::println("Starting Vulkan simulation #{} with:\n{}", id, createInfo);
+}
+
 template class Vulkan<Precision::f16>;
 template class Vulkan<Precision::f32>;
 template class Vulkan<Precision::f64>;

@@ -72,7 +72,7 @@ public:
 
 			char buffer[128];
 
-			const auto result = std::format_to_n(buffer, std::size(buffer)-1, "Plot #{}", (std::underlying_type_t<typeof(id)>)id);
+			const auto result = std::format_to_n(buffer, std::size(buffer)-1, "Plot #{}", id);
 			*result.out = '\0';
 
 			drawProgressBar(id, buffer, simulation_info, plot_info, fdtd_data);
