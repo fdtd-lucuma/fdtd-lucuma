@@ -21,8 +21,13 @@ import lucuma.utils;
 import lucuma.services.backends;
 import lucuma.services.window;
 import lucuma.utils.imgui;
+import lucuma.components;
+import lucuma.services.backends.vulkan_components;
 
 import std;
+import magic_enum;
+
+import :simulation_plotter;
 
 namespace lucuma::systems
 {
@@ -43,6 +48,12 @@ void Root::init()
 
 	systems.start<systems::SimulationList>();
 	systems.start<systems::SimulationStepper>();
+
+	magic_enum::enum_for_each<Precision>([&](auto precision)
+	{
+		systems.start<systems::SimulationPlotter<lucuma::components::FdtdData, precision>>();
+		systems.start<systems::SimulationPlotter<lucuma::services::backends::vulkan_components::FdtdData, precision>>();
+	});
 }
 
 

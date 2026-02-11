@@ -27,5 +27,6 @@ target_sources(${PROJECT_NAME}
 			root.cppm
 			simulation_list.cppm
 			simulation_stepper.cppm
+			simulation_plotter.cppm
 			systems.cppm
 )
