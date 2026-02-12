@@ -228,7 +228,7 @@ float maxDeltaTime(float deltaX, float deltaY, float deltaZ, float c)
 void updateInputs(FdtdSimulationInfo& info)
 {
 	for(std::size_t i = 0; i < 3; i++)
-		info.basicDeltaSize[i] = info.basicSize[i]/info.size[i];
+		info.basicDeltaSize[i] = info.basicSize[i]*10/info.size[i];
 
 	info.maxTime = info.basicTime/info.deltaT;
 	info.deltaT = std::min(info.deltaT, maxDeltaTime(info.basicDeltaSize[0]/1000, info.basicDeltaSize[1]/1000, info.basicDeltaSize[2]/1000, 3.f*std::pow(10.f, 8.f))*1000000000);
@@ -285,10 +285,32 @@ static const float fFastStep = fStep*100;
 
 void SimulationList::newSimulationInputs()
 {
-	constexpr const char* cmFormat = "%.2fcm";
-	constexpr const char* mmFormat = "%.2fmm";
-	constexpr const char* nsFormat = "%.6fns";
+	if(ImGui::BeginTabBar("Inputs"))
+	{
+		if(ImGui::BeginTabItem("Human"))
+		{
+			newSimulationHumanInputs();
+			ImGui::EndTabItem();
+		}
+		if(ImGui::BeginTabItem("Basic"))
+		{
+			newSimulationBasicInputs();
+			ImGui::EndTabItem();
+		}
 
+		ImGui::EndTabBar();
+	}
+
+}
+
+constexpr const char* cmFormat = "%.2fcm";
+constexpr const char* mmFormat = "%.2fmm";
+constexpr const char* mFormat = "%.2fm";
+constexpr const char* nsFormat = "%.6fns";
+constexpr const char* sFormat = "%.2fs";
+
+void SimulationList::newSimulationHumanInputs()
+{
 	ImGui::PushItemWidth(400);
 	if(ImGui::InputScalarN("Size", ImGuiDataType_Float, newSimulationInfo.basicSize, 3, &fStep, &fFastStep, cmFormat))
 		clampSizes();
@@ -317,11 +339,28 @@ void SimulationList::newSimulationInputs()
 	ImGui::EndDisabled();
 
 	ImGui::InputFloat("Epsilon", &newSimulationInfo.epsilon, fStep, fFastStep);
-
-
 	ImGui::InputFloat("Gaussian sigma", &newSimulationInfo.gaussSigma);
 
 	updateInputs(newSimulationInfo);
+
+	newSimulationInfo.type = InputType::HUMAN;
+}
+
+void SimulationList::newSimulationBasicInputs()
+{
+	ImGui::PushItemWidth(400);
+	ImGui::InputScalarN("Matrix size", ImGuiDataType_U32, newSimulationInfo.size, 3, &step, &fastStep);
+	ImGui::InputScalarN("Source position (in matrix)", ImGuiDataType_U32, newSimulationInfo.gaussPosition, 3, &step, &fastStep);
+	ImGui::PopItemWidth();
+	ImGui::InputScalar("Time steps", ImGuiDataType_U32, &newSimulationInfo.maxTime, &step, &fastStep);
+	ImGui::InputFloat("DeltaT", &newSimulationInfo.deltaT, 0.0f, 0.0f, sFormat);
+	ImGui::InputFloat("Delta X", &newSimulationInfo.basicDeltaSize[0], fStep, fFastStep, mFormat);
+	ImGui::InputFloat("Delta Y", &newSimulationInfo.basicDeltaSize[1], fStep, fFastStep, mFormat);
+	ImGui::InputFloat("Delta Z", &newSimulationInfo.basicDeltaSize[2], fStep, fFastStep, mFormat);
+	ImGui::InputFloat("Epsilon", &newSimulationInfo.epsilon, fStep, fFastStep);
+	ImGui::InputFloat("Gaussian sigma", &newSimulationInfo.gaussSigma);
+
+	newSimulationInfo.type = InputType::BASIC;
 }
 
 void SimulationList::newSimulationBackends()
@@ -473,6 +512,8 @@ void SimulationList::resetNewSimulationInfo()
 	const auto size = (glm::vec<3, unsigned int>)settings.size();
 
 	newSimulationInfo = FdtdSimulationInfo{
+		.type = InputType::HUMAN,
+
 		.basicSize          = {1, 1, 1},
 		.basicGaussPosition = {0.5f, 0.5f, 0.5f},
 		.basicTime          = 1.f,
@@ -561,15 +602,17 @@ void SimulationList::resetNewSimulationInfo()
 	};
 }
 
+
+
 void SimulationList::startSimulation()
 {
 	components::FdtdDataCreateInfo createInfo {
 		.size          = {newSimulationInfo.size[0], newSimulationInfo.size[1], newSimulationInfo.size[2]},
 		.gaussPosition = {newSimulationInfo.gaussPosition[0], newSimulationInfo.gaussPosition[1], newSimulationInfo.gaussPosition[2]},
-		.deltaT        = newSimulationInfo.deltaT/1000000000,
-		.deltaX        = newSimulationInfo.basicDeltaSize[0]/1000,
-		.deltaY        = newSimulationInfo.basicDeltaSize[1]/1000,
-		.deltaZ        = newSimulationInfo.basicDeltaSize[2]/1000,
+		.deltaT        = newSimulationInfo.deltaT/(newSimulationInfo.type == InputType::HUMAN ? 1000000000 : 1),
+		.deltaX        = newSimulationInfo.basicDeltaSize[0]/(newSimulationInfo.type == InputType::HUMAN ? 1000 : 1),
+		.deltaY        = newSimulationInfo.basicDeltaSize[1]/(newSimulationInfo.type == InputType::HUMAN ? 1000 : 1),
+		.deltaZ        = newSimulationInfo.basicDeltaSize[2]/(newSimulationInfo.type == InputType::HUMAN ? 1000 : 1),
 		.imp0          = newSimulationInfo.imp0,
 		.Cr            = newSimulationInfo.Cr,
 		.maxTime       = newSimulationInfo.maxTime,

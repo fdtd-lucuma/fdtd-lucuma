@@ -34,16 +34,25 @@ using namespace lucuma::utils;
 using namespace services::basic;
 using namespace services::backends;
 
+enum class InputType
+{
+	HUMAN,
+	BASIC,
+};
+
 struct FdtdSimulationInfo
 {
-	// Basic
-	float basicSize[3];
-	float basicGaussPosition[3];
+	InputType type;
+
+	// Human
+
+	float basicSize[3]; // In cm
+	float basicGaussPosition[3]; // In cm
 	float basicTime; // In ns
 	float basicDeltaSize[3]; // In mm
 	float epsilon;
 
-	// Advanced
+	// Basic
 	unsigned int size[3];
 	unsigned int gaussPosition[3];
 	float        deltaT;
@@ -142,6 +151,8 @@ private:
 	void init();
 	void newSimulationPopup();
 	void newSimulationInputs();
+	void newSimulationHumanInputs();
+	void newSimulationBasicInputs();
 	void newSimulationBackends();
 	void newSimulationStartingValues();
 	void resetNewSimulationInfo();
