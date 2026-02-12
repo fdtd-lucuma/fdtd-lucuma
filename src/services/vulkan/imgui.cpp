@@ -140,6 +140,7 @@ void Imgui::onFrameStart(const events::FrameStart&)
 	ImGui_ImplVulkan_NewFrame();
 
 	ImGui::NewFrame();
+	ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 }
 
 void Imgui::onFrameEnd(const events::FrameEnd&)
