@@ -117,7 +117,7 @@ private:
 
 	void plotHeatmap(entt::entity id, const components::SimulationInfo& simulation_info, components::SimulationPlotInfo& plot_info, const data_t& data)
 	{
-		auto heatmapData = registry.get_or_emplace<components::HeatmapData<T>>(id);
+		auto& heatmapData = registry.get_or_emplace<components::HeatmapData<T>>(id);
 
 		if(simulation_info.timeI % plot_info.nThStep == 0)
 			fillHeatmapData(heatmapData, plot_info, data);

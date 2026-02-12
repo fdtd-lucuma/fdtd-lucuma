@@ -73,6 +73,12 @@ class HeatmapData
 {
 public:
 	HeatmapData() = default;
+	HeatmapData(HeatmapData<T>&& other):
+		buffer(std::exchange(other.buffer, {})),
+		sizeX(std::exchange(other.sizeX, {})),
+		sizeY(std::exchange(other.sizeY, {})),
+		_colMajor(std::exchange(_colMajor, {}))
+	{}
 
 	template <typename T2, typename E, typename L, typename A>
 	requires (Kokkos::mdspan<T2,E,L,A>::rank() == 2)
