@@ -222,6 +222,11 @@ target_compile_definitions(VkfwModule
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
+		$<$<PLATFORM_ID:Darwin>:GLFW_EXPOSE_NATIVE_COCOA>
+		# TODO: Find out why this breaks the compilation
+		#$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_X11>
+		$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_WAYLAND>
+		$<$<PLATFORM_ID:Windows>:GLFW_EXPOSE_NATIVE_WIN32>
 		# TODO: Find out how to dedup vulkan module target
 		#VKFW_NO_INCLUDE_VULKAN
 		#VKFW_NO_INCLUDE_VULKAN_HPP

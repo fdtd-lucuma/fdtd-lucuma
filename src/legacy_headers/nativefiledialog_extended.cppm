@@ -17,6 +17,7 @@
 module;
 
 #include <nfd.hpp>
+#include <nfd_glfw3.h>
 
 export module lucuma.legacy_headers.nativefiledialog_extended;
 
@@ -42,3 +43,5 @@ using NFD::ClearError;
 
 export using enum ::nfdresult_t;
 export using ::nfdnfilteritem_t;
+export using ::NFD_SetDisplayPropertiesFromGLFW;
+export using ::NFD_GetNativeWindowFromGLFWWindow;
