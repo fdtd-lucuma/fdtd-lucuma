@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.2.0.r176.gb4e81dd
+pkgver=0.2.0.r210.gd383df7
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -59,8 +59,8 @@ source=(
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
 	"mdspan-git::git+https://github.com/kokkos/mdspan#branch=stable"
 	"imgui-graphnode-git::git+https://github.com/otreblan/imgui-graphnode#branch=master"
-	"implot3d-git::git+https://github.com/brenocq/implot3d#branch=main"
-	"implot-git::git+https://github.com/epezent/implot#branch=master"
+	"implot3d-git::git+https://github.com/brenocq/implot3d#commit=3d7fb60faf77552705b70c23600ff49f02ac5f93"
+	"implot-git::git+https://github.com/epezent/implot#commit=81b8b1951392767cf458508385fa025fd087a252"
 	"nativefiledialog-extended-git::git+https://github.com/btzy/nativefiledialog-extended#branch=master"
 )
 sha256sums=(
@@ -84,6 +84,11 @@ pkgver() {
 	git describe --long 2>/dev/null | sed 's/^v-//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 	)
+}
+
+prepare() {
+	cd "$srcdir/nativefiledialog-extended-git"
+	git submodule update --init --recursive --force
 }
 
 build() {
