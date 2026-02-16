@@ -203,6 +203,53 @@ private:
 		return cmdspan_2d_t(v.data(), dims.x, dims.y);
 	}
 
+	template <FloatFileReader<T> floater_t>
+	static void readInto(floater_t& reader, mdspan_3d_t matrix, const std::filesystem::path& path)
+	{
+		if(!std::filesystem::exists(path))
+			return;
+
+		auto fileFloats = reader.readIntoFloats(path);
+
+		T f;
+
+		for(std::size_t i = 0; i < matrix.extent(0); i++)
+		{
+			for(std::size_t j = 0; j < matrix.extent(1); j++)
+			{
+				for(std::size_t k = 0; k < matrix.extent(2); k++)
+				{
+					if(!fileFloats.readOne(f))
+						return;
+
+					matrix[i,j,k] = f;
+				}
+			}
+		}
+	}
+
+	template <FloatFileReader<T> floater_t>
+	static void readInto(floater_t& reader, mdspan_2d_t matrix, const std::filesystem::path& path)
+	{
+		if(!std::filesystem::exists(path))
+			return;
+
+		auto fileFloats = reader.readIntoFloats(path);
+
+		T f;
+
+		for(std::size_t i = 0; i < matrix.extent(0); i++)
+		{
+			for(std::size_t j = 0; j < matrix.extent(1); j++)
+			{
+				if(!fileFloats.readOne(f))
+					return;
+
+				matrix[i,j] = f;
+			}
+		}
+	}
+
 
 public:
 	FdtdData(const FdtdDataCreateInfo& createInfo):
@@ -283,19 +330,54 @@ public:
 	{
 		FdtdData<T> result(createInfo);
 
-		if(std::filesystem::exists(createInfo.Hx0))
-		{
-			auto Hxf = reader.readIntoFloats(createInfo.Hx0);
-
-			T f;
-			while(Hxf.readOne(f))
-			{
-				if constexpr(!std::is_floating_point_v<T>)
-					std::println("{}", (float)f);
-				else
-					std::println("{}", f);
-			}
-		}
+		readInto(reader, result.Hx(),    createInfo.Hx0);
+		readInto(reader, result.Hy(),    createInfo.Hy0);
+		readInto(reader, result.Hz(),    createInfo.Hz0);
+		readInto(reader, result.Chxh(),  createInfo.Chxh0);
+		readInto(reader, result.Chyh(),  createInfo.Chyh0);
+		readInto(reader, result.Chzh(),  createInfo.Chzh0);
+		readInto(reader, result.Chxe(),  createInfo.Chxe0);
+		readInto(reader, result.Chye(),  createInfo.Chye0);
+		readInto(reader, result.Chze(),  createInfo.Chze0);
+		readInto(reader, result.CMhx(),  createInfo.CMhx0);
+		readInto(reader, result.CMhy(),  createInfo.CMhy0);
+		readInto(reader, result.CMhz(),  createInfo.CMhz0);
+		readInto(reader, result.mux(),   createInfo.mux0);
+		readInto(reader, result.muy(),   createInfo.muy0);
+		readInto(reader, result.muz(),   createInfo.muz0);
+		readInto(reader, result.muxR(),  createInfo.muxR0);
+		readInto(reader, result.muyR(),  createInfo.muyR0);
+		readInto(reader, result.muzR(),  createInfo.muzR0);
+		readInto(reader, result.Ex(),    createInfo.Ex0);
+		readInto(reader, result.Ey(),    createInfo.Ey0);
+		readInto(reader, result.Ez(),    createInfo.Ez0);
+		readInto(reader, result.Cexe(),  createInfo.Cexe0);
+		readInto(reader, result.Ceye(),  createInfo.Ceye0);
+		readInto(reader, result.Ceze(),  createInfo.Ceze0);
+		readInto(reader, result.Cexh(),  createInfo.Cexh0);
+		readInto(reader, result.Ceyh(),  createInfo.Ceyh0);
+		readInto(reader, result.Cezh(),  createInfo.Cezh0);
+		readInto(reader, result.CEEx(),  createInfo.CEEx0);
+		readInto(reader, result.CEEy(),  createInfo.CEEy0);
+		readInto(reader, result.CEEz(),  createInfo.CEEz0);
+		readInto(reader, result.epsx(),  createInfo.epsx0);
+		readInto(reader, result.epsy(),  createInfo.epsy0);
+		readInto(reader, result.epsz(),  createInfo.epsz0);
+		readInto(reader, result.epsxR(), createInfo.epsxR0);
+		readInto(reader, result.epsyR(), createInfo.epsyR0);
+		readInto(reader, result.epszR(), createInfo.epszR0);
+		readInto(reader, result.eyx0(),  createInfo.eyx00);
+		readInto(reader, result.ezx0(),  createInfo.ezx00);
+		readInto(reader, result.eyx1(),  createInfo.eyx10);
+		readInto(reader, result.ezx1(),  createInfo.ezx10);
+		readInto(reader, result.exy0(),  createInfo.exy00);
+		readInto(reader, result.ezy0(),  createInfo.ezy00);
+		readInto(reader, result.exy1(),  createInfo.exy10);
+		readInto(reader, result.ezy1(),  createInfo.ezy10);
+		readInto(reader, result.exz0(),  createInfo.exz00);
+		readInto(reader, result.eyz0(),  createInfo.eyz00);
+		readInto(reader, result.exz1(),  createInfo.exz10);
+		readInto(reader, result.eyz1(),  createInfo.eyz10);
 
 		return result;
 	}
