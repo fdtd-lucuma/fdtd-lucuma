@@ -44,7 +44,7 @@ public:
 			.basePath = ".",
 		};
 
-		data_t& data = registry.emplace<data_t>(id, createInfo);
+		data_t& data = registry.emplace<data_t>(id, data_t::make(createInfo, fileReader));
 
 		data.initCoefs();
 
@@ -110,6 +110,7 @@ public:
 
 private:
 	basic::Settings& settings;
+	basic::FileReader& fileReader;
 	entt::registry& registry;
 
 };

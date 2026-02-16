@@ -116,17 +116,29 @@ public:
 
 	FileToFloat(FileBuffer&& buffer):
 		buffer(std::move(buffer)),
-		currentPtr(buffer.getBuffer().begin().base())
+		currentPtr(this->buffer.getBuffer().begin().base())
 	{}
 
 	template <typename T>
+	requires std::is_floating_point_v<T>
 	bool readOne(T& result)
 	{
+		assert(currentPtr != nullptr);
 		auto answer = fast_float::from_chars<T, char>(currentPtr, buffer.getBuffer().end().base(), result);
 
 		currentPtr = answer.ptr+1;
 
 		return (bool)answer;
+	}
+
+	template <typename T>
+	bool readOne(T& result)
+	{
+		float fresult;
+		auto answer = readOne<float>(fresult);
+		result = fresult;
+
+		return answer;
 	}
 
 private:

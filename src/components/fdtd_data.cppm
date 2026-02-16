@@ -48,6 +48,19 @@ MatrixData<T> initMat(svec2 dims, T defaultValue = 0)
 	return MatrixData<T>(dims.x*dims.y, defaultValue);
 }
 
+template <typename T, typename float_t>
+concept FloatFileReader =
+requires(T t, std::filesystem::path p, float_t f)
+{
+	{ t.readIntoFloats(p) };
+
+	requires requires (decltype(t.readIntoFloats(p)) handle)
+	{
+		{ handle.readOne(f) } -> std::same_as<bool>;
+	};
+};
+
+
 export struct FdtdDataCreateInfo
 {
 	svec3 size; // index
@@ -264,6 +277,29 @@ public:
 		_exz1(initMat<T>(exzDims)),
 		_eyz1(initMat<T>(eyzDims))
 	{}
+
+	template <FloatFileReader<T> floater_t>
+	static FdtdData<T> make(const FdtdDataCreateInfo& createInfo, floater_t& reader)
+	{
+		FdtdData<T> result(createInfo);
+
+		if(std::filesystem::exists(createInfo.Hx0))
+		{
+			auto Hxf = reader.readIntoFloats(createInfo.Hx0);
+
+			T f;
+			while(Hxf.readOne(f))
+			{
+				if constexpr(!std::is_floating_point_v<T>)
+					std::println("{}", (float)f);
+				else
+					std::println("{}", f);
+			}
+		}
+
+		return result;
+	}
+
 
 	mdspan_3d_t Hx()    { return toMdspan(_Hx,    HxDims);  }
 	mdspan_3d_t Hy()    { return toMdspan(_Hy,    HyDims);  }

@@ -28,6 +28,7 @@ namespace lucuma::services::backends
 
 CpuCommon::CpuCommon([[maybe_unused]]Injector& injector):
 	settings(injector.inject<basic::Settings>()),
+	fileReader(injector.inject<basic::FileReader>()),
 	registry(injector.inject<entt::registry>())
 { }
 
