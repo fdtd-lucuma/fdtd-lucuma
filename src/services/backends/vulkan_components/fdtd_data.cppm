@@ -504,18 +504,18 @@ public:
 	{
 	}
 
-	const svec3 workGroupSize;
-	const svec3 size;
-	const svec3 paddedSize;
-	const svec3 gaussPosition;
-	const T deltaT;
-	const T deltaX;
-	const T deltaY;
-	const T deltaZ;
-	const T imp0;
-	const T Cr;
+	svec3 workGroupSize;
+	svec3 size;
+	svec3 paddedSize;
+	svec3 gaussPosition;
+	T deltaT;
+	T deltaX;
+	T deltaY;
+	T deltaZ;
+	T imp0;
+	T Cr;
 
-	const unsigned int maxTime;
+	unsigned int maxTime;
 
 private:
 	unsigned int time = 0;
@@ -523,49 +523,49 @@ private:
 
 	// Magnetic field dimentions
 
-	const svec3 HxDims;
-	const svec3 HyDims;
-	const svec3 HzDims;
+	svec3 HxDims;
+	svec3 HyDims;
+	svec3 HzDims;
 
 	// Electric field dimentions
 
-	const svec3 ExDims;
-	const svec3 EyDims;
-	const svec3 EzDims;
+	svec3 ExDims;
+	svec3 EyDims;
+	svec3 EzDims;
 
 	// ABC dimentions
 
-	const svec2 eyxDims;
-	const svec2 ezxDims;
+	svec2 eyxDims;
+	svec2 ezxDims;
 
-	const svec2 exyDims;
-	const svec2 ezyDims;
+	svec2 exyDims;
+	svec2 ezyDims;
 
-	const svec2 exzDims;
-	const svec2 eyzDims;
+	svec2 exzDims;
+	svec2 eyzDims;
 
 	// Padded Magnetic field dimentions
 
-	const svec3 paddedHxDims;
-	const svec3 paddedHyDims;
-	const svec3 paddedHzDims;
+	svec3 paddedHxDims;
+	svec3 paddedHyDims;
+	svec3 paddedHzDims;
 
 	// Padded Electric field dimentions
 
-	const svec3 paddedExDims;
-	const svec3 paddedEyDims;
-	const svec3 paddedEzDims;
+	svec3 paddedExDims;
+	svec3 paddedEyDims;
+	svec3 paddedEzDims;
 
 	// Padded ABC dimentions
 
-	const svec2 paddedEyxDims;
-	const svec2 paddedEzxDims;
+	svec2 paddedEyxDims;
+	svec2 paddedEzxDims;
 
-	const svec2 paddedExyDims;
-	const svec2 paddedEzyDims;
+	svec2 paddedExyDims;
+	svec2 paddedEzyDims;
 
-	const svec2 paddedExzDims;
-	const svec2 paddedEyzDims;
+	svec2 paddedExzDims;
+	svec2 paddedEyzDims;
 
 	MatrixData _Hx;
 	MatrixData _Hy;
