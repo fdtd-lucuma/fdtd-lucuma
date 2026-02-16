@@ -98,10 +98,11 @@ private:
 
 };
 
-export template <typename T>
+export
 class FileToFloat
 {
 public:
+	template <typename T>
 	struct Iterator
 	{
 		using iterator_category = std::input_iterator_tag;
@@ -118,6 +119,7 @@ public:
 		currentPtr(buffer.getBuffer().begin().base())
 	{}
 
+	template <typename T>
 	bool readOne(T& result)
 	{
 		auto answer = fast_float::from_chars<T, char>(currentPtr, buffer.getBuffer().end().base(), result);
@@ -139,10 +141,9 @@ public:
 
 	FileBuffer read(const std::filesystem::path& path);
 
-	template <typename T>
-	FileToFloat<T> readIntoFloats(const std::filesystem::path& path)
+	FileToFloat readIntoFloats(const std::filesystem::path& path)
 	{
-		return FileToFloat<T>(read(path));
+		return FileToFloat(read(path));
 	}
 private:
 };
