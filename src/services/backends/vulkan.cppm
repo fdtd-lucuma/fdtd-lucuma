@@ -47,6 +47,7 @@ protected:
 	vulkan::Compute&   vulkanCompute;
 	vulkan::All&       vulkanAll;
 	basic::Settings&   settings;
+	basic::FileReader& fileReader;
 	entt::registry&    registry;
 
 	vulkan::SimpleCommandBuffer commandBuffer;
@@ -89,7 +90,7 @@ public:
 			.basePath = ".",
 		};
 
-		data_t& data = registry.emplace<data_t>(id, vulkanCreateInfo);
+		data_t& data = registry.emplace<data_t>(id, data_t::make(vulkanCreateInfo, fileReader));
 
 		{
 			auto recorder = createCommandRecorder();

@@ -36,6 +36,7 @@ VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	vulkanCompute(injector.inject<vulkan::Compute>()),
 	vulkanAll(injector.inject<vulkan::All>()),
 	settings(injector.inject<basic::Settings>()),
+	fileReader(injector.inject<basic::FileReader>()),
 	registry(injector.inject<entt::registry>())
 {
 	init();

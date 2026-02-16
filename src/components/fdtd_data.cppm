@@ -48,7 +48,7 @@ MatrixData<T> initMat(svec2 dims, T defaultValue = 0)
 	return MatrixData<T>(dims.x*dims.y, defaultValue);
 }
 
-template <typename T, typename float_t>
+export template <typename T, typename float_t>
 concept FloatFileReader =
 requires(T t, std::filesystem::path p, float_t f)
 {
