@@ -58,9 +58,13 @@ void pickFile(std::string_view label, std::filesystem::path& path)
 		}}
 	};
 
+	constexpr ImGuiInputTextFlags textFlags =
+		ImGuiInputTextFlags_ElideLeft
+	;
+
 	ImGui::BeginGroup();
 	ImGui::PushID(label.begin());
-	ImGui::InputText("", &path);
+	ImGui::InputText("", &path, textFlags);
 	ImGui::SameLine(0, ImGui::GetStyle().ItemInnerSpacing.x);
 
 	if(!path.empty() && !std::filesystem::exists(path)) //TODO: Style
