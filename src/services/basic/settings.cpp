@@ -123,6 +123,24 @@ const std::filesystem::path& Settings::Hz0() const
 	return ref.has_value() ? ref.value() : empty;
 }
 
+const std::filesystem::path& Settings::Chxh0() const
+{
+	const auto& ref = argumentParser.Chxh0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Chyh0() const
+{
+	const auto& ref = argumentParser.Chyh0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Chzh0() const
+{
+	const auto& ref = argumentParser.Chzh0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
 const std::filesystem::path& Settings::Chxe0() const
 {
 	const auto& ref = argumentParser.Chxe0();
@@ -228,6 +246,24 @@ const std::filesystem::path& Settings::Ceye0() const
 const std::filesystem::path& Settings::Ceze0() const
 {
 	const auto& ref = argumentParser.Ceze0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Cexh0() const
+{
+	const auto& ref = argumentParser.Cexh0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Ceyh0() const
+{
+	const auto& ref = argumentParser.Ceyh0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Cezh0() const
+{
+	const auto& ref = argumentParser.Cezh0();
 	return ref.has_value() ? ref.value() : empty;
 }
 
