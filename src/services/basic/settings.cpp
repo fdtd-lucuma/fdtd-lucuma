@@ -53,6 +53,310 @@ std::size_t Settings::sizeZ() const
 	return argumentParser.sizeZ().value_or(defaultSizeZ);
 }
 
+std::size_t Settings::gaussX() const
+{
+	return argumentParser.gaussX().value_or(defaultGaussX);
+}
+
+std::size_t Settings::gaussY() const
+{
+	return argumentParser.gaussY().value_or(defaultGaussY);
+}
+
+std::size_t Settings::gaussZ() const
+{
+	return argumentParser.gaussZ().value_or(defaultGaussZ);
+}
+
+float Settings::deltaT() const
+{
+	return argumentParser.deltaT().value_or(defaultDeltaT);
+}
+
+float Settings::deltaX() const
+{
+	return argumentParser.deltaX().value_or(defaultDeltaX);
+}
+
+float Settings::deltaY() const
+{
+	return argumentParser.deltaY().value_or(defaultDeltaY);
+}
+
+float Settings::deltaZ() const
+{
+	return argumentParser.deltaZ().value_or(defaultDeltaZ);
+}
+
+float Settings::imp0() const
+{
+	return argumentParser.imp0().value_or(defaultImp0);
+}
+
+float Settings::Cr() const
+{
+	return argumentParser.Cr().value_or(1.f/std::sqrt(3.f));
+}
+
+float Settings::gaussSigma() const
+{
+	return argumentParser.gaussSigma().value_or(defaultGaussSigma);
+}
+
+const std::filesystem::path Settings::empty = {};
+
+const std::filesystem::path& Settings::Hx0() const
+{
+	const auto& ref = argumentParser.Hx0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Hy0() const
+{
+	const auto& ref = argumentParser.Hy0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Hz0() const
+{
+	const auto& ref = argumentParser.Hz0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Chxe0() const
+{
+	const auto& ref = argumentParser.Chxe0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Chye0() const
+{
+	const auto& ref = argumentParser.Chye0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Chze0() const
+{
+	const auto& ref = argumentParser.Chze0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::CMhx0() const
+{
+	const auto& ref = argumentParser.CMhx0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::CMhy0() const
+{
+	const auto& ref = argumentParser.CMhy0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::CMhz0() const
+{
+	const auto& ref = argumentParser.CMhz0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::mux0() const
+{
+	const auto& ref = argumentParser.mux0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::muy0() const
+{
+	const auto& ref = argumentParser.muy0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::muz0() const
+{
+	const auto& ref = argumentParser.muz0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::muxR0() const
+{
+	const auto& ref = argumentParser.muxR0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::muyR0() const
+{
+	const auto& ref = argumentParser.muyR0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::muzR0() const
+{
+	const auto& ref = argumentParser.muzR0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Ex0() const
+{
+	const auto& ref = argumentParser.Ex0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Ey0() const
+{
+	const auto& ref = argumentParser.Ey0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Ez0() const
+{
+	const auto& ref = argumentParser.Ez0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Cexe0() const
+{
+	const auto& ref = argumentParser.Cexe0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Ceye0() const
+{
+	const auto& ref = argumentParser.Ceye0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::Ceze0() const
+{
+	const auto& ref = argumentParser.Ceze0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::CEEx0() const
+{
+	const auto& ref = argumentParser.CEEx0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::CEEy0() const
+{
+	const auto& ref = argumentParser.CEEy0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::CEEz0() const
+{
+	const auto& ref = argumentParser.CEEz0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::epsx0() const
+{
+	const auto& ref = argumentParser.epsx0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::epsy0() const
+{
+	const auto& ref = argumentParser.epsy0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::epsz0() const
+{
+	const auto& ref = argumentParser.epsz0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::epsxR0() const
+{
+	const auto& ref = argumentParser.epsxR0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::epsyR0() const
+{
+	const auto& ref = argumentParser.epsyR0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::epszR0() const
+{
+	const auto& ref = argumentParser.epszR0();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::eyx00() const
+{
+	const auto& ref = argumentParser.eyx00();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::ezx00() const
+{
+	const auto& ref = argumentParser.ezx00();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::eyx10() const
+{
+	const auto& ref = argumentParser.eyx10();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::ezx10() const
+{
+	const auto& ref = argumentParser.ezx10();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::exy00() const
+{
+	const auto& ref = argumentParser.exy00();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::ezy00() const
+{
+	const auto& ref = argumentParser.ezy00();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::exy10() const
+{
+	const auto& ref = argumentParser.exy10();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::ezy10() const
+{
+	const auto& ref = argumentParser.ezy10();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::exz00() const
+{
+	const auto& ref = argumentParser.exz00();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::eyz00() const
+{
+	const auto& ref = argumentParser.eyz00();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::exz10() const
+{
+	const auto& ref = argumentParser.exz10();
+	return ref.has_value() ? ref.value() : empty;
+}
+
+const std::filesystem::path& Settings::eyz10() const
+{
+	const auto& ref = argumentParser.eyz10();
+	return ref.has_value() ? ref.value() : empty;
+}
+
 unsigned int Settings::time() const
 {
 	return argumentParser.time().value_or(defaultTime);

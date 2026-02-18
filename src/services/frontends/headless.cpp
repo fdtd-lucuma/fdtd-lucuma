@@ -44,16 +44,15 @@ void Headless::compute()
 		.size          = settings.size(),
 		.gaussPosition = settings.size()/(std::uint64_t)2,
 
-		//TODO: Get from settings
-		.deltaT = 1,
-		.deltaX = 1,
-		.deltaY = 1,
-		.deltaZ = 1,
-		.imp0 = 377,
-		.Cr = 1.f/std::sqrt(3.f),
+		.deltaT = settings.deltaT(),
+		.deltaX = settings.deltaX(),
+		.deltaY = settings.deltaY(),
+		.deltaZ = settings.deltaZ(),
+		.imp0   = settings.imp0(),
+		.Cr     = settings.Cr(),
 
 		.maxTime = settings.time(),
-		.gaussSigma = 10,
+		.gaussSigma = settings.gaussSigma(),
 	};
 
 	backend.init(createInfo, id);

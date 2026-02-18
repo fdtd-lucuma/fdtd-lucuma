@@ -522,11 +522,12 @@ void SimulationList::resetNewSimulationInfo()
 
 		.size          = {size.x, size.y, size.z},
 		.gaussPosition = {size.x/2, size.y/2, size.z/2},
-		.deltaT        = 1,
-		.imp0          = 377,
-		.Cr            = (1.f/std::sqrt(3.f)),
+		.deltaT        = settings.deltaT(),
+		.imp0          = settings.imp0(),
+		.Cr            = settings.Cr(),
 		.maxTime       = settings.time(),
-		.gaussSigma    = 10,
+		.gaussSigma    = settings.gaussSigma(),
+
 
 		.backend   = Backend::vulkan,
 		.precision = Precision::f32,
