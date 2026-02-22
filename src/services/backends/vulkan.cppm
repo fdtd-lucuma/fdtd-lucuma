@@ -222,11 +222,11 @@ private:
 
 		if(settings.tracy())
 		{
+			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute abc");
 			data.abc(recorder);
 		}
 		else
 		{
-			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute abc");
 			data.abc(recorder);
 		}
 
