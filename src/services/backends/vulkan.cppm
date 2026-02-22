@@ -183,19 +183,52 @@ private:
 
 	void innerStep(data_t& data, vulkan::CommandRecorder& recorder)
 	{
-		data.updateH(recorder);
+		if(settings.tracy())
+		{
+			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute H");
+			data.updateH(recorder);
+		}
+		else
+		{
+			data.updateH(recorder);
+		}
 
 		computeComputeBarrier(recorder);
 
-		data.updateE(recorder);
+		if(settings.tracy())
+		{
+			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute E");
+			data.updateE(recorder);
+		}
+		else
+		{
+			data.updateE(recorder);
+		}
 
 		computeComputeBarrier(recorder);
 
-		data.gauss(recorder);
+		if(settings.tracy())
+		{
+			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute gauss");
+			data.gauss(recorder);
+		}
+		else
+		{
+			data.gauss(recorder);
+		}
 
 		computeComputeBarrier(recorder);
 
-		data.abc(recorder);
+
+		if(settings.tracy())
+		{
+			data.abc(recorder);
+		}
+		else
+		{
+			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute abc");
+			data.abc(recorder);
+		}
 
 	}
 
