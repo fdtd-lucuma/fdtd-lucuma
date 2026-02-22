@@ -16,20 +16,26 @@
 
 module;
 
-module lucuma.services.basic;
+export module lucuma.services.basic:tracy;
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+import lucuma.utils;
+
+import std;
+
+namespace lucuma::services::basic
 {
-using namespace lucuma::services::basic;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
-template PathCommon&     Injector::inject<PathCommon>();
-template Settings&       Injector::inject<Settings>();
-template Systems&        Injector::inject<Systems>();
-template Tracy&          Injector::inject<Tracy>();
-template XdgDirs&        Injector::inject<XdgDirs>();
+using namespace lucuma::utils;
 
+export class Tracy
+{
+public:
+	Tracy(Injector& injector);
+
+	~Tracy();
+
+private:
+	void init();
+};
 
 }

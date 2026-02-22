@@ -648,8 +648,8 @@ void ArgumentParser::parse(int argc, char** argv)
 		{"eyz00",       required_argument, nullptr, (int)Argument::eyz00},
 		{"exz10",       required_argument, nullptr, (int)Argument::exz10},
 		{"eyz10",       required_argument, nullptr, (int)Argument::eyz10},
-		{"tracy",       required_argument, nullptr, (int)Argument::tracy},
-		{"no-tracy",    required_argument, nullptr, (int)Argument::no_tracy},
+		{"tracy",       no_argument,       nullptr, (int)Argument::tracy},
+		{"no-tracy",    no_argument,       nullptr, (int)Argument::no_tracy},
 
 		{nullptr,       0,                 nullptr, 0},
 	};

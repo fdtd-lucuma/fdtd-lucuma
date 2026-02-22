@@ -18,18 +18,25 @@ module;
 
 module lucuma.services.basic;
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+import std;
+import lucuma.legacy_headers.tracy;
+
+namespace lucuma::services::basic
 {
-using namespace lucuma::services::basic;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
-template PathCommon&     Injector::inject<PathCommon>();
-template Settings&       Injector::inject<Settings>();
-template Systems&        Injector::inject<Systems>();
-template Tracy&          Injector::inject<Tracy>();
-template XdgDirs&        Injector::inject<XdgDirs>();
+Tracy::Tracy([[maybe_unused]]Injector& injector)
+{
+	init();
+}
 
+void Tracy::init()
+{
+	tracy::StartupProfiler();
+}
+
+Tracy::~Tracy()
+{
+	tracy::ShutdownProfiler();
+}
 
 }

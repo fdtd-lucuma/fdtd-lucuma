@@ -26,6 +26,7 @@ export import :path;
 export import :path_common;
 export import :settings;
 export import :systems;
+export import :tracy;
 export import :xdg_dirs;
 
 namespace lucuma::utils
@@ -37,6 +38,7 @@ extern template FileReader&     Injector::inject<FileReader>();
 extern template PathCommon&     Injector::inject<PathCommon>();
 extern template Settings&       Injector::inject<Settings>();
 extern template Systems&        Injector::inject<Systems>();
+extern template Tracy&          Injector::inject<Tracy>();
 extern template XdgDirs&        Injector::inject<XdgDirs>();
 
 }
