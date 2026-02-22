@@ -16,6 +16,9 @@
 
 module;
 
+#include <vulkan/vulkan.hpp>
+#include <tracy/TracyVulkan.hpp>
+
 export module lucuma.services.backends:vulkan;
 
 import lucuma.legacy_headers.entt;
@@ -42,6 +45,11 @@ export class VulkanBase
 {
 protected:
 	VulkanBase(Injector& injector);
+
+	VulkanBase(VulkanBase const&) = delete;
+	VulkanBase(VulkanBase&& other);
+
+	VulkanBase& operator=(VulkanBase const&) = delete;
 
 	vulkan::Allocator& vulkanAllocator;
 	vulkan::Compute&   vulkanCompute;
@@ -122,45 +130,40 @@ public:
 
 		data_t& data = registry.get<data_t>(id);
 
-		bool canContinue = data.step();
+		if(!data.step())
+			return false;
 
-		if(canContinue)
+		if(settings.debug())
+			std::println("Step #{}", data.getTime());
+
 		{
-			if(settings.debug())
-				std::println("Step #{}", data.getTime());
+			auto recorder = createCommandRecorder();
 
+			if(settings.tracy())
 			{
-				auto recorder = createCommandRecorder();
+				TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute");
+				innerStep(data, recorder);
 
-				data.updateH(recorder);
-
-				computeComputeBarrier(recorder);
-
-				data.updateE(recorder);
-
-				computeComputeBarrier(recorder);
-
-				data.gauss(recorder);
-
-				computeComputeBarrier(recorder);
-
-				data.abc(recorder);
-
-				if(settings.saveAs() != SaveAs::none)
-					computeCpuBarrier(recorder);
-
-				if(data.getTime() % 32 == 0)
+				if(data.getTime() % 64 == 0)
 					commandBuffer.tracyCollect();
 			}
-
-			if(settings.debug())
+			else
 			{
-				for(auto&& [name, mat]: data.zippedFields())
-					debugPrintSlice(name, mat, data.size);
+				innerStep(data, recorder);
 			}
+
+			if(settings.saveAs() != SaveAs::none)
+				computeCpuBarrier(recorder);
+
 		}
 
-		return canContinue;
+		if(settings.debug())
+		{
+			for(auto&& [name, mat]: data.zippedFields())
+				debugPrintSlice(name, mat, data.size);
+		}
+
+		return true;
 	}
 
 	virtual void saveFiles(entt::entity id)
@@ -177,6 +180,24 @@ public:
 	virtual ~Vulkan() = default;
 
 private:
+
+	void innerStep(data_t& data, vulkan::CommandRecorder& recorder)
+	{
+		data.updateH(recorder);
+
+		computeComputeBarrier(recorder);
+
+		data.updateE(recorder);
+
+		computeComputeBarrier(recorder);
+
+		data.gauss(recorder);
+
+		computeComputeBarrier(recorder);
+
+		data.abc(recorder);
+
+	}
 
 };
 

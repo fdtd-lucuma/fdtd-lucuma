@@ -107,11 +107,13 @@ private:
 	void createTracyContexts();
 
 	void recordCommandBuffer(std::uint32_t imageIndex);
+	void recordCommandBufferInner(std::uint32_t imageIndex);
 	void transition_image_layout(const TransitionImageLayoutInfo& input);
 
 	void transitionImageAny2Optimal(std::uint32_t imageIndex);
 	void transitionImageOptimal2PresentSrc(std::uint32_t imageIndex);
 
+	std::uint32_t currentFrameMod = 0;
 	std::uint32_t currentFrame = 0;
 	bool framebufferResized = false;
 

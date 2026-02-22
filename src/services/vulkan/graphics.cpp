@@ -137,8 +137,29 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 
 	commandBuffer.begin({});
 
-	//if(settings.tracy())
-	//	TracyVkZone(getCurrentVkCtx(), (VkCommandBuffer)*commandBuffer, "Graphics");
+	if(settings.tracy())
+	{
+		auto* ctx = getCurrentVkCtx();
+		TracyVkZone(ctx, *commandBuffer, "Graphics");
+		recordCommandBufferInner(imageIndex);
+
+		if(currentFrame % 64 == 0)
+		{
+			TracyVkCollect(ctx, *commandBuffer);
+		}
+	}
+	else
+	{
+		recordCommandBufferInner(imageIndex);
+	}
+
+	commandBuffer.end();
+
+}
+
+void Graphics::recordCommandBufferInner(std::uint32_t imageIndex)
+{
+	auto& commandBuffer = getCurrentCommandBuffer();
 
 	transitionImageAny2Optimal(imageIndex);
 
@@ -169,8 +190,6 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 	commandBuffer.endRendering();
 
 	transitionImageOptimal2PresentSrc(imageIndex);
-
-	commandBuffer.end();
 
 }
 
@@ -349,22 +368,22 @@ Graphics::~Graphics()
 
 vk::raii::CommandBuffer& Graphics::getCurrentCommandBuffer()
 {
-	return commandBuffers[currentFrame];
+	return commandBuffers[currentFrameMod];
 }
 
 vk::raii::Fence& Graphics::getCurrentInFlightFence()
 {
-	return inFlightFences[currentFrame];
+	return inFlightFences[currentFrameMod];
 }
 
 tracy::VkCtx* Graphics::getCurrentVkCtx()
 {
-	return tracyContexts[currentFrame];
+	return tracyContexts[currentFrameMod];
 }
 
 void Graphics::advanceFrame()
 {
-	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+	currentFrameMod = ++currentFrame % MAX_FRAMES_IN_FLIGHT;
 	swapchain.advanceFrame();
 }
 

@@ -37,14 +37,26 @@ VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	vulkanAll(injector.inject<vulkan::All>()),
 	settings(injector.inject<basic::Settings>()),
 	fileReader(injector.inject<basic::FileReader>()),
-	registry(injector.inject<entt::registry>())
+	registry(injector.inject<entt::registry>()),
+	commandBuffer(vulkanCompute.createSimpleCommandBuffer())
 {
-	init();
+}
+
+VulkanBase::VulkanBase(VulkanBase&& other):
+	vulkanAllocator(other.vulkanAllocator),
+	vulkanCompute(other.vulkanCompute),
+	vulkanAll(other.vulkanAll),
+	settings(other.settings),
+	fileReader(other.fileReader),
+	registry(other.registry),
+	commandBuffer(std::exchange(other.commandBuffer, {}))
+{
 }
 
 void VulkanBase::init()
 {
-	commandBuffer = vulkanCompute.createSimpleCommandBuffer();
+	// TODO: Check why this = operator calls the copy constructor
+	//commandBuffer = vulkanCompute.createSimpleCommandBuffer();
 }
 
 vulkan::CommandRecorder VulkanBase::createCommandRecorder()

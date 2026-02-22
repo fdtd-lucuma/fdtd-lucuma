@@ -349,7 +349,8 @@ void ComputePipeline::bind(vk::CommandBuffer commandBuffer)
 }
 
 SimpleCommandBuffer::SimpleCommandBuffer(SimpleCommandBuffer&& other):
-	commandBuffer(std::exchange(other.commandBuffer, nullptr))
+	commandBuffer(std::exchange(other.commandBuffer, nullptr)),
+	ctx(std::exchange(other.ctx, nullptr))
 {}
 
 SimpleCommandBuffer::SimpleCommandBuffer(Compute& compute)
@@ -394,7 +395,9 @@ vk::raii::CommandBuffer* SimpleCommandBuffer::operator ->()
 SimpleCommandBuffer::~SimpleCommandBuffer()
 {
 	if(ctx != nullptr)
+	{
 		TracyVkDestroy(ctx);
+	}
 }
 
 void SimpleCommandBuffer::tracyCollect()
@@ -403,6 +406,11 @@ void SimpleCommandBuffer::tracyCollect()
 		return;
 
 	TracyVkCollect(ctx, *commandBuffer);
+}
+
+tracy::VkCtx* SimpleCommandBuffer::getCtx()
+{
+	return ctx;
 }
 
 CommandRecorder::CommandRecorder(const CommandRecorderCreateInfo& createInfo):

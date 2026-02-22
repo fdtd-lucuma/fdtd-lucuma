@@ -65,6 +65,8 @@ public:
 
 	void tracyCollect();
 
+	tracy::VkCtx* getCtx();
+
 private:
 	SimpleCommandBuffer(Compute& compute);
 
