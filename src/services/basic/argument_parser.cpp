@@ -54,6 +54,11 @@ bool ArgumentParser::debug() const
 	return _debug;
 }
 
+bool ArgumentParser::tracy() const
+{
+	return _tracy;
+}
+
 const std::optional<std::filesystem::path>& ArgumentParser::graphPath() const
 {
 	return _graphPath;
@@ -463,6 +468,8 @@ void ArgumentParser::usage(int exit_code)
 		"\t--eyz00=PATH        Text file with initial values.\n"
 		"\t--exz10=PATH        Text file with initial values.\n"
 		"\t--eyz10=PATH        Text file with initial values.\n"
+		"\t--tracy             Enable tracy profiling.\n"
+		"\t--no-tracy          Disable tracy profiling.\n"
 		,
 		argv0(),
 		Settings::defaultSizeX,
@@ -559,6 +566,9 @@ enum class Argument: int
 	exz10,
 	eyz10,
 
+	tracy,
+	no_tracy,
+
 };
 
 void ArgumentParser::parse(int argc, char** argv)
@@ -638,6 +648,8 @@ void ArgumentParser::parse(int argc, char** argv)
 		{"eyz00",       required_argument, nullptr, (int)Argument::eyz00},
 		{"exz10",       required_argument, nullptr, (int)Argument::exz10},
 		{"eyz10",       required_argument, nullptr, (int)Argument::eyz10},
+		{"tracy",       required_argument, nullptr, (int)Argument::tracy},
+		{"no-tracy",    required_argument, nullptr, (int)Argument::no_tracy},
 
 		{nullptr,       0,                 nullptr, 0},
 	};
@@ -939,6 +951,14 @@ void ArgumentParser::handleOption(int shortopt)
 
 		case Argument::save_as:
 			fromString(_saveAs, optarg);
+			break;
+
+		case Argument::tracy:
+			_tracy = true;
+			break;
+
+		case Argument::no_tracy:
+			_tracy = false;
 			break;
 
 		case Argument::failure:

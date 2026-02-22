@@ -29,6 +29,7 @@ target_sources(${PROJECT_NAME}
 			mdspan.cppm
 			nativefiledialog_extended.cppm
 			taskflow.cppm
+			tracy.cppm
 			xdg_utils_cxx.cppm
 			yaml_cpp.cppm
 )

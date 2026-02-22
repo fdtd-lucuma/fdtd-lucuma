@@ -37,6 +37,7 @@ public:
 
 	bool isHeadless() const;
 	bool debug() const;
+	bool tracy() const;
 	const std::optional<std::filesystem::path>& graphPath() const;
 
 	std::optional<std::size_t> sizeX() const;
@@ -132,6 +133,7 @@ private:
 
 	bool                                 _isHeadless = true;
 	bool                                 _debug      = false;
+	bool                                 _tracy      = false;
 	std::optional<std::filesystem::path> _graphPath   = std::nullopt;
 
 	std::optional<std::size_t> _sizeX = std::nullopt;

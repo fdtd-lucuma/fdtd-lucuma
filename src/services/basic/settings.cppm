@@ -36,6 +36,7 @@ public:
 
 	bool isHeadless() const;
 	bool debug() const;
+	bool tracy() const;
 
 	static constexpr std::size_t defaultSizeX = 128;
 	static constexpr std::size_t defaultSizeY = 128;

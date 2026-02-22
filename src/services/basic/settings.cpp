@@ -38,6 +38,11 @@ bool Settings::debug() const
 	return argumentParser.debug();
 }
 
+bool Settings::tracy() const
+{
+	return argumentParser.tracy();
+}
+
 std::size_t Settings::sizeX() const
 {
 	return argumentParser.sizeX().value_or(defaultSizeX);
