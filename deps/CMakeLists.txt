@@ -141,7 +141,8 @@ FetchContent_Declare(
 	tracy
 	EXCLUDE_FROM_ALL
 	GIT_REPOSITORY https://github.com/wolfpld/tracy.git
-	GIT_TAG        master
+	GIT_TAG        v0.13.1
+	#GIT_TAG        master
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
 	OVERRIDE_FIND_PACKAGE
