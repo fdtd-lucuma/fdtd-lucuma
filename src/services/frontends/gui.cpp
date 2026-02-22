@@ -22,6 +22,7 @@ import lucuma.utils;
 import lucuma.services.window;
 import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
+import lucuma.legacy_headers.tracy;
 import lucuma.events;
 import lucuma.systems;
 
@@ -57,6 +58,7 @@ void Gui::start()
 		glfw.pollEvents();
 
 		drawFrame(timeDelta);
+		tracy::_FrameMark();
 
 		currentTime = std::chrono::high_resolution_clock::now();
 		timeDelta   = std::chrono::duration<float, std::chrono::seconds::period>(currentTime-lastTime).count();
