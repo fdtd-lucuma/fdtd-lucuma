@@ -24,7 +24,15 @@ import std;
 import lucuma.utils;
 import lucuma.utils.vulkan;
 import lucuma.services.window;
+import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
+
+namespace tracy
+{
+
+extern "C++" class VkCtx;
+
+};
 
 namespace lucuma::services::vulkan
 {
@@ -75,6 +83,7 @@ private:
 	entt::registry&   registry;
 	Device&           device;
 	Swapchain&        swapchain;
+	basic::Settings&  settings;
 	window::Glfw&     glfw;
 
 	std::uint32_t currentImageIndex;
@@ -95,6 +104,7 @@ private:
 
 	void createCommandBuffers();
 	void createSyncObjects();
+	void createTracyContexts();
 
 	void recordCommandBuffer(std::uint32_t imageIndex);
 	void transition_image_layout(const TransitionImageLayoutInfo& input);
@@ -109,10 +119,12 @@ private:
 
 	std::vector<vk::raii::CommandBuffer> commandBuffers;
 
-	std::vector<vk::raii::Fence>     inFlightFences;
+	std::vector<vk::raii::Fence> inFlightFences;
+	std::vector<tracy::VkCtx*>   tracyContexts;
 
 	vk::raii::CommandBuffer& getCurrentCommandBuffer();
 	vk::raii::Fence&         getCurrentInFlightFence();
+	tracy::VkCtx*            getCurrentVkCtx();
 
 };
 

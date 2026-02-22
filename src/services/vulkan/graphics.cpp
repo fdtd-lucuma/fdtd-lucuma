@@ -16,6 +16,9 @@
 
 module;
 
+#include <vulkan/vulkan.hpp>
+#include <tracy/TracyVulkan.hpp>
+
 module lucuma.services.vulkan;
 
 import lucuma.services.window;
@@ -35,6 +38,7 @@ Graphics::Graphics([[maybe_unused]] Injector& injector):
 	registry(injector.inject<entt::registry>()),
 	device(injector.inject<Device>()),
 	swapchain(injector.inject<Swapchain>()),
+	settings(injector.inject<basic::Settings>()),
 	glfw(injector.inject<window::Glfw>())
 
 {
@@ -74,6 +78,7 @@ void Graphics::init()
 	createCommandBuffers();
 
 	createSyncObjects();
+	createTracyContexts();
 
 	glfw.getWindow().callbacks()->on_framebuffer_resize =
 		[this](const vkfw::Window&, std::size_t, std::size_t)
@@ -131,6 +136,9 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 	commandBuffer.reset();
 
 	commandBuffer.begin({});
+
+	//if(settings.tracy())
+	//	TracyVkZone(getCurrentVkCtx(), (VkCommandBuffer)*commandBuffer, "Graphics");
 
 	transitionImageAny2Optimal(imageIndex);
 
@@ -228,7 +236,26 @@ void Graphics::createSyncObjects()
 		inFlightFences.emplace_back(device.getDevice().createFence({.flags = vk::FenceCreateFlagBits::eSignaled}));
 	}
 
+}
 
+void Graphics::createTracyContexts()
+{
+	if(!settings.tracy())
+		return;
+
+	tracyContexts.clear();
+
+	for(int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+	{
+		const auto& physdev = *device.getPhysicalDevice();
+		const auto& dev     = *device.getDevice();
+		const auto& queue   = *getGraphicsQueue();
+		const auto& cmdbuf  = commandBuffers[i];
+
+		tracy::VkCtx* ptr = TracyVkContext(physdev, dev, queue, *cmdbuf);
+
+		tracyContexts.emplace_back(ptr);
+	}
 }
 
 vk::Result Graphics::acquireNextImage()
@@ -313,6 +340,11 @@ vk::Result Graphics::present()
 Graphics::~Graphics()
 {
 	device.waitIdle();
+
+	for(auto ptr: tracyContexts)
+	{
+		TracyVkDestroy(ptr);
+	}
 }
 
 vk::raii::CommandBuffer& Graphics::getCurrentCommandBuffer()
@@ -323,6 +355,11 @@ vk::raii::CommandBuffer& Graphics::getCurrentCommandBuffer()
 vk::raii::Fence& Graphics::getCurrentInFlightFence()
 {
 	return inFlightFences[currentFrame];
+}
+
+tracy::VkCtx* Graphics::getCurrentVkCtx()
+{
+	return tracyContexts[currentFrame];
 }
 
 void Graphics::advanceFrame()

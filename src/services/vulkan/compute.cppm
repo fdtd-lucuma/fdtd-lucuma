@@ -23,6 +23,14 @@ import std;
 
 import lucuma.utils;
 import lucuma.utils.vulkan;
+import lucuma.services.basic;
+
+namespace tracy
+{
+
+extern "C++" class VkCtx;
+
+};
 
 namespace lucuma::services::vulkan
 {
@@ -52,10 +60,16 @@ public:
 
 	operator vk::CommandBuffer();
 	vk::raii::CommandBuffer* operator ->();
+
+	~SimpleCommandBuffer();
+
+	void tracyCollect();
+
 private:
 	SimpleCommandBuffer(Compute& compute);
 
 	vk::raii::CommandBuffer commandBuffer = nullptr;
+	tracy::VkCtx* ctx = nullptr;
 
 	friend class Compute;
 };
@@ -191,8 +205,9 @@ public:
 
 
 private:
-	Device&	   device;
-	ShaderLoader& shaderLoader;
+	Device&          device;
+	ShaderLoader&    shaderLoader;
+	basic::Settings& settings;
 
 	std::vector<vk::raii::Queue> queues;
 	vk::raii::CommandPool		commandPool = nullptr;

@@ -148,6 +148,9 @@ public:
 
 				if(settings.saveAs() != SaveAs::none)
 					computeCpuBarrier(recorder);
+
+				if(data.getTime() % 32 == 0)
+					commandBuffer.tracyCollect();
 			}
 
 			if(settings.debug())

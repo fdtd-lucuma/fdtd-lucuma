@@ -17,6 +17,8 @@
 module;
 
 #include <cstddef>
+#include <vulkan/vulkan.hpp>
+#include <tracy/TracyVulkan.hpp>
 
 module lucuma.services.vulkan;
 
@@ -30,7 +32,8 @@ using namespace lucuma::services;
 
 Compute::Compute([[maybe_unused]] Injector& injector):
 	device(injector.inject<Device>()),
-	shaderLoader(injector.inject<ShaderLoader>())
+	shaderLoader(injector.inject<ShaderLoader>()),
+	settings(injector.inject<basic::Settings>())
 
 {
 	if(!device.getComputeInfo().has_value())
@@ -362,6 +365,15 @@ SimpleCommandBuffer::SimpleCommandBuffer(Compute& compute)
 
 	commandBuffer = std::move(device.allocateCommandBuffers(commandBufferAllocateInfo)[0]);
 
+	if(compute.settings.tracy())
+	{
+		const auto& physdev = *compute.device.getPhysicalDevice();
+		const auto& dev     = *device;
+		const auto& queue   = *compute.getQueue();
+		const auto& cmdbuf  = *commandBuffer;
+
+		ctx = TracyVkContext(physdev, dev, queue, cmdbuf);
+	}
 }
 
 vk::raii::CommandBuffer& SimpleCommandBuffer::getCommandBuffer()
@@ -377,6 +389,20 @@ SimpleCommandBuffer::operator vk::CommandBuffer()
 vk::raii::CommandBuffer* SimpleCommandBuffer::operator ->()
 {
 	return &getCommandBuffer();
+}
+
+SimpleCommandBuffer::~SimpleCommandBuffer()
+{
+	if(ctx != nullptr)
+		TracyVkDestroy(ctx);
+}
+
+void SimpleCommandBuffer::tracyCollect()
+{
+	if(ctx == nullptr)
+		return;
+
+	TracyVkCollect(ctx, *commandBuffer);
 }
 
 CommandRecorder::CommandRecorder(const CommandRecorderCreateInfo& createInfo):

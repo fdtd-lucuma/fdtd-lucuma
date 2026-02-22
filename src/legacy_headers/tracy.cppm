@@ -29,9 +29,4 @@ using tracy::ShutdownProfiler;
 using tracy::IsProfilerStarted;
 #endif
 
-inline void _FrameMark()
-{
-	FrameMark;
-}
-
 };
