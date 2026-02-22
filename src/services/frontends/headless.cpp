@@ -16,6 +16,8 @@
 
 module;
 
+#include <tracy/Tracy.hpp>
+
 module lucuma.services.frontends;
 
 import lucuma.utils;
@@ -128,6 +130,9 @@ void Headless::compute()
 
 	while(backend.step(id))
 	{
+		if(settings.tracy())
+			FrameMark;
+
 		backend.saveFiles(id);
 	}
 
