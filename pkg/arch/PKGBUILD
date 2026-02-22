@@ -13,6 +13,7 @@ license=('GPL-3.0-or-later')
 groups=()
 depends=(
 	'dbus'
+	'debuginfod'
 	'fmt'
 	'freetype2'
 	'gcc-libs'

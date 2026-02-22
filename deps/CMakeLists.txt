@@ -139,6 +139,7 @@ set(TRACY_DELAYED_INIT ON CACHE BOOL "Enable delayed initialization of the libra
 set(TRACY_MANUAL_LIFETIME ON CACHE BOOL "Enable the manual lifetime management of the profile" FORCE)
 FetchContent_Declare(
 	tracy
+	EXCLUDE_FROM_ALL
 	GIT_REPOSITORY https://github.com/wolfpld/tracy.git
 	GIT_TAG        master
 	GIT_SHALLOW    ON

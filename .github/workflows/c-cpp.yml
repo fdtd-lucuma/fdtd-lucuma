@@ -92,6 +92,7 @@ jobs:
         vcpkg
         bash-completion@2
         fast_float
+        elfutils
 
     - name: vcpkg root
       run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
