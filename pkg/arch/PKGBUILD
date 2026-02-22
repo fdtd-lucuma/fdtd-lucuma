@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.2.0.r212.ga4bd36d
+pkgver=0.2.0.r217.g0834079
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -62,8 +62,10 @@ source=(
 	"implot3d-git::git+https://github.com/brenocq/implot3d#commit=3d7fb60faf77552705b70c23600ff49f02ac5f93"
 	"implot-git::git+https://github.com/epezent/implot#commit=81b8b1951392767cf458508385fa025fd087a252"
 	"nativefiledialog-extended-git::git+https://github.com/btzy/nativefiledialog-extended#branch=master"
+	"tracy-git::git+https://github.com/wolfpld/tracy.git#branch=master"
 )
 sha256sums=(
+	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -110,6 +112,7 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_IMPLOT3D="$srcdir/implot3d-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMPLOT="$srcdir/implot-git" \
 		-DFETCHCONTENT_SOURCE_DIR_NATIVEFILEDIALOG-EXTENDED="$srcdir/nativefiledialog-extended-git" \
+		-DFETCHCONTENT_SOURCE_DIR_TRACY="$srcdir/tracy-git" \
 		-DCMAKE_CXX_VISIBILITY_PRESET=hidden \
 		-DCMAKE_C_VISIBILITY_PRESET=hidden \
 

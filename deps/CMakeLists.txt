@@ -134,6 +134,18 @@ FetchContent_Declare(
 	OVERRIDE_FIND_PACKAGE
 )
 
+set(TRACY_DEBUGINFOD ON CACHE BOOL "Enable debuginfod support" FORCE)
+set(TRACY_DELAYED_INIT ON CACHE BOOL "Enable delayed initialization of the library (init on first call)" FORCE)
+set(TRACY_MANUAL_LIFETIME ON CACHE BOOL "Enable the manual lifetime management of the profile" FORCE)
+FetchContent_Declare(
+	tracy
+	GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+	GIT_TAG        master
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+	OVERRIDE_FIND_PACKAGE
+)
+
 FetchContent_MakeAvailable(
 	imgui
 	imgui-module
@@ -146,6 +158,7 @@ FetchContent_MakeAvailable(
 	implot3d
 	implot
 	nativefiledialog-extended
+	tracy
 )
 
 # Packages
@@ -162,6 +175,7 @@ find_package(Taskflow REQUIRED)
 find_package(Threads REQUIRED)
 find_package(nativefiledialog-extended REQUIRED)
 find_package(FastFloat REQUIRED)
+find_package(tracy REQUIRED)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
@@ -494,6 +508,7 @@ target_link_libraries(${PROJECT_NAME}
 		implot3d
 		magic_enumModule
 		nfd
+		Tracy::TracyClient
 )
 
 if (XdgUtils_FOUND)
