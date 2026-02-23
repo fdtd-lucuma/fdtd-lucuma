@@ -19,6 +19,22 @@ cd fdtd-lucuma
 docker compose up
 ```
 
+## Run as root (on wayland)
+```bash
+#https://github.com/systemd/systemd/issues/6249
+cat > /etc/dbus-1/session-local.conf <<EOF
+<busconfig>
+  <policy context="mandatory">
+    <allow user="root"/>
+  </policy>
+</busconfig>
+EOF
+
+sudo systemctl restart dbus
+
+sudo --preserve-env=XDG_SESSION_TYPE --preserve-env=WAYLAND_DISPLAY --preserve-env=DISPLAY --preserve-env=XDG_RUNTIME_DIR --preserve-env=DBUS_SESSION_BUS_ADDRESS fdtd-lucum
+```
+
 ## Dependencies
 
 Read [./pkg/ubuntu/dependencies.txt](./pkg/ubuntu/dependencies.txt)

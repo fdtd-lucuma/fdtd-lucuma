@@ -33,11 +33,11 @@ Filedialog::Filedialog([[maybe_unused]] Injector& injector):
 
 void Filedialog::init()
 {
-	if(NFD::Init() != NFD_OKAY)
+	if(NFD::Init() != NFD_OKAY || !NFD_SetDisplayPropertiesFromGLFW())
+	{
+		std::println(std::cerr, "{}", NFD::GetError());
 		throw new std::runtime_error(NFD::GetError());
-
-	if(!NFD_SetDisplayPropertiesFromGLFW())
-		throw new std::runtime_error(NFD::GetError());
+	}
 
 	// TODO: Parent window in wayland and X11
 }
