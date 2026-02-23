@@ -210,7 +210,7 @@ private:
 		{
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "Post abc", settings.tracy());
 
-			dispatcher.trigger(events::vulkan::PostFdtdAbc{
+			dispatcher.trigger(events::vulkan::PostFdtdAbc<precision>{
 				.commandBuffer = commandBuffer,
 				.handle        = entt::handle(registry, id),
 				.ctx           = ctx,
