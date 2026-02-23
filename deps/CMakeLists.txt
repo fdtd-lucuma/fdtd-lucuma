@@ -137,6 +137,11 @@ FetchContent_Declare(
 set(TRACY_DEBUGINFOD ON CACHE BOOL "Enable debuginfod support" FORCE)
 set(TRACY_DELAYED_INIT ON CACHE BOOL "Enable delayed initialization of the library (init on first call)" FORCE)
 set(TRACY_MANUAL_LIFETIME ON CACHE BOOL "Enable the manual lifetime management of the profile" FORCE)
+
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	set(TRACY_DEBUGINFOD OFF)
+endif()
+
 FetchContent_Declare(
 	tracy
 	EXCLUDE_FROM_ALL
