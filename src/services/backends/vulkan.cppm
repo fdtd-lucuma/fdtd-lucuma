@@ -213,6 +213,7 @@ private:
 			dispatcher.trigger(events::vulkan::PostFdtdAbc{
 				.commandBuffer = commandBuffer,
 				.handle        = entt::handle(registry, id),
+				.ctx           = ctx,
 			});
 		}
 

@@ -21,6 +21,13 @@ export module lucuma.events.vulkan:fdtd;
 import vulkan_hpp;
 import lucuma.legacy_headers.entt;
 
+namespace tracy
+{
+
+extern "C++" class VkCtx;
+
+};
+
 namespace lucuma::events::vulkan
 {
 
@@ -28,6 +35,7 @@ export struct PostFdtdAbc
 {
 	vk::CommandBuffer commandBuffer = {};
 	entt::handle      handle        = {};
+	tracy::VkCtx*     ctx           = nullptr;
 };
 
 }
