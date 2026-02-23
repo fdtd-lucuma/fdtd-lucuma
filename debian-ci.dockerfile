@@ -17,4 +17,5 @@ RUN  --mount=type=cache,target=/vcpkg_cache,sharing=locked \
 COPY ./pkg/ubuntu/ /fdtd-lucuma/pkg/ubuntu/
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 	--mount=type=cache,target=/var/cache/apt,sharing=locked \
-	xargs -a pkg/ubuntu/dependencies.txt -- apt install -y
+	sed "/debuginfo/d" pkg/ubuntu/dependencies.txt | xargs -- apt install -y
+	# debuginfo can't be installed yet on debian experimental
