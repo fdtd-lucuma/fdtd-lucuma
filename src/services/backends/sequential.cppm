@@ -16,6 +16,8 @@
 
 module;
 
+#include <tracy/Tracy.hpp>
+
 export module lucuma.services.backends:sequential;
 
 import lucuma.utils;
@@ -63,12 +65,24 @@ public:
 
 	virtual bool step(entt::entity id)
 	{
-		return common.step<T>(id, [](data_t& data)
+		return common.step<T>(id, [this](data_t& data)
 		{
-			data.updateH();
-			data.updateE();
-			data.gauss();
-			data.abc();
+			{
+				ZoneNamedN(__zone, "H", common.tracy());
+				data.updateH();
+			}
+			{
+				ZoneNamedN(__zone, "E", common.tracy());
+				data.updateE();
+			}
+			{
+				ZoneNamedN(__zone, "gauss", common.tracy());
+				data.gauss();
+			}
+			{
+				ZoneNamedN(__zone, "abc", common.tracy());
+				data.abc();
+			}
 		});
 	}
 

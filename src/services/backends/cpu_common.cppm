@@ -103,10 +103,8 @@ public:
 		saver.snapshot(data);
 	}
 
-	bool debug() const
-	{
-		return settings.debug();
-	}
+	bool debug() const;
+	bool tracy() const;
 
 private:
 	basic::Settings& settings;

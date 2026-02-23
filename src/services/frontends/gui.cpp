@@ -70,17 +70,39 @@ void Gui::start()
 
 void Gui::drawFrame(float timeDelta)
 {
-	dispatcher.trigger(events::FrameStart{timeDelta});
-	dispatcher.trigger(events::Update{timeDelta});
-	dispatcher.trigger(events::PostUpdate{timeDelta});
-	dispatcher.trigger(events::FrameEnd{timeDelta});
+	{
+		ZoneNamedN(__zone, "Start", settings.tracy());
+		dispatcher.trigger(events::FrameStart{timeDelta});
+	}
+	{
+		ZoneNamedN(__zone, "Update", settings.tracy());
+		dispatcher.trigger(events::Update{timeDelta});
+	}
+	{
+		ZoneNamedN(__zone, "Post update", settings.tracy());
+		dispatcher.trigger(events::PostUpdate{timeDelta});
+	}
+	{
+		ZoneNamedN(__zone, "End", settings.tracy());
+		dispatcher.trigger(events::FrameEnd{timeDelta});
+	}
 
-	systems.cleanStopped(); //TODO: Move this into frameEnd
+	{
+		ZoneNamedN(__zone, "Clean stopped", settings.tracy());
+		systems.cleanStopped(); //TODO: Move this into frameEnd
+	}
 
-	dispatcher.trigger<events::Start>();
-	dispatcher.sink<events::Start>().disconnect();
+	{
+		ZoneNamedN(__zone, "System starts", settings.tracy());
 
-	graphics.draw();
+		dispatcher.trigger<events::Start>();
+		dispatcher.sink<events::Start>().disconnect();
+	}
+
+	{
+		ZoneNamedN(__zone, "Draw", settings.tracy());
+		graphics.draw();
+	}
 }
 
 }

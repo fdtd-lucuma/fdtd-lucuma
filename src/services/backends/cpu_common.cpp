@@ -32,4 +32,14 @@ CpuCommon::CpuCommon([[maybe_unused]]Injector& injector):
 	registry(injector.inject<entt::registry>())
 { }
 
+bool CpuCommon::debug() const
+{
+	return settings.debug();
+}
+
+bool CpuCommon::tracy() const
+{
+	return settings.tracy();
+}
+
 }

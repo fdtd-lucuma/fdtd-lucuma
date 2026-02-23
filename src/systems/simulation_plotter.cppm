@@ -16,6 +16,8 @@
 
 module;
 
+#include <tracy/Tracy.hpp>
+
 export module lucuma.systems:simulation_plotter;
 
 import lucuma.services.basic;
@@ -65,10 +67,14 @@ public:
 
 	void update([[maybe_unused]] const events::Update& event)
 	{
+		ZoneNamedN(__zone, "Plotter", settings.tracy());
 		for(auto&& [id, simulation_info, plot_info, fdtd_data]: registry.view<components::SimulationInfo, components::SimulationPlotInfo, data_t>().each())
 		{
 			if(!plot_info.openWindow)
 				continue;
+
+			ZoneNamed(__zone2, settings.tracy());
+			ZoneNameVF(__zone2, "#%d", id);
 
 			char buffer[128];
 

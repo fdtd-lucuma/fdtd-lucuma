@@ -180,21 +180,21 @@ private:
 		auto& cmdbuf = *commandBuffer.getCommandBuffer();
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute H", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "H", settings.tracy());
 			data.updateH(recorder);
 		}
 
 		computeComputeBarrier(recorder);
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute E", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "E", settings.tracy());
 			data.updateE(recorder);
 		}
 
 		computeComputeBarrier(recorder);
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute gauss", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "gauss", settings.tracy());
 			data.gauss(recorder);
 		}
 
@@ -202,7 +202,7 @@ private:
 
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute abc", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "abc", settings.tracy());
 			data.abc(recorder);
 		}
 

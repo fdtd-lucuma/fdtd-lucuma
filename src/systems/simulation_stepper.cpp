@@ -16,6 +16,8 @@
 
 module;
 
+#include <tracy/Tracy.hpp>
+
 module lucuma.systems;
 import lucuma.utils;
 import lucuma.utils.imgui;
@@ -45,9 +47,14 @@ void SimulationStepper::init()
 
 void SimulationStepper::update([[maybe_unused]]const events::Update& event)
 {
+	ZoneNamedN(__zone, "Stepper", settings.tracy());
+
 	// TODO: Find a way to decouple this from the frame rate
 	for(auto&& [id, info]: registry.view<components::SimulationInfo>(entt::exclude<components::Paused>).each())
 	{
+		ZoneNamed(__zone2, settings.tracy());
+		ZoneNameVF(__zone2, "#%d", id);
+
 		if(!instantiator.get(info.backend, info.precision).step(id))
 		{
 			registry.emplace<components::Paused>(id);

@@ -16,6 +16,8 @@
 
 module;
 
+#include <tracy/Tracy.hpp>
+
 export module lucuma.services.backends:cpu_taskflow;
 
 import lucuma.utils;
@@ -64,7 +66,7 @@ public:
 
 	virtual bool step(entt::entity id)
 	{
-		return common.step<T>(id, [](data_t& data)
+		return common.step<T>(id, [this](data_t& data)
 		{
 			static tf::Executor executor(3); //TODO Inject this
 
@@ -72,24 +74,58 @@ public:
 
 			auto updateH = taskflow.emplace([&](tf::Subflow& subflow)
 			{
+				ZoneNamedN(__zone, "H", common.tracy());
 				subflow.emplace(
-					[&](){data.updateHx();},
-					[&](){data.updateHy();},
-					[&](){data.updateHz();}
+					[&]()
+					{
+						ZoneNamedN(__zone2, "Hx", common.tracy());
+						data.updateHx();
+					},
+					[&]()
+					{
+						ZoneNamedN(__zone2, "Hy", common.tracy());
+						data.updateHy();
+					},
+					[&]()
+					{
+						ZoneNamedN(__zone2, "Hz", common.tracy());
+						data.updateHz();
+					}
 				);
 			});
 
 			auto updateE = taskflow.emplace([&](tf::Subflow& subflow)
 			{
+				ZoneNamedN(__zone, "E", common.tracy());
 				subflow.emplace(
-					[&](){data.updateEx();},
-					[&](){data.updateEy();},
-					[&](){data.updateEz();}
+					[&]()
+					{
+						ZoneNamedN(__zone2, "Ex", common.tracy());
+						data.updateEx();
+					},
+					[&]()
+					{
+						ZoneNamedN(__zone2, "Ey", common.tracy());
+						data.updateEy();
+					},
+					[&]()
+					{
+						ZoneNamedN(__zone2, "Ez", common.tracy());
+						data.updateEz();
+					}
 				);
 			});
 
-			auto gauss = taskflow.emplace([&](){data.gauss();});
-			auto abc   = taskflow.emplace([&](){data.abc();});
+			auto gauss = taskflow.emplace([&]()
+			{
+				ZoneNamedN(__zone, "gauss", common.tracy());
+				data.gauss();
+			});
+			auto abc = taskflow.emplace([&]()
+			{
+				ZoneNamedN(__zone, "abc", common.tracy());
+				data.abc();
+			});
 
 			updateH.precede(updateE);
 			updateE.precede(gauss);
