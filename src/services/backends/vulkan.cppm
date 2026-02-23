@@ -139,18 +139,11 @@ public:
 		{
 			auto recorder = createCommandRecorder();
 
-			if(settings.tracy())
-			{
-				TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute");
-				innerStep(data, recorder);
+			TracyVkNamedZone(commandBuffer.getCtx(), __zone, *commandBuffer.getCommandBuffer(), "Compute", settings.tracy());
+			innerStep(data, recorder);
 
-				if(data.getTime() % 64 == 0)
-					commandBuffer.tracyCollect();
-			}
-			else
-			{
-				innerStep(data, recorder);
-			}
+			if(data.getTime() % 64 == 0)
+				commandBuffer.tracyCollect();
 
 			if(settings.saveAs() != SaveAs::none)
 				computeCpuBarrier(recorder);
@@ -183,50 +176,33 @@ private:
 
 	void innerStep(data_t& data, vulkan::CommandRecorder& recorder)
 	{
-		if(settings.tracy())
+		auto* ctx = commandBuffer.getCtx();
+		auto& cmdbuf = *commandBuffer.getCommandBuffer();
+
 		{
-			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute H");
-			data.updateH(recorder);
-		}
-		else
-		{
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute H", settings.tracy());
 			data.updateH(recorder);
 		}
 
 		computeComputeBarrier(recorder);
 
-		if(settings.tracy())
 		{
-			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute E");
-			data.updateE(recorder);
-		}
-		else
-		{
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute E", settings.tracy());
 			data.updateE(recorder);
 		}
 
 		computeComputeBarrier(recorder);
 
-		if(settings.tracy())
 		{
-			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute gauss");
-			data.gauss(recorder);
-		}
-		else
-		{
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute gauss", settings.tracy());
 			data.gauss(recorder);
 		}
 
 		computeComputeBarrier(recorder);
 
 
-		if(settings.tracy())
 		{
-			TracyVkZone(commandBuffer.getCtx(), *commandBuffer.getCommandBuffer(), "Compute abc");
-			data.abc(recorder);
-		}
-		else
-		{
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "Compute abc", settings.tracy());
 			data.abc(recorder);
 		}
 

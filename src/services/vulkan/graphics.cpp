@@ -137,20 +137,16 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 
 	commandBuffer.begin({});
 
-	if(settings.tracy())
 	{
 		auto* ctx = getCurrentVkCtx();
-		TracyVkZone(ctx, *commandBuffer, "Graphics");
+		TracyVkNamedZone(ctx, __zone, *commandBuffer, "Graphics", settings.tracy());
+
 		recordCommandBufferInner(imageIndex);
 
-		if(currentFrame % 64 == 0)
+		if(ctx != nullptr && currentFrame % 64 == 0)
 		{
 			TracyVkCollect(ctx, *commandBuffer);
 		}
-	}
-	else
-	{
-		recordCommandBufferInner(imageIndex);
 	}
 
 	commandBuffer.end();
@@ -378,6 +374,9 @@ vk::raii::Fence& Graphics::getCurrentInFlightFence()
 
 tracy::VkCtx* Graphics::getCurrentVkCtx()
 {
+	if(tracyContexts.empty())
+		return nullptr;
+
 	return tracyContexts[currentFrameMod];
 }
 
