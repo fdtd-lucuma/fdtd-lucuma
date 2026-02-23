@@ -16,7 +16,18 @@
 
 module;
 
-export module lucuma.events.vulkan;
+export module lucuma.events.vulkan:fdtd;
 
-export import :draw;
-export import :fdtd;
+import vulkan_hpp;
+import lucuma.legacy_headers.entt;
+
+namespace lucuma::events::vulkan
+{
+
+export struct PostFdtdAbc
+{
+	vk::CommandBuffer commandBuffer = {};
+	entt::handle      handle        = {};
+};
+
+}

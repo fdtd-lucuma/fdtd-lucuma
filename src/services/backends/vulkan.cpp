@@ -38,6 +38,7 @@ VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	settings(injector.inject<basic::Settings>()),
 	fileReader(injector.inject<basic::FileReader>()),
 	registry(injector.inject<entt::registry>()),
+	dispatcher(injector.inject<entt::dispatcher>()),
 	commandBuffer(vulkanCompute.createSimpleCommandBuffer())
 {
 }
@@ -49,6 +50,7 @@ VulkanBase::VulkanBase(VulkanBase&& other):
 	settings(other.settings),
 	fileReader(other.fileReader),
 	registry(other.registry),
+	dispatcher(other.dispatcher),
 	commandBuffer(std::exchange(other.commandBuffer, {}))
 {
 }

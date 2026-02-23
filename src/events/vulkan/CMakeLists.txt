@@ -20,5 +20,6 @@ target_sources(${PROJECT_NAME}
 		TYPE CXX_MODULES
 		FILES
 			draw.cppm
+			fdtd.cppm
 			vulkan.cppm
 )

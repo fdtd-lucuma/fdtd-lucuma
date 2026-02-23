@@ -25,6 +25,7 @@ import lucuma.legacy_headers.entt;
 import glm;
 
 import lucuma.utils;
+import lucuma.events.vulkan;
 import lucuma.components;
 import lucuma.services.basic;
 import lucuma.services.vulkan;
@@ -57,6 +58,7 @@ protected:
 	basic::Settings&   settings;
 	basic::FileReader& fileReader;
 	entt::registry&    registry;
+	entt::dispatcher&  dispatcher;
 
 	vulkan::SimpleCommandBuffer commandBuffer;
 
@@ -140,7 +142,7 @@ public:
 			auto recorder = createCommandRecorder();
 
 			TracyVkNamedZone(commandBuffer.getCtx(), __zone, *commandBuffer.getCommandBuffer(), "Compute", settings.tracy());
-			innerStep(data, recorder);
+			innerStep(id, data, recorder);
 
 			if(data.getTime() % 64 == 0)
 				commandBuffer.tracyCollect();
@@ -174,7 +176,7 @@ public:
 
 private:
 
-	void innerStep(data_t& data, vulkan::CommandRecorder& recorder)
+	void innerStep(entt::entity id, data_t& data, vulkan::CommandRecorder& recorder)
 	{
 		auto* ctx = commandBuffer.getCtx();
 		auto& cmdbuf = *commandBuffer.getCommandBuffer();
@@ -200,10 +202,18 @@ private:
 
 		computeComputeBarrier(recorder);
 
-
 		{
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "abc", settings.tracy());
 			data.abc(recorder);
+		}
+
+		{
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "Post abc", settings.tracy());
+
+			dispatcher.trigger(events::vulkan::PostFdtdAbc{
+				.commandBuffer = commandBuffer,
+				.handle        = entt::handle(registry, id),
+			});
 		}
 
 	}
