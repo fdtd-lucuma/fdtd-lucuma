@@ -21,7 +21,9 @@ docker compose up
 
 ## Run as root (on wayland)
 ```bash
-#https://github.com/systemd/systemd/issues/6249
+sudo su
+
+# https://github.com/systemd/systemd/issues/6249
 cat > /etc/dbus-1/session-local.conf <<EOF
 <busconfig>
   <policy context="mandatory">
@@ -30,9 +32,9 @@ cat > /etc/dbus-1/session-local.conf <<EOF
 </busconfig>
 EOF
 
-sudo systemctl restart dbus
+systemctl restart dbus
 
-sudo --preserve-env=XDG_SESSION_TYPE --preserve-env=WAYLAND_DISPLAY --preserve-env=DISPLAY --preserve-env=XDG_RUNTIME_DIR --preserve-env=DBUS_SESSION_BUS_ADDRESS fdtd-lucum
+--preserve-env=XDG_SESSION_TYPE --preserve-env=WAYLAND_DISPLAY --preserve-env=DISPLAY --preserve-env=XDG_RUNTIME_DIR --preserve-env=DBUS_SESSION_BUS_ADDRESS fdtd-lucuma
 ```
 
 ## Dependencies
