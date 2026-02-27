@@ -144,8 +144,7 @@ public:
 			TracyVkNamedZone(commandBuffer.getCtx(), __zone, *commandBuffer.getCommandBuffer(), "Compute", settings.tracy());
 			innerStep(id, data, recorder);
 
-			if(data.getTime() % 64 == 0)
-				commandBuffer.tracyCollect();
+			commandBuffer.tracyCollect();
 
 			if(settings.saveAs() != SaveAs::none)
 				computeCpuBarrier(recorder);

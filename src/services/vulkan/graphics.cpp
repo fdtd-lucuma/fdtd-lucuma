@@ -143,7 +143,7 @@ void Graphics::recordCommandBuffer(std::uint32_t imageIndex)
 
 		recordCommandBufferInner(imageIndex);
 
-		if(ctx != nullptr && currentFrame % 65 == 0)
+		if(ctx != nullptr)
 		{
 			TracyVkCollect(ctx, *commandBuffer);
 		}
