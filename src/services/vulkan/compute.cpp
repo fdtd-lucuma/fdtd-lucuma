@@ -394,10 +394,11 @@ vk::raii::CommandBuffer* SimpleCommandBuffer::operator ->()
 
 SimpleCommandBuffer::~SimpleCommandBuffer()
 {
-	if(ctx != nullptr)
-	{
-		TracyVkDestroy(ctx);
-	}
+	if(ctx == nullptr)
+		return;
+
+	TracyVkCollect(ctx, *commandBuffer);
+	TracyVkDestroy(ctx);
 }
 
 void SimpleCommandBuffer::tracyCollect()

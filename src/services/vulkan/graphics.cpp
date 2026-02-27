@@ -356,6 +356,11 @@ Graphics::~Graphics()
 {
 	device.waitIdle();
 
+	for(size_t i = 0; i < tracyContexts.size(); i++)
+	{
+		TracyVkCollect(tracyContexts[i], *commandBuffers[i]);
+	}
+
 	for(auto ptr: tracyContexts)
 	{
 		TracyVkDestroy(ptr);
