@@ -397,7 +397,6 @@ SimpleCommandBuffer::~SimpleCommandBuffer()
 	if(ctx == nullptr)
 		return;
 
-	TracyVkCollect(ctx, *commandBuffer);
 	TracyVkDestroy(ctx);
 }
 

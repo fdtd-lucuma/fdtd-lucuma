@@ -142,9 +142,9 @@ public:
 			auto recorder = createCommandRecorder();
 
 			TracyVkNamedZone(commandBuffer.getCtx(), __zone, *commandBuffer.getCommandBuffer(), "Compute", settings.tracy());
-			innerStep(id, data, recorder);
+			innerStep(id, data);
 
-			if(data.getTime() % 64 == 0)
+			if(data.getTime() % 64 == 0 || data.getTime() == data.maxTime)
 				commandBuffer.tracyCollect();
 
 			if(settings.saveAs() != SaveAs::none)
@@ -173,38 +173,39 @@ public:
 	}
 
 	virtual ~Vulkan() = default;
+	
 
 private:
 
-	void innerStep(entt::entity id, data_t& data, vulkan::CommandRecorder& recorder)
+	void innerStep(entt::entity id, data_t& data)
 	{
 		auto* ctx = commandBuffer.getCtx();
 		auto& cmdbuf = *commandBuffer.getCommandBuffer();
 
 		{
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "H", settings.tracy());
-			data.updateH(recorder);
+			data.updateH(cmdbuf);
 		}
 
-		computeComputeBarrier(recorder);
+		computeComputeBarrier(cmdbuf);
 
 		{
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "E", settings.tracy());
-			data.updateE(recorder);
+			data.updateE(cmdbuf);
 		}
 
-		computeComputeBarrier(recorder);
+		computeComputeBarrier(cmdbuf);
 
 		{
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "gauss", settings.tracy());
-			data.gauss(recorder);
+			data.gauss(cmdbuf);
 		}
 
-		computeComputeBarrier(recorder);
+		computeComputeBarrier(cmdbuf);
 
 		{
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "abc", settings.tracy());
-			data.abc(recorder);
+			data.abc(cmdbuf);
 		}
 
 		{
