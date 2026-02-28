@@ -126,14 +126,22 @@ void Headless::compute()
 		.eyz10 = settings.eyz10(),
 	};
 
-	backend.init(createInfo, id);
-
-	while(backend.step(id))
 	{
-		if(settings.tracy())
-			FrameMark;
+		ZoneNamedN(__zone, "init", settings.tracy());
 
-		backend.saveFiles(id);
+		backend.init(createInfo, id);
+	}
+
+	{
+		ZoneNamedN(__zone, "steps", settings.tracy());
+
+		while(backend.step(id))
+		{
+			if(settings.tracy())
+				FrameMark;
+
+			backend.saveFiles(id);
+		}
 	}
 
 	// TODO: RAII this
