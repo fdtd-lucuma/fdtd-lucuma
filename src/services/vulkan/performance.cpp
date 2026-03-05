@@ -30,16 +30,17 @@ Performance::Performance([[maybe_unused]] Injector& injector):
 {
 }
 
-void Performance::showCounters(const QueueFamilyInfo& info)
+void Performance::enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPool& queryPool)
 {
 	auto [counters, descriptions] = core.getPhysicalDevice().enumerateQueueFamilyPerformanceQueryCountersKHR(info.index);
 
 	for(size_t i = 0; i < counters.size(); i++)
 	{
-		std::println("{}:  {}, {}, {}, {}, {}, {}", i,
+		std::println("{}:  {}, {}, {}, {}, {}, {}, {}", i,
 			counters[i].unit,
 			counters[i].scope,
 			counters[i].storage,
+			to_string(descriptions[i].flags),
 			descriptions[i].name.begin(),
 			descriptions[i].category.begin(),
 			descriptions[i].description.begin()
@@ -47,20 +48,20 @@ void Performance::showCounters(const QueueFamilyInfo& info)
 	}
 }
 
-void Performance::showComputeCounters()
+void Performance::enableComputeCounters()
 {
 	auto queueInfo = device.getComputeInfo();
 
 	if(queueInfo.has_value())
-		showCounters(queueInfo.value());
+		enableCounters(queueInfo.value(), computeQueryPool);
 }
 
-void Performance::showGraphicsCounters()
+void Performance::enableGraphicsCounters()
 {
 	auto queueInfo = device.getGraphicsInfo();
 
 	if(queueInfo.has_value())
-		showCounters(queueInfo.value());
+		enableCounters(queueInfo.value(), graphicsQueryPool);
 }
 
 

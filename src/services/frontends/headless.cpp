@@ -41,7 +41,7 @@ Headless::Headless([[maybe_unused]]Injector& injector):
 	{
 		auto& performance = injector.inject<vulkan::Performance>();
 
-		performance.showComputeCounters();
+		performance.enableComputeCounters();
 	}
 }
 

@@ -37,15 +37,18 @@ export class Performance
 public:
 	Performance(Injector& injector);
 
-	void showCounters(const QueueFamilyInfo& info);
-	void showComputeCounters();
-	void showGraphicsCounters();
+	void enableComputeCounters();
+	void enableGraphicsCounters();
 
 private:
-
 	Tracy&  tracy;
 	Core&   core;
 	Device& device;
+
+	void enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPool& queryPool);
+
+	vk::raii::QueryPool computeQueryPool = nullptr;
+	vk::raii::QueryPool graphicsQueryPool = nullptr;
 
 };
 
