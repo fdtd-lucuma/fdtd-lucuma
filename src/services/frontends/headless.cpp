@@ -35,7 +35,15 @@ Headless::Headless([[maybe_unused]]Injector& injector):
 	backend(injector.inject<backends::IBackend>()),
 	settings(injector.inject<basic::Settings>()),
 	registry(injector.inject<entt::registry>())
-{ }
+{
+	//TODO: Use signals
+	if(settings.tracy() && settings.backend() == Backend::vulkan)
+	{
+		auto& performance = injector.inject<vulkan::Performance>();
+
+		performance.showComputeCounters();
+	}
+}
 
 void Headless::compute()
 {

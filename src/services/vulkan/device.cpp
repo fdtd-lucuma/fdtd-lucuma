@@ -87,6 +87,9 @@ QueueFamilyInfo Device::selectQueueFamilyCommon(std::span<const vk::QueueFamilyP
 		{
 			maxCount = properties[i].queueCount;
 			maxIndex = i;
+
+			if(settings.tracy() && settings.isHeadless()) // For some reason in amd only the first queue family has performance counters.
+				break;
 		}
 	}
 
