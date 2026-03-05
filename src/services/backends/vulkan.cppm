@@ -140,16 +140,7 @@ public:
 
 		{
 			auto recorder = createCommandRecorder();
-
-			TracyVkNamedZone(commandBuffer.getCtx(), __zone, *commandBuffer.getCommandBuffer(), "Compute", settings.tracy());
 			innerStep(id, data);
-
-			if(data.getTime() % 64 == 0 || data.getTime() == data.maxTime)
-				commandBuffer.tracyCollect();
-
-			if(settings.saveAs() != SaveAs::none)
-				computeCpuBarrier(recorder);
-
 		}
 
 		if(settings.debug())
@@ -181,6 +172,8 @@ private:
 	{
 		auto* ctx = commandBuffer.getCtx();
 		auto& cmdbuf = *commandBuffer.getCommandBuffer();
+
+		TracyVkNamedZone(commandBuffer.getCtx(), __zone, *commandBuffer.getCommandBuffer(), "Compute", settings.tracy());
 
 		{
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "H", settings.tracy());
@@ -217,6 +210,12 @@ private:
 				.ctx           = ctx,
 			});
 		}
+
+		if(data.getTime() % 64 == 0 || data.getTime() == data.maxTime)
+			commandBuffer.tracyCollect();
+
+		if(settings.saveAs() != SaveAs::none)
+			computeCpuBarrier(cmdbuf);
 
 	}
 

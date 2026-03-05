@@ -32,26 +32,38 @@ struct QueueFamilyInfo;
 class Core;
 class Device;
 
+struct CounterData
+{
+	vk::raii::QueryPool queryPool   = nullptr;
+	std::uint32_t       queryPasses = {};
+
+	std::flat_set<std::uint32_t> enabledCounters = {};
+
+	std::vector<vk::PerformanceCounterKHR>            counters     = {};
+	std::vector<vk::PerformanceCounterDescriptionKHR> descriptions = {};
+
+	std::vector<vk::PerformanceCounterResultKHR> results = {};
+
+};
+
 export class Performance
 {
 public:
 	Performance(Injector& injector);
 
 	void enableComputeCounters();
-	void enableGraphicsCounters();
+
+	void startRecording(vk::CommandBuffer buf);
+	void submitPasses(vk::Queue queue, vk::CommandBuffer buf);
 
 private:
-	Tracy&  tracy;
-	Core&   core;
-	Device& device;
+	Core&            core;
+	Device&          device;
+	basic::Settings& settings;
 
-	void enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPool& queryPool, std::uint32_t& queryPasses);
+	CounterData enableCounters(const QueueFamilyInfo& info);
 
-	vk::raii::QueryPool computeQueryPool  = nullptr;
-	vk::raii::QueryPool graphicsQueryPool = nullptr;
-
-	std::uint32_t computeQueryPasses  = {};
-	std::uint32_t graphicsQueryPasses = {};
+	CounterData computeData  = {};
 
 };
 

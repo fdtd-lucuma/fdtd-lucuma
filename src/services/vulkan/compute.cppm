@@ -42,6 +42,7 @@ using namespace lucuma::services;
 class Device;
 class ShaderLoader;
 class Buffer;
+class Performance;
 
 export class Compute;
 
@@ -205,10 +206,14 @@ public:
 		};
 	}
 
+	bool tracy();
+	void startPerformanceRecording(vk::CommandBuffer buf);
+	void submitPerformancePasses(vk::CommandBuffer buf);
 
 private:
 	Device&          device;
 	ShaderLoader&    shaderLoader;
+	Performance&     performance;
 	basic::Settings& settings;
 
 	std::vector<vk::raii::Queue> queues;
