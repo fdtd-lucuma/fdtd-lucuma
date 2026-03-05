@@ -207,6 +207,9 @@ std::vector<const char*> Device::getRequiredExtensions()
 	if(!settings.isHeadless())
 		result.emplace_back(vk::KHRSwapchainExtensionName);
 
+	if(settings.tracy())
+		result.emplace_back(vk::KHRPerformanceQueryExtensionName);
+
 	return result;
 }
 
