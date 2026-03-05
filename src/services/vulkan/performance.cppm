@@ -45,10 +45,13 @@ private:
 	Core&   core;
 	Device& device;
 
-	void enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPool& queryPool);
+	void enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPool& queryPool, std::uint32_t& queryPasses);
 
-	vk::raii::QueryPool computeQueryPool = nullptr;
+	vk::raii::QueryPool computeQueryPool  = nullptr;
 	vk::raii::QueryPool graphicsQueryPool = nullptr;
+
+	std::uint32_t computeQueryPasses  = {};
+	std::uint32_t graphicsQueryPasses = {};
 
 };
 

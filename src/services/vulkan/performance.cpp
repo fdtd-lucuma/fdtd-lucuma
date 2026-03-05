@@ -16,8 +16,6 @@
 
 module;
 
-#include <vulkan/vulkan_core.h>
-
 module lucuma.services.vulkan;
 
 namespace lucuma::services::vulkan
@@ -30,11 +28,11 @@ Performance::Performance([[maybe_unused]] Injector& injector):
 {
 }
 
-void Performance::enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPool& queryPool)
+void Performance::enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPool& queryPool, std::uint32_t& queryPasses)
 {
 	auto [counters, descriptions] = core.getPhysicalDevice().enumerateQueueFamilyPerformanceQueryCountersKHR(info.index);
 
-	for(size_t i = 0; i < counters.size(); i++)
+	for(std::size_t i = 0; i < counters.size(); i++)
 	{
 		std::println("{}:  {}, {}, {}, {}, {}, {}, {}", i,
 			counters[i].unit,
@@ -46,6 +44,30 @@ void Performance::enableCounters(const QueueFamilyInfo& info, vk::raii::QueryPoo
 			descriptions[i].description.begin()
 		);
 	}
+
+	auto enabled =
+		std::views::iota((std::uint32_t)0, (std::uint32_t)descriptions.size()) |
+		std::views::filter([&](auto&& i) {return !(descriptions[i].flags & vk::PerformanceCounterDescriptionFlagBitsKHR::ePerformanceImpacting);}) |
+		std::ranges::to<std::vector>()
+	;
+
+	auto chain = vk::StructureChain {
+		vk::QueryPoolCreateInfo {
+			.queryType  = vk::QueryType::ePerformanceQueryKHR,
+			.queryCount = 1,
+		},
+		vk::QueryPoolPerformanceCreateInfoKHR {
+			.queueFamilyIndex = info.index,
+		}
+	};
+
+	auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
+
+	performanceCreateInfo.setCounterIndices(enabled);
+
+	queryPasses = core.getPhysicalDevice().getQueueFamilyPerformanceQueryPassesKHR(performanceCreateInfo);
+	queryPool   = device.getDevice().createQueryPool(queryPoolCreateInfo);
+
 }
 
 void Performance::enableComputeCounters()
@@ -53,7 +75,7 @@ void Performance::enableComputeCounters()
 	auto queueInfo = device.getComputeInfo();
 
 	if(queueInfo.has_value())
-		enableCounters(queueInfo.value(), computeQueryPool);
+		enableCounters(queueInfo.value(), computeQueryPool, computeQueryPasses);
 }
 
 void Performance::enableGraphicsCounters()
@@ -61,7 +83,7 @@ void Performance::enableGraphicsCounters()
 	auto queueInfo = device.getGraphicsInfo();
 
 	if(queueInfo.has_value())
-		enableCounters(queueInfo.value(), graphicsQueryPool);
+		enableCounters(queueInfo.value(), graphicsQueryPool, graphicsQueryPasses);
 }
 
 
