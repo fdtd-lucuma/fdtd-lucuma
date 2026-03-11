@@ -53,7 +53,6 @@ FetchContent_Declare(
 	GIT_REPOSITORY         https://github.com/otreblan/VulkanMemoryAllocator-Hpp.git
 	GIT_TAG                origin/master
 	GIT_SHALLOW            ON
-	EXCLUDE_FROM_ALL
 	GIT_PROGRESS           ON
 	OVERRIDE_FIND_PACKAGE
 )
@@ -158,7 +157,6 @@ FetchContent_MakeAvailable(
 
 # Packages
 find_package(Vulkan REQUIRED)
-find_package(VulkanMemoryAllocator REQUIRED)
 find_package(VulkanMemoryAllocator-Hpp REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(glm REQUIRED)
