@@ -16,7 +16,7 @@
 
 module;
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 #include <tracy/TracyVulkan.hpp>
 
 export module lucuma.services.backends:vulkan;
