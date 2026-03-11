@@ -16,7 +16,7 @@
 
 module;
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 #include <tracy/TracyVulkan.hpp>
 
 export module lucuma.services.backends:vulkan;
@@ -164,45 +164,52 @@ public:
 	}
 
 	virtual ~Vulkan() = default;
-	
+
 
 private:
 
 	void innerStep(entt::entity id, data_t& data)
 	{
 		auto* ctx = commandBuffer.getCtx();
-		auto& cmdbuf = *commandBuffer.getCommandBuffer();
+		auto& cmdbuf = commandBuffer.getCommandBuffer();
 
-		TracyVkNamedZone(commandBuffer.getCtx(), __zone, *commandBuffer.getCommandBuffer(), "Compute", settings.tracy());
+		TracyVkNamedZone(commandBuffer.getCtx(), __zone, *cmdbuf, "Compute", settings.tracy());
+
+		const vk::DebugUtilsLabelEXT labelInfo
+		{
+			.pLabelName = "Step start",
+		};
+
+		cmdbuf.beginDebugUtilsLabelEXT(labelInfo);
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "H", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, *cmdbuf, "H", settings.tracy());
 			data.updateH(cmdbuf);
 		}
 
 		computeComputeBarrier(cmdbuf);
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "E", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, *cmdbuf, "E", settings.tracy());
 			data.updateE(cmdbuf);
 		}
 
 		computeComputeBarrier(cmdbuf);
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "gauss", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, *cmdbuf, "gauss", settings.tracy());
 			data.gauss(cmdbuf);
 		}
 
 		computeComputeBarrier(cmdbuf);
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "abc", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, *cmdbuf, "abc", settings.tracy());
 			data.abc(cmdbuf);
 		}
 
 		{
-			TracyVkNamedZone(ctx, __zone, cmdbuf, "Post abc", settings.tracy());
+			TracyVkNamedZone(ctx, __zone, *cmdbuf, "Post abc", settings.tracy());
 
 			dispatcher.trigger(events::vulkan::PostFdtdAbc<precision>{
 				.commandBuffer = commandBuffer,
@@ -216,6 +223,8 @@ private:
 
 		if(settings.saveAs() != SaveAs::none)
 			computeCpuBarrier(cmdbuf);
+
+		cmdbuf.endDebugUtilsLabelEXT();
 
 	}
 
