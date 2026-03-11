@@ -23,7 +23,7 @@ import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
 import std;
 import vulkan_hpp;
-import vk_mem_alloc_hpp;
+import vk_mem_alloc;
 
 
 import :vulkan;

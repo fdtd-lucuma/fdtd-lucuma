@@ -18,7 +18,7 @@ module;
 
 module lucuma.services.vulkan;
 
-import vk_mem_alloc_hpp;
+import vk_mem_alloc;
 import std.compat;
 
 namespace lucuma::services::vulkan
@@ -94,7 +94,7 @@ Buffer Allocator::allocate(vk::DeviceSize size, vk::BufferUsageFlags usage, vma:
 		.requiredFlags = requiredFlags,
 	};
 
-	std::tie(buffer.buffer, buffer.allocation) = getAllocator().createBufferUnique(bufferCreateInfo, allocationCreateInfo, &buffer.info);
+	std::tie(buffer.allocation, buffer.buffer) = getAllocator().createBufferUnique(bufferCreateInfo, allocationCreateInfo, &buffer.info);
 
 	return buffer;
 }

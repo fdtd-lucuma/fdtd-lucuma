@@ -54,7 +54,6 @@ source=(
 	"$pkgname::git+file://$_gitrepo#commit=$_headcommit"
 	"imgui-git::git+https://github.com/ocornut/imgui#branch=docking"
 	"imgui-module-git::git+https://github.com/otreblan/imgui-module.git#branch=docking"
-	"vma-git::git+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator#branch=master"
 	"vma-hpp-git::git+https://github.com/otreblan/VulkanMemoryAllocator-Hpp#branch=master"
 	"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
@@ -66,7 +65,6 @@ source=(
 	"tracy-git::git+https://github.com/wolfpld/tracy.git#tag=v0.13.1"
 )
 sha256sums=(
-	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -92,6 +90,9 @@ pkgver() {
 prepare() {
 	cd "$srcdir/nativefiledialog-extended-git"
 	git submodule update --init --recursive --force
+
+	cd "$srcdir/vma-hpp-git"
+	git submodule update --init --recursive --force
 }
 
 build() {
@@ -105,7 +106,6 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI="$srcdir/imgui-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI-MODULE="$srcdir/imgui-module-git" \
 		-DFETCHCONTENT_SOURCE_DIR_VULKANMEMORYALLOCATOR-HPP="$srcdir/vma-hpp-git" \
-		-DFETCHCONTENT_SOURCE_DIR_VULKANMEMORYALLOCATOR="$srcdir/vma-git" \
 		-DFETCHCONTENT_SOURCE_DIR_VKFW="$srcdir/vkfw-git" \
 		-DFETCHCONTENT_SOURCE_DIR_MAGIC_ENUM="$srcdir/magic-enum-git" \
 		-DFETCHCONTENT_SOURCE_DIR_MDSPAN="$srcdir/mdspan-git" \
@@ -115,7 +115,7 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_NATIVEFILEDIALOG-EXTENDED="$srcdir/nativefiledialog-extended-git" \
 		-DFETCHCONTENT_SOURCE_DIR_TRACY="$srcdir/tracy-git" \
 		-DCMAKE_CXX_VISIBILITY_PRESET=hidden \
-		-DCMAKE_C_VISIBILITY_PRESET=hidden \
+		-DCMAKE_C_VISIBILITY_PRESET=hidden
 
 	cmake --build build
 }

@@ -48,26 +48,13 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
-	VulkanMemoryAllocator
-	GIT_REPOSITORY         https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
-	GIT_TAG                origin/master
-	GIT_SHALLOW            ON
-	GIT_PROGRESS           ON
-	GIT_SUBMODULES         ""
-	GIT_SUBMODULES_RECURSE OFF
-	OVERRIDE_FIND_PACKAGE
-)
-
-FetchContent_Declare(
 	VulkanMemoryAllocator-Hpp
 	#GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git # Wait until https://github.com/YaaZ/VulkanMemoryAllocator-Hpp/issues/61
 	GIT_REPOSITORY         https://github.com/otreblan/VulkanMemoryAllocator-Hpp.git
 	GIT_TAG                origin/master
-	#GIT_TAG                v3.2.1
 	GIT_SHALLOW            ON
+	EXCLUDE_FROM_ALL
 	GIT_PROGRESS           ON
-	GIT_SUBMODULES         ""
-	GIT_SUBMODULES_RECURSE OFF
 	OVERRIDE_FIND_PACKAGE
 )
 
@@ -158,7 +145,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(
 	imgui
 	imgui-module
-	VulkanMemoryAllocator
 	VulkanMemoryAllocator-Hpp
 	vkfw
 	magic_enum
@@ -446,19 +432,19 @@ target_compile_definitions(GlmModule
 target_link_libraries(GlmModule PUBLIC glm::glm-header-only)
 
 # set up vma hpp C++ module as a library
-add_library(VulkanMemoryAllocator-HppModule)
-target_sources(VulkanMemoryAllocator-HppModule PUBLIC
+add_library(VulkanMemoryAllocator-HppModule2)
+target_sources(VulkanMemoryAllocator-HppModule2 PUBLIC
 	FILE_SET CXX_MODULES
 	BASE_DIRS ${VulkanMemoryAllocator-Hpp_SOURCE_DIR}
-	FILES ${VulkanMemoryAllocator-Hpp_SOURCE_DIR}/src/vk_mem_alloc.cppm
+	FILES ${VulkanMemoryAllocator-Hpp_SOURCE_DIR}/vk_mem_alloc.cppm
 )
 
-set_target_properties(VulkanMemoryAllocator-HppModule
+set_target_properties(VulkanMemoryAllocator-HppModule2
 	PROPERTIES
 		CXX_STANDARD 26
 )
 
-target_compile_definitions(VulkanMemoryAllocator-HppModule
+target_compile_definitions(VulkanMemoryAllocator-HppModule2
 	PRIVATE
 		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
 	PUBLIC
@@ -468,7 +454,7 @@ target_compile_definitions(VulkanMemoryAllocator-HppModule
 		VMA_ENABLE_STD_MODULE
 )
 
-target_link_libraries(VulkanMemoryAllocator-HppModule
+target_link_libraries(VulkanMemoryAllocator-HppModule2
 	PUBLIC
 		VulkanMemoryAllocator-Hpp::VulkanMemoryAllocator-Hpp
 		VulkanHppModule
@@ -510,7 +496,7 @@ target_link_libraries(${PROJECT_NAME}
 		Taskflow::Taskflow
 		Threads::Threads
 		VkfwModule
-		VulkanMemoryAllocator-HppModule
+		VulkanMemoryAllocator-HppModule2
 		imgui
 		imgui-graphnode
 		implot
