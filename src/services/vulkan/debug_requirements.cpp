@@ -39,8 +39,7 @@ std::vector<const char*> DebugRequirements::getRequiredExtensions()
 {
 	std::vector<const char*> result;
 
-	if constexpr(enableValidationLayers)
-		result.emplace_back(vk::EXTDebugUtilsExtensionName);
+	result.emplace_back(vk::EXTDebugUtilsExtensionName);
 
 	return result;
 }

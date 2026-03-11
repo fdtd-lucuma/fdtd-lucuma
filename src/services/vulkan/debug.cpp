@@ -42,8 +42,7 @@ std::vector<const char*> Debug::getRequiredExtensions()
 
 void Debug::init()
 {
-	if constexpr(DebugRequirements::enableValidationLayers)
-		setupDebugMessenger();
+	setupDebugMessenger();
 }
 
 void Debug::setupDebugMessenger()
