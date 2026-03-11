@@ -157,11 +157,11 @@ FetchContent_MakeAvailable(
 )
 
 # Packages
+find_package(Vulkan REQUIRED)
 find_package(VulkanMemoryAllocator REQUIRED)
 find_package(VulkanMemoryAllocator-Hpp REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(glm REQUIRED)
-find_package(Vulkan REQUIRED)
 find_package(vkfw REQUIRED)
 find_package(slang REQUIRED) #TODO: Ubuntu https://github.com/shader-slang/slang/issues/8334
 find_package(magic_enum REQUIRED)
