@@ -16,7 +16,7 @@
 
 module;
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 #include <tracy/TracyVulkan.hpp>
 
 module lucuma.services.vulkan;
