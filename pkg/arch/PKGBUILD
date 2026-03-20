@@ -21,6 +21,7 @@ depends=(
 	'graphviz'
 	'libx11'
 	'libxrandr'
+	'simdjson'
 	'vulkan-icd-loader'
 	'yaml-cpp'
 )

@@ -11,6 +11,7 @@ libfreetype-dev
 libglfw3-dev
 libglm-dev
 libgraphviz-dev
+libsimdjson-dev
 libtaskflow-cpp-dev
 libvulkan-dev
 libvulkan-memory-allocator-dev

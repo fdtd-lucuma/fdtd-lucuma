@@ -183,6 +183,7 @@ pkg_check_modules(libraries
 		freetype2
 		glfw3
 		libgvc
+		simdjson
 		x11
 		yaml-cpp
 )
