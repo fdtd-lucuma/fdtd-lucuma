@@ -16,20 +16,31 @@
 
 module;
 
-module lucuma.services.basic;
+#include <simdjson.h>
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+export module lucuma.legacy_headers.simdjson;
+
+#define ONDEMAND SIMDJSON_BUILTIN_IMPLEMENTATION::ondemand
+
+export namespace simdjson
 {
-using namespace lucuma::services::basic;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
-template Json&           Injector::inject<Json>();
-template PathCommon&     Injector::inject<PathCommon>();
-template Settings&       Injector::inject<Settings>();
-template Systems&        Injector::inject<Systems>();
-template Tracy&          Injector::inject<Tracy>();
-template XdgDirs&        Injector::inject<XdgDirs>();
+using simdjson::padded_string;
+using simdjson::padded_string_view;
+using simdjson::padded_string_builder;
 
-}
+namespace ONDEMAND
+{
+
+	using ONDEMAND::parser;
+	using ONDEMAND::document;
+	using ONDEMAND::object;
+	using ONDEMAND::array;
+	using ONDEMAND::json_type;
+
+};
+
+namespace ondemand = ONDEMAND;
+
+};
+

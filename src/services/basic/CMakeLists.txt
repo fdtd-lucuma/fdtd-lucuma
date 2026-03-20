@@ -19,6 +19,7 @@ target_sources(${PROJECT_NAME}
 		argument_parser.cpp
 		file_reader.cpp
 		instantiations.cpp
+		json.cpp
 		path.cpp
 		path_common.cpp
 		settings.cpp
@@ -32,6 +33,7 @@ target_sources(${PROJECT_NAME}
 			argument_parser.cppm
 			basic.cppm
 			file_reader.cppm
+			json.cppm
 			path.cppm
 			path_common.cppm
 			settings.cppm

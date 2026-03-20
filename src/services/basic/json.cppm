@@ -16,20 +16,30 @@
 
 module;
 
-module lucuma.services.basic;
+export module lucuma.services.basic:json;
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+
+import lucuma.utils;
+
+import std;
+
+import lucuma.legacy_headers.simdjson;
+
+namespace lucuma::services::basic
 {
-using namespace lucuma::services::basic;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
-template Json&           Injector::inject<Json>();
-template PathCommon&     Injector::inject<PathCommon>();
-template Settings&       Injector::inject<Settings>();
-template Systems&        Injector::inject<Systems>();
-template Tracy&          Injector::inject<Tracy>();
-template XdgDirs&        Injector::inject<XdgDirs>();
+using namespace lucuma::utils;
+
+export class Json
+{
+public:
+	Json(Injector& injector);
+
+private:
+	void init();
+
+	simdjson::ondemand::parser parser;
+
+};
 
 }

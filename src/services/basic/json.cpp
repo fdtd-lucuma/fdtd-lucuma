@@ -18,18 +18,18 @@ module;
 
 module lucuma.services.basic;
 
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
-{
-using namespace lucuma::services::basic;
+import std;
 
-template ArgumentParser& Injector::inject<ArgumentParser>();
-template FileReader&     Injector::inject<FileReader>();
-template Json&           Injector::inject<Json>();
-template PathCommon&     Injector::inject<PathCommon>();
-template Settings&       Injector::inject<Settings>();
-template Systems&        Injector::inject<Systems>();
-template Tracy&          Injector::inject<Tracy>();
-template XdgDirs&        Injector::inject<XdgDirs>();
+namespace lucuma::services::basic
+{
+
+Json::Json([[maybe_unused]]Injector& injector)
+{
+	init();
+}
+
+void Json::init()
+{
+}
 
 }
