@@ -16,14 +16,10 @@
 
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		fdtd_data.cpp
-	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
-			components.cppm
-			fdtd_data.cppm
-			simulation.cppm
+			dtos.cppm
+			gaussian_source.cppm
+			simulation_input.cppm
 )
-
-add_subdirectory(dtos)
