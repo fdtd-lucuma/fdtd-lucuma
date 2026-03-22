@@ -22,4 +22,5 @@ target_sources(${PROJECT_NAME}
 			dtos.cppm
 			gaussian_source.cppm
 			simulation_input.cppm
+			source.cppm
 )

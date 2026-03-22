@@ -28,6 +28,16 @@ Settings::Settings([[maybe_unused]]Injector& injector):
 	argumentParser(injector.inject<ArgumentParser>())
 { }
 
+std::string_view Settings::argv0() const
+{
+	return argumentParser.argv0();
+}
+
+std::span<const std::string> Settings::positionalArguments() const
+{
+	return argumentParser.positionalArguments();
+}
+
 bool Settings::isHeadless() const
 {
 	return argumentParser.isHeadless();

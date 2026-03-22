@@ -16,45 +16,15 @@
 
 module;
 
-import lucuma.utils;
+export module lucuma.utils:source_type;
 
-export module lucuma.components.dtos:gaussian_source;
-
-import lucuma.legacy_headers.simdjson;
-
-namespace lucuma::components::dtos
+namespace lucuma::utils
 {
 
-export struct GaussianSource
+export enum class SourceType
 {
-	utils::svec3 position;
-	double       sigma;
+	GAUSSIAN,
 };
 
 }
 
-namespace simdjson
-{
-
-using namespace lucuma::components::dtos;
-
-export template <typename simdjson_value>
-auto tag_invoke(deserialize_tag, simdjson_value& val, GaussianSource& gaussianSource)
-{
-	ondemand::object obj;
-
-	auto error = val.get_object().get(obj);
-
-	if(error)
-		return error;
-
-	if((error = obj["position"].get(gaussianSource.position)))
-		return error;
-
-	if((error = obj["sigma"].get(gaussianSource.sigma)))
-		return error;
-
-	return simdjson::SUCCESS;
-}
-
-}

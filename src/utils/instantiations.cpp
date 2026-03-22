@@ -26,6 +26,7 @@ template struct MagicInstantiator<Field>;
 template struct MagicInstantiator<Plane>;
 template struct MagicInstantiator<Precision>;
 template struct MagicInstantiator<SaveAs>;
+template struct MagicInstantiator<SourceType>;
 template struct MagicInstantiator<VectorComponent>;
 
 }

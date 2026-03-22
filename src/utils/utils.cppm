@@ -31,6 +31,7 @@ export import :plane;
 export import :precision;
 export import :print;
 export import :save_as;
+export import :source_type;
 export import :stream_edge_writer;
 export import :vector_component;
 
@@ -53,6 +54,7 @@ extern template struct MagicInstantiator<Field>;
 extern template struct MagicInstantiator<Plane>;
 extern template struct MagicInstantiator<Precision>;
 extern template struct MagicInstantiator<SaveAs>;
+extern template struct MagicInstantiator<SourceType>;
 extern template struct MagicInstantiator<VectorComponent>;
 
 }

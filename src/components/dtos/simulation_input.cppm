@@ -17,17 +17,41 @@
 module;
 
 import std;
+import lucuma.legacy_headers.simdjson;
 
 export module lucuma.components.dtos:simulation_input;
 
-struct GaussianSource;
+import :source;
 
 namespace lucuma::components::dtos
 {
 
 export struct SimulationInput
 {
-	std::vector<std::variant<GaussianSource>> sources;
+	std::vector<Source> sources;
 };
+
+}
+
+namespace simdjson
+{
+
+using namespace lucuma::components::dtos;
+
+export template <typename simdjson_value>
+auto tag_invoke(deserialize_tag, simdjson_value& val, SimulationInput& simulationInput)
+{
+	ondemand::object obj;
+
+	auto error = val.get_object().get(obj);
+
+	if(error)
+		return error;
+
+	if((error = obj["sources"].get<typeof(SimulationInput::sources)>().get(simulationInput.sources)))
+		return error;
+
+	return simdjson::SUCCESS;
+}
 
 }

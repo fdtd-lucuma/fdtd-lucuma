@@ -38,6 +38,9 @@ public:
 	bool debug() const;
 	bool tracy() const;
 
+	std::string_view             argv0() const;
+	std::span<const std::string> positionalArguments() const;
+
 	static constexpr std::size_t defaultSizeX = 128;
 	static constexpr std::size_t defaultSizeY = 128;
 	static constexpr std::size_t defaultSizeZ = 128;

@@ -35,6 +35,23 @@ export class Json
 public:
 	Json(Injector& injector);
 
+	template <typename T>
+	inline T parse(std::string_view path)
+	{
+		T result;
+
+		auto json = simdjson::padded_string::load(path);
+		auto doc  = parser.iterate(json);
+
+		if(auto error = doc.get(result))
+		{
+			std::println(std::cerr, "{}", simdjson::error_message(error));
+			throw new std::runtime_error(simdjson::error_message(error));
+		}
+
+		return result;
+	}
+
 private:
 	void init();
 

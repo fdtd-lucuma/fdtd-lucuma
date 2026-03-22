@@ -29,6 +29,10 @@ using simdjson::padded_string;
 using simdjson::padded_string_view;
 using simdjson::padded_string_builder;
 
+using simdjson::deserialize_tag;
+using simdjson::error_code;
+using simdjson::error_message;
+
 namespace ONDEMAND
 {
 

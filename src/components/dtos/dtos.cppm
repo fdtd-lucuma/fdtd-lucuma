@@ -18,5 +18,6 @@ module;
 
 export module lucuma.components.dtos;
 
-export import :simulation_input;
 export import :gaussian_source;
+export import :simulation_input;
+export import :source;

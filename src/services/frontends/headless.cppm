@@ -40,6 +40,7 @@ public:
 private:
 	backends::IBackend& backend;
 	basic::Settings&    settings;
+	basic::Json&        json;
 	entt::registry&     registry;
 
 };

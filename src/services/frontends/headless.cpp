@@ -24,6 +24,7 @@ import lucuma.utils;
 import lucuma.services.backends;
 import lucuma.legacy_headers.entt;
 import lucuma.components;
+import lucuma.components.dtos;
 
 import std;
 import glm;
@@ -34,6 +35,7 @@ namespace lucuma::services::frontends
 Headless::Headless([[maybe_unused]]Injector& injector):
 	backend(injector.inject<backends::IBackend>()),
 	settings(injector.inject<basic::Settings>()),
+	json(injector.inject<basic::Json>()),
 	registry(injector.inject<entt::registry>())
 {
 	//TODO: Use signals
@@ -49,6 +51,11 @@ void Headless::compute()
 {
 	const auto id = registry.create();
 
+	for(const auto& str: settings.positionalArguments())
+	{
+		auto input = json.parse<components::dtos::SimulationInput>(str);
+
+	}
 
 	components::FdtdDataCreateInfo createInfo {
 		.size          = settings.size(),

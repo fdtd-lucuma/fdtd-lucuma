@@ -21,6 +21,8 @@ export module lucuma.utils:alias;
 import std;
 import glm;
 
+import lucuma.legacy_headers.simdjson;
+
 namespace lucuma::utils
 {
 
@@ -47,5 +49,128 @@ export using svec3Delta = glm::vec<3, std::ptrdiff_t>;
 
 /// Size vector 4 for fdtd matrices deltas
 export using svec4Delta = glm::vec<4, std::ptrdiff_t>;
+
+}
+
+namespace simdjson
+{
+
+using namespace lucuma::utils;
+
+// TODO: Delete this once C++26 reflection becomes mainstream
+
+export template <typename simdjson_value>
+auto tag_invoke(deserialize_tag, simdjson_value& val, svec1& vec)
+{
+	ondemand::object obj;
+
+	auto error = val.get_object().get(obj);
+
+	if(error)
+		return error;
+
+	if((error = obj["x"].get(vec.x)))
+		return error;
+
+	return simdjson::SUCCESS;
+}
+
+export template <typename simdjson_value>
+auto tag_invoke(deserialize_tag, simdjson_value& val, svec1Delta& vec)
+{
+	ondemand::object obj;
+
+	auto error = val.get_object().get(obj);
+
+	if(error)
+		return error;
+
+	if((error = obj["x"].get(vec.x)))
+		return error;
+
+	return simdjson::SUCCESS;
+}
+
+export template <typename simdjson_value>
+auto tag_invoke(deserialize_tag, simdjson_value& val, svec2& vec)
+{
+	ondemand::object obj;
+
+	auto error = val.get_object().get(obj);
+
+	if(error)
+		return error;
+
+	if((error = obj["x"].get(vec.x)))
+		return error;
+
+	if((error = obj["y"].get(vec.y)))
+		return error;
+
+	return simdjson::SUCCESS;
+}
+
+export template <typename simdjson_value>
+auto tag_invoke(deserialize_tag, simdjson_value& val, svec2Delta& vec)
+{
+	ondemand::object obj;
+
+	auto error = val.get_object().get(obj);
+
+	if(error)
+		return error;
+
+	if((error = obj["x"].get(vec.x)))
+		return error;
+
+	if((error = obj["y"].get(vec.y)))
+		return error;
+
+	return simdjson::SUCCESS;
+}
+
+export template <typename simdjson_value>
+auto tag_invoke(deserialize_tag, simdjson_value& val, svec3& vec)
+{
+	ondemand::object obj;
+
+	auto error = val.get_object().get(obj);
+
+	if(error)
+		return error;
+
+	if((error = obj["x"].get(vec.x)))
+		return error;
+
+	if((error = obj["y"].get(vec.y)))
+		return error;
+
+	if((error = obj["z"].get(vec.z)))
+		return error;
+
+	return simdjson::SUCCESS;
+}
+
+export template <typename simdjson_value>
+auto tag_invoke(deserialize_tag, simdjson_value& val, svec3Delta& vec)
+{
+	ondemand::object obj;
+
+	auto error = val.get_object().get(obj);
+
+	if(error)
+		return error;
+
+	if((error = obj["x"].get(vec.x)))
+		return error;
+
+	if((error = obj["y"].get(vec.y)))
+		return error;
+
+	if((error = obj["z"].get(vec.z)))
+		return error;
+
+	return simdjson::SUCCESS;
+}
 
 }
