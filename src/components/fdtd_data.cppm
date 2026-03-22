@@ -22,6 +22,7 @@ export module lucuma.components:fdtd_data;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
+import lucuma.components.dtos;
 
 import std;
 import glm;
@@ -73,6 +74,8 @@ export struct FdtdDataCreateInfo
 	float Cr;
 	unsigned int maxTime;
 	float gaussSigma;
+
+	std::span<const dtos::Source> sources = {};
 
 	// Magnetic fields
 

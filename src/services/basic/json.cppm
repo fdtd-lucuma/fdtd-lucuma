@@ -40,16 +40,22 @@ public:
 	{
 		T result;
 
-		auto json = simdjson::padded_string::load(path);
-		auto doc  = parser.iterate(json);
-
-		if(auto error = doc.get(result))
+		if(auto error = parse(path, result))
 		{
 			std::println(std::cerr, "{}", simdjson::error_message(error));
 			throw new std::runtime_error(simdjson::error_message(error));
 		}
 
 		return result;
+	}
+
+	template <typename T>
+	inline simdjson::error_code parse(std::string_view path, T& result)
+	{
+		auto json = simdjson::padded_string::load(path);
+		auto doc  = parser.iterate(json);
+
+		return doc.get(result);
 	}
 
 private:

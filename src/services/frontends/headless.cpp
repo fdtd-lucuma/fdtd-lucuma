@@ -51,10 +51,12 @@ void Headless::compute()
 {
 	const auto id = registry.create();
 
-	for(const auto& str: settings.positionalArguments())
-	{
-		auto input = json.parse<components::dtos::SimulationInput>(str);
+	components::dtos::SimulationInput simulationInput;
 
+	// TODO: Múltiple simulations?
+	if(!settings.positionalArguments().empty())
+	{
+		simulationInput = json.parse<components::dtos::SimulationInput>(settings.positionalArguments().back());
 	}
 
 	components::FdtdDataCreateInfo createInfo {
@@ -70,6 +72,8 @@ void Headless::compute()
 
 		.maxTime = settings.time(),
 		.gaussSigma = settings.gaussSigma(),
+
+		.sources = simulationInput.sources,
 
 		// Magnetic fields
 
