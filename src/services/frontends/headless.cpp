@@ -58,6 +58,16 @@ void Headless::compute()
 	{
 		simulationInput = json.parse<components::dtos::SimulationInput>(settings.positionalArguments().back());
 	}
+	else
+	{
+		simulationInput.sources.emplace_back(components::dtos::Source{
+			.type = utils::SourceType::GAUSSIAN,
+			.source = components::dtos::GaussianSource {
+				.position = settings.size()/(std::uint64_t)2,
+				.sigma    = settings.gaussSigma(),
+			}
+		});
+	}
 
 	components::FdtdDataCreateInfo createInfo {
 		.size          = settings.size(),
