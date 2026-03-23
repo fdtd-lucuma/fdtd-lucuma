@@ -22,10 +22,14 @@ export module lucuma.components:fdtd_data;
 
 import lucuma.utils;
 import lucuma.legacy_headers.mdspan;
+import lucuma.legacy_headers.entt;
 import lucuma.components.dtos;
 
 import std;
 import glm;
+
+import :transform;
+import :gaussian_source;
 
 namespace lucuma::components
 {
@@ -326,7 +330,25 @@ public:
 		_eyz0(initMat<T>(eyzDims)),
 		_exz1(initMat<T>(exzDims)),
 		_eyz1(initMat<T>(eyzDims))
-	{}
+	{
+		for(const auto& source: createInfo.sources)
+		{
+			auto id = privateRegistry.create();
+
+			std::visit([&](auto&& arg)
+			{
+				using T2 = std::decay_t<decltype(arg)>;
+
+				privateRegistry.emplace<Transform>(id, arg.position);
+
+				if constexpr(std::is_same_v<T2, components::dtos::GaussianSource>)
+					privateRegistry.emplace<GaussianSource<T>>(id, (T)arg.sigma);
+				else
+					static_assert(false, "Non supported source type");
+
+			}, source.source);
+		}
+	}
 
 	template <FloatFileReader<T> floater_t>
 	static FdtdData<T> make(const FdtdDataCreateInfo& createInfo, floater_t& reader)
@@ -632,6 +654,8 @@ private:
 	MatrixData<T> _eyz0;
 	MatrixData<T> _exz1;
 	MatrixData<T> _eyz1;
+
+	entt::registry privateRegistry;
 
 public:
 	unsigned int getTime() const
@@ -945,8 +969,12 @@ public:
 
 	void gauss()
 	{
-		Ex()[gaussPosition.x, gaussPosition.y, gaussPosition.z] +=
-			gauss(time, gaussSigma);
+		auto field = Ex();
+
+		for(auto&& [_, transform, source]: privateRegistry.view<Transform, GaussianSource<T>>().each())
+		{
+			field[transform.position.x, transform.position.y, transform.position.z] += gauss(time, source.sigma);
+		}
 	}
 
 	template <typename T2 = T>

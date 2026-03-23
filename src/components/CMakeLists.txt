@@ -23,7 +23,9 @@ target_sources(${PROJECT_NAME}
 		FILES
 			components.cppm
 			fdtd_data.cppm
+			gaussian_source.cppm
 			simulation.cppm
+			transform.cppm
 )
 
 add_subdirectory(dtos)

@@ -16,9 +16,15 @@
 
 module;
 
-export module lucuma.components;
+export module lucuma.components:gaussian_source;
 
-export import :fdtd_data;
-export import :gaussian_source;
-export import :simulation;
-export import :transform;
+namespace lucuma::components
+{
+
+export template <typename T>
+struct GaussianSource
+{
+	T sigma;
+};
+
+}

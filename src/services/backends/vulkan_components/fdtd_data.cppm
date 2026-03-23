@@ -18,8 +18,9 @@ module;
 
 export module lucuma.services.backends.vulkan_components:fdtd_data;
 
-import lucuma.legacy_headers.mdspan;
+import lucuma.legacy_headers.entt;
 import lucuma.legacy_headers.glm;
+import lucuma.legacy_headers.mdspan;
 
 import lucuma.utils;
 import lucuma.components;
@@ -745,6 +746,8 @@ private:
 	UpdateEPipelines<T>  updateEPipelines;
 	GaussPipeline<T>     gaussPipeline;
 	AbcPipelines<T>      abcPipelines;
+
+	entt::registry privateRegistry;
 
 public:
 

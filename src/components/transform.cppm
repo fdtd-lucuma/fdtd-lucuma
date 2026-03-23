@@ -16,9 +16,18 @@
 
 module;
 
-export module lucuma.components;
+export module lucuma.components:transform;
 
-export import :fdtd_data;
-export import :gaussian_source;
-export import :simulation;
-export import :transform;
+import lucuma.utils;
+
+namespace lucuma::components
+{
+
+using namespace lucuma::utils;
+
+export struct Transform
+{
+	svec3 position;
+};
+
+}
