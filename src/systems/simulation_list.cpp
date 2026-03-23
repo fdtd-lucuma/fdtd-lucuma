@@ -23,6 +23,7 @@ import lucuma.utils.imgui;
 import lucuma.legacy_headers.nativefiledialog_extended;
 import lucuma.components;
 import lucuma.services.window;
+import lucuma.components.dtos;
 
 import imgui;
 import glm;
@@ -38,6 +39,7 @@ SimulationList::SimulationList(Systems& _systems):
 	Base(_systems),
 	settings(_systems.inject<Settings>()),
 	instantiator(_systems.inject<Instantiator>()),
+	json(_systems.inject<services::basic::Json>()),
 	registry(_systems.inject<entt::registry>())
 {
 	init();
@@ -611,6 +613,25 @@ void SimulationList::resetNewSimulationInfo()
 
 void SimulationList::startSimulation()
 {
+
+	components::dtos::SimulationInput simulationInput;
+
+	// TODO: Múltiple simulations?
+	if(!settings.positionalArguments().empty())
+	{
+		simulationInput = json.parse<components::dtos::SimulationInput>(settings.positionalArguments().back());
+	}
+	else
+	{
+		simulationInput.sources.emplace_back(components::dtos::Source{
+			.type = utils::SourceType::GAUSSIAN,
+			.source = components::dtos::GaussianSource {
+				.position = settings.size()/(std::uint64_t)2,
+				.sigma    = settings.gaussSigma(),
+			}
+		});
+	}
+
 	components::FdtdDataCreateInfo createInfo {
 		.size          = {newSimulationInfo.size[0], newSimulationInfo.size[1], newSimulationInfo.size[2]},
 		.gaussPosition = {newSimulationInfo.gaussPosition[0], newSimulationInfo.gaussPosition[1], newSimulationInfo.gaussPosition[2]},

@@ -142,9 +142,10 @@ public:
 	void update(const events::Update& event);
 
 private:
-	Settings&       settings;
-	Instantiator&   instantiator;
-	entt::registry& registry;
+	Settings&              settings;
+	Instantiator&          instantiator;
+	services::basic::Json& json;
+	entt::registry&        registry;
 
 	FdtdSimulationInfo newSimulationInfo = {};
 
