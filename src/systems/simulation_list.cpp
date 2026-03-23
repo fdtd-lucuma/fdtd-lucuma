@@ -644,6 +644,8 @@ void SimulationList::startSimulation()
 		.maxTime       = newSimulationInfo.maxTime,
 		.gaussSigma    = newSimulationInfo.gaussSigma,
 
+		.sources = simulationInput.sources,
+
 		// Magnetic fields
 
 		.Hx0 = newSimulationInfo.Hx0,
