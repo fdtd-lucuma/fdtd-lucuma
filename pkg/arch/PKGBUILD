@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.2.0.r218.ge83cc73
+pkgver=0.2.0.r265.gcbf5392
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -53,7 +53,7 @@ _headcommit="$(git rev-parse HEAD)"
 #"imgui-module-git::git+https://github.com/stripe2933/imgui-module#branch=docking"
 source=(
 	"$pkgname::git+file://$_gitrepo#commit=$_headcommit"
-	"imgui-git::git+https://github.com/ocornut/imgui#branch=docking"
+	"imgui-git::git+https://github.com/ocornut/imgui#commit=60d7fb207eeb46d6363dd4bde10b35991bae0ce7"
 	"imgui-module-git::git+https://github.com/otreblan/imgui-module.git#branch=docking"
 	"vma-hpp-git::git+https://github.com/otreblan/VulkanMemoryAllocator-Hpp#branch=master"
 	"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"

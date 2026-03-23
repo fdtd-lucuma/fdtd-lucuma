@@ -30,8 +30,9 @@ endif()
 FetchContent_Declare(
 	imgui
 	GIT_REPOSITORY https://github.com/ocornut/imgui.git
-	GIT_TAG        origin/docking
-	GIT_SHALLOW    ON
+	#GIT_TAG        origin/docking
+	GIT_TAG        60d7fb207eeb46d6363dd4bde10b35991bae0ce7
+	#GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
 )
 
