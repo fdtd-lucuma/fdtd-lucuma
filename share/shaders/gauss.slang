@@ -34,7 +34,7 @@ FDTD_FLOAT_T gauss(FDTD_FLOAT_T time, FDTD_FLOAT_T sigma, FDTD_FLOAT_T x0)
 [numthreads(wgX,wgY,wgZ)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
-	if(threadId.x > size)
+	if(threadId.x >= size)
 		return;
 
 	matrix3d Ec = matrix3d<FDTD_FLOAT_T>(_Ec, pushConstants.paddedDims);

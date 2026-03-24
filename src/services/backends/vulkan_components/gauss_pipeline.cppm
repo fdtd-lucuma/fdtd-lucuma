@@ -117,7 +117,7 @@ private:
 				0, (std::uint32_t)getWorkgroupSize(),
 				1, (std::uint32_t)1,
 				2, (std::uint32_t)1,
-				4, (std::uint32_t)sourceSsbos.size()
+				3, (std::uint32_t)sourceSsbos.size()
 			)
 		});
 	}
