@@ -33,6 +33,8 @@ using simdjson::deserialize_tag;
 using simdjson::error_code;
 using simdjson::error_message;
 
+using simdjson::tag_invoke;
+
 namespace ONDEMAND
 {
 
