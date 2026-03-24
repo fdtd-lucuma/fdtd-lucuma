@@ -71,6 +71,13 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 
 	auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
 
+#ifdef __APPLE__
+	auto& queryPoolCreateInfo   = chain.get<vk::QueryPoolCreateInfo>();
+	auto& performanceCreateInfo = chain.get<vk::QueryPoolPerformanceCreateInfoKHR>();
+#else
+	auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
+#endif
+
 	std::span enabledSpan(enabled.begin(), enabled.end());
 
 	performanceCreateInfo.setCounterIndices(enabledSpan);
@@ -126,13 +133,21 @@ void Performance::submitPasses(vk::Queue queue, vk::CommandBuffer buf)
 
 	for(std::uint32_t pass = 0; pass < computeData.queryPasses; pass++)
 	{
-		auto [submitInfo, performanceQuery] = vk::StructureChain {
+		vk::StructureChain chain {
 			vk::SubmitInfo {
 			},
 			vk::PerformanceQuerySubmitInfoKHR {
 				.counterPassIndex = pass,
 			},
 		};
+
+		
+#ifdef __APPLE__
+		auto& submitInfo       = chain.get<vk::SubmitInfo>();
+		auto& performanceQuery = chain.get<vk::PerformanceQuerySubmitInfoKHR>();
+#else
+		auto& [submitInfo, performanceQuery] = chain; 
+#endif
 
 		submitInfo.setCommandBuffers(buf);
 
