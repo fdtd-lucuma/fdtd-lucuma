@@ -76,7 +76,7 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 	auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
 #endif
 
-	std::span enabledSpan(enabled.begin(), enabled.size());
+	std::span enabledSpan(enabled);
 
 	performanceCreateInfo.setCounterIndices(enabledSpan);
 
