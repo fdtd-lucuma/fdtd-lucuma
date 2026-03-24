@@ -31,6 +31,7 @@ export import :plane;
 export import :precision;
 export import :print;
 export import :save_as;
+export import :simdjson;
 export import :source_type;
 export import :stream_edge_writer;
 export import :vector_component;

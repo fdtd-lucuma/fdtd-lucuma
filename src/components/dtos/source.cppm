@@ -53,12 +53,10 @@ auto tag_invoke(deserialize_tag, simdjson_value& val, Source& source)
 	if(error)
 		return error;
 
-	std::string_view typeStr;
-
-	if((error = obj["type"].get_string().get(typeStr)))
+	if((error = obj["type"].get(source.type)))
 		return error;
 
-	switch(source.type = magic_enum::enum_cast<SourceType>(typeStr).value())
+	switch(source.type)
 	{
 		case SourceType::GAUSSIAN:
 			source.source = GaussianSource();

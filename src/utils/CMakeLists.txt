@@ -39,6 +39,7 @@ target_sources(${PROJECT_NAME}
 			precision.cppm
 			print.cppm
 			save_as.cppm
+			simdjson.cppm
 			source_type.cppm
 			stream_edge_writer.cppm
 			utils.cppm
