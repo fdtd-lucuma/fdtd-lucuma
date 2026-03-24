@@ -86,7 +86,7 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 	return {
 		.queryPool       = std::move(queryPool),
 		.queryPasses     = queryPasses,
-		.enabledCounters = std::move(enabled),
+		.enabledCounters = std::flat_set<std::uint32_t>(std::sorted_unique_t(), std::move(enabled)),
 		.counters        = std::move(counters),
 		.descriptions    = std::move(descriptions),
 		.results         = std::vector<vk::PerformanceCounterResultKHR>(enabledSize),
