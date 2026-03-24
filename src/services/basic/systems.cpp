@@ -39,7 +39,7 @@ void Systems::stop(entt::entity e)
 
 void Systems::cleanStopped()
 {
-	for(auto&& [id, on]: registry.view<toStop, OnSystemEnd>().each())
+	for(auto&& [id, on]: registry.group<toStop>(entt::get<OnSystemEnd>).each())
 	{
 		on.f(registry, id);
 	}

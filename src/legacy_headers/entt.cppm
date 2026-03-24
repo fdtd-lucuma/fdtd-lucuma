@@ -42,6 +42,7 @@ using entt::dispatcher;
 using entt::exclude;
 using entt::handle;
 using entt::const_handle;
+using entt::get;
 
 };
 

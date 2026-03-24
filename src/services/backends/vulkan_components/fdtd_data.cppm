@@ -552,6 +552,7 @@ public:
 			},
 		})
 	{
+		components::fillRegistryWithSources<T>(privateRegistry, createInfo.fdtdDataCreateInfo);
 	}
 
 	template <components::FloatFileReader<T> floater_t>

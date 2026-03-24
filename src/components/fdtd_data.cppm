@@ -151,6 +151,28 @@ export struct FdtdDataCreateInfo
 	std::filesystem::path eyz10 = {};
 };
 
+export template<typename T>
+void fillRegistryWithSources(entt::registry& registry, const FdtdDataCreateInfo& createInfo)
+{
+	for(const auto& source: createInfo.sources)
+	{
+		auto id = registry.create();
+
+		std::visit([&](auto&& arg)
+		{
+			using T2 = std::decay_t<decltype(arg)>;
+
+			registry.emplace<Transform>(id, arg.position);
+
+			if constexpr(std::is_same_v<T2, components::dtos::GaussianSource>)
+				registry.emplace<GaussianSource<T>>(id, (T)arg.sigma);
+			else
+				static_assert(false, "Non supported source type");
+
+		}, source.source);
+	}
+}
+
 export template <class T>
 class FdtdData
 {
@@ -331,23 +353,7 @@ public:
 		_exz1(initMat<T>(exzDims)),
 		_eyz1(initMat<T>(eyzDims))
 	{
-		for(const auto& source: createInfo.sources)
-		{
-			auto id = privateRegistry.create();
-
-			std::visit([&](auto&& arg)
-			{
-				using T2 = std::decay_t<decltype(arg)>;
-
-				privateRegistry.emplace<Transform>(id, arg.position);
-
-				if constexpr(std::is_same_v<T2, components::dtos::GaussianSource>)
-					privateRegistry.emplace<GaussianSource<T>>(id, (T)arg.sigma);
-				else
-					static_assert(false, "Non supported source type");
-
-			}, source.source);
-		}
+		fillRegistryWithSources<T>(privateRegistry, createInfo);
 	}
 
 	template <FloatFileReader<T> floater_t>
@@ -971,7 +977,7 @@ public:
 	{
 		auto field = Ex();
 
-		for(auto&& [_, transform, source]: privateRegistry.view<Transform, GaussianSource<T>>().each())
+		for(auto&& [_, source, transform]: privateRegistry.group<GaussianSource<T>>(entt::get<Transform>).each())
 		{
 			field[transform.position.x, transform.position.y, transform.position.z] += gauss(time, source.sigma);
 		}

@@ -24,6 +24,8 @@ import glm;
 import lucuma.utils;
 import lucuma.utils.vulkan;
 import lucuma.services.vulkan;
+import lucuma.legacy_headers.entt;
+import lucuma.components;
 import vulkan_hpp;
 
 import std;
@@ -62,6 +64,14 @@ private:
 		T x0 = {};
 	} pushConstants;
 
+	struct SourceUbo
+	{
+		alignas(sizeof(svec4)) svec3 position = {};
+		T sigma;
+	};
+
+	std::vector<SourceUbo> sourceUbos;
+
 	vulkan::ComputePipeline pipeline;
 
 public:
@@ -82,6 +92,30 @@ public:
 			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
 		}))
 	{ }
+
+	void fillData(const entt::registry& registry)
+	{
+		sourceUbos.clear();
+
+		auto group = registry.group<components::GaussianSource<T>>(entt::get<components::Transform>);
+
+		for(auto&& [_, source, transform]: group.each())
+		{
+			sourceUbos.emplace_back(SourceUbo{
+				.position = transform.position,
+				.sigma    = source.sigma,
+			});
+		}
+
+	}
+
+	void dispatch(vk::CommandBuffer, const entt::registry& registry, T time, T x0 = 0)
+	{
+		pushConstants.time = time;
+		pushConstants.x0   = x0;
+
+		fillData(registry);
+	}
 
 	void dispatch(vk::CommandBuffer commandBuffer, svec3 pos, T time, T sigma, T x0 = 0)
 	{
