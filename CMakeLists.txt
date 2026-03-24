@@ -18,7 +18,11 @@ cmake_minimum_required(VERSION 4.0.3)
 
 # Change this each version
 # Read Help/dev/experimental.rst at CMake's repo for more info
-set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444" )
+if(CMAKE_MAJOR_VERSION EQUAL 4 AND CMAKE_MINOR_VERSION EQUAL 2)
+	set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444" )
+elseif(CMAKE_MAJOR_VERSION EQUAL 4 AND CMAKE_MINOR_VERSION EQUAL 3)
+	set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "1942b4fa-b2c5-4546-9385-83f254070067" )
+endif()
 
 # Default build type
 if(NOT CMAKE_BUILD_TYPE)
