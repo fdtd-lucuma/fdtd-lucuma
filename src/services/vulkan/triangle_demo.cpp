@@ -143,7 +143,12 @@ void TriangleDemo::createGraphicsPipeline()
 		vk::PipelineRenderingCreateInfo{},
 	};
 
+#ifdef __APPLE__
+	auto& pipelineInfo                = chain.get<vk::GraphicsPipelineCreateInfo>();
+	auto& pipelineRenderingCreateInfo = chain.get<vk::PipelineRenderingCreateInfo>();
+#else
 	auto& [pipelineInfo, pipelineRenderingCreateInfo] = chain;
+#endif
 
 	const auto swapchainFormat = swapchain.getFormat();
 
