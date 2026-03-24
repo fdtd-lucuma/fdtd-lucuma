@@ -176,7 +176,7 @@ public:
 
 		if(byteSize > sourceSsbosBuffer.getInfo().size)
 		{
-			sourceSsbosBuffer = allocateSsbosBuffer(byteSize);
+			sourceSsbosBuffer = allocateSsbosBuffer(std::bit_ceil(byteSize));
 			pipeline          = recreatePipeline(Ec);
 		}
 
