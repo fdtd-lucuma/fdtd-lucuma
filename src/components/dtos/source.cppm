@@ -18,7 +18,6 @@ module;
 
 import lucuma.utils;
 import std;
-import magic_enum;
 
 export module lucuma.components.dtos:source;
 
