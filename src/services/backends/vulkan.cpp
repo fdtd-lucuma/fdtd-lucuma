@@ -34,6 +34,7 @@ namespace lucuma::services::backends
 VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 	vulkanAllocator(injector.inject<vulkan::Allocator>()),
 	vulkanCompute(injector.inject<vulkan::Compute>()),
+	vulkanDevice(injector.inject<vulkan::Device>()),
 	vulkanAll(injector.inject<vulkan::All>()),
 	settings(injector.inject<basic::Settings>()),
 	fileReader(injector.inject<basic::FileReader>()),
@@ -46,6 +47,7 @@ VulkanBase::VulkanBase([[maybe_unused]]Injector& injector):
 VulkanBase::VulkanBase(VulkanBase&& other):
 	vulkanAllocator(other.vulkanAllocator),
 	vulkanCompute(other.vulkanCompute),
+	vulkanDevice(other.vulkanDevice),
 	vulkanAll(other.vulkanAll),
 	settings(other.settings),
 	fileReader(other.fileReader),

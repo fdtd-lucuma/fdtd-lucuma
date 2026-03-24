@@ -44,13 +44,12 @@ struct GaussPipelineCreateInfo
 {
 	svec3 paddedDims;
 
-	vulkan::Buffer& Ec;
-
 	std::filesystem::path shaderPath;
 	std::string_view      entrypoint = "main";
 
-	vulkan::Compute& compute;
+	vulkan::Compute&   compute;
 	vulkan::Allocator& allocator;
+	vulkan::Device&    device;
 };
 
 template <typename T>
@@ -60,12 +59,12 @@ private:
 
 	GaussPipelineCreateInfo<T> createInfo;
 
+	std::size_t maxWorkgroupSize;
+
 	struct alignas(32)
 	{
 		alignas(sizeof(svec4)) svec3 paddedDims;
-		alignas(sizeof(svec4)) svec3 pos = {};
 		T time = {};
-		T sigma = {};
 		T x0 = {};
 	} pushConstants;
 
@@ -80,26 +79,54 @@ private:
 
 	vulkan::ComputePipeline pipeline;
 
-	// TODO: use cache
-	vulkan::ComputePipeline recreatePipeline()
+	std::size_t getWorkgroupSize()
 	{
+		return std::min(maxWorkgroupSize, sourceSsbos.size());
+	}
+
+	std::size_t getWorkgroupCount()
+	{
+		const auto workgroupSize = getWorkgroupSize();
+		const auto size          = sourceSsbos.size();
+
+		if(size == 0)
+			return 1;
+
+		return size/workgroupSize + ((size % workgroupSize) == 0 ? 0 : 1);
+	}
+
+	// TODO: use cache
+	vulkan::ComputePipeline recreatePipeline(vulkan::Buffer& Ec)
+	{
+		if(sourceSsbos.empty())
+			return {};
+
 		return createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
 			.setLayouts = {
 				{
 					.bindings = simpleStorageBuffersLayout<2>(),
 					.buffers = {
-						createInfo.Ec,
+						Ec,
 						sourceSsbosBuffer,
 					}
 				}
 			},
 			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
+			.specializationConstants = SpecializationConstants::make(
+				0, (std::uint32_t)getWorkgroupSize(),
+				1, (std::uint32_t)1,
+				2, (std::uint32_t)1,
+				4, (std::uint32_t)sourceSsbos.size()
+			)
 		});
 	}
 
 	vulkan::Buffer allocateSsbosBuffer(std::size_t bytes)
 	{
+		if(bytes == 0)
+			return {};
+
 		vma::AllocationCreateFlags vmaFlags =
 			vma::AllocationCreateFlagBits::eMapped |
 			vma::AllocationCreateFlagBits::eHostAccessSequentialWrite;
@@ -112,21 +139,30 @@ private:
 		);
 	}
 
+	static std::size_t getMaxWorkgroupSize(vulkan::Device& device)
+	{
+		const auto limits = device.getPhysicalDevice().getProperties().limits;
+
+		return (std::size_t)std::min(limits.maxComputeWorkGroupSize[0], limits.maxComputeWorkGroupInvocations);
+	}
+
 public:
 	GaussPipeline(const GaussPipelineCreateInfo<T>& createInfo):
 		createInfo(createInfo),
+		maxWorkgroupSize(getMaxWorkgroupSize(createInfo.device)),
 		pushConstants({
 			.paddedDims = createInfo.paddedDims,
 		}),
-		sourceSsbosBuffer(allocateSsbosBuffer(1*sizeof(SourceSsbo))),
-		pipeline(recreatePipeline())
-	{ }
+		sourceSsbosBuffer(allocateSsbosBuffer(0))
+	{
 
-	void fillData(const entt::registry& registry)
+	}
+
+	void fillData(entt::registry& registry, vulkan::Buffer& Ec)
 	{
 		sourceSsbos.clear();
 
-		auto group = registry.group<components::GaussianSource<T>>(entt::get<components::Transform>);
+		auto group = registry.group<const components::GaussianSource<T>>(entt::get<const components::Transform>);
 
 		for(auto&& [_, source, transform]: group.each())
 		{
@@ -141,31 +177,26 @@ public:
 		if(byteSize > sourceSsbosBuffer.getInfo().size)
 		{
 			sourceSsbosBuffer = allocateSsbosBuffer(byteSize);
-			pipeline          = recreatePipeline();
+			pipeline          = recreatePipeline(Ec);
 		}
 
 		sourceSsbosBuffer.memcpy(sourceSsbos.data(), byteSize);
 
 	}
 
-	void dispatch(vk::CommandBuffer, const entt::registry& registry, T time, T x0 = 0)
+	void dispatch(vk::CommandBuffer commandBuffer, entt::registry& registry, T time, vulkan::Buffer& Ec, T x0 = 0)
 	{
 		pushConstants.time = time;
 		pushConstants.x0   = x0;
 
-		fillData(registry);
-	}
+		fillData(registry, Ec);
 
-	void dispatch(vk::CommandBuffer commandBuffer, svec3 pos, T time, T sigma, T x0 = 0)
-	{
-		pushConstants.pos   = pos;
-		pushConstants.time  = time;
-		pushConstants.sigma = sigma;
-		pushConstants.x0    = x0;
+		if(sourceSsbos.empty())
+			return;
 
 		pipeline.bind(commandBuffer);
 		pipeline.pushConstants(commandBuffer, pushConstants);
-		commandBuffer.dispatch(1,1,1);
+		commandBuffer.dispatch(getWorkgroupCount(),1,1);
 	}
 
 };

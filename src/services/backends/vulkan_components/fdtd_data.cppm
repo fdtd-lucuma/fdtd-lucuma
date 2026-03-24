@@ -46,8 +46,9 @@ export template <typename T>
 struct FdtdDataCreateInfo
 {
 	components::FdtdDataCreateInfo fdtdDataCreateInfo;
-	vulkan::Compute& compute;
+	vulkan::Compute&   compute;
 	vulkan::Allocator& allocator;
+	vulkan::Device&    device;
 };
 
 export template <typename T>
@@ -494,10 +495,10 @@ public:
 		}),
 		gaussPipeline(GaussPipelineCreateInfo<T>{
 			.paddedDims = paddedExDims,
-			.Ec         = _Ex,
 			.shaderPath = shaderName<T>("gauss"),
 			.compute    = createInfo.compute,
 			.allocator  = createInfo.allocator,
+			.device     = createInfo.device,
 		}),
 		abcPipelines(AbcPipelinesCreateInfo<T>{
 			.Cr = Cr,
@@ -915,7 +916,7 @@ public:
 
 	void gauss(vk::CommandBuffer commandBuffer)
 	{
-		gaussPipeline.dispatch(commandBuffer, gaussPosition, time, gaussSigma);
+		gaussPipeline.dispatch(commandBuffer, privateRegistry, time, _Ex);
 	}
 
 	void abc(vk::CommandBuffer commandBuffer)

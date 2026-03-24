@@ -4,13 +4,23 @@
 struct PushConstants<T = FDTD_FLOAT_T>
 {
 	svec3 paddedDims;
-	svec3 pos;
 	T time;
-	T sigma;
 	T x0;
 };
 
+struct SourceSsbo<T = FDTD_FLOAT_T>
+{
+	svec3 position;
+	T sigma;
+};
+
+[[vk::constant_id(0)]] const uint wgX;
+[[vk::constant_id(1)]] const uint wgY;
+[[vk::constant_id(2)]] const uint wgZ;
+[[vk::constant_id(3)]] const uint size;
+
 RWStructuredBuffer<FDTD_FLOAT_T> _Ec;
+StructuredBuffer<SourceSsbo> sources;
 
 // How do slang generics work?
 FDTD_FLOAT_T gauss(FDTD_FLOAT_T time, FDTD_FLOAT_T sigma, FDTD_FLOAT_T x0)
@@ -21,15 +31,20 @@ FDTD_FLOAT_T gauss(FDTD_FLOAT_T time, FDTD_FLOAT_T sigma, FDTD_FLOAT_T x0)
 }
 
 [shader("compute")]
-[numthreads(1,1,1)]
+[numthreads(wgX,wgY,wgZ)]
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
+	if(threadId.x > size)
+		return;
+
 	matrix3d Ec = matrix3d<FDTD_FLOAT_T>(_Ec, pushConstants.paddedDims);
 
-	const uint i = (uint)pushConstants.pos.x;
-	const uint j = (uint)pushConstants.pos.y;
-	const uint k = (uint)pushConstants.pos.z;
+	SourceSsbo source = sources[threadId.x];
 
-	Ec[i,j,k] += gauss(pushConstants.time, pushConstants.sigma, pushConstants.x0);
+	const uint i = (uint)source.position.x;
+	const uint j = (uint)source.position.y;
+	const uint k = (uint)source.position.z;
+
+	Ec[i,j,k] += gauss(pushConstants.time, source.sigma, pushConstants.x0);
 
 }

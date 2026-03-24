@@ -54,6 +54,7 @@ protected:
 
 	vulkan::Allocator& vulkanAllocator;
 	vulkan::Compute&   vulkanCompute;
+	vulkan::Device&    vulkanDevice;
 	vulkan::All&       vulkanAll;
 	basic::Settings&   settings;
 	basic::FileReader& fileReader;
@@ -92,8 +93,9 @@ public:
 
 		create_info_t vulkanCreateInfo {
 			.fdtdDataCreateInfo = createInfo,
-			.compute = vulkanCompute,
-			.allocator = vulkanAllocator,
+			.compute            = vulkanCompute,
+			.allocator          = vulkanAllocator,
+			.device             = vulkanDevice,
 		};
 
 		SaverCreateInfo saverCreateInfo {
@@ -164,7 +166,7 @@ public:
 	}
 
 	virtual ~Vulkan() = default;
-	
+
 
 private:
 
