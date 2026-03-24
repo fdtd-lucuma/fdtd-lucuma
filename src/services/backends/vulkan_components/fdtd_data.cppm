@@ -497,6 +497,7 @@ public:
 			.Ec         = _Ex,
 			.shaderPath = shaderName<T>("gauss"),
 			.compute    = createInfo.compute,
+			.allocator  = createInfo.allocator,
 		}),
 		abcPipelines(AbcPipelinesCreateInfo<T>{
 			.Cr = Cr,

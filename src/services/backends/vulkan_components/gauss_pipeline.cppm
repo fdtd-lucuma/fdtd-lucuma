@@ -27,6 +27,7 @@ import lucuma.services.vulkan;
 import lucuma.legacy_headers.entt;
 import lucuma.components;
 import vulkan_hpp;
+import vk_mem_alloc;
 
 import std;
 
@@ -49,12 +50,16 @@ struct GaussPipelineCreateInfo
 	std::string_view      entrypoint = "main";
 
 	vulkan::Compute& compute;
+	vulkan::Allocator& allocator;
 };
 
 template <typename T>
 class GaussPipeline
 {
 private:
+
+	GaussPipelineCreateInfo<T> createInfo;
+
 	struct alignas(32)
 	{
 		alignas(sizeof(svec4)) svec3 paddedDims;
@@ -64,48 +69,82 @@ private:
 		T x0 = {};
 	} pushConstants;
 
-	struct SourceUbo
+	struct SourceSsbo
 	{
 		alignas(sizeof(svec4)) svec3 position = {};
 		T sigma;
 	};
 
-	std::vector<SourceUbo> sourceUbos;
+	std::vector<SourceSsbo> sourceSsbos;
+	vulkan::Buffer          sourceSsbosBuffer;
 
 	vulkan::ComputePipeline pipeline;
 
-public:
-	GaussPipeline(const GaussPipelineCreateInfo<T>& createInfo):
-		pushConstants({
-			.paddedDims = createInfo.paddedDims,
-		}),
-		pipeline(createInfo.compute.createPipeline({
+	// TODO: use cache
+	vulkan::ComputePipeline recreatePipeline()
+	{
+		return createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
 			.setLayouts = {
 				{
-					.bindings = simpleStorageBuffersLayout<1>(),
+					.bindings = simpleStorageBuffersLayout<2>(),
 					.buffers = {
 						createInfo.Ec,
+						sourceSsbosBuffer,
 					}
 				}
 			},
 			.pushConstants = vulkan::Compute::makePushConstantsLayout<typeof(pushConstants)>(),
-		}))
+		});
+	}
+
+	vulkan::Buffer allocateSsbosBuffer(std::size_t bytes)
+	{
+		vma::AllocationCreateFlags vmaFlags =
+			vma::AllocationCreateFlagBits::eMapped |
+			vma::AllocationCreateFlagBits::eHostAccessSequentialWrite;
+
+		return createInfo.allocator.allocate(
+			bytes,
+			vk::BufferUsageFlagBits::eStorageBuffer,
+			vmaFlags,
+			vk::MemoryPropertyFlagBits::eDeviceLocal
+		);
+	}
+
+public:
+	GaussPipeline(const GaussPipelineCreateInfo<T>& createInfo):
+		createInfo(createInfo),
+		pushConstants({
+			.paddedDims = createInfo.paddedDims,
+		}),
+		sourceSsbosBuffer(allocateSsbosBuffer(1*sizeof(SourceSsbo))),
+		pipeline(recreatePipeline())
 	{ }
 
 	void fillData(const entt::registry& registry)
 	{
-		sourceUbos.clear();
+		sourceSsbos.clear();
 
 		auto group = registry.group<components::GaussianSource<T>>(entt::get<components::Transform>);
 
 		for(auto&& [_, source, transform]: group.each())
 		{
-			sourceUbos.emplace_back(SourceUbo{
+			sourceSsbos.emplace_back(SourceSsbo{
 				.position = transform.position,
 				.sigma    = source.sigma,
 			});
 		}
+
+		const std::size_t byteSize = sourceSsbos.size()*sizeof(SourceSsbo);
+
+		if(byteSize > sourceSsbosBuffer.getInfo().size)
+		{
+			sourceSsbosBuffer = allocateSsbosBuffer(byteSize);
+			pipeline          = recreatePipeline();
+		}
+
+		sourceSsbosBuffer.memcpy(sourceSsbos.data(), byteSize);
 
 	}
 
