@@ -31,7 +31,7 @@ error_code tag_invoke(deserialize_tag, auto &val, T &out) noexcept
 {
 	std::string_view str;
 
-	if(auto error = val.get_string().get(str))
+	if(auto error = val.get_string(str))
 		return error;
 
 	auto opt = magic_enum::enum_cast<T>(str);

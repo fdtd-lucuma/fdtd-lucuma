@@ -48,7 +48,7 @@ auto tag_invoke(deserialize_tag, simdjson_value& val, SimulationInput& simulatio
 	if(error)
 		return error;
 
-	if((error = obj["sources"].get<typeof(SimulationInput::sources)>().get(simulationInput.sources)))
+	if((error = obj["sources"].get(simulationInput.sources)))
 		return error;
 
 	return simdjson::SUCCESS;
