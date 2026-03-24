@@ -51,11 +51,13 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 	}
 
 
-	auto enabled =
+	auto enabledSet =
 		std::views::iota((std::uint32_t)0, (std::uint32_t)descriptions.size()) |
 		std::views::filter([&](auto&& i) {return !(descriptions[i].flags & vk::PerformanceCounterDescriptionFlagBitsKHR::ePerformanceImpacting);}) |
 		std::ranges::to<std::flat_set>()
 	;
+
+	auto enabled{std::move(enabledSet).extract()};
 
 	auto enabledSize = enabled.size();
 
@@ -76,9 +78,7 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 	auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
 #endif
 
-	std::span enabledSpan(enabled);
-
-	performanceCreateInfo.setCounterIndices(enabledSpan);
+	performanceCreateInfo.setCounterIndices(enabled);
 
 	auto queryPool   = device.getDevice().createQueryPool(queryPoolCreateInfo);
 	auto queryPasses = core.getPhysicalDevice().getQueueFamilyPerformanceQueryPassesKHR(performanceCreateInfo);
