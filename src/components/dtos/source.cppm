@@ -58,10 +58,12 @@ auto tag_invoke(deserialize_tag, simdjson_value& val, Source& source)
 	switch(source.type)
 	{
 		case SourceType::GAUSSIAN:
-			if((error = obj["source"].get(source.source.emplace<GaussianSource>())))
-				return error;
+			source.source.emplace<GaussianSource>();
 			break;
 	}
+
+	if((error = obj["source"].get(source.source)))
+		return error;
 
 	return simdjson::SUCCESS;
 }

@@ -44,4 +44,24 @@ error_code tag_invoke(deserialize_tag, auto &val, T &out) noexcept
 	return simdjson::SUCCESS;
 }
 
+export template <typename ...T>
+auto tag_invoke(deserialize_tag, auto& val, std::variant<T...>& variant)
+{
+	if(variant.valueless_by_exception())
+		return simdjson::UNINITIALIZED;
+
+	simdjson::error_code error;
+
+	std::visit([&](auto&& v)
+	{
+		error = val.get(v);
+
+	}, variant);
+
+	if(error)
+		return error;
+
+	return simdjson::SUCCESS;
+}
+
 }
