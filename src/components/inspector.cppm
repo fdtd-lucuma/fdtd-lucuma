@@ -16,12 +16,19 @@
 
 module;
 
-export module lucuma.systems;
+export module lucuma.components:inspector;
 
-import lucuma.utils;
+namespace lucuma::components
+{
 
-export import :base;
-export import :root;
-export import :simulation_inspector;
-export import :simulation_list;
-export import :simulation_stepper;
+export struct RegistryInspector
+{
+	bool openWindow = true;
+};
+
+export struct ComponentInspector
+{
+	bool openWindow = true;
+};
+
+}

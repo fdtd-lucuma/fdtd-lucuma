@@ -25,8 +25,9 @@ target_sources(${PROJECT_NAME}
 		FILES
 			base.cppm
 			root.cppm
+			simulation_inspector.cppm
 			simulation_list.cppm
-			simulation_stepper.cppm
 			simulation_plotter.cppm
+			simulation_stepper.cppm
 			systems.cppm
 )

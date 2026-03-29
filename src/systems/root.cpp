@@ -57,6 +57,9 @@ void Root::init()
 		systems.start<systems::SimulationPlotter<lucuma::components::FdtdData, precision>>();
 		systems.start<systems::SimulationPlotter<lucuma::services::backends::vulkan_components::FdtdData, precision>>();
 
+		systems.start<systems::SimulationInspector<lucuma::components::FdtdData, precision>>();
+		systems.start<systems::SimulationInspector<lucuma::services::backends::vulkan_components::FdtdData, precision>>();
+
 		registerEditor<GaussianSource<typename PrecisionTraits<precision>::type>>();
 	});
 
