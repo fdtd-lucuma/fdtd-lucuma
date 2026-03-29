@@ -84,7 +84,7 @@ private:
 
 	void inspectRegistry(entt::registry& private_registry, components::RegistryInspector& inspector)
 	{
-		if(ImGui::BeginListBox("##Entities"))
+		if(ImGui::BeginListBox("##Entities", ImVec2(std::numeric_limits<float>::min(), 5*ImGui::GetTextLineHeightWithSpacing())))
 		{
 			for(auto&& [id]: private_registry.template view<entt::entity>().each())
 			{
