@@ -56,14 +56,16 @@ constexpr ImGuiDataType getDataType()
 
 // TODO: Steps
 template <typename T>
-bool InputArithmetic(const char* label, T* p_data, const void* p_step = nullptr, const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0)
+inline bool InputArithmetic(const char* label, T* p_data, const void* p_step = nullptr, const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0)
 {
 
 	if constexpr(std::is_same_v<T, _Float16>)
 	{
-		float data = (float)*p_data;
+		float data            = (float)*p_data;
+		const float step      = p_step == nullptr ? float{} : (float)*(_Float16*)p_step;
+		const float step_fast = p_step_fast == nullptr ? float{} : (float)*(_Float16*)p_step_fast;
 
-		bool result = InputScalar(label, getDataType<float>(), p_data, p_step, p_step_fast, format, flags);
+		bool result = InputArithmetic(label, &data, p_step == nullptr ? p_step : &step, p_step_fast == nullptr ? p_step_fast : &step_fast, format, flags);
 
 		if(result)
 			*p_data = data;
