@@ -31,7 +31,7 @@ void showComponentEditor(entt::handle handle)
 		{
 			if(void* value = storage.value(handle.entity()))
 			{
-				func.invoke(type.from_void(value), handle);
+				func.invoke({}, value, handle);
 			}
 		}
 	}
