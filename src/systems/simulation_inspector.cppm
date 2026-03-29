@@ -84,7 +84,12 @@ private:
 
 	void inspectRegistry(entt::registry& private_registry, components::RegistryInspector& inspector)
 	{
-		if(ImGui::BeginListBox("##Entities", ImVec2(std::numeric_limits<float>::min(), 5*ImGui::GetTextLineHeightWithSpacing())))
+		if(ImGui::Button("New"))
+		{
+			auto _ = private_registry.create();
+		}
+
+		if(ImGui::BeginListBox("##Entities", ImVec2(std::numeric_limits<float>::min(), ImGui::GetContentRegionAvail().y)))
 		{
 			for(auto&& [id]: private_registry.template view<entt::entity>().each())
 			{
@@ -104,8 +109,9 @@ private:
 				if(is_selected)
 					ImGui::SetItemDefaultFocus();
 			}
+
+			ImGui::EndListBox();
 		}
-		ImGui::EndListBox();
 	}
 
 	void inspectRegistry(entt::entity id, const char* window_name, components::RegistryInspector& inspector, data_t& data)
