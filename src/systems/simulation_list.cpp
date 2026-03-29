@@ -272,6 +272,7 @@ void SimulationList::newSimulationPopup()
 		ImGui::SeparatorText("Starting values");
 		newSimulationStartingValues();
 
+		ImGui::Checkbox("Start simulation on creation", &newSimulationInfo.startOnCreate);
 
 		if(ImGui::Button("Cancel"))
 		{
@@ -545,6 +546,8 @@ void SimulationList::resetNewSimulationInfo()
 		.backend   = Backend::vulkan,
 		.precision = Precision::f32,
 
+		.startOnCreate = true,
+
 		// Magnetic fields
 
 		.Hx0 = {},
@@ -733,6 +736,9 @@ void SimulationList::startSimulation()
 
 	registry.emplace<components::SimulationPlotInfo>(newId);
 	registry.emplace<components::RegistryInspector>(newId);
+
+	if(!newSimulationInfo.startOnCreate)
+		registry.emplace<components::Paused>(newId);
 
 	instantiator.get(newSimulationInfo.backend, newSimulationInfo.precision).init(createInfo, newId);
 }

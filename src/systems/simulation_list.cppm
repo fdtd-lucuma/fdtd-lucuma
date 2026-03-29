@@ -64,6 +64,8 @@ struct FdtdSimulationInfo
 	Backend   backend;
 	Precision precision;
 
+	bool startOnCreate = true;
+
 	// Magnetic fields
 	std::filesystem::path Hx0;
 	std::filesystem::path Hy0;
