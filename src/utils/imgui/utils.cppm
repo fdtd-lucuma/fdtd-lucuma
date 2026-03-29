@@ -61,11 +61,11 @@ inline bool InputArithmetic(const char* label, T* p_data, const void* p_step = n
 
 	if constexpr(std::is_same_v<T, _Float16>)
 	{
-		float data            = (float)*p_data;
+		float data            = p_data == nullptr ? float{} : (float)*p_data;
 		const float step      = p_step == nullptr ? float{} : (float)*(_Float16*)p_step;
 		const float step_fast = p_step_fast == nullptr ? float{} : (float)*(_Float16*)p_step_fast;
 
-		bool result = InputArithmetic(label, &data, p_step == nullptr ? p_step : &step, p_step_fast == nullptr ? p_step_fast : &step_fast, format, flags);
+		bool result = InputArithmetic(label, p_data == nullptr ? nullptr : &data, p_step == nullptr ? nullptr : &step, p_step_fast == nullptr ? nullptr : &step_fast, format, flags);
 
 		if(result)
 			*p_data = data;
