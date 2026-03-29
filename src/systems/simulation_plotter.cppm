@@ -110,12 +110,6 @@ private:
 			ImGui::SeparatorText("Time steps");
 			utils::imgui::ProgressBar(simulation_info.timeI, simulation_info.maxTime);
 
-			// TODO: Move this to another window
-			for(auto&& [id]: data.getRegistry().template view<entt::entity>().each())
-			{
-				entt::handle handle(data.getRegistry(), id);
-				components::showEditor(handle);
-			}
 		}
 
 		ImGui::End();

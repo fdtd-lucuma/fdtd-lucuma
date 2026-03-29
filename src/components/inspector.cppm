@@ -18,12 +18,15 @@ module;
 
 export module lucuma.components:inspector;
 
+import lucuma.legacy_headers.entt;
+
 namespace lucuma::components
 {
 
 export struct RegistryInspector
 {
-	bool openWindow = true;
+	bool         openWindow   = true;
+	entt::entity selected_idx = entt::null;
 };
 
 export struct ComponentInspector

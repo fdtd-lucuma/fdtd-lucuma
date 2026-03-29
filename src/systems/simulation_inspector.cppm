@@ -55,6 +55,18 @@ public:
 
 	void update([[maybe_unused]] const events::Update& event)
 	{
+		for(auto&& [id, inspector, fdtd_data]: registry.view<components::RegistryInspector, data_t>().each())
+		{
+			if(!inspector.openWindow)
+				continue;
+
+			char buffer[128];
+
+			const auto result = std::format_to_n(buffer, std::size(buffer)-1, "Inspector #{}", id);
+			*result.out = '\0';
+
+			inspectRegistry(id, buffer, inspector, fdtd_data);
+		}
 	}
 
 private:
@@ -63,6 +75,70 @@ private:
 
 	void init()
 	{
+	}
+
+	void markAsInspectable(entt::handle handle)
+	{
+		handle.emplace<components::ComponentInspector>();
+	}
+
+	void inspectRegistry(entt::registry& private_registry, components::RegistryInspector& inspector)
+	{
+		if(ImGui::BeginListBox("##Entities"))
+		{
+			for(auto&& [id]: private_registry.template view<entt::entity>().each())
+			{
+				char buffer[128];
+
+				const auto result = std::format_to_n(buffer, std::size(buffer)-1, "{}", id); // TODO: Find a way to dedup this
+				*result.out = '\0';
+
+				bool is_selected = inspector.selected_idx == id;
+
+				if(ImGui::Selectable(buffer, is_selected))
+				{
+					inspector.selected_idx = id;
+					markAsInspectable({private_registry, id});
+				}
+
+				if(is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	void inspectRegistry(entt::entity id, const char* window_name, components::RegistryInspector& inspector, data_t& data)
+	{
+		if(ImGui::Begin(window_name, &inspector.openWindow))
+		{
+			inspectRegistry(data.getRegistry(), inspector);
+		}
+
+		ImGui::End();
+
+		inspectComponents(id, data.getRegistry());
+	}
+
+	void inspectComponents(entt::entity parent_id, entt::registry& private_registry)
+	{
+		for(auto&& [id, inspector]: private_registry.template view<components::ComponentInspector>().each())
+		{
+			if(!inspector.openWindow)
+				continue;
+
+			char buffer[128];
+
+			const auto result = std::format_to_n(buffer, std::size(buffer)-1, "Inspector #{},{}", parent_id, id); // TODO: Find a way to dedup this
+			*result.out = '\0';
+
+			if(ImGui::Begin(buffer, &inspector.openWindow))
+			{
+				components::showEditor({private_registry, id});
+			}
+
+			ImGui::End();
+		}
 	}
 
 
