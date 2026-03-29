@@ -20,18 +20,15 @@ module lucuma.components;
 
 import imgui;
 
-namespace lucuma::gui
+namespace lucuma::components
 {
 
 static const int step     = 1;
 static const int fastStep = 100;
 
-template<>
-void componentEditor<components::Transform>(void* p, entt::handle)
+void componentEditor(components::Transform& transform, entt::handle)
 {
-	auto& t = *((components::Transform*)p);
-
-	ImGui::InputScalarN("Position", ImGuiDataType_U64, &t.position, 3, &step, &fastStep);
+	ImGui::InputScalarN("Position", ImGuiDataType_U64, &transform.position, 3, &step, &fastStep);
 }
 
 }

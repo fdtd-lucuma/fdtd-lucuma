@@ -754,6 +754,16 @@ private:
 
 public:
 
+	entt::registry& getRegistry()
+	{
+		return privateRegistry;
+	}
+
+	const entt::registry& getRegistry() const
+	{
+		return privateRegistry;
+	}
+
 	cmdspan_3d_t Hx()    const { return toMdspan(_Hx,    paddedHxDims,  HxDims);  }
 	cmdspan_3d_t Hy()    const { return toMdspan(_Hy,    paddedHyDims,  HyDims);  }
 	cmdspan_3d_t Hz()    const { return toMdspan(_Hz,    paddedHzDims,  HzDims);  }

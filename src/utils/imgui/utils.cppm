@@ -64,7 +64,7 @@ bool InputArithmetic(const char* label, T* p_data, const void* p_step = nullptr,
 		bool result = InputScalar(label, getDataType<float>(), p_data, p_step, p_step_fast, format, flags);
 
 		if(result)
-			p_data = data;
+			*p_data = data;
 
 		return result;
 	}

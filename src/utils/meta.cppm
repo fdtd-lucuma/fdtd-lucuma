@@ -22,30 +22,36 @@ import lucuma.legacy_headers.entt;
 
 import std;
 
-namespace lucuma::gui
+namespace lucuma::components
 {
-
-export template <typename T>
-void componentEditor(void*,entt::handle) = delete;
 
 export template<typename T>
-concept HasComponentEditor = requires(void* t, entt::handle h)
+concept HasComponentEditor = requires(T& t, entt::handle h)
 {
-	componentEditor<T>(t, h);
+	componentEditor(t, h);
 };
+
+export template <typename T>
+inline void componentEditorCaller(void* p, entt::handle handle)
+{
+	T& data = *((T*)p);
+
+	componentEditor(data, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
+}
 
 };
 
 namespace lucuma::utils
 {
 
+
 export template <typename T>
 void registerComponentEditor()
 {
-	static_assert(gui::HasComponentEditor<T>, "Missing lucuma::editor::componentWidget<T> specialization for this type");
+	static_assert(components::HasComponentEditor<T>, "Missing lucuma::components::componentEditor<T> specialization for this type");
 
 	entt::meta_factory<T>{}
-		. template func<&gui::componentEditor<T>>(entt::hashed_string("componentEditor"));
+		. template func<&components::componentEditorCaller<T>>(entt::hashed_string("componentEditor"));
 }
 
 

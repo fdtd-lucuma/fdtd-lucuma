@@ -664,6 +664,17 @@ private:
 	entt::registry privateRegistry;
 
 public:
+
+	entt::registry& getRegistry()
+	{
+		return privateRegistry;
+	}
+
+	const entt::registry& getRegistry() const
+	{
+		return privateRegistry;
+	}
+
 	unsigned int getTime() const
 	{
 		return time;

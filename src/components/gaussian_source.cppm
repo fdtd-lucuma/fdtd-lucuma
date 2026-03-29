@@ -32,24 +32,10 @@ struct GaussianSource
 	T sigma;
 };
 
-export template<typename>
-struct is_gaussian_source : std::false_type {};
-
 export template<typename T>
-struct is_gaussian_source<lucuma::components::GaussianSource<T>> : std::true_type {};
-
-export template<typename T>
-concept GaussianSourceType = is_gaussian_source<T>::value;
-
-}
-
-namespace lucuma::gui
+void componentEditor(components::GaussianSource<T>& source, entt::handle)
 {
-
-export template<components::GaussianSourceType T>
-void componentEditor(void* v, entt::handle)
-{
-	ImGui::InputArithmetic("Sigma", ((T*)v)->sigma);
+	ImGui::InputArithmetic("Sigma", &source.sigma);
 }
 
 }

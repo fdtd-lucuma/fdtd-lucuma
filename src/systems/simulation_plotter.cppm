@@ -63,7 +63,9 @@ public:
 		base_t(_systems),
 		registry(_systems.inject<entt::registry>()),
 		settings(_systems.inject<Settings>())
-	{ }
+	{
+		init();
+	}
 
 	void update([[maybe_unused]] const events::Update& event)
 	{
@@ -88,6 +90,10 @@ public:
 private:
 	entt::registry& registry;
 	Settings&       settings;
+
+	void init()
+	{
+	}
 
 	void drawProgressBar(entt::entity id, std::string_view title, const components::SimulationInfo& simulation_info, components::SimulationPlotInfo& plot_info, const data_t& data)
 	{

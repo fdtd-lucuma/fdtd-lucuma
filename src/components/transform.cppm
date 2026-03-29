@@ -31,12 +31,7 @@ export struct Transform
 	svec3 position;
 };
 
-}
-
-namespace lucuma::gui
-{
-
-export template<>
-void componentEditor<components::Transform>(void*, entt::handle);
+export
+void componentEditor(components::Transform&, entt::handle);
 
 }
