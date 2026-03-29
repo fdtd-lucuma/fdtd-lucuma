@@ -43,11 +43,21 @@ void registerEditor()
 			bool visible = true;
 
 			if(ImGui::CollapsingHeader(name.c_str(), &visible, ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGui::PushID(name.c_str());
 				editor(*(T*)p, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
+				ImGui::PopID();
+
+			}
 
 			if(!visible)
 				handle.erase<T>();
-		}>(entt::hashed_string("editor"));
+		}>(entt::hashed_string("editor"))
+		.template func<+[](entt::handle handle)
+		{
+			handle.emplace_or_replace<T>();
+		}>(entt::hashed_string("emplaceComponent"))
+		.template data<&name>(entt::hashed_string("name"));
 }
 
 

@@ -15,12 +15,32 @@
 
 module;
 
+#include <cassert>
+
 module lucuma.utils;
 
 import lucuma.legacy_headers.entt;
 
 namespace lucuma::components
 {
+
+void newComponentMenu(entt::handle handle)
+{
+	for(auto&& [id, type]: entt::resolve())
+	{
+		if(auto func = type.func(entt::hashed_string("emplaceComponent")); func)
+		{
+			auto name = type.data(entt::hashed_string("name"));
+
+			assert(name.is_static());
+
+			if(ImGui::MenuItem(((std::string*)name.get({}).base().data())->c_str()))
+			{
+				func.invoke({}, handle);
+			}
+		}
+	}
+}
 
 void showEditor(entt::handle handle)
 {
@@ -35,6 +55,21 @@ void showEditor(entt::handle handle)
 			}
 		}
 	}
+
+	static constexpr const char* popupName = "New components";
+
+	if(ImGui::Button("New component"))
+	{
+		ImGui::OpenPopup(popupName);
+	}
+
+	if(ImGui::BeginPopup(popupName))
+	{
+		newComponentMenu(handle);
+
+		ImGui::EndPopup();
+	}
+
 }
 
 }
