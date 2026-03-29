@@ -22,6 +22,7 @@ module lucuma.services.vulkan;
 
 import lucuma.services.basic;
 import lucuma.services.window;
+import vkfw;
 
 namespace lucuma::services::vulkan
 {
@@ -168,7 +169,7 @@ vk::Extent2D Swapchain::selectDefaultExtent(const SwapchainDetails& details) con
 	if(details.capabilities.currentExtent.width != std::numeric_limits<std::uint32_t>::max())
 		return details.capabilities.currentExtent;
 
-	auto [width, height] = glfw.getWindow().getFramebufferSize();
+	auto [width, height] = glfw.getFramebufferSize();
 
 	return vk::Extent2D {
 		.width  = std::clamp<std::uint32_t>(width, details.capabilities.minImageExtent.width, details.capabilities.maxImageExtent.width),

@@ -92,7 +92,9 @@ void Imgui::initImgui()
 		io.IniFilename = iniPath.c_str();
 #endif
 
-	ImGui_ImplGlfw_InitForVulkan(glfw.getWindow(), true);
+	glfw.initImgui();
+
+	// TODO: Move this into glfw service
 
 	const auto swapchainFormat = swapchain.getFormat();
 
@@ -114,6 +116,7 @@ void Imgui::initImgui()
 		.PipelineInfoMain   = {
 			.RenderPass                  = {},
 			.Subpass                     = {},
+			.ExtraDynamicStates          = {},
 			.PipelineRenderingCreateInfo = pipelineRenderingCreateInfo,
 			.SwapChainImageUsage         = {},
 		},
@@ -136,7 +139,7 @@ void Imgui::onDraw(const events::vulkan::GuiDraw& event)
 
 void Imgui::onFrameStart(const events::FrameStart&)
 {
-	ImGui_ImplGlfw_NewFrame();
+	glfw.newImguiFrame();
 	ImGui_ImplVulkan_NewFrame();
 
 	ImGui::NewFrame();
@@ -157,7 +160,7 @@ Imgui::~Imgui()
 	device.waitIdle();
 
 	ImGui_ImplVulkan_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
+	glfw.shutdownImgui();
 
 	// ImGui's extensions
 	ImPlot::DestroyContext();

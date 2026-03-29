@@ -80,12 +80,10 @@ void Graphics::init()
 	createSyncObjects();
 	createTracyContexts();
 
-	glfw.getWindow().callbacks()->on_framebuffer_resize =
-		[this](const vkfw::Window&, std::size_t, std::size_t)
-		{
-			framebufferResized = true;
-		}
-	;
+	glfw.setOnFrameBufferResize([this](std::size_t, std::size_t)
+	{
+		framebufferResized = true;
+	});
 }
 
 std::vector<vk::raii::Queue> Graphics::createQueuesCommon(const QueueFamilyInfo& info)

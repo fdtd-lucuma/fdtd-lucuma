@@ -19,10 +19,11 @@ module;
 export module lucuma.services.window:glfw;
 
 import std;
-import vkfw;
+import vulkan;
 
 import lucuma.utils;
 import lucuma.services.basic;
+import lucuma.legacy_headers.entt;
 
 namespace lucuma::services::window
 {
@@ -38,17 +39,30 @@ public:
 	bool shouldClose() const;
 	void pollEvents();
 
-	vkfw::Window& getWindow();
-
 	void waitUntilMaximixed();
+
+	std::tuple<std::size_t, std::size_t> getFramebufferSize() const;
+
+	void initImgui();
+	void shutdownImgui();
+	void newImguiFrame();
+
+	vk::raii::SurfaceKHR createSurface(const vk::raii::Instance& instance);
+
+	void setOnFrameBufferResize(std::function<void(std::size_t, std::size_t)>&& func);
 
 private:
 	basic::Settings& settings;
 
-	vkfw::UniqueInstance instance;
-	vkfw::UniqueWindow   window;
+	struct Data;
+
+	entt::basic_any<32> _data;
+
+	Data& data();
+	const Data& data() const;
 
 	void init();
+
 };
 
 }

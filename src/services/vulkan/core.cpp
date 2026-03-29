@@ -119,7 +119,7 @@ void Core::createSurface()
 
 	assert(glfw != nullptr);
 
-	surface = vk::raii::SurfaceKHR(instance, vkfw::createWindowSurface(instance, glfw->getWindow()));
+	surface = glfw->createSurface(instance);
 }
 
 std::vector<const char*> Core::getRequiredLayers()

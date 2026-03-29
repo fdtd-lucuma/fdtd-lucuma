@@ -16,7 +16,10 @@
 
 module;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #include <entt/entt.hpp>
+#pragma GCC diagnostic pop
 
 export module lucuma.legacy_headers.entt;
 
@@ -44,6 +47,9 @@ using entt::handle;
 using entt::const_handle;
 using entt::get;
 using entt::hashed_string;
+
+using entt::any;
+using entt::basic_any;
 
 using entt::meta_factory;
 using entt::resolve;

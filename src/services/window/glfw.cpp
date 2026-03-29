@@ -19,6 +19,9 @@ module;
 module lucuma.services.window;
 
 import vkfw;
+import imgui;
+import imgui_impl_glfw;
+import imgui_impl_vulkan;
 
 import lucuma.services.basic;
 
@@ -27,8 +30,16 @@ namespace lucuma::services::window
 
 using namespace lucuma::services;
 
+
+struct Glfw::Data
+{
+	vkfw::UniqueInstance instance;
+	vkfw::UniqueWindow   window;
+};
+
 Glfw::Glfw([[maybe_unused]] Injector& injector):
-	settings(injector.inject<basic::Settings>())
+	settings(injector.inject<basic::Settings>()),
+	_data(std::in_place_type<Glfw::Data>)
 
 {
 	init();
@@ -41,13 +52,13 @@ void error_callback(int, const char *description) {
 void Glfw::init()
 {
 	vkfw::setErrorCallback(error_callback);
-	instance = vkfw::initUnique();
+	data().instance = vkfw::initUnique();
 
 	vkfw::windowHint<vkfw::WindowHint::eClientAPI>(vkfw::ClientAPI::eNone);
 	vkfw::windowHint<vkfw::WindowHint::eSRGBCapable>(true);
 	vkfw::windowHint<vkfw::WindowHint::eResizable>(true);
 
-	window = vkfw::createWindowUnique(800, 600, "fdtd-lucuma");
+	data().window = vkfw::createWindowUnique(800, 600, "fdtd-lucuma");
 
 	// TODO: Key callback
 }
@@ -55,7 +66,7 @@ void Glfw::init()
 
 bool Glfw::shouldClose() const
 {
-	return window->shouldClose();
+	return data().window->shouldClose();
 }
 
 void Glfw::pollEvents()
@@ -63,22 +74,60 @@ void Glfw::pollEvents()
 	vkfw::pollEvents();
 }
 
-vkfw::Window& Glfw::getWindow()
-{
-	return window.get();
-}
-
 void Glfw::waitUntilMaximixed()
 {
-	auto [width, height] = window->getFramebufferSize();
+	auto [width, height] = data().window->getFramebufferSize();
 
 	while(width == 0 || height == 0)
 	{
-		std::tie(width, height) = window->getFramebufferSize();
+		std::tie(width, height) = data().window->getFramebufferSize();
 
 		vkfw::waitEvents();
 	}
 
+}
+
+Glfw::Data& Glfw::data()
+{
+	return *(Glfw::Data*)_data.data();
+}
+
+const Glfw::Data& Glfw::data() const
+{
+	return *(Glfw::Data*)_data.data();
+}
+
+std::tuple<std::size_t, std::size_t> Glfw::getFramebufferSize() const
+{
+	return data().window->getFramebufferSize();
+}
+
+void Glfw::initImgui()
+{
+	ImGui_ImplGlfw_InitForVulkan(data().window.get(), true);
+}
+
+void Glfw::shutdownImgui()
+{
+	ImGui_ImplGlfw_Shutdown();
+}
+
+void Glfw::newImguiFrame()
+{
+	ImGui_ImplGlfw_NewFrame();
+}
+
+vk::raii::SurfaceKHR Glfw::createSurface(const vk::raii::Instance& instance)
+{
+	return vk::raii::SurfaceKHR(instance, vkfw::createWindowSurface(instance, data().window.get()));
+}
+
+void Glfw::setOnFrameBufferResize(std::function<void(std::size_t, std::size_t)>&& func)
+{
+	data().window->callbacks()->on_framebuffer_resize = [=](const vkfw::Window&, std::size_t x, std::size_t y)
+	{
+		func(x, y);
+	};
 }
 
 }
