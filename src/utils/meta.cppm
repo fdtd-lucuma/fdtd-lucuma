@@ -19,16 +19,19 @@ module;
 export module lucuma.utils:meta;
 
 import lucuma.legacy_headers.entt;
-import std;
 
 namespace lucuma::editor
 {
 
 export template <typename T>
-void componentEditor(entt::handle)
+void componentEditor(entt::handle) = delete;
+
+export template<typename T>
+concept HasComponentEditor = requires(entt::handle h)
 {
-	std::println("{} {}", "It works", entt::type_id<T>().name());
-}
+	lucuma::editor::componentEditor<T>(h);
+};
+
 
 };
 
@@ -38,6 +41,8 @@ namespace lucuma::utils
 export template <typename T>
 void registerComponentEditor()
 {
+	static_assert(editor::HasComponentEditor<T>, "Missing lucuma::editor::componentWidget<T> specialization for this type");
+
 	entt::meta_factory<T>{}
 		. template func<&lucuma::editor::componentEditor<T>>(entt::hashed_string("componentEditor"));
 }
