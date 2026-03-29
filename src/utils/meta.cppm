@@ -21,6 +21,7 @@ export module lucuma.utils:meta;
 import lucuma.legacy_headers.entt;
 
 import std;
+import imgui;
 
 namespace lucuma::components
 {
@@ -34,10 +35,13 @@ concept HasEditor = requires(T& t, entt::handle h)
 export template <HasEditor T>
 void registerComponentEditor()
 {
+	static const std::string name(entt::type_id<T>().name());
+
 	entt::meta_factory<T>{}
 		.template func<+[](void* p, entt::handle handle)
 		{
-			editor(*(T*)p, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
+			if(ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+				editor(*(T*)p, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
 		}>(entt::hashed_string("editor"));
 }
 
