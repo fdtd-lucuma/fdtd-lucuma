@@ -44,6 +44,9 @@ Root::Root(Systems& _systems):
 
 void Root::init()
 {
+	using namespace components;
+	using namespace utils;
+
 	systems.inject<lucuma::services::window::Filedialog>();
 
 	systems.start<systems::SimulationList>();
@@ -54,10 +57,10 @@ void Root::init()
 		systems.start<systems::SimulationPlotter<lucuma::components::FdtdData, precision>>();
 		systems.start<systems::SimulationPlotter<lucuma::services::backends::vulkan_components::FdtdData, precision>>();
 
-		registerComponentEditor<components::GaussianSource<typename PrecisionTraits<precision>::type>>();
+		registerComponentEditor<GaussianSource<typename PrecisionTraits<precision>::type>>();
 	});
 
-	registerComponentEditor<components::Transform>();
+	registerComponentEditor<Transform>();
 }
 
 

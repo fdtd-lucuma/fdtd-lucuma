@@ -33,7 +33,7 @@ struct GaussianSource
 };
 
 export template<typename T>
-void componentEditor(components::GaussianSource<T>& source, entt::handle)
+void editor(components::GaussianSource<T>& source, entt::handle)
 {
 	ImGui::InputArithmetic("Sigma", &source.sigma);
 }

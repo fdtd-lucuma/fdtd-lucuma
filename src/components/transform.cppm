@@ -32,6 +32,6 @@ export struct Transform
 };
 
 export
-void componentEditor(components::Transform&, entt::handle);
+void editor(components::Transform&, entt::handle);
 
 }

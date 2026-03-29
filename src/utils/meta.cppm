@@ -26,36 +26,23 @@ namespace lucuma::components
 {
 
 export template<typename T>
-concept HasComponentEditor = requires(T& t, entt::handle h)
+concept HasEditor = requires(T& t, entt::handle h)
 {
-	componentEditor(t, h);
+	editor(t, h);
 };
 
-export template <typename T>
-inline void componentEditorCaller(void* p, entt::handle handle)
-{
-	T& data = *((T*)p);
-
-	componentEditor(data, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
-}
-
-};
-
-namespace lucuma::utils
-{
-
-
-export template <typename T>
+export template <HasEditor T>
 void registerComponentEditor()
 {
-	static_assert(components::HasComponentEditor<T>, "Missing lucuma::components::componentEditor<T> specialization for this type");
-
 	entt::meta_factory<T>{}
-		. template func<&components::componentEditorCaller<T>>(entt::hashed_string("componentEditor"));
+		.template func<+[](void* p, entt::handle handle)
+		{
+			editor(*(T*)p, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
+		}>(entt::hashed_string("editor"));
 }
 
 
-export void showComponentEditor(entt::handle handle);
+export void showEditor(entt::handle handle);
 
 }
 

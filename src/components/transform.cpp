@@ -26,7 +26,7 @@ namespace lucuma::components
 static const int step     = 1;
 static const int fastStep = 100;
 
-void componentEditor(components::Transform& transform, entt::handle)
+void editor(components::Transform& transform, entt::handle)
 {
 	ImGui::InputScalarN("Position", ImGuiDataType_U64, &transform.position, 3, &step, &fastStep);
 }

@@ -27,7 +27,7 @@ void showComponentEditor(entt::handle handle)
 	for(auto [id, storage]: handle.storage())
 	{
 		auto type = entt::resolve(storage.type());
-		if(auto func = type.func(entt::hashed_string("componentEditor")); func)
+		if(auto func = type.func(entt::hashed_string("editor")); func)
 		{
 			if(void* value = storage.value(handle.entity()))
 			{
