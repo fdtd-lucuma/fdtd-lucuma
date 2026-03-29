@@ -95,7 +95,7 @@ private:
 	{
 	}
 
-	void drawProgressBar(entt::entity id, std::string_view title, const components::SimulationInfo& simulation_info, components::SimulationPlotInfo& plot_info, const data_t& data)
+	void drawProgressBar(entt::entity id, std::string_view title, const components::SimulationInfo& simulation_info, components::SimulationPlotInfo& plot_info, data_t& data)
 	{
 		if(ImGui::Begin(title.data(), &plot_info.openWindow))
 		{
@@ -109,6 +109,13 @@ private:
 
 			ImGui::SeparatorText("Time steps");
 			utils::imgui::ProgressBar(simulation_info.timeI, simulation_info.maxTime);
+
+			// TODO: Move this to another window
+			for(auto&& [id]: data.getRegistry().template view<entt::entity>().each())
+			{
+				entt::handle handle(data.getRegistry(), id);
+				components::showEditor(handle);
+			}
 		}
 
 		ImGui::End();

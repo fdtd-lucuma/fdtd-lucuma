@@ -19,10 +19,10 @@ module lucuma.utils;
 
 import lucuma.legacy_headers.entt;
 
-namespace lucuma::utils
+namespace lucuma::components
 {
 
-void showComponentEditor(entt::handle handle)
+void showEditor(entt::handle handle)
 {
 	for(auto [id, storage]: handle.storage())
 	{

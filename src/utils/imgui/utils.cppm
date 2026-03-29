@@ -53,6 +53,8 @@ constexpr ImGuiDataType getDataType()
 	return ImGuiDataType_COUNT;
 }
 
+
+// TODO: Steps
 template <typename T>
 bool InputArithmetic(const char* label, T* p_data, const void* p_step = nullptr, const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0)
 {

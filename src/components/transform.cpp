@@ -23,12 +23,12 @@ import imgui;
 namespace lucuma::components
 {
 
-static const int step     = 1;
-static const int fastStep = 100;
+static const std::size_t step     = 1;
+static const std::size_t fastStep = 100;
 
 void editor(components::Transform& transform, entt::handle)
 {
-	ImGui::InputScalarN("Position", ImGuiDataType_U64, &transform.position, 3, &step, &fastStep);
+	ImGui::InputScalarN("Position", ImGuiDataType_U64, &transform.position.x, 3, &step, &fastStep);
 }
 
 }
