@@ -33,7 +33,7 @@ concept HasEditor = requires(T& t, entt::handle h)
 };
 
 export template <HasEditor T>
-void registerComponentEditor()
+void registerEditor()
 {
 	static const std::string name(entt::type_id<T>().name());
 
