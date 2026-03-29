@@ -40,8 +40,13 @@ void registerEditor()
 	entt::meta_factory<T>{}
 		.template func<+[](void* p, entt::handle handle)
 		{
-			if(ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+			bool visible = true;
+
+			if(ImGui::CollapsingHeader(name.c_str(), &visible, ImGuiTreeNodeFlags_DefaultOpen))
 				editor(*(T*)p, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
+
+			if(!visible)
+				handle.erase<T>();
 		}>(entt::hashed_string("editor"));
 }
 
