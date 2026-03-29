@@ -34,7 +34,7 @@ void newComponentMenu(entt::handle handle)
 
 			assert(name.is_static());
 
-			if(ImGui::MenuItem(((std::string*)name.get({}).base().data())->c_str()))
+			if(ImGui::MenuItem(((const std::string*)name.get({}).base().data())->c_str()))
 			{
 				func.invoke({}, handle);
 			}
