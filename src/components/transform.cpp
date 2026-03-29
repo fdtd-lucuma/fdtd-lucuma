@@ -16,27 +16,22 @@
 
 module;
 
-export module lucuma.components:transform;
+module lucuma.components;
 
-import lucuma.utils;
-import lucuma.legacy_headers.entt;
-
-namespace lucuma::components
-{
-
-using namespace lucuma::utils;
-
-export struct Transform
-{
-	svec3 position;
-};
-
-}
+import imgui;
 
 namespace lucuma::gui
 {
 
-export template<>
-void componentEditor<components::Transform>(void*, entt::handle);
+static const int step     = 1;
+static const int fastStep = 100;
+
+template<>
+void componentEditor<components::Transform>(void* p, entt::handle)
+{
+	auto& t = *((components::Transform*)p);
+
+	ImGui::InputScalarN("Position", ImGuiDataType_U64, &t.position, 3, &step, &fastStep);
+}
 
 }

@@ -17,6 +17,7 @@
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		fdtd_data.cpp
+		transform.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES

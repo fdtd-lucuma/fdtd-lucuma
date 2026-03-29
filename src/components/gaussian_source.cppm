@@ -49,7 +49,7 @@ namespace lucuma::gui
 export template<components::GaussianSourceType T>
 void componentEditor(void* v, entt::handle)
 {
-	ImGui::InputArithmetic("sigma", ((T*)v)->sigma);
+	ImGui::InputArithmetic("Sigma", ((T*)v)->sigma);
 }
 
 }
