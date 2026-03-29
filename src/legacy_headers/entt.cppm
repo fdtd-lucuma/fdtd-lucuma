@@ -20,8 +20,6 @@ module;
 
 export module lucuma.legacy_headers.entt;
 
-import std;
-
 export namespace entt
 {
 
@@ -43,6 +41,11 @@ using entt::exclude;
 using entt::handle;
 using entt::const_handle;
 using entt::get;
+using entt::hashed_string;
+
+using entt::meta;
+using entt::meta_factory;
+using entt::resolve;
 
 };
 

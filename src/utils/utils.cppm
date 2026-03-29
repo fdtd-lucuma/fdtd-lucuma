@@ -27,6 +27,7 @@ export import :field;
 export import :imgui_graphnode_edge_writer;
 export import :injector;
 export import :mdspan;
+export import :meta;
 export import :plane;
 export import :precision;
 export import :print;

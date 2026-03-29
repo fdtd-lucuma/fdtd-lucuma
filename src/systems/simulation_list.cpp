@@ -47,6 +47,7 @@ SimulationList::SimulationList(Systems& _systems):
 
 void SimulationList::init()
 {
+	utils::registerComponentEditor<components::SimulationInfo>();
 }
 
 void pickFile(std::string_view label, std::filesystem::path& path)

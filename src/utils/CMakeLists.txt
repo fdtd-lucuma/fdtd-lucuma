@@ -21,6 +21,7 @@ target_sources(${PROJECT_NAME}
 		imgui_graphnode_edge_writer.cpp
 		injector.cpp
 		instantiations.cpp
+		meta.cpp
 		stream_edge_writer.cpp
 	PRIVATE
 		FILE_SET fdtd
@@ -35,6 +36,7 @@ target_sources(${PROJECT_NAME}
 			imgui_graphnode_edge_writer.cppm
 			injector.cppm
 			mdspan.cppm
+			meta.cppm
 			plane.cppm
 			precision.cppm
 			print.cppm
