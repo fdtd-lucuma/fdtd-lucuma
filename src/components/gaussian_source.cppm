@@ -18,13 +18,38 @@ module;
 
 export module lucuma.components:gaussian_source;
 
+import lucuma.utils.imgui;
+import imgui;
+import lucuma.legacy_headers.entt;
+import std;
+
 namespace lucuma::components
 {
 
-export template <typename T>
+export template<typename T>
 struct GaussianSource
 {
 	T sigma;
 };
+
+export template<typename>
+struct is_gaussian_source : std::false_type {};
+
+export template<typename T>
+struct is_gaussian_source<lucuma::components::GaussianSource<T>> : std::true_type {};
+
+export template<typename T>
+concept GaussianSourceType = is_gaussian_source<T>::value;
+
+}
+
+namespace lucuma::gui
+{
+
+export template<components::GaussianSourceType T>
+void componentEditor(void* v, entt::handle)
+{
+	ImGui::InputArithmetic("sigma", ((T*)v)->sigma);
+}
 
 }

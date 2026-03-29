@@ -23,5 +23,56 @@ import std;
 
 export namespace ImGui
 {
-    bool InputText(const char* label, std::filesystem::path* path, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
+
+bool InputText(const char* label, std::filesystem::path* path, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
+
+template <typename T>
+constexpr ImGuiDataType getDataType()
+{
+	if constexpr(std::is_same_v<T, char>)
+		return ImGuiDataType_S8;
+	if constexpr(std::is_same_v<T, unsigned char>)
+		return ImGuiDataType_U8;
+	if constexpr(std::is_same_v<T, short>)
+		return ImGuiDataType_S16;
+	if constexpr(std::is_same_v<T, unsigned short>)
+		return ImGuiDataType_U16;
+	if constexpr(std::is_same_v<T, int>)
+		return ImGuiDataType_S32;
+	if constexpr(std::is_same_v<T, unsigned int>)
+		return ImGuiDataType_U32;
+	if constexpr(std::is_same_v<T, long long>)
+		return ImGuiDataType_S64;
+	if constexpr(std::is_same_v<T, unsigned long long>)
+		return ImGuiDataType_U64;
+	if constexpr(std::is_same_v<T, float>)
+		return ImGuiDataType_Float;
+	if constexpr(std::is_same_v<T, double>)
+		return ImGuiDataType_Double;
+
+	return ImGuiDataType_COUNT;
+}
+
+template <typename T>
+bool InputArithmetic(const char* label, T* p_data, const void* p_step = nullptr, const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0)
+{
+
+	if constexpr(std::is_same_v<T, _Float16>)
+	{
+		float data = (float)*p_data;
+
+		bool result = InputScalar(label, getDataType<float>(), p_data, p_step, p_step_fast, format, flags);
+
+		if(result)
+			p_data = data;
+
+		return result;
+	}
+	else
+	{
+		return InputScalar(label, getDataType<T>(), p_data, p_step, p_step_fast, format, flags);
+	}
+
+}
+
 }
