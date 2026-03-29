@@ -990,7 +990,7 @@ public:
 
 		for(auto&& [_, source, transform]: privateRegistry.group<GaussianSource<T>>(entt::get<Transform>).each())
 		{
-			field[transform.position.x, transform.position.y, transform.position.z] += gauss(time, source.sigma);
+			field[transform.position.x, transform.position.y, transform.position.z] += gauss(time*deltaT, source.sigma);
 		}
 	}
 

@@ -926,7 +926,7 @@ public:
 
 	void gauss(vk::CommandBuffer commandBuffer)
 	{
-		gaussPipeline.dispatch(commandBuffer, privateRegistry, time, _Ex);
+		gaussPipeline.dispatch(commandBuffer, privateRegistry, time*deltaT, _Ex);
 	}
 
 	void abc(vk::CommandBuffer commandBuffer)
