@@ -79,7 +79,7 @@ private:
 
 	void markAsInspectable(entt::handle handle)
 	{
-		handle.emplace<components::ComponentInspector>();
+		handle.emplace_or_replace<components::ComponentInspector>();
 	}
 
 	void inspectRegistry(entt::registry& private_registry, components::RegistryInspector& inspector)

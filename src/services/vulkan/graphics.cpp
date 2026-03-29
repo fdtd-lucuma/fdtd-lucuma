@@ -354,24 +354,6 @@ Graphics::~Graphics()
 {
 	device.waitIdle();
 
-	for(size_t i = 0; i < tracyContexts.size(); i++)
-	{
-		commandBuffers[i].reset();
-		commandBuffers[i].begin({});
-		TracyVkCollect(tracyContexts[i], *commandBuffers[i]);
-		commandBuffers[i].end();
-	}
-
-	auto buffers = unraii(commandBuffers);
-
-	vk::SubmitInfo submitInfo {
-	};
-
-	submitInfo.setCommandBuffers(buffers);
-
-	getGraphicsQueue().submit(submitInfo);
-	getGraphicsQueue().waitIdle();
-
 	for(auto ptr: tracyContexts)
 	{
 		TracyVkDestroy(ptr);

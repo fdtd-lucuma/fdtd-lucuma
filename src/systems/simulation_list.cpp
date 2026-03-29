@@ -175,13 +175,6 @@ void SimulationList::rowActions(entt::entity id)
 
 	ImGui::SameLine();
 
-	if(ImGui::Button("Edit"))
-	{
-		registry.emplace_or_replace<components::RegistryInspector>(id, true);
-	}
-
-	ImGui::SameLine();
-
 	ImGui::BeginDisabled(isPaused);
 
 	if(ImGui::Button("Stop"))
@@ -190,6 +183,13 @@ void SimulationList::rowActions(entt::entity id)
 	}
 
 	ImGui::EndDisabled();
+
+	ImGui::SameLine();
+
+	if(ImGui::Button("Edit"))
+	{
+		registry.emplace_or_replace<components::RegistryInspector>(id);
+	}
 
 	ImGui::SameLine();
 
