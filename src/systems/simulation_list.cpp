@@ -633,8 +633,8 @@ void SimulationList::startSimulation()
 		simulationInput.sources.emplace_back(components::dtos::Source{
 			.type = utils::SourceType::GAUSSIAN,
 			.source = components::dtos::GaussianSource {
-				.position = settings.size()/(std::uint64_t)2,
-				.sigma    = settings.gaussSigma(),
+				.position = {newSimulationInfo.gaussPosition[0], newSimulationInfo.gaussPosition[1], newSimulationInfo.gaussPosition[2]},
+				.sigma    = newSimulationInfo.gaussSigma,
 			}
 		});
 	}
