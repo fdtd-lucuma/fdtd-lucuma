@@ -76,10 +76,12 @@ public:
 			if(!plot_info.openWindow)
 				continue;
 
-			ZoneNamed(__zone2, settings.tracy());
-			ZoneNameVF(__zone2, "#%d", id);
+			StackStr name("Plot #{}", id);
 
-			drawProgressBar(id, StackStr("Plot #{}", id), simulation_info, plot_info, fdtd_data);
+			ZoneNamed(__zone2, settings.tracy());
+			ZoneNameVF(__zone2, "%s", (const char*)name);
+
+			drawProgressBar(id, name, simulation_info, plot_info, fdtd_data);
 		}
 	}
 

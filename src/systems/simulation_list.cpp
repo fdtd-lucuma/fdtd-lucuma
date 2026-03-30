@@ -34,6 +34,7 @@ namespace lucuma::systems
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::imgui;
 
 SimulationList::SimulationList(Systems& _systems):
 	Base(_systems),
@@ -143,7 +144,7 @@ void SimulationList::simulationTable()
 			ImGui::TableNextRow();
 
 			ImGui::TableNextColumn();
-			ImGui::Text("%d", id);
+			utils::imgui::TextView(StackStr(id));
 
 			ImGui::TableNextColumn();
 			rowActions(id);

@@ -53,7 +53,7 @@ void SimulationStepper::update([[maybe_unused]]const events::Update& event)
 	for(auto&& [id, info]: registry.view<components::SimulationInfo>(entt::exclude<components::Paused>).each())
 	{
 		ZoneNamed(__zone2, settings.tracy());
-		ZoneNameVF(__zone2, "#%d", id);
+		ZoneNameVF(__zone2, "#%s", (const char*)StackStr(id));
 
 		if(!instantiator.get(info.backend, info.precision).step(id))
 		{

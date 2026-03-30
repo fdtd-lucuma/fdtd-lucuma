@@ -62,5 +62,6 @@ struct StackStr
 
 };
 
-}
+export void TextView(std::string_view str);
 
+}
