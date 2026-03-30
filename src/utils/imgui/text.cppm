@@ -32,5 +32,29 @@ void Enum(T v)
 	ImGui::Text("%s", magic_enum::enum_name(v).begin());
 }
 
+export template <std::size_t size = 64, typename char_t = char>
+struct StackStr
+{
+	char_t str[size];
+
+	template <typename... Args>
+	StackStr(std::format_string<Args...> fmt, Args&&... args)
+	{
+		const auto result = std::format_to_n(str, size-1, fmt, std::forward<Args>(args)...);
+		*result.out = '\0';
+	}
+
+	operator const char_t*() const
+	{
+		return str;
+	}
+
+	operator std::basic_string_view<char_t>() const
+	{
+		return str;
+	}
+
+};
+
 }
 

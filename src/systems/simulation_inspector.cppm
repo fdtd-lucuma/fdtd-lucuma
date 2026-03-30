@@ -34,6 +34,7 @@ namespace lucuma::systems
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::imgui;
 using namespace services::basic;
 using namespace services::backends;
 
@@ -60,12 +61,7 @@ public:
 			if(!inspector.openWindow)
 				continue;
 
-			char buffer[128];
-
-			const auto result = std::format_to_n(buffer, std::size(buffer)-1, "Inspector #{}", id);
-			*result.out = '\0';
-
-			inspectRegistry(id, buffer, inspector, fdtd_data);
+			inspectRegistry(id, StackStr("Inspector #{}", id), inspector, fdtd_data);
 		}
 	}
 
@@ -93,14 +89,9 @@ private:
 		{
 			for(auto&& [id]: private_registry.template view<entt::entity>().each())
 			{
-				char buffer[128];
-
-				const auto result = std::format_to_n(buffer, std::size(buffer)-1, "{}", id); // TODO: Find a way to dedup this
-				*result.out = '\0';
-
 				bool is_selected = inspector.selected_idx == id;
 
-				if(ImGui::Selectable(buffer, is_selected))
+				if(ImGui::Selectable(StackStr<128>("{}", id), is_selected))
 				{
 					inspector.selected_idx = id;
 					markAsInspectable({private_registry, id});
@@ -133,12 +124,7 @@ private:
 			if(!inspector.openWindow)
 				continue;
 
-			char buffer[128];
-
-			const auto result = std::format_to_n(buffer, std::size(buffer)-1, "Inspector #{},{}", parent_id, id); // TODO: Find a way to dedup this
-			*result.out = '\0';
-
-			if(ImGui::Begin(buffer, &inspector.openWindow))
+			if(ImGui::Begin(StackStr("Inspector #{},{}", parent_id, id), &inspector.openWindow))
 			{
 				components::showEditor({private_registry, id});
 			}

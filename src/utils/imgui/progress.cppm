@@ -21,6 +21,8 @@ export module lucuma.utils.imgui:progress;
 import imgui;
 import std;
 
+import :text;
+
 namespace lucuma::utils::imgui
 {
 
@@ -28,14 +30,9 @@ export template <typename T>
 requires std::is_integral_v<T>
 void ProgressBar(T current_value, T max_value)
 {
-	char buffer[32];
-
-	const auto result = std::format_to_n(buffer, std::size(buffer)-1, "{}/{}", current_value, max_value);
-	*result.out = '\0';
-
 	float progress = (float)current_value/max_value;
 
-	ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), buffer);
+	ImGui::ProgressBar(progress, ImVec2(-std::numeric_limits<float>::min(),0), StackStr<32>("{}/{}", current_value, max_value));
 }
 
 }

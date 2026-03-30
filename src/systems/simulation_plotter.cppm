@@ -42,6 +42,7 @@ namespace lucuma::systems
 {
 
 using namespace lucuma::utils;
+using namespace lucuma::utils::imgui;
 using namespace services::basic;
 using namespace services::backends;
 
@@ -78,12 +79,7 @@ public:
 			ZoneNamed(__zone2, settings.tracy());
 			ZoneNameVF(__zone2, "#%d", id);
 
-			char buffer[128];
-
-			const auto result = std::format_to_n(buffer, std::size(buffer)-1, "Plot #{}", id);
-			*result.out = '\0';
-
-			drawProgressBar(id, buffer, simulation_info, plot_info, fdtd_data);
+			drawProgressBar(id, StackStr("Plot #{}", id), simulation_info, plot_info, fdtd_data);
 		}
 	}
 
