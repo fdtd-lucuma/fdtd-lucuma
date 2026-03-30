@@ -59,6 +59,10 @@ using entt::forward_apply;
 using entt::forward_as_any;
 using entt::forward_as_meta;
 
+using entt::to_integral;
+using entt::to_entity;
+using entt::to_version;
+
 };
 
 export template<>
@@ -67,6 +71,6 @@ struct std::formatter<entt::entity>: std::formatter<int>
 	template<class FmtContext>
 	FmtContext::iterator format(entt::entity id, FmtContext& ctx) const
 	{
-		return std::format_to(ctx.out(), "{}", (std::underlying_type_t<entt::entity>)id);
+		return std::format_to(ctx.out(), "{}v{}", entt::to_entity(id), entt::to_version(id));
 	}
 };

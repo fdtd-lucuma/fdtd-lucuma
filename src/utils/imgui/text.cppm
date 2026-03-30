@@ -44,6 +44,12 @@ struct StackStr
 		*result.out = '\0';
 	}
 
+	template <typename T>
+	StackStr(T&& arg):
+		StackStr("{}", std::forward<T>(arg))
+	{
+	}
+
 	operator const char_t*() const
 	{
 		return str;

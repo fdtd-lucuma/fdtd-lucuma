@@ -91,7 +91,7 @@ private:
 			{
 				bool is_selected = inspector.selected_idx == id;
 
-				if(ImGui::Selectable(StackStr<128>("{}", id), is_selected))
+				if(ImGui::Selectable(StackStr(id), is_selected))
 				{
 					inspector.selected_idx = id;
 					markAsInspectable({private_registry, id});
