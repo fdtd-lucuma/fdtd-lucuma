@@ -29,7 +29,7 @@ namespace lucuma::components
 export template<typename T>
 concept HasEditor = requires(T& t, entt::handle h)
 {
-	editor(t, h);
+	{editor(t, h)} -> std::convertible_to<bool>;
 };
 
 export template <HasEditor T>
@@ -41,14 +41,19 @@ void registerEditor()
 		.template func<+[](void* p, entt::handle handle)
 		{
 			bool visible = true;
+			bool updated = false;
 
 			if(ImGui::CollapsingHeader(name.c_str(), &visible, ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::PushID(name.c_str());
-				editor(*(T*)p, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
+
+				updated |= editor(*(T*)p, handle); // For some reason modules makes this fail when it's not on the same namespace as the components.
 				ImGui::PopID();
 
 			}
+
+			if(updated)
+				handle.patch<T>();
 
 			if(!visible)
 				handle.erase<T>();

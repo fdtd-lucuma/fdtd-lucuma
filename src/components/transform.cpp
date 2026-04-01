@@ -26,9 +26,13 @@ namespace lucuma::components
 static const std::size_t step     = 1;
 static const std::size_t fastStep = 100;
 
-void editor(components::Transform& transform, entt::handle)
+bool editor(components::Transform& transform, entt::handle)
 {
-	ImGui::InputScalarN("Position", ImGuiDataType_U64, &transform.position.x, 3, &step, &fastStep);
+	bool updated = false;
+
+	updated |= ImGui::InputScalarN("Position", ImGuiDataType_U64, &transform.position.x, 3, &step, &fastStep);
+
+	return updated;
 }
 
 }

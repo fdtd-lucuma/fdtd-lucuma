@@ -31,7 +31,6 @@ export struct Transform
 	svec3 position;
 };
 
-export
-void editor(components::Transform&, entt::handle);
+export bool editor(components::Transform&, entt::handle);
 
 }

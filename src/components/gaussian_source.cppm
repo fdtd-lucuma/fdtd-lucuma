@@ -33,9 +33,13 @@ struct GaussianSource
 };
 
 export template<typename T>
-void editor(components::GaussianSource<T>& source, entt::handle)
+bool editor(components::GaussianSource<T>& source, entt::handle)
 {
-	ImGui::InputArithmetic("Sigma", &source.sigma);
+	bool updated = false;
+
+	updated |= ImGui::InputArithmetic("Sigma", &source.sigma);
+
+	return updated;
 }
 
 }

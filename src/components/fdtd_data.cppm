@@ -27,6 +27,7 @@ import lucuma.components.dtos;
 
 import std;
 import glm;
+import lucuma.legacy_headers.fmt;
 
 import :transform;
 import :gaussian_source;
