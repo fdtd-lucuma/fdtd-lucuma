@@ -130,11 +130,11 @@ bool fits(svec3 workGroupSize, svec3 maxWorkgroupSize, svec3 size, std::uint64_t
 
 svec3 Compute::getWorkgroupSize(svec3 size) const
 {
-	svec3 result(1);
+	svec3 result(64,1,1);
 
 	auto [wgSizes, wgInvocations] = limits(device.getPhysicalDevice().getProperties().limits);
 
-	for(svec3 x = result; fits(x, wgSizes, size, wgInvocations); x *= 2)
+	for(svec3 x = result; fits(x, wgSizes, size, wgInvocations); x *= svec3(1,2,2))
 	{
 		result = x;
 	}
