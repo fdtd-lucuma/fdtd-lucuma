@@ -75,6 +75,15 @@ void Imgui::initImgui()
 
 	auto& io = ImGui::GetIO();
 
+	io.Fonts->AddFontDefault();
+
+	ImFontConfig config;
+
+	config.MergeMode = true;
+	config.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
+	io.Fonts->AddFontFromFileTTF(FONTS_DIR "/fa-regular-400.woff2", 13.0f, &config);
+	io.Fonts->AddFontFromFileTTF(FONTS_DIR "/fa-solid-900.woff2", 13.0f, &config);
+
 	io.ConfigFlags |=
 		ImGuiConfigFlags_NavEnableKeyboard |
 		ImGuiConfigFlags_NavEnableGamepad |

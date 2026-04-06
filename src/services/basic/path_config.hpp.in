@@ -17,4 +17,5 @@
 #pragma once
 
 #define DATA_DIR     "@FDTD_DATA_DIR@"
+#define FONTS_DIR    "@FDTD_DATA_DIR@/fonts"
 #define PROJECT_NAME "@PROJECT_NAME@"

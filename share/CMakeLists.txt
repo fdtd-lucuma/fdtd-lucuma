@@ -17,3 +17,4 @@
 add_subdirectory(applications)
 add_subdirectory(icons/hicolor/scalable/apps)
 add_subdirectory(shaders)
+add_subdirectory(fonts)

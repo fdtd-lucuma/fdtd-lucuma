@@ -125,6 +125,22 @@ set(TRACY_DEBUGINFOD ON CACHE BOOL "Enable debuginfod support" FORCE)
 set(TRACY_DELAYED_INIT ON CACHE BOOL "Enable delayed initialization of the library (init on first call)" FORCE)
 set(TRACY_MANUAL_LIFETIME ON CACHE BOOL "Enable the manual lifetime management of the profile" FORCE)
 
+FetchContent_Declare(
+	font-awesome
+	GIT_REPOSITORY https://github.com/FortAwesome/Font-Awesome
+	GIT_TAG        7.x
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+)
+
+FetchContent_Declare(
+	icon-fonts-cpp-headers
+	GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders
+	GIT_TAG        main
+	GIT_SHALLOW    ON
+	GIT_PROGRESS   ON
+)
+
 pkg_check_modules(debuginfod libdebuginfod)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux" OR NOT debuginfod_FOUND)
@@ -154,6 +170,8 @@ FetchContent_MakeAvailable(
 	implot
 	nativefiledialog-extended
 	tracy
+	font-awesome
+	icon-fonts-cpp-headers
 )
 
 # Packages
@@ -170,6 +188,8 @@ find_package(Threads REQUIRED)
 find_package(nativefiledialog-extended REQUIRED)
 find_package(FastFloat REQUIRED)
 find_package(tracy REQUIRED)
+
+set(FONT_AWESOME_SOURCE_DIR ${font-awesome_SOURCE_DIR} PARENT_SCOPE)
 
 # For some readon mdspan install even if it's not at top level
 set_target_properties(mdspan
@@ -521,4 +541,5 @@ endif()
 target_include_directories(${PROJECT_NAME}
 	PRIVATE
 		${mdspan_SOURCE_DIR}/include
+		${icon-fonts-cpp-headers_SOURCE_DIR}
 )

@@ -16,6 +16,8 @@
 
 module;
 
+#include <IconsFontAwesome7.h>
+
 module lucuma.systems;
 import lucuma.utils;
 import lucuma.services.backends;
@@ -168,37 +170,43 @@ void SimulationList::rowActions(entt::entity id)
 	bool isPaused = registry.view<components::Paused>().contains(id);
 
 	ImGui::BeginDisabled(!isPaused);
-	if(ImGui::Button("Start"))
+	if(ImGui::Button(ICON_FA_PLAY))
 	{
 		registry.remove<components::Paused>(id);
 	}
+	ImGui::SetItemTooltip("Start");
+
 	ImGui::EndDisabled();
 
 	ImGui::SameLine();
 
 	ImGui::BeginDisabled(isPaused);
 
-	if(ImGui::Button("Stop"))
+	if(ImGui::Button(ICON_FA_PAUSE))
 	{
 		registry.emplace<components::Paused>(id);
 	}
+	ImGui::SetItemTooltip("Stop");
 
 	ImGui::EndDisabled();
 
 	ImGui::SameLine();
 
-	if(ImGui::Button("Edit"))
+	if(ImGui::Button(ICON_FA_PENCIL))
 	{
 		registry.emplace_or_replace<components::RegistryInspector>(id);
 	}
+	ImGui::SetItemTooltip("Edit");
 
 	ImGui::SameLine();
 
 	ImGui::BeginDisabled(false);
-	if(ImGui::Button("Cancel"))
+	if(ImGui::Button(ICON_FA_BAN))
 	{
 		systems.stop(id);
 	}
+	ImGui::SetItemTooltip("Cancel");
+
 	ImGui::EndDisabled();
 }
 
