@@ -100,8 +100,62 @@ public:
 
 	using create_info_t = FdtdDataCreateInfo<T>;
 
-	using MatrixData = vulkan::Buffer;
 private:
+	class MatrixData
+	{
+	public:
+		MatrixData(vulkan::Buffer&& _buffer, T _defaultValue):
+			buffer(std::move(_buffer)),
+			defaultValue(_defaultValue)
+		{};
+
+		operator vulkan::Buffer&()
+		{
+			return buffer;
+		}
+
+		operator const vulkan::Buffer&() const
+		{
+			return buffer;
+		}
+
+		void init(vk::CommandBuffer commandBuffer)
+		{
+			// TODO: Read from file
+			// TODO: Move readInto
+			if constexpr(!canFillBuffer())
+			{
+				// TODO: Init from a shader
+				for(auto& x: buffer.getData<T>())
+					x = defaultValue;
+			}
+			else
+			{
+				commandBuffer.fillBuffer(buffer.getBuffer(), 0, buffer.getInfo().size, fillData());
+			}
+		}
+
+		static constexpr bool canFillBuffer()
+		{
+			return sizeof(T) <= 4;
+		}
+
+	private:
+		std::uint32_t fillData() const
+		{
+			if constexpr(sizeof(T) == 4)
+				return std::bit_cast<std::uint32_t>(defaultValue);
+			else if constexpr(sizeof(T) == 2)
+			{
+				auto v = std::bit_cast<std::uint16_t>(defaultValue);
+				return v | (v << 16);
+			}
+			return 0;
+		}
+
+		vulkan::Buffer buffer;
+		T              defaultValue;
+	};
 
 	static inline auto toMdspan(vulkan::Buffer& buffer, svec3 paddedDims, svec3 dims)
 	{
@@ -174,7 +228,7 @@ private:
 
 
 	template <typename vec_t = svec3>
-	static vulkan::Buffer makeBuffer(const create_info_t& createInfo, vec_t paddedDims, T defaultValue = (T)0, bool hostReadable = false)
+	static MatrixData makeBuffer(const create_info_t& createInfo, vec_t paddedDims, T defaultValue = (T)0, bool hostReadable = false)
 	{
 		vma::AllocationCreateFlags vmaFlags = vma::AllocationCreateFlagBits::eMapped;
 
@@ -183,22 +237,23 @@ private:
 		else
 			vmaFlags |= vma::AllocationCreateFlagBits::eHostAccessSequentialWrite;
 
+		vk::BufferUsageFlags bufferFlags = vk::BufferUsageFlagBits::eStorageBuffer;
+
+		if constexpr(MatrixData::canFillBuffer())
+			bufferFlags |= vk::BufferUsageFlagBits::eTransferDst;
+
 		vulkan::Buffer result = createInfo.allocator.allocate(
 			glm::compMul(paddedDims)*sizeof(T),
-			vk::BufferUsageFlagBits::eStorageBuffer,
+			bufferFlags,
 			vmaFlags,
 			vk::MemoryPropertyFlagBits::eDeviceLocal
 		);
 
-		// TODO: Init from a shader
-		for(auto& x: result.getData<T>())
-			x = defaultValue;
-
-		return result;
+		return MatrixData(std::move(result), defaultValue);
 	}
 
 	template <typename vec_t = svec3>
-	static vulkan::Buffer makeRWBuffer(const create_info_t& createInfo, vec_t paddedDims, T defaultValue = (T)0)
+	static MatrixData makeRWBuffer(const create_info_t& createInfo, vec_t paddedDims, T defaultValue = (T)0)
 	{
 		return makeBuffer(createInfo, paddedDims, defaultValue, true);
 	}
@@ -907,6 +962,58 @@ public:
 			{"Ceyh()",Ceyh()},
 			{"Cezh()",Cezh()},
 		};
+	}
+
+	void initBuffers(vk::CommandBuffer commandBuffer)
+	{
+		_Hx.init(commandBuffer);
+		_Hy.init(commandBuffer);
+		_Hz.init(commandBuffer);
+		_Chxh.init(commandBuffer);
+		_Chyh.init(commandBuffer);
+		_Chzh.init(commandBuffer);
+		_Chxe.init(commandBuffer);
+		_Chye.init(commandBuffer);
+		_Chze.init(commandBuffer);
+		_CMhx.init(commandBuffer);
+		_CMhy.init(commandBuffer);
+		_CMhz.init(commandBuffer);
+		_mux.init(commandBuffer);
+		_muy.init(commandBuffer);
+		_muz.init(commandBuffer);
+		_muxR.init(commandBuffer);
+		_muyR.init(commandBuffer);
+		_muzR.init(commandBuffer);
+		_Ex.init(commandBuffer);
+		_Ey.init(commandBuffer);
+		_Ez.init(commandBuffer);
+		_Cexe.init(commandBuffer);
+		_Ceye.init(commandBuffer);
+		_Ceze.init(commandBuffer);
+		_Cexh.init(commandBuffer);
+		_Ceyh.init(commandBuffer);
+		_Cezh.init(commandBuffer);
+		_CEEx.init(commandBuffer);
+		_CEEy.init(commandBuffer);
+		_CEEz.init(commandBuffer);
+		_epsx.init(commandBuffer);
+		_epsy.init(commandBuffer);
+		_epsz.init(commandBuffer);
+		_epsxR.init(commandBuffer);
+		_epsyR.init(commandBuffer);
+		_epszR.init(commandBuffer);
+		_eyx0.init(commandBuffer);
+		_ezx0.init(commandBuffer);
+		_eyx1.init(commandBuffer);
+		_ezx1.init(commandBuffer);
+		_exy0.init(commandBuffer);
+		_ezy0.init(commandBuffer);
+		_exy1.init(commandBuffer);
+		_ezy1.init(commandBuffer);
+		_exz0.init(commandBuffer);
+		_eyz0.init(commandBuffer);
+		_exz1.init(commandBuffer);
+		_eyz1.init(commandBuffer);
 	}
 
 	void initCoefs(vk::CommandBuffer commandBuffer)

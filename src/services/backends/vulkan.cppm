@@ -107,6 +107,8 @@ public:
 		{
 			auto recorder = createCommandRecorder();
 
+			data.initBuffers(recorder);
+			computeComputeBarrier(recorder);
 			data.initCoefs(recorder);
 			computeComputeBarrier(recorder);
 		}
