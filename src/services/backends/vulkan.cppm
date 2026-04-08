@@ -104,8 +104,14 @@ public:
 
 		data_t& data = registry.emplace<data_t>(id, data_t::make(vulkanCreateInfo, fileReader));
 
+		auto* ctx = commandBuffer.getCtx();
+
 		{
 			auto recorder = createCommandRecorder();
+
+			auto& cmdbuf = *commandBuffer.getCommandBuffer();
+
+			TracyVkNamedZone(ctx, __zone, cmdbuf, "init", settings.tracy());
 
 			data.initBuffers(recorder);
 			computeComputeBarrier(recorder);
