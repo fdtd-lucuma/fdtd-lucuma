@@ -67,6 +67,7 @@ protected:
 	vulkan::CommandRecorder createCommandRecorder();
 
 	static void computeComputeBarrier(vk::CommandBuffer commandBuffer);
+	static void transferComputeBarrier(vk::CommandBuffer commandBuffer);
 	static void computeCpuBarrier(vk::CommandBuffer commandBuffer);
 
 	void initCommon(const components::FdtdDataCreateInfo& createInfo, entt::entity id);
@@ -114,7 +115,7 @@ public:
 			TracyVkNamedZone(ctx, __zone, cmdbuf, "init", settings.tracy());
 
 			data.initBuffers(recorder);
-			computeComputeBarrier(recorder);
+			transferComputeBarrier(recorder);
 			data.initCoefs(recorder);
 			computeComputeBarrier(recorder);
 		}

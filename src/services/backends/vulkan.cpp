@@ -117,6 +117,11 @@ void VulkanBase::computeComputeBarrier(vk::CommandBuffer commandBuffer)
 	writeReadBarrier(commandBuffer, eComputeShader, eComputeShader);
 }
 
+void VulkanBase::transferComputeBarrier(vk::CommandBuffer commandBuffer)
+{
+	writeReadBarrier(commandBuffer, eTransfer, eComputeShader);
+}
+
 void VulkanBase::computeCpuBarrier(vk::CommandBuffer commandBuffer)
 {
 	writeReadBarrier(commandBuffer, eComputeShader, eHost);
