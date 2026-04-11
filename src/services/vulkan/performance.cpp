@@ -71,12 +71,10 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 		}
 	};
 
-#ifdef __APPLE__
 	auto& queryPoolCreateInfo   = chain.get<vk::QueryPoolCreateInfo>();
 	auto& performanceCreateInfo = chain.get<vk::QueryPoolPerformanceCreateInfoKHR>();
-#else
-	auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
-#endif
+
+	//auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
 
 	performanceCreateInfo.setCounterIndices(enabled);
 
@@ -139,12 +137,10 @@ void Performance::submitPasses(vk::Queue queue, vk::CommandBuffer buf)
 			},
 		};
 
-#ifdef __APPLE__
 		auto& submitInfo       = chain.get<vk::SubmitInfo>();
-		auto& performanceQuery = chain.get<vk::PerformanceQuerySubmitInfoKHR>();
-#else
-		auto& [submitInfo, performanceQuery] = chain;
-#endif
+		//auto& performanceQuery = chain.get<vk::PerformanceQuerySubmitInfoKHR>();
+
+		//auto& [submitInfo, performanceQuery] = chain;
 
 		submitInfo.setCommandBuffers(buf);
 
