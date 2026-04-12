@@ -20,6 +20,7 @@ module;
 module lucuma.utils;
 
 import lucuma.legacy_headers.entt;
+import std;
 
 namespace lucuma::components
 {
