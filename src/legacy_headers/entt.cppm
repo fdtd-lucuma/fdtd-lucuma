@@ -23,7 +23,7 @@ module;
 
 export module lucuma.legacy_headers.entt;
 
-import std;
+//import std;
 
 export namespace entt
 {
