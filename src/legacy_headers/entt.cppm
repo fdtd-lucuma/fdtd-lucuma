@@ -55,6 +55,7 @@ using entt::meta_factory;
 using entt::resolve;
 using entt::meta_handle;
 using entt::meta_any;
+using entt::meta_range;
 using entt::forward_apply;
 using entt::forward_as_any;
 using entt::forward_as_meta;
