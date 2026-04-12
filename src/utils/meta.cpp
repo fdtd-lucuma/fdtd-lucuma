@@ -26,8 +26,10 @@ namespace lucuma::components
 
 void newComponentMenu(entt::handle handle)
 {
-	for(auto&& [id, type]: entt::resolve())
+	for(auto&& it: entt::resolve())
 	{
+		auto& type = it.second;
+
 		if(auto func = type.func(entt::hashed_string("emplaceComponent")); func)
 		{
 			auto name = type.data(entt::hashed_string("name"));
