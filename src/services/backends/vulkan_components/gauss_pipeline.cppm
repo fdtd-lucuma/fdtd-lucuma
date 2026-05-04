@@ -103,10 +103,10 @@ private:
 
 		return createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
-			.setLayouts = {
-				{
+			.setLayouts = std::array{
+				vulkan::ComputePipelineCreateInfo::setLayout {
 					.bindings = simpleStorageBuffersLayout<2>(),
-					.buffers = {
+					.buffers = std::array<std::reference_wrapper<const vulkan::Buffer>, 2>{
 						Ec,
 						sourceSsbosBuffer,
 					}

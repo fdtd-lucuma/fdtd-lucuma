@@ -84,10 +84,10 @@ public:
 		groupCount(workGroupCount(createInfo.paddedDims, createInfo.workGroupSize)),
 		pipeline(createInfo.compute.createPipeline({
 			.shaderPath = createInfo.shaderPath,
-			.setLayouts = {
-				{
+			.setLayouts = std::array{
+				vulkan::ComputePipelineCreateInfo::setLayout {
 					.bindings = simpleStorageBuffersLayout<4>(),
-					.buffers = {
+					.buffers = std::array<std::reference_wrapper<const vulkan::Buffer>, 4>{
 						createInfo.Ch,
 						createInfo.Ce,
 						createInfo.CM,
