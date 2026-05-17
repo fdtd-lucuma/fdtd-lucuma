@@ -1,4 +1,3 @@
-
 // Una GUI para fdtd
 // Copyright © 2025-2026 Otreblan
 //
@@ -17,38 +16,39 @@
 
 module;
 
-#include <implot.h>
+export module lucuma.components:monitor;
 
-export module lucuma.legacy_headers.implot;
-
+import lucuma.utils.imgui;
 import imgui;
+import lucuma.legacy_headers.entt;
+import std;
+import lucuma.utils;
 
-export namespace ImPlot
+namespace lucuma::components
 {
 
-using ImPlot::CreateContext;
-using ImPlot::DestroyContext;
-using ImPlot::ShowDemoWindow;
-using ImPlot::BeginPlot;
-using ImPlot::PlotHeatmap;
-using ImPlot::EndPlot;
-using ImPlot::SetupAxes;
-using ImPlot::SetupAxesLimits;
-using ImPlot::PushColormap;
-using ImPlot::PopColormap;
-using ImPlot::PlotShaded;
-using ImPlot::PlotLine;
+using namespace utils;
 
+export template<typename T>
+struct SingleMonitor
+{
+	Field           field           = Field::Electric;
+	VectorComponent vectorComponent = VectorComponent::Magnitude;
+
+	T value;
 };
 
-export using ::ImPlotPoint;
+export template<typename T>
+bool editor(components::SingleMonitor<T>& monitor, entt::handle)
+{
+	bool updated = false;
 
-export using ::ImPlotAxisFlags;
-export using ::ImPlotFlags;
-export using ::ImPlotColormap;
-export using ::ImPlotHeatmapFlags;
+	updated |= utils::imgui::Combo("Field type", &monitor.field);
+	updated |= utils::imgui::Combo("Field component", &monitor.vectorComponent);
 
-export using ::ImPlotAxisFlags_;
-export using ::ImPlotFlags_;
-export using ::ImPlotColormap_;
-export using ::ImPlotHeatmapFlags_;
+	ImGui::Text("%s", utils::imgui::StackStr(monitor.value));
+
+	return updated;
+}
+
+}

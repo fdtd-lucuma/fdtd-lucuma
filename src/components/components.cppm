@@ -21,5 +21,6 @@ export module lucuma.components;
 export import :fdtd_data;
 export import :gaussian_source;
 export import :inspector;
+export import :monitor;
 export import :simulation;
 export import :transform;
