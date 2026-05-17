@@ -63,12 +63,8 @@ cd build
 git clone https://github.com/fdtd-lucuma/fdtd-lucuma
 cd fdtd-lucuma
 
+pkg add x11-repo
 xargs -oa pkg/termux/dependencies.txt -- pkg add
-
-#git clone https://github.com/microsoft/vcpkg.git ./vcpkg
-#pushd ./vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
-#./vcpkg install shader-slang
-#popd
 
 cmake -B build -G Ninja -DBUILD_FOR_TERMUX=ON
 cmake --build build
