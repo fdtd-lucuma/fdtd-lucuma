@@ -58,6 +58,24 @@ cd build
 ./fdtd-lucuma
 ```
 
+## Build (Android Termux)
+```bash
+git clone https://github.com/fdtd-lucuma/fdtd-lucuma
+cd fdtd-lucuma
+
+xargs -oa pkg/termux/dependencies.txt -- pkg add
+
+#git clone https://github.com/microsoft/vcpkg.git ./vcpkg
+#pushd ./vcpkg && ./bootstrap-vcpkg.sh -disableMetrics
+#./vcpkg install shader-slang
+#popd
+
+cmake -B build -G Ninja -DBUILD_FOR_TERMUX=ON
+cmake --build build
+
+fdtd-lucuma
+```
+
 ## Build (Arch Linux)
 ``` bash
 git clone https://github.com/fdtd-lucuma/fdtd-lucuma

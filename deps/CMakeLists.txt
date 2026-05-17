@@ -27,7 +27,7 @@ if(NOT USE_SYSTEM_LIBS)
 	FetchContent_MakeAvailable(EnTT)
 endif()
 
-if(USE_VENDOR_SLANG)
+if(BUILD_FOR_TERMUX)
 
 	set(SLANG_LLVM_FLAVOR                DISABLE CACHE STRING "" FORCE)
 	set(SLANG_ENABLE_RELEASE_DEBUG_INFO  FALSE   CACHE BOOL   "" FORCE)
@@ -55,6 +55,17 @@ if(USE_VENDOR_SLANG)
 	)
 
 	FetchContent_Declare(
+		taskflow
+		GIT_REPOSITORY https://github.com/taskflow/taskflow
+		GIT_TAG        v4.0.0
+		GIT_SHALLOW    ON
+		GIT_PROGRESS   ON
+		GIT_SUBMODULES         ""
+		GIT_SUBMODULES_RECURSE OFF
+		OVERRIDE_FIND_PACKAGE
+	)
+
+	FetchContent_Declare(
 		slang
 		GIT_REPOSITORY https://github.com/shader-slang/slang
 		GIT_TAG        v2026.8.1
@@ -65,7 +76,7 @@ if(USE_VENDOR_SLANG)
 		OVERRIDE_FIND_PACKAGE
 	)
 
-	FetchContent_MakeAvailable(slang miniz)
+	FetchContent_MakeAvailable(slang miniz taskflow)
 
 endif()
 
