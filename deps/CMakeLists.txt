@@ -66,6 +66,17 @@ if(BUILD_FOR_TERMUX)
 	)
 
 	FetchContent_Declare(
+		fastfloat
+		GIT_REPOSITORY https://github.com/fastfloat/fast_float
+		GIT_TAG        v8.2.5
+		GIT_SHALLOW    ON
+		GIT_PROGRESS   ON
+		GIT_SUBMODULES         ""
+		GIT_SUBMODULES_RECURSE OFF
+		OVERRIDE_FIND_PACKAGE
+	)
+
+	FetchContent_Declare(
 		slang
 		GIT_REPOSITORY https://github.com/shader-slang/slang
 		GIT_TAG        v2026.8.1
@@ -76,7 +87,7 @@ if(BUILD_FOR_TERMUX)
 		OVERRIDE_FIND_PACKAGE
 	)
 
-	FetchContent_MakeAvailable(slang miniz taskflow)
+	FetchContent_MakeAvailable(slang miniz taskflow fastfloat)
 
 endif()
 
