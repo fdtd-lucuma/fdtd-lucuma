@@ -29,6 +29,21 @@ endif()
 
 if(BUILD_FOR_TERMUX)
 
+	set(SLANG_LLVM_FLAVOR                DISABLE CACHE STRING "" FORCE)
+	set(SLANG_ENABLE_RELEASE_DEBUG_INFO  FALSE   CACHE BOOL   "" FORCE)
+	set(SLANG_ENABLE_SPLIT_DEBUG_INFO    FALSE   CACHE BOOL   "" FORCE)
+	set(SLANG_ENABLE_TESTS               FALSE   CACHE BOOL   "" FORCE)
+	set(SLANG_ENABLE_SLANG_RHI           FALSE   CACHE BOOL   "" FORCE)
+	set(SLANG_ENABLE_SLANGC              TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_USE_SYSTEM_MINIZ           TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_USE_SYSTEM_LZ4             TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_USE_SYSTEM_VULKAN_HEADERS  TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_USE_SYSTEM_SPIRV_HEADERS   TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_USE_SYSTEM_SPIRV_TOOLS     TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_USE_SYSTEM_UNORDERED_DENSE TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_USE_SYSTEM_GLSLANG         TRUE    CACHE BOOL   "" FORCE)
+	set(SLANG_ENABLE_GFX                 FALSE   CACHE BOOL   "" FORCE)
+
 	FetchContent_Declare(
 		miniz
 		GIT_REPOSITORY https://github.com/richgel999/miniz
@@ -64,7 +79,12 @@ if(BUILD_FOR_TERMUX)
 
 	FetchContent_Declare(
 		shader-slang
-		URL https://github.com/shader-slang/slang/releases/download/v2026.8.1/slang-2026.8.1-linux-aarch64.tar.gz
+		GIT_REPOSITORY https://github.com/shader-slang/slang
+		GIT_TAG        v2026.8.1
+		GIT_SHALLOW    ON
+		GIT_PROGRESS   ON
+		GIT_SUBMODULES         ""
+		GIT_SUBMODULES_RECURSE OFF
 		OVERRIDE_FIND_PACKAGE
 	)
 
