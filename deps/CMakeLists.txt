@@ -79,7 +79,7 @@ if(BUILD_FOR_TERMUX)
 
 	FetchContent_Declare(
 		slang
-		URL slang-2026.8.1-linux-aarch64.tar.gz
+		URL https://github.com/shader-slang/slang/releases/download/v2026.8.1/slang-2026.8.1-linux-aarch64.tar.gz
 		OVERRIDE_FIND_PACKAGE
 	)
 
