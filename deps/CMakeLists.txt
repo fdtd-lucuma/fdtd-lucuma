@@ -79,12 +79,7 @@ if(BUILD_FOR_TERMUX)
 
 	FetchContent_Declare(
 		slang
-		GIT_REPOSITORY https://github.com/shader-slang/slang
-		GIT_TAG        v2026.8.1
-		GIT_SHALLOW    ON
-		GIT_PROGRESS   ON
-		GIT_SUBMODULES         ""
-		GIT_SUBMODULES_RECURSE OFF
+		URL slang-2026.8.1-linux-aarch64.tar.gz
 		OVERRIDE_FIND_PACKAGE
 	)
 
