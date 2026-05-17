@@ -78,7 +78,7 @@ if(BUILD_FOR_TERMUX)
 	)
 
 	FetchContent_Declare(
-		shader-slang
+		slang
 		GIT_REPOSITORY https://github.com/shader-slang/slang
 		GIT_TAG        v2026.8.1
 		GIT_SHALLOW    ON
@@ -88,7 +88,7 @@ if(BUILD_FOR_TERMUX)
 		OVERRIDE_FIND_PACKAGE
 	)
 
-	FetchContent_MakeAvailable(shader-slang miniz taskflow fastfloat)
+	FetchContent_MakeAvailable(slang miniz taskflow fastfloat)
 
 endif()
 
