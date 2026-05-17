@@ -69,16 +69,15 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 }
 
 using enum vk::PipelineStageFlagBits2;
-using enum vk::AccessFlagBits2;
 
 constexpr vk::AccessFlags2 writeAccessMask(vk::PipelineStageFlags2 stage)
 {
 	vk::AccessFlags2 result;
 
 	if(stage & eComputeShader)
-		result |= eShaderWrite;
+		result |= vk::AccessFlagBits2::eShaderWrite;
 	if(stage & eHost)
-		result |= eHostWrite;
+		result |= vk::AccessFlagBits2::eHostWrite;
 
 	return result;
 }
@@ -88,9 +87,9 @@ constexpr vk::AccessFlags2 readAccessMask(vk::PipelineStageFlags2 stage)
 	vk::AccessFlags2 result;
 
 	if(stage & eComputeShader)
-		result |= eShaderRead;
+		result |= vk::AccessFlagBits2::eShaderRead;
 	if(stage & eHost)
-		result |= eHostRead;
+		result |= vk::AccessFlagBits2::eHostRead;
 
 	return result;
 }
