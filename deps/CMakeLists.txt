@@ -27,6 +27,20 @@ if(NOT USE_SYSTEM_LIBS)
 	FetchContent_MakeAvailable(EnTT)
 endif()
 
+if(USE_VENDOR_SLANG)
+	FetchContent_Declare(
+		slang
+		GIT_REPOSITORY https://github.com/shader-slang/slang
+		GIT_TAG        v2026.8.1
+		GIT_SHALLOW    ON
+		GIT_PROGRESS   ON
+		OVERRIDE_FIND_PACKAGE
+	)
+
+	FetchContent_MakeAvailable(slang)
+
+endif()
+
 FetchContent_Declare(
 	imgui
 	GIT_REPOSITORY https://github.com/ocornut/imgui.git
