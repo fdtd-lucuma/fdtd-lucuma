@@ -30,7 +30,7 @@ function(add_spirv_target)
 	)
 
 	if(NOT IS_EXECUTABLE ${SLANG_EXECUTABLE})
-		message(FATAL_ERROR "Couldn't find slangc in $SLANG_EXECUTABLE. Did you call find_package(slang)?")
+		message(FATAL_ERROR "Couldn't find slangc in $SLANG_EXECUTABLE (${SLANG_EXECUTABLE}). Did you call find_package(slang)?")
 	endif()
 
 	foreach(SOURCE IN LISTS ARG_SOURCES)
