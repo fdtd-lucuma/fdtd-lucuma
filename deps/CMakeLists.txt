@@ -270,7 +270,6 @@ pkg_check_modules(libraries
 		libgvc
 		simdjson
 		x11
-		yaml-cpp
 )
 
 # set up Vulkan C++ module as a library

@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154,SC2164
 
 pkgname=fdtd-lucuma-git
-pkgver=0.2.0.r267.gb54e521
+pkgver=0.2.0.r334.gcc7f7a9
 pkgrel=1
 epoch=
 pkgdesc="Una GUI para fdtd"
@@ -23,7 +23,6 @@ depends=(
 	'libxrandr'
 	'simdjson'
 	'vulkan-icd-loader'
-	'yaml-cpp'
 )
 makedepends=(
 	#'vulkan-memory-allocator'

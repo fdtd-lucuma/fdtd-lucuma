@@ -46,8 +46,6 @@ void Simulator::initBasic(int argc, char** argv)
 	injector.emplace<services::basic::ArgumentParser>(argc, argv);
 	auto& settings = injector.inject<services::basic::Settings>();
 
-	//TODO: Yaml?
-
 	if(settings.tracy())
 	{
 		injector.emplace<services::basic::Tracy>(injector);

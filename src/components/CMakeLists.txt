@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME}
 			fdtd_data.cppm
 			gaussian_source.cppm
 			inspector.cppm
+			monitor.cppm
 			simulation.cppm
 			transform.cppm
 )

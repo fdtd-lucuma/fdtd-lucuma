@@ -32,5 +32,4 @@ target_sources(${PROJECT_NAME}
 			taskflow.cppm
 			tracy.cppm
 			xdg_utils_cxx.cppm
-			yaml_cpp.cppm
 )
