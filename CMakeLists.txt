@@ -34,11 +34,11 @@ endif()
 
 # As of 2025 module : private doesn't compile with gcc
 if(NOT DEFINED ENV{CC})
-	set(CMAKE_C_COMPILER "/usr/bin/clang")
+	set(CMAKE_C_COMPILER "clang")
 endif()
 
 if(NOT DEFINED ENV{CXX})
-	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+	set(CMAKE_CXX_COMPILER "clang++")
 endif()
 
 set(CMAKE_CXX_STANDARD 26)
