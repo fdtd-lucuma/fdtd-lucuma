@@ -44,6 +44,17 @@ if(USE_VENDOR_SLANG)
 	set(SLANG_ENABLE_GFX                 FALSE   CACHE BOOL   "" FORCE)
 
 	FetchContent_Declare(
+		miniz
+		GIT_REPOSITORY https://github.com/richgel999/miniz
+		GIT_TAG        3.1.1
+		GIT_SHALLOW    ON
+		GIT_PROGRESS   ON
+		GIT_SUBMODULES         ""
+		GIT_SUBMODULES_RECURSE OFF
+		OVERRIDE_FIND_PACKAGE
+	)
+
+	FetchContent_Declare(
 		slang
 		GIT_REPOSITORY https://github.com/shader-slang/slang
 		GIT_TAG        v2026.8.1
@@ -54,7 +65,7 @@ if(USE_VENDOR_SLANG)
 		OVERRIDE_FIND_PACKAGE
 	)
 
-	FetchContent_MakeAvailable(slang)
+	FetchContent_MakeAvailable(slang miniz)
 
 endif()
 
