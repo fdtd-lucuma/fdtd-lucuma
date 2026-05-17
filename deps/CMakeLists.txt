@@ -63,12 +63,12 @@ if(BUILD_FOR_TERMUX)
 	)
 
 	FetchContent_Declare(
-		slang
+		shader-slang
 		URL https://github.com/shader-slang/slang/releases/download/v2026.8.1/slang-2026.8.1-linux-aarch64.tar.gz
 		OVERRIDE_FIND_PACKAGE
 	)
 
-	FetchContent_MakeAvailable(slang miniz taskflow fastfloat)
+	FetchContent_MakeAvailable(shader-slang miniz taskflow fastfloat)
 
 endif()
 
