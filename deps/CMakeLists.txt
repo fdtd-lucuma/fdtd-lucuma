@@ -301,6 +301,7 @@ target_compile_definitions(VkfwModule
 		#$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_X11>
 		$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_WAYLAND>
 		$<$<PLATFORM_ID:Windows>:GLFW_EXPOSE_NATIVE_WIN32>
+		GLFW_INCLUDE_NONE
 		# TODO: Find out how to dedup vulkan module target
 		#VKFW_NO_INCLUDE_VULKAN
 		#VKFW_NO_INCLUDE_VULKAN_HPP
