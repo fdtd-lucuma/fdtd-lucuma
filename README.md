@@ -58,7 +58,7 @@ cd build
 ./fdtd-lucuma
 ```
 
-## Build (Android Termux)
+## Build (Android Termux) (Wait until Termux clang supports C++ modules) https://github.com/termux/termux-packages/issues/23870
 ```bash
 git clone https://github.com/fdtd-lucuma/fdtd-lucuma
 cd fdtd-lucuma
@@ -68,6 +68,35 @@ xargs -oa pkg/termux/dependencies.txt -- pkg add
 
 cmake -B build -G Ninja -DBUILD_FOR_TERMUX=ON
 cmake --build build
+
+
+cd build
+./fdtd-lucuma
+```
+
+## Build (Android Termux (Arch linux proot)) (No Vulkan support)
+```bash
+proot-distro install archlinux
+proot-distro login archlinux
+
+pacman -Syu base-devel sudo
+
+useradd -m build
+visudo # Make the new user a sudoer
+
+su build
+cd ~
+
+git clone https://aur.archlinux.org/paru.git 
+cd paru
+makepkg -si --ignorearch
+
+cd ~
+
+git clone https://github.com/fdtd-lucuma/fdtd-lucuma
+cd fdtd-lucuma
+
+paru -Bi --mflags=--ignorearch pkg/arch/
 
 fdtd-lucuma
 ```
@@ -97,7 +126,7 @@ sudo pacman -Syu base-devel
 git clone https://github.com/fdtd-lucuma/fdtd-lucuma
 cd fdtd-lucuma
 
-yay -Bi pkg/arch/
+paru -Bi pkg/arch/
 
 fdtd-lucuma
 ```
