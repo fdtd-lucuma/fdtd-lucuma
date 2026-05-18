@@ -26,6 +26,15 @@ namespace lucuma::utils
 export class ImguiGraphnodeEdgeWriter
 {
 public:
+
+#ifdef BUILD_FOR_TERMUX
+	template<typename T, typename C = std::less<T>, typename A = std::allocator<T>>
+	using set_t = std::flat_set<T,C,A>;
+#else
+	template<typename T, typename C = std::less<T>, typename A = std::allocator<T>>
+	using set_t = std::set<T,C,A>;
+#endif
+
 	ImguiGraphnodeEdgeWriter();
 
 	void start(std::string_view name);
@@ -33,8 +42,8 @@ public:
 	void end();
 
 private:
-	std::flat_set<std::string> nodes;
-	std::flat_set<std::pair<std::string_view, std::string_view>> edges;
+	set_t<std::string> nodes;
+	set_t<std::pair<std::string_view, std::string_view>> edges;
 	bool should_write;
 
 	const std::string& writeNode(std::string_view node);

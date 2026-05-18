@@ -49,6 +49,7 @@ add_compile_definitions(vulkan_hpp=vulkan) # vulkan_hpp was renamed to vulkan
 
 if(BUILD_FOR_TERMUX)
 	add_compile_options(-D__BIONIC_CTYPE_INLINE=inline)
+	add_compile_definitions(BUILD_FOR_TERMUX)
 endif()
 
 project(fdtd-lucuma
