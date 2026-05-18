@@ -48,7 +48,7 @@ add_compile_options($<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fno-rtti>) # No RTTI
 add_compile_definitions(vulkan_hpp=vulkan) # vulkan_hpp was renamed to vulkan
 
 if(BUILD_FOR_TERMUX)
-	add_compile_definitions(__BIONIC_CTYPE_INLINE=inline)
+	add_compile_options(-D__BIONIC_CTYPE_INLINE=inline)
 endif()
 
 project(fdtd-lucuma
