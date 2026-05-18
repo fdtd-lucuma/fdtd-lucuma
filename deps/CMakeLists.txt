@@ -40,6 +40,9 @@ if(BUILD_FOR_TERMUX)
 		OVERRIDE_FIND_PACKAGE
 	)
 
+	set(TF_BUILD_TESTS    FALSE CACHE BOOL "" FORCE)
+	set(TF_BUILD_EXAMPLES FALSE CACHE BOOL "" FORCE)
+
 	FetchContent_Declare(
 		taskflow
 		GIT_REPOSITORY https://github.com/taskflow/taskflow
