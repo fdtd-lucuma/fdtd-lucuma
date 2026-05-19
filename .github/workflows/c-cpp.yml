@@ -72,7 +72,7 @@ jobs:
         fetch-depth: 0
 
     - name: deps
-      run: xargs -a pkg/macos/dependencies.txt -- brew install
+      run: xargs -- brew install < pkg/macos/dependencies.txt
 
     - name: vcpkg root
       run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
