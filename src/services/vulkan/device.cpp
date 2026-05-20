@@ -203,20 +203,7 @@ void Device::createDevice()
 		.setQueueCreateInfos(queues)
 	;
 
-	if(settings.tracy()) // TODO: Find a way to optionally add chain links to the features
-	{
-		vk::PhysicalDevicePerformanceQueryFeaturesKHR performanceFeatures{
-			.performanceCounterQueryPools = true,
-		};
-
-		chain.get<vk::PhysicalDeviceVulkan13Features>().setPNext(&performanceFeatures); // Tail
-
-		device = getPhysicalDevice().createDevice(deviceCreateInfo);
-	}
-	else
-	{
-		device = getPhysicalDevice().createDevice(deviceCreateInfo);
-	}
+	device = getPhysicalDevice().createDevice(deviceCreateInfo);
 }
 
 std::vector<const char*> Device::getRequiredExtensions()
