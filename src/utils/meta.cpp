@@ -27,7 +27,11 @@ namespace lucuma::components
 
 void newComponentMenu(entt::handle handle)
 {
-	for(const auto&& type: entt::resolve() | std::views::transform([](auto&& x){return x.second;}))
+#ifdef BUILD_FOR_TERMUX
+// TODO: Fix entt::resolve()
+#warning "The component inspector is disabled on Termux"
+#else
+	for(const auto&& [id, type]: entt::resolve())
 	{
 		if(auto func = type.func(entt::hashed_string("emplaceComponent")); func)
 		{
@@ -41,6 +45,7 @@ void newComponentMenu(entt::handle handle)
 			}
 		}
 	}
+#endif
 }
 
 void showEditor(entt::handle handle)
