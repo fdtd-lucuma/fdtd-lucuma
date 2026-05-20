@@ -80,7 +80,11 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 
 	//auto& [queryPoolCreateInfo, performanceCreateInfo] = chain;
 
+#ifdef BUILD_FOR_TERMUX
+	performanceCreateInfo.setCounterIndices(std::vector(enabled.begin(), enabled.end()));
+#else
 	performanceCreateInfo.setCounterIndices(enabled);
+#endif
 
 	auto queryPool   = device.getDevice().createQueryPool(queryPoolCreateInfo);
 	auto queryPasses = core.getPhysicalDevice().getQueueFamilyPerformanceQueryPassesKHR(performanceCreateInfo);
