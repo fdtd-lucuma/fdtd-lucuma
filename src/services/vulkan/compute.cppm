@@ -42,7 +42,6 @@ using namespace lucuma::services;
 class Device;
 class ShaderLoader;
 class Buffer;
-class Performance;
 
 export class Compute;
 
