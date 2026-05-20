@@ -29,17 +29,6 @@ endif()
 
 if(BUILD_FOR_TERMUX)
 
-	FetchContent_Declare(
-		miniz
-		GIT_REPOSITORY https://github.com/richgel999/miniz
-		GIT_TAG        3.1.1
-		GIT_SHALLOW    ON
-		GIT_PROGRESS   ON
-		GIT_SUBMODULES         ""
-		GIT_SUBMODULES_RECURSE OFF
-		OVERRIDE_FIND_PACKAGE
-	)
-
 	set(TF_BUILD_TESTS    FALSE CACHE BOOL "" FORCE)
 	set(TF_BUILD_EXAMPLES FALSE CACHE BOOL "" FORCE)
 
@@ -65,15 +54,7 @@ if(BUILD_FOR_TERMUX)
 		OVERRIDE_FIND_PACKAGE
 	)
 
-	FetchContent_Declare(
-		slang
-		URL https://github.com/shader-slang/slang/releases/download/v2026.8.1/slang-2026.8.1-linux-aarch64.tar.gz
-		OVERRIDE_FIND_PACKAGE
-	)
-
-	FetchContent_MakeAvailable(slang miniz taskflow fastfloat)
-
-	set(SLANG_EXECUTABLE ${slang_SOURCE_DIR}/bin/slangc CACHE STRING "Path to the slangc executable")
+	FetchContent_MakeAvailable(taskflow fastfloat)
 
 endif()
 

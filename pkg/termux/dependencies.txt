@@ -4,14 +4,10 @@ fmt
 freetype
 glfw
 glm
-glslang
 graphviz
-lz4
 ninja
 pkg-config
 simdjson
-spirv-headers
-spirv-tools
 termux-x11
 vulkan-headers
 vulkan-loader-android
