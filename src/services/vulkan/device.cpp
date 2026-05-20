@@ -187,8 +187,9 @@ void Device::createDevice()
 	auto chain = getPhysicalDevice().getFeatures2<
 		vk::DeviceCreateInfo,
 		vk::PhysicalDeviceFeatures2,
-		vk::PhysicalDeviceVulkan11Features,
+		vk::PhysicalDeviceVulkan11Features
 #ifndef BUILD_FOR_TERMUX
+		,
 		vk::PhysicalDeviceVulkan12Features,
 		vk::PhysicalDeviceVulkan13Features
 #endif
