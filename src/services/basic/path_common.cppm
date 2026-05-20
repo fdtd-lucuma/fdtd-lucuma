@@ -36,6 +36,7 @@ public:
 	PathCommon(Injector& injector);
 
 	std::vector<std::filesystem::path> createPath(std::string_view filePreffix) const;
+	bool debug() const;
 
 private:
 	Settings& settings;

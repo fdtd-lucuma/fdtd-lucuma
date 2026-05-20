@@ -33,4 +33,16 @@ std::span<const std::filesystem::path> PathBase::getPath() const
 	return path;
 }
 
+void PathBase::failFind(const std::filesystem::path& file) const
+{
+	if(!common.debug())
+		return;
+
+	std::println("Could not find {} in:", file.c_str());
+	for(const auto& p: getPath())
+	{
+		std::println("\t{}", p.c_str());
+	}
+}
+
 }

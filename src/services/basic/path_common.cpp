@@ -59,4 +59,9 @@ void PathCommon::createBasePath()
 	basePath.emplace_back(DATA_DIR);
 }
 
+bool PathCommon::debug() const
+{
+	return settings.debug();
+}
+
 }

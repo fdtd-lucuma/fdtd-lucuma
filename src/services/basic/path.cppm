@@ -41,6 +41,7 @@ protected:
 	/// Like $PATH
 	std::vector<std::filesystem::path> path;
 
+	void failFind(const std::filesystem::path& file) const;
 };
 
 template<std::size_t n>
@@ -91,6 +92,8 @@ public:
 			if(check(result))
 				return result;
 		}
+
+		failFind(file);
 
 		return (result = file);
 	}
