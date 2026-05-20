@@ -57,7 +57,11 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 		std::ranges::to<typeof(CounterData::enabledCounters)>()
 	;
 
+#ifdef BUILD_FOR_TERMUX
+	auto& enabled = enabledSet;
+#else
 	auto enabled{std::move(enabledSet).extract()};
+#endif
 
 	auto enabledSize = enabled.size();
 
