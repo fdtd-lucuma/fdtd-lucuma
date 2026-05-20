@@ -188,8 +188,10 @@ void Device::createDevice()
 		vk::DeviceCreateInfo,
 		vk::PhysicalDeviceFeatures2,
 		vk::PhysicalDeviceVulkan11Features,
+#ifndef BUILD_FOR_TERMUX
 		vk::PhysicalDeviceVulkan12Features,
 		vk::PhysicalDeviceVulkan13Features
+#endif
 		//vk::PhysicalDeviceVulkan14Features
 	>();
 

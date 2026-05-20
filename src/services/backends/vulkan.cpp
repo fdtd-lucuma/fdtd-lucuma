@@ -68,10 +68,10 @@ vulkan::CommandRecorder VulkanBase::createCommandRecorder()
 	return vulkanCompute.createCommandRecorder(commandBuffer);
 }
 
-using enum vk::PipelineStageFlagBits2;
 
 constexpr vk::AccessFlags2 writeAccessMask(vk::PipelineStageFlags2 stage)
 {
+	using enum vk::PipelineStageFlagBits2;
 	vk::AccessFlags2 result;
 
 	if(stage & eComputeShader)
@@ -84,6 +84,8 @@ constexpr vk::AccessFlags2 writeAccessMask(vk::PipelineStageFlags2 stage)
 
 constexpr vk::AccessFlags2 readAccessMask(vk::PipelineStageFlags2 stage)
 {
+	using enum vk::PipelineStageFlagBits2;
+
 	vk::AccessFlags2 result;
 
 	if(stage & eComputeShader)
@@ -93,6 +95,53 @@ constexpr vk::AccessFlags2 readAccessMask(vk::PipelineStageFlags2 stage)
 
 	return result;
 }
+
+constexpr vk::AccessFlags writeAccessMask(vk::PipelineStageFlags stage)
+{
+	using enum vk::PipelineStageFlagBits;
+	vk::AccessFlags result;
+
+	if(stage & eComputeShader)
+		result |= vk::AccessFlagBits::eShaderWrite;
+
+	if(stage & eHost)
+		result |= vk::AccessFlagBits::eHostWrite;
+
+	return result;
+}
+
+constexpr vk::AccessFlags readAccessMask(vk::PipelineStageFlags stage)
+{
+	using enum vk::PipelineStageFlagBits;
+
+	vk::AccessFlags result;
+
+	if(stage & eComputeShader)
+		result |= vk::AccessFlagBits::eShaderRead;
+
+	if(stage & eHost)
+		result |= vk::AccessFlagBits::eHostRead;
+
+	return result;
+}
+
+void writeReadBarrier( vk::CommandBuffer commandBuffer, vk::PipelineStageFlags src, vk::PipelineStageFlags dst)
+{
+	vk::MemoryBarrier memoryBarrier {
+		.srcAccessMask = writeAccessMask(src),
+		.dstAccessMask = readAccessMask(dst),
+	};
+
+	commandBuffer.pipelineBarrier(
+		src,
+		dst,
+		{},
+		memoryBarrier,
+		nullptr,
+		nullptr
+	);
+}
+
 
 void writeReadBarrier(vk::CommandBuffer commandBuffer, vk::PipelineStageFlags2 src, vk::PipelineStageFlags2 dst)
 {
@@ -110,6 +159,12 @@ void writeReadBarrier(vk::CommandBuffer commandBuffer, vk::PipelineStageFlags2 s
 
 	commandBuffer.pipelineBarrier2(dependencyInfo);
 }
+
+#ifdef BUILD_FOR_TERMUX
+using enum vk::PipelineStageFlagBits;
+#else
+using enum vk::PipelineStageFlagBits2;
+#endif
 
 void VulkanBase::computeComputeBarrier(vk::CommandBuffer commandBuffer)
 {

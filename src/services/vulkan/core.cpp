@@ -228,7 +228,7 @@ vk::raii::PhysicalDevice Core::selectPhysicalDevice()
 		return device;
 	}
 
-	throw std::runtime_error("Failed to find a  compatible GPU");
+	throw std::runtime_error("Failed to find a compatible GPU");
 }
 
 bool Core::isSuitable(vk::PhysicalDevice physicalDevice)
@@ -246,7 +246,11 @@ bool Core::isSuitable(vk::PhysicalDevice physicalDevice)
 
 std::uint32_t Core::getApiVersion() const
 {
+#ifdef BUILD_FOR_TERMUX
+	return vk::ApiVersion11;
+#else
 	return vk::ApiVersion13;
+#endif
 }
 
 }

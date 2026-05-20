@@ -129,6 +129,9 @@ bool fits(svec3 workGroupSize, svec3 maxWorkgroupSize, svec3 size, std::uint64_t
 
 svec3 Compute::getWorkgroupSize(svec3 size) const
 {
+#ifdef BUILD_FOR_TERMUX
+	return svec(64,4,2);
+#else
 	svec3 result(64,1,1);
 
 	auto [wgSizes, wgInvocations] = limits(device.getPhysicalDevice().getProperties().limits);
@@ -139,6 +142,7 @@ svec3 Compute::getWorkgroupSize(svec3 size) const
 	}
 
 	return result;
+#endif
 }
 
 ComputePipeline::ComputePipeline(ComputePipeline&& other):

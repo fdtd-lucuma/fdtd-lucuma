@@ -1,5 +1,6 @@
 #include "utils/types.slang"
 #include "utils/matrix.slang"
+#include "utils/workgroup.slang"
 
 struct PushConstants<T = FDTD_FLOAT_T>
 {
@@ -31,7 +32,7 @@ FDTD_FLOAT_T gauss(FDTD_FLOAT_T time, FDTD_FLOAT_T sigma, FDTD_FLOAT_T x0)
 }
 
 [shader("compute")]
-[numthreads(wgX,wgY,wgZ)]
+Workgroup(wgX,wgY,wgZ)
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
 	if(threadId.x >= size)

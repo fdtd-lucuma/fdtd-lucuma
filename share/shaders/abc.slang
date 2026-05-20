@@ -1,5 +1,6 @@
 #include "utils/types.slang"
 #include "utils/matrix.slang"
+#include "utils/workgroup.slang"
 
 struct PushConstants<T = FDTD_FLOAT_T>
 {
@@ -55,7 +56,7 @@ uint getJ(Dim dim, uint3 index)
 }
 
 [shader("compute")]
-[numthreads(wgX,wgY,wgZ)]
+Workgroup(wgX,wgY,wgZ)
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
 	const Dim dim = (Dim)_dim;

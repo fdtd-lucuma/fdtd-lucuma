@@ -42,11 +42,18 @@ function(add_spirv_target)
 		set(BINARY_PATH "${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME}")
 		set(DEPFILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${DEPFILE_NAME}")
 
+		if(BUILD_FOR_TERMUX)
+			set(SPIRV_PROFILE "spirv_1_3")
+			set(SLANG_DEF "-DSTATIC_WORKGROUP")
+		else()
+			set(SPIRV_PROFILE "spirv_1_4")
+		endif()
+
 		add_custom_command(
 			OUTPUT "${BINARY_PATH}"
 			DEPENDS "${SOURCE}"
 			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-			COMMAND "${SLANG_EXECUTABLE}" -depfile "${DEPFILE_PATH}" -O3 -profile spirv_1_4 -target spirv -o "${BINARY_PATH}" -- "${SOURCE}"
+			COMMAND "${SLANG_EXECUTABLE}" -depfile "${DEPFILE_PATH}" -O3 -profile "${SPIRV_PROFILE}" ${SLANG_DEF} -target spirv -o "${BINARY_PATH}" -- "${SOURCE}"
 			DEPFILE "${DEPFILE_PATH}"
 			COMMENT "${SOURCE} -> ${BINARY_NAME}"
 			VERBATIM

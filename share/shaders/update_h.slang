@@ -1,5 +1,6 @@
 #include "utils/types.slang"
 #include "utils/matrix.slang"
+#include "utils/workgroup.slang"
 
 struct PushConstants<T = FDTD_FLOAT_T>
 {
@@ -36,7 +37,7 @@ bool outside(uint3 threadId, svec3 dims)
 }
 
 [shader("compute")]
-[numthreads(wgX,wgY,wgZ)]
+Workgroup(wgX,wgY,wgZ)
 void main(uint3 threadId : SV_DispatchThreadID, uniform PushConstants pushConstants)
 {
 	if(outside(threadId, pushConstants.Hdims))
