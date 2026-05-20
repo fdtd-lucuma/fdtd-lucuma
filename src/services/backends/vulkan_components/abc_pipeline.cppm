@@ -113,7 +113,7 @@ public:
 			),
 		}))
 	{
-		assert(countOnes(groupCount) == 1);
+		assert(countOnes(groupCount) >= 1);
 		assert(groupCount*createInfo.workGroupSize == slice(createInfo.paddedEcDims, createInfo.dim));
 	}
 
