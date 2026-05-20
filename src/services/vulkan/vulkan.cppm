@@ -32,7 +32,6 @@ export import :debug_requirements;
 export import :device;
 export import :graphics;
 export import :imgui;
-export import :performance;
 export import :swapchain;
 export import :triangle_demo;
 

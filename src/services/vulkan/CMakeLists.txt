@@ -27,7 +27,6 @@ target_sources(${PROJECT_NAME}
 		graphics.cpp
 		imgui.cpp
 		instantiations.cpp
-		performance.cpp
 		shader_loader.cpp
 		swapchain.cpp
 		triangle_demo.cpp
@@ -46,7 +45,6 @@ target_sources(${PROJECT_NAME}
 			device.cppm
 			graphics.cppm
 			imgui.cppm
-			performance.cppm
 			shader_loader.cppm
 			swapchain.cppm
 			triangle_demo.cppm

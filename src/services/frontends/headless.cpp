@@ -38,13 +38,6 @@ Headless::Headless([[maybe_unused]]Injector& injector):
 	json(injector.inject<basic::Json>()),
 	registry(injector.inject<entt::registry>())
 {
-	//TODO: Use signals
-	if(settings.tracy() && settings.backend() == Backend::vulkan)
-	{
-		auto& performance = injector.inject<vulkan::Performance>();
-
-		performance.enableComputeCounters();
-	}
 }
 
 void Headless::compute()

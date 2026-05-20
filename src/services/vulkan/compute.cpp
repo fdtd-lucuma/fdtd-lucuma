@@ -33,7 +33,6 @@ using namespace lucuma::services;
 Compute::Compute([[maybe_unused]] Injector& injector):
 	device(injector.inject<Device>()),
 	shaderLoader(injector.inject<ShaderLoader>()),
-	performance(injector.inject<Performance>()),
 	settings(injector.inject<basic::Settings>())
 
 {
@@ -479,16 +478,6 @@ CommandRecorder::~CommandRecorder()
 bool Compute::tracy()
 {
 	return settings.tracy();
-}
-
-void Compute::startPerformanceRecording(vk::CommandBuffer buf)
-{
-	performance.startRecording(buf);
-}
-
-void Compute::submitPerformancePasses(vk::CommandBuffer buf)
-{
-	performance.submitPasses(getQueue(), buf);
 }
 
 }

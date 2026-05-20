@@ -207,13 +207,10 @@ public:
 	}
 
 	bool tracy();
-	void startPerformanceRecording(vk::CommandBuffer buf);
-	void submitPerformancePasses(vk::CommandBuffer buf);
 
 private:
 	Device&          device;
 	ShaderLoader&    shaderLoader;
-	Performance&     performance;
 	basic::Settings& settings;
 
 	std::vector<vk::raii::Queue> queues;
