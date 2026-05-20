@@ -54,7 +54,7 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 	auto enabledSet =
 		std::views::iota((std::uint32_t)0, (std::uint32_t)descriptions.size()) |
 		std::views::filter([&](auto&& i) {return !(descriptions[i].flags & vk::PerformanceCounterDescriptionFlagBitsKHR::ePerformanceImpacting);}) |
-		std::ranges::to<std::flat_set>()
+		std::ranges::to<typeof(CounterData::enabledCounters)>()
 	;
 
 	auto enabled{std::move(enabledSet).extract()};
@@ -84,7 +84,7 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 	return {
 		.queryPool       = std::move(queryPool),
 		.queryPasses     = queryPasses,
-		.enabledCounters = std::flat_set<std::uint32_t>(std::sorted_unique_t(), std::move(enabled)),
+		.enabledCounters = CounterData::set_t<std::uint32_t>(std::sorted_unique_t(), std::move(enabled)),
 		.counters        = std::move(counters),
 		.descriptions    = std::move(descriptions),
 		.results         = std::vector<vk::PerformanceCounterResultKHR>(enabledSize),

@@ -34,10 +34,19 @@ class Device;
 
 struct CounterData
 {
+
+#ifdef BUILD_FOR_TERMUX
+	template<typename T, typename C = std::less<T>, typename A = std::allocator<T>>
+	using set_t = std::set<T,C,A>;
+#else
+	template<typename T, typename C = std::less<T>, typename Co = std::vector<T>>
+	using set_t = std::flat_set<T,C,Co>;
+#endif
+
 	vk::raii::QueryPool queryPool   = nullptr;
 	std::uint32_t       queryPasses = {};
 
-	std::flat_set<std::uint32_t> enabledCounters = {};
+	set_t<std::uint32_t> enabledCounters = {};
 
 	std::vector<vk::PerformanceCounterKHR>            counters     = {};
 	std::vector<vk::PerformanceCounterDescriptionKHR> descriptions = {};
