@@ -16,10 +16,7 @@
 
 module;
 
-#ifdef __APPLE__
 #include <bit>
-#endif
-
 #include <taskflow/taskflow.hpp>
 
 export module lucuma.legacy_headers.taskflow;
