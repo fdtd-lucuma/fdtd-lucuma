@@ -250,7 +250,7 @@ void ComputePipeline::initDescriptorSets(vk::raii::Device& device, const Compute
 			auto&& [bindings, descriptorSet] = t;
 
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(BUILD_FOR_TERMUX)
 			std::vector<std::pair<vk::DescriptorSetLayoutBinding, std::reference_wrapper<const vk::raii::DescriptorSet>>> result;
 
 			for(auto&& x: bindings)
