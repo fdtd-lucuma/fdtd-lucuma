@@ -88,7 +88,11 @@ CounterData Performance::enableCounters(const QueueFamilyInfo& info)
 	return {
 		.queryPool       = std::move(queryPool),
 		.queryPasses     = queryPasses,
+#ifdef BUILD_FOR_TERMUX
+		.enabledCounters = std::move(enabled),
+#else
 		.enabledCounters = CounterData::set_t<std::uint32_t>(std::sorted_unique_t(), std::move(enabled)),
+#endif
 		.counters        = std::move(counters),
 		.descriptions    = std::move(descriptions),
 		.results         = std::vector<vk::PerformanceCounterResultKHR>(enabledSize),
