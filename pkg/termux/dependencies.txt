@@ -13,3 +13,4 @@ vulkan-headers
 vulkan-loader-android
 xorgproto
 zip
+bash-completion
