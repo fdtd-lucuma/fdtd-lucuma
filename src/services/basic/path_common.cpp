@@ -50,6 +50,8 @@ void PathCommon::init()
 
 void PathCommon::createBasePath()
 {
+	basePath.emplace_back("./share");
+
 	//TODO: Override by config or something. Or maybe only by envars to avoid
 	//dependency loops.
 #ifdef NDEBUG
