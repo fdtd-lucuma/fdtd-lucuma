@@ -1,3 +1,4 @@
+bash-completion
 cmake
 dbus
 fmt
@@ -7,10 +8,10 @@ glm
 graphviz
 ninja
 pkg-config
+shader-slang
 simdjson
 termux-x11
 vulkan-headers
 vulkan-loader-android
 xorgproto
 zip
-bash-completion
