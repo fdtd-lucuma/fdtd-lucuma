@@ -74,7 +74,7 @@ pushd android-ndk-r${NDK_VERSION}
 
 cp -fr toolchains/llvm/prebuilt/linux-x86_64/share/libc++ /data/data/com.termux/files/usr/share/
 cp toolchains/llvm/prebuilt/linux-x86_64/lib/libc++.modules.json  /data/data/com.termux/files/usr/lib
-sed -i "s#\.\./..#..#g" /data/data/com.termux/files/usr/lib/libc++.modules.json
+sed -i "s#\.\./\.\.#..#g" /data/data/com.termux/files/usr/lib/libc++.modules.json
 sed -i "/__inline__/ s/static//" /data/data/com.termux/files/usr/include/std
 
 popd
