@@ -63,12 +63,23 @@ cd build
 git clone https://github.com/fdtd-lucuma/fdtd-lucuma
 cd fdtd-lucuma
 
-pkg add x11-repo
+pkg add x11-repo tur-repo
 xargs -oa pkg/termux/dependencies.txt -- pkg add
+
+NDK_VERSION=29
+curl -LO https://dl.google.com/android/repository/android-ndk-r${NDK_VERSION}-linux.zip
+unzip android-ndk-r${NDK_VERSION}-linux.zip
+
+pushd android-ndk-r${NDK_VERSION}
+
+cp -fr toolchains/llvm/prebuilt/linux-x86_64/share/libc++ /data/data/com.termux/files/usr/share/
+cp toolchains/llvm/prebuilt/linux-x86_64/lib/libc++.modules.json  /data/data/com.termux/files/usr/lib
+ed -i "/__inline__/ s/static//" /data/data/com.termux/files/usr/include/std
+
+popd
 
 cmake -B build -G Ninja -DBUILD_FOR_TERMUX=ON
 cmake --build build
-
 
 cd build
 ./fdtd-lucuma
