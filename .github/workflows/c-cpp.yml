@@ -74,11 +74,15 @@ jobs:
     - name: deps
       run: xargs -- brew install < pkg/macos/dependencies.txt
 
-    - name: vcpkg root
-      run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
+    - name: Setup vcpkg
+      run: |
+        git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
+        cd "$VCPKG_ROOT"
+        ./bootstrap-vcpkg.sh -disableMetrics
 
     - name: vcpkg deps
-      run: vcpkg install shader-slang
+      run: |
+        "$VCPKG_ROOT/vcpkg" install shader-slang
 
     - name: configure
       run: export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)" ;
