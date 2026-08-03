@@ -62,7 +62,7 @@ jobs:
       run: cmake --build build --parallel $(nproc)
 
   apple:
-    runs-on: macos-26
+    runs-on: macos-27
     env:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
@@ -73,9 +73,6 @@ jobs:
 
     - name: deps
       run: xargs -- brew install < pkg/macos/dependencies.txt
-
-    - name: vcpkg root
-      run: git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
 
     - name: vcpkg deps
       run: vcpkg install shader-slang
