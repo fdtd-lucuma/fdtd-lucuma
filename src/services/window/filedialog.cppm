@@ -26,7 +26,7 @@ namespace lucuma::services::window
 using namespace lucuma::utils;
 using namespace lucuma::services;
 
-class Glfw;
+class Sdl3;
 
 export class Filedialog
 {
@@ -36,7 +36,7 @@ public:
 	~Filedialog();
 
 private:
-	Glfw& glfw;
+	Sdl3& glfw;
 
 	void init();
 };

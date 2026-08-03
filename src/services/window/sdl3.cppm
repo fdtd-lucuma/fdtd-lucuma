@@ -23,7 +23,6 @@ import vulkan;
 
 import lucuma.utils;
 import lucuma.services.basic;
-import lucuma.legacy_headers.entt;
 import lucuma.legacy_headers.sdl3;
 
 namespace lucuma::services::window
@@ -62,6 +61,9 @@ private:
 
 	void init();
 	std::span<const char* const> getExtensions() const noexcept;
+
+	bool _shouldClose = false;
+	std::function<void(std::size_t, std::size_t)> frameBufferResizeCallback;
 
 };
 

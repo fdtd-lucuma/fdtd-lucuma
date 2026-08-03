@@ -59,7 +59,6 @@ void Sdl3::init()
 
 	window.reset(SDL_CreateWindow("fdtd-lucuma", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_VULKAN));
 
-	//TODO
 	//vkfw::setErrorCallback(error_callback);
 	//data().instance = vkfw::initUnique();
 
@@ -75,15 +74,29 @@ void Sdl3::init()
 
 bool Sdl3::shouldClose() const
 {
-	//TODO
-	return true;
-	//return data().window->shouldClose();
+	return _shouldClose;
 }
 
 void Sdl3::pollEvents()
 {
-	//TODO
-	//vkfw::pollEvents();
+	SDL_Event event;
+
+	while(SDL_PollEvent(&event))
+	{
+		switch(event.type)
+		{
+			case SDL_EVENT_QUIT:
+				_shouldClose = true;
+				break;
+			case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+				if(frameBufferResizeCallback)
+				{
+					auto e = event.window;
+					frameBufferResizeCallback(e.data1, e.data2);
+				}
+				break;
+		}
+	}
 }
 
 void Sdl3::waitUntilMaximixed()
@@ -94,8 +107,7 @@ void Sdl3::waitUntilMaximixed()
 	{
 		std::tie(width, height) = getFramebufferSize();
 
-		//TODO
-		//vkfw::waitEvents();
+		SDL_WaitEvent(nullptr);
 	}
 
 }
@@ -109,7 +121,6 @@ std::tuple<std::size_t, std::size_t> Sdl3::getFramebufferSize() const noexcept
 
 void Sdl3::initImgui()
 {
-	//TODO
 	ImGui_ImplSDL3_InitForVulkan(window.get());
 }
 
@@ -133,11 +144,7 @@ vk::raii::SurfaceKHR Sdl3::createSurface(const vk::raii::Instance& instance)
 
 void Sdl3::setOnFrameBufferResize(std::function<void(std::size_t, std::size_t)>&& func)
 {
-	// TODO
-	//data().window->callbacks()->on_framebuffer_resize = [=](const vkfw::Window&, std::size_t x, std::size_t y)
-	//{
-	//	func(x, y);
-	//};
+	frameBufferResizeCallback = func;
 }
 
 void Sdl3::appendExtensions(std::vector<const char*>& v) const

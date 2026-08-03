@@ -30,6 +30,7 @@ export using ::SDL_SetAppMetadata;
 export using ::SDL_Event;
 export using ::SDL_PollEvent;
 export using ::SDL_PeepEvents;
+export using ::SDL_WaitEvent;
 
 export using ::SDL_CommonEvent;
 export using ::SDL_DisplayEvent;

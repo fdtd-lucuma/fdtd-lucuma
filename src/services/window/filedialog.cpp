@@ -26,14 +26,14 @@ namespace lucuma::services::window
 using namespace lucuma::services;
 
 Filedialog::Filedialog([[maybe_unused]] Injector& injector):
-	glfw(injector.inject<Glfw>())
+	glfw(injector.inject<Sdl3>())
 {
 	init();
 }
 
 void Filedialog::init()
 {
-	if(NFD::Init() != NFD_OKAY || !NFD_SetDisplayPropertiesFromGLFW())
+	if(NFD::Init() != NFD_OKAY)
 	{
 		std::println(std::cerr, "{}", NFD::GetError());
 		throw new std::runtime_error(NFD::GetError());
