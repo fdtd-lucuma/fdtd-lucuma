@@ -89,10 +89,27 @@ FetchContent_Declare(
 	OVERRIDE_FIND_PACKAGE
 )
 
+set(GLFW_INCLUDE_NONE TRUE CACHE BOOL "" FORCE)
+set(VKFW_ENABLE_VULKAN_HPP_MODULE TRUE CACHE BOOL "" FORCE)
+set(VKFW_NO_STRUCT_CONSTRUCTORS TRUE CACHE BOOL "" FORCE)
+set(VKFW_BUILD_CXX_MODULE TRUE CACHE BOOL "" FORCE)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+	set(GLFW_EXPOSE_NATIVE_COCOA TRUE CACHE BOOL "" FORCE)
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	set(GLFW_EXPOSE_NATIVE_WAYLAND TRUE CACHE BOOL "" FORCE)
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	set(GLFW_EXPOSE_NATIVE_WIN32 TRUE CACHE BOOL "" FORCE)
+endif()
+
 FetchContent_Declare(
 	vkfw
-	GIT_REPOSITORY https://github.com/Cvelth/vkfw.git
-	GIT_TAG        origin/main
+	#GIT_REPOSITORY https://github.com/Cvelth/vkfw.git
+	GIT_REPOSITORY https://github.com/otreblan/vkfw.git
+	#GIT_TAG        origin/main
+	GIT_TAG        origin/quotes
 	GIT_SHALLOW    ON
 	GIT_PROGRESS   ON
 	OVERRIDE_FIND_PACKAGE
@@ -264,47 +281,47 @@ target_compile_definitions(VulkanHppModule
 
 target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
 
-# set up vkfw C++ module as a library
-add_library(VkfwModule)
-target_sources(VkfwModule PUBLIC
-	FILE_SET CXX_MODULES
-	BASE_DIRS ${vkfw_SOURCE_DIR}
-	FILES ${vkfw_SOURCE_DIR}/include/vkfw/vkfw.cppm
-)
-set_target_properties(VkfwModule
-	PROPERTIES
-		CXX_STANDARD 26
-)
-
-target_compile_definitions(VkfwModule
-	PRIVATE
-		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
-	PUBLIC
-		$<$<PLATFORM_ID:Darwin>:GLFW_EXPOSE_NATIVE_COCOA>
-		# TODO: Find out why this breaks the compilation
-		#$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_X11>
-		$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_WAYLAND>
-		$<$<PLATFORM_ID:Windows>:GLFW_EXPOSE_NATIVE_WIN32>
-		GLFW_INCLUDE_NONE
-		# TODO: Find out how to dedup vulkan module target
-		#VKFW_NO_INCLUDE_VULKAN
-		#VKFW_NO_INCLUDE_VULKAN_HPP
-		VKFW_ENABLE_VULKAN_HPP_MODULE
-		#VKFW_ENABLE_STD_MODULE
-		VKFW_NO_STRUCT_CONSTRUCTORS
-)
-
-target_link_libraries(VkfwModule
-	PUBLIC
-		VulkanHppModule
-		vkfw
-)
-
-# TODO: Find what to do when the library doesn't have an alias
-target_include_directories(VkfwModule
-	PRIVATE
-		${vkfw_SOURCE_DIR}/include
-)
+## set up vkfw C++ module as a library
+#add_library(VkfwModule)
+#target_sources(VkfwModule PUBLIC
+#	FILE_SET CXX_MODULES
+#	BASE_DIRS ${vkfw_SOURCE_DIR}
+#	FILES ${vkfw_SOURCE_DIR}/include/vkfw/vkfw.cppm
+#)
+#set_target_properties(VkfwModule
+#	PROPERTIES
+#		CXX_STANDARD 26
+#)
+#
+#target_compile_definitions(VkfwModule
+#	PRIVATE
+#		$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+#	PUBLIC
+#		$<$<PLATFORM_ID:Darwin>:GLFW_EXPOSE_NATIVE_COCOA>
+#		# TODO: Find out why this breaks the compilation
+#		#$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_X11>
+#		$<$<PLATFORM_ID:Linux>:GLFW_EXPOSE_NATIVE_WAYLAND>
+#		$<$<PLATFORM_ID:Windows>:GLFW_EXPOSE_NATIVE_WIN32>
+#		GLFW_INCLUDE_NONE
+#		# TODO: Find out how to dedup vulkan module target
+#		#VKFW_NO_INCLUDE_VULKAN
+#		#VKFW_NO_INCLUDE_VULKAN_HPP
+#		VKFW_ENABLE_VULKAN_HPP_MODULE
+#		#VKFW_ENABLE_STD_MODULE
+#		VKFW_NO_STRUCT_CONSTRUCTORS
+#)
+#
+#target_link_libraries(VkfwModule
+#	INTERFACE
+#		VulkanHppModule
+#		vkfw
+#)
+#
+## TODO: Find what to do when the library doesn't have an alias
+#target_include_directories(VkfwModule
+#	INTERFACE
+#		${VKFW_SOURCE_ROOT}
+#)
 
 add_library(imgui)
 
@@ -359,7 +376,7 @@ target_compile_definitions(imgui
 
 target_link_libraries(imgui
 	PUBLIC
-		VkfwModule
+		vkfw-module
 	PRIVATE
 		PkgConfig::libraries
 )
@@ -546,7 +563,7 @@ target_link_libraries(${PROJECT_NAME}
 		PkgConfig::libraries
 		Taskflow::Taskflow
 		Threads::Threads
-		VkfwModule
+		vkfw-module
 		VulkanMemoryAllocator-HppModule2
 		imgui
 		imgui-graphnode
