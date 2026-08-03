@@ -36,13 +36,14 @@ export class Sdl3
 {
 public:
 	Sdl3(Injector& injector);
+	~Sdl3();
 
 	bool shouldClose() const;
 	void pollEvents();
 
 	void waitUntilMaximixed();
 
-	std::tuple<std::size_t, std::size_t> getFramebufferSize() const;
+	std::tuple<std::size_t, std::size_t> getFramebufferSize() const noexcept;
 
 	void initImgui();
 	void shutdownImgui();
@@ -52,10 +53,15 @@ public:
 
 	void setOnFrameBufferResize(std::function<void(std::size_t, std::size_t)>&& func);
 
+	void appendExtensions(std::vector<const char*>& v) const;
+
 private:
 	basic::Settings& settings;
 
+	sdl3::unique_window window = nullptr;
+
 	void init();
+	std::span<const char* const> getExtensions() const noexcept;
 
 };
 

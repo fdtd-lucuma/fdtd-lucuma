@@ -133,14 +133,12 @@ std::vector<const char*> Core::getRequiredExtensions()
 {
 	auto result = debugRequirements.getRequiredExtensions();
 
-	//if(glfw != nullptr)
-	//	result.append_range(vkfw::getRequiredInstanceExtensions());
+	if(glfw != nullptr)
+		glfw->appendExtensions(result);
 
 #ifdef __APPLE__
 	result.emplace_back(vk::KHRPortabilityEnumerationExtensionName);
 #endif
-
-	// TODO: Make glfw more maintainable
 
 	checkExtensions(result);
 

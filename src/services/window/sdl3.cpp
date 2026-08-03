@@ -16,6 +16,10 @@
 
 module;
 
+#include <SDL3/SDL_video.h>
+#include <SDL3/SDL_init.h>
+#include <vulkan/vulkan_core.h>
+
 module lucuma.services.window;
 
 import imgui;
@@ -42,6 +46,19 @@ void error_callback(int, const char *description) {
 
 void Sdl3::init()
 {
+	SDL_Init(
+		SDL_INIT_AUDIO |
+		SDL_INIT_VIDEO |
+		SDL_INIT_JOYSTICK |
+		SDL_INIT_HAPTIC |
+		SDL_INIT_GAMEPAD |
+		SDL_INIT_EVENTS
+	);
+
+	SDL_SetAppMetadata("fdtd-lucuma", "1.0.0", "fdtd-lucuma");
+
+	window.reset(SDL_CreateWindow("fdtd-lucuma", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_VULKAN));
+
 	//TODO
 	//vkfw::setErrorCallback(error_callback);
 	//data().instance = vkfw::initUnique();
@@ -71,28 +88,29 @@ void Sdl3::pollEvents()
 
 void Sdl3::waitUntilMaximixed()
 {
-	//TODO
-	//auto [width, height] = data().window->getFramebufferSize();
+	auto [width, height] = getFramebufferSize();
 
-	//while(width == 0 || height == 0)
-	//{
-	//	std::tie(width, height) = data().window->getFramebufferSize();
+	while(width == 0 || height == 0)
+	{
+		std::tie(width, height) = getFramebufferSize();
 
-	//	vkfw::waitEvents();
-	//}
+		//TODO
+		//vkfw::waitEvents();
+	}
 
 }
 
-std::tuple<std::size_t, std::size_t> Sdl3::getFramebufferSize() const
+std::tuple<std::size_t, std::size_t> Sdl3::getFramebufferSize() const noexcept
 {
-	//return data().window->getFramebufferSize();
-	return {1,1};
+	int width, height;
+	SDL_GetWindowSizeInPixels(window.get(), &width, &height);
+	return {width, height};
 }
 
 void Sdl3::initImgui()
 {
 	//TODO
-	//ImGui_ImplSdl3_InitForVulkan(data().window.get(), true);
+	ImGui_ImplSDL3_InitForVulkan(window.get());
 }
 
 void Sdl3::shutdownImgui()
@@ -107,8 +125,10 @@ void Sdl3::newImguiFrame()
 
 vk::raii::SurfaceKHR Sdl3::createSurface(const vk::raii::Instance& instance)
 {
-	// TODO
-	//return vk::raii::SurfaceKHR(instance, vkfw::createWindowSurface(instance, data().window.get()));
+	VkSurfaceKHR surface;
+	SDL_Vulkan_CreateSurface(window.get(), *instance, nullptr, &surface);
+
+	return vk::raii::SurfaceKHR(instance, surface);
 }
 
 void Sdl3::setOnFrameBufferResize(std::function<void(std::size_t, std::size_t)>&& func)
@@ -118,6 +138,24 @@ void Sdl3::setOnFrameBufferResize(std::function<void(std::size_t, std::size_t)>&
 	//{
 	//	func(x, y);
 	//};
+}
+
+void Sdl3::appendExtensions(std::vector<const char*>& v) const
+{
+	v.append_range(getExtensions());
+}
+
+std::span<const char* const> Sdl3::getExtensions() const noexcept
+{
+	std::uint32_t count;
+	auto extensions = SDL_Vulkan_GetInstanceExtensions(&count);
+
+	return std::span<const char* const>(extensions, (std::size_t)count);
+}
+
+Sdl3::~Sdl3()
+{
+	SDL_Quit();
 }
 
 }
