@@ -57,7 +57,7 @@ private:
 	Device&           device;
 	Swapchain&        swapchain;
 	Graphics&         graphics;
-	window::Glfw&     glfw;
+	window::Sdl3&     glfw;
 	basic::XdgDirs&   xdgDirs;
 
 	std::filesystem::path iniPath;

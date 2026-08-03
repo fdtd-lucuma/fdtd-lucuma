@@ -3,11 +3,11 @@ cmake
 dbus
 fmt
 freetype
-glfw
 glm
 graphviz
 ninja
 pkg-config
+sdl3
 shader-slang
 simdjson
 termux-x11

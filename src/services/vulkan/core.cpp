@@ -23,8 +23,6 @@ module lucuma.services.vulkan;
 
 import lucuma.services.window;
 
-import vkfw;
-
 namespace lucuma::services::vulkan
 {
 
@@ -34,7 +32,7 @@ Core::Core([[maybe_unused]] Injector& injector):
 	settings(injector.inject<basic::Settings>())
 {
 	if(!settings.isHeadless())
-		glfw = &injector.inject<window::Glfw>();
+		glfw = &injector.inject<window::Sdl3>();
 
 	init();
 }
@@ -135,8 +133,8 @@ std::vector<const char*> Core::getRequiredExtensions()
 {
 	auto result = debugRequirements.getRequiredExtensions();
 
-	if(glfw != nullptr)
-		result.append_range(vkfw::getRequiredInstanceExtensions());
+	//if(glfw != nullptr)
+	//	result.append_range(vkfw::getRequiredInstanceExtensions());
 
 #ifdef __APPLE__
 	result.emplace_back(vk::KHRPortabilityEnumerationExtensionName);

@@ -44,7 +44,7 @@ private:
 
 	entt::dispatcher&     dispatcher;
 	entt::registry&       registry;
-	window::Glfw&         glfw;
+	window::Sdl3&         glfw;
 	vulkan::Graphics&     graphics;
 	vulkan::Imgui&        imgui;
 	basic::Settings&      settings;

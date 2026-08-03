@@ -69,7 +69,7 @@ private:
 	Core&            core;
 	Device&          device;
 	basic::Settings& settings;
-	window::Glfw&    glfw;
+	window::Sdl3&    glfw;
 
 	vk::Format   format;
 	vk::Extent2D extent;

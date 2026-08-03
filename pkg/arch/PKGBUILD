@@ -17,10 +17,10 @@ depends=(
 	'fmt'
 	'freetype2'
 	'gcc-libs'
-	'glfw'
 	'graphviz'
 	'libx11'
 	'libxrandr'
+	'sdl3'
 	'simdjson'
 	'vulkan-icd-loader'
 )
@@ -50,13 +50,11 @@ _headcommit="$(git rev-parse HEAD)"
 
 #"vma-hpp-git::git+https://github.com/YaaZ/VulkanMemoryAllocator-Hpp#tag=v3.2.1"
 #"imgui-module-git::git+https://github.com/stripe2933/imgui-module#branch=docking"
-#"vkfw-git::git+https://github.com/Cvelth/vkfw#branch=main"
 source=(
 	"$pkgname::git+file://$_gitrepo#commit=$_headcommit"
 	"imgui-git::git+https://github.com/ocornut/imgui#commit=60d7fb207eeb46d6363dd4bde10b35991bae0ce7"
 	"imgui-module-git::git+https://github.com/otreblan/imgui-module.git#branch=docking"
 	"vma-hpp-git::git+https://github.com/otreblan/VulkanMemoryAllocator-Hpp#branch=master"
-	"vkfw-git::git+https://github.com/otreblan/vkfw#branch=quotes"
 	"magic-enum-git::git+https://github.com/Neargye/magic_enum#tag=v0.9.7"
 	"mdspan-git::git+https://github.com/kokkos/mdspan#branch=stable"
 	"imgui-graphnode-git::git+https://github.com/otreblan/imgui-graphnode#branch=master"
@@ -68,7 +66,6 @@ source=(
 	"icon-fonts-cpp-headers-git::git+https://github.com/juliettef/IconFontCppHeaders#branch=main"
 )
 sha256sums=(
-	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -111,7 +108,6 @@ build() {
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI="$srcdir/imgui-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI-MODULE="$srcdir/imgui-module-git" \
 		-DFETCHCONTENT_SOURCE_DIR_VULKANMEMORYALLOCATOR-HPP="$srcdir/vma-hpp-git" \
-		-DFETCHCONTENT_SOURCE_DIR_VKFW="$srcdir/vkfw-git" \
 		-DFETCHCONTENT_SOURCE_DIR_MAGIC_ENUM="$srcdir/magic-enum-git" \
 		-DFETCHCONTENT_SOURCE_DIR_MDSPAN="$srcdir/mdspan-git" \
 		-DFETCHCONTENT_SOURCE_DIR_IMGUI-GRAPHNODE="$srcdir/imgui-graphnode-git" \

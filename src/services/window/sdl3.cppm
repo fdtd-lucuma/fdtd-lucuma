@@ -16,24 +16,47 @@
 
 module;
 
-export module lucuma.services.window;
+export module lucuma.services.window:sdl3;
 
 import std;
+import vulkan;
+
 import lucuma.utils;
+import lucuma.services.basic;
+import lucuma.legacy_headers.entt;
+import lucuma.legacy_headers.sdl3;
 
-export import :filedialog;
-//export import :glfw;
-export import :sdl3;
-
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
+namespace lucuma::services::window
 {
-using namespace lucuma::services::window;
 
-//TODO: Find a way to automate this
+using namespace lucuma::utils;
+using namespace lucuma::services;
 
-extern template Filedialog& Injector::inject<Filedialog>();
-//extern template Glfw& Injector::inject<Glfw>();
-extern template Sdl3& Injector::inject<Sdl3>();
+export class Sdl3
+{
+public:
+	Sdl3(Injector& injector);
+
+	bool shouldClose() const;
+	void pollEvents();
+
+	void waitUntilMaximixed();
+
+	std::tuple<std::size_t, std::size_t> getFramebufferSize() const;
+
+	void initImgui();
+	void shutdownImgui();
+	void newImguiFrame();
+
+	vk::raii::SurfaceKHR createSurface(const vk::raii::Instance& instance);
+
+	void setOnFrameBufferResize(std::function<void(std::size_t, std::size_t)>&& func);
+
+private:
+	basic::Settings& settings;
+
+	void init();
+
+};
 
 }

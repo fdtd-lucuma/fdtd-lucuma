@@ -16,24 +16,7 @@
 
 module;
 
-export module lucuma.services.window;
+export module lucuma.legacy_headers.sdl3;
 
-import std;
-import lucuma.utils;
-
-export import :filedialog;
-//export import :glfw;
-export import :sdl3;
-
-// Explicit template instantiations for faster compilation
-namespace lucuma::utils
-{
-using namespace lucuma::services::window;
-
-//TODO: Find a way to automate this
-
-extern template Filedialog& Injector::inject<Filedialog>();
-//extern template Glfw& Injector::inject<Glfw>();
-extern template Sdl3& Injector::inject<Sdl3>();
-
-}
+//export using ::ImGuiGraphNodeLayout_;
+//export using ::ImGuiGraphNodeLayout;

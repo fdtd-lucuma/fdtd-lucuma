@@ -23,8 +23,6 @@ import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
 import lucuma.events.vulkan;
 
-import vkfw;
-
 namespace lucuma::services::vulkan
 {
 

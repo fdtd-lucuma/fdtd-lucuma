@@ -17,13 +17,15 @@
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		filedialog.cpp
-		glfw.cpp
+		sdl3.cpp
+		#glfw.cpp
 		instantiations.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
 			filedialog.cppm
-			glfw.cppm
+			sdl3.cppm
+			#glfw.cppm
 			window.cppm
 )

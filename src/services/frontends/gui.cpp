@@ -36,7 +36,7 @@ Gui::Gui([[maybe_unused]]Injector& injector):
 	_injector(injector),
 	dispatcher(injector.inject<entt::dispatcher>()),
 	registry(injector.inject<entt::registry>()),
-	glfw(injector.inject<window::Glfw>()),
+	glfw(injector.inject<window::Sdl3>()),
 	graphics(injector.inject<vulkan::Graphics>()),
 	imgui(injector.inject<vulkan::Imgui>()),
 	settings(injector.inject<basic::Settings>()),

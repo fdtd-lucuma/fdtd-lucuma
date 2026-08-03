@@ -54,7 +54,7 @@ private:
 	Context&           context;
 	DebugRequirements& debugRequirements;
 	basic::Settings&   settings;
-	window::Glfw*      glfw = nullptr;
+	window::Sdl3*      glfw = nullptr;
 
 	vk::raii::Instance       instance       = nullptr;
 	vk::raii::PhysicalDevice physicalDevice = nullptr;

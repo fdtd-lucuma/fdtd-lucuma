@@ -22,7 +22,6 @@ module lucuma.services.vulkan;
 
 import lucuma.services.basic;
 import lucuma.services.window;
-import vkfw;
 
 namespace lucuma::services::vulkan
 {
@@ -33,7 +32,7 @@ Swapchain::Swapchain([[maybe_unused]] Injector& injector):
 	core(injector.inject<Core>()),
 	device(injector.inject<Device>()),
 	settings(injector.inject<basic::Settings>()),
-	glfw(injector.inject<window::Glfw>())
+	glfw(injector.inject<window::Sdl3>())
 
 {
 	init();

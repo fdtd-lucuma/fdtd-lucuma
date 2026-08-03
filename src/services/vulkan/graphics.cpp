@@ -26,8 +26,6 @@ import lucuma.services.basic;
 import lucuma.legacy_headers.entt;
 import lucuma.events.vulkan;
 
-import vkfw;
-
 namespace lucuma::services::vulkan
 {
 
@@ -39,7 +37,7 @@ Graphics::Graphics([[maybe_unused]] Injector& injector):
 	device(injector.inject<Device>()),
 	swapchain(injector.inject<Swapchain>()),
 	settings(injector.inject<basic::Settings>()),
-	glfw(injector.inject<window::Glfw>())
+	glfw(injector.inject<window::Sdl3>())
 
 {
 	if(!device.getGraphicsInfo().has_value())

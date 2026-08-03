@@ -28,6 +28,7 @@ target_sources(${PROJECT_NAME}
 			implot3d.cppm
 			mdspan.cppm
 			nativefiledialog_extended.cppm
+			sdl3.cppm
 			simdjson.cppm
 			taskflow.cppm
 			tracy.cppm

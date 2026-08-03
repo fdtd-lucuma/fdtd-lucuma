@@ -32,7 +32,7 @@ import lucuma.events.vulkan;
 
 import imgui;
 import imgui_impl_vulkan;
-import imgui_impl_glfw;
+import imgui_impl_sdl3;
 import vulkan_hpp;
 
 namespace lucuma::services::vulkan
@@ -47,7 +47,7 @@ Imgui::Imgui([[maybe_unused]] Injector& injector):
 	device(injector.inject<Device>()),
 	swapchain(injector.inject<Swapchain>()),
 	graphics(injector.inject<Graphics>()),
-	glfw(injector.inject<window::Glfw>()),
+	glfw(injector.inject<window::Sdl3>()),
 	xdgDirs(injector.inject<basic::XdgDirs>())
 
 {
