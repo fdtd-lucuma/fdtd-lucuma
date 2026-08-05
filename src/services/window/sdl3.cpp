@@ -57,18 +57,7 @@ void Sdl3::init()
 
 	SDL_SetAppMetadata("fdtd-lucuma", "1.0.0", "fdtd-lucuma");
 
-	window.reset(SDL_CreateWindow("fdtd-lucuma", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_VULKAN));
-
-	//vkfw::setErrorCallback(error_callback);
-	//data().instance = vkfw::initUnique();
-
-	//vkfw::windowHint<vkfw::WindowHint::eClientAPI>(vkfw::ClientAPI::eNone);
-	//vkfw::windowHint<vkfw::WindowHint::eSRGBCapable>(true);
-	//vkfw::windowHint<vkfw::WindowHint::eResizable>(true);
-
-	//data().window = vkfw::createWindowUnique(800, 600, "fdtd-lucuma");
-
-	// TODO: Key callback
+	window.reset(SDL_CreateWindow("fdtd-lucuma", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_VULKAN | SDL_WINDOW_HIGH_PIXEL_DENSITY));
 }
 
 
@@ -83,8 +72,13 @@ void Sdl3::pollEvents()
 
 	while(SDL_PollEvent(&event))
 	{
+		ImGui_ImplSDL3_ProcessEvent(&event);
 		switch(event.type)
 		{
+			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+				if(event.window.windowID != SDL_GetWindowID(window.get()))
+					break;
+				[[fallthrough]];
 			case SDL_EVENT_QUIT:
 				_shouldClose = true;
 				break;

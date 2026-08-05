@@ -72,6 +72,7 @@ export using ::SDL_DropEvent;
 export using ::SDL_ClipboardEvent;
 
 export using ::SDL_Window;
+export using ::SDL_GetWindowID;
 export using ::SDL_CreateWindow;
 export using ::SDL_DestroyWindow;
 export using ::SDL_GetWindowSize;
