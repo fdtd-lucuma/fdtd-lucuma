@@ -94,7 +94,8 @@ struct deleter {
 	template<class T>
 	void operator()(T* p) const noexcept
 	{
-		f(p);
+		if(p)
+			f(p);
 	}
 };
 
