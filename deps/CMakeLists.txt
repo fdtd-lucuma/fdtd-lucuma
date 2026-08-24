@@ -81,8 +81,7 @@ FetchContent_Declare(
 
 FetchContent_Declare(
 	VulkanMemoryAllocator-Hpp
-	#GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git # Wait until https://github.com/YaaZ/VulkanMemoryAllocator-Hpp/issues/61
-	GIT_REPOSITORY         https://github.com/otreblan/VulkanMemoryAllocator-Hpp.git
+	GIT_REPOSITORY         https://github.com/YaaZ/VulkanMemoryAllocator-Hpp.git
 	GIT_TAG                origin/master
 	GIT_SHALLOW            ON
 	GIT_PROGRESS           ON
