@@ -45,7 +45,7 @@ bool Settings::isHeadless() const
 
 bool Settings::debug() const
 {
-	return argumentParser.debug();
+	return _debugOverride.value_or(argumentParser.debug());
 }
 
 bool Settings::tracy() const
@@ -430,7 +430,30 @@ Precision Settings::precision() const
 
 SaveAs Settings::saveAs() const
 {
+	if(_saveAsOverride.has_value())
+		return _saveAsOverride.value();
+
 	return argumentParser.saveAs().value_or(defaultSaveAs);
+}
+
+const std::filesystem::path& Settings::savePath() const
+{
+	return _savePath;
+}
+
+void Settings::setSaveAsOverride(SaveAs saveAs)
+{
+	_saveAsOverride = saveAs;
+}
+
+void Settings::setDebugOverride(bool enabled)
+{
+	_debugOverride = enabled;
+}
+
+void Settings::setSavePath(std::filesystem::path path)
+{
+	_savePath = std::move(path);
 }
 
 

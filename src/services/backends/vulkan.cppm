@@ -100,7 +100,7 @@ public:
 		};
 
 		SaverCreateInfo saverCreateInfo {
-			.basePath = ".",
+			.basePath = settings.savePath(),
 		};
 
 		data_t& data = registry.emplace<data_t>(id, data_t::make(vulkanCreateInfo, fileReader));

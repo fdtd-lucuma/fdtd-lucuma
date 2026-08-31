@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
-target_sources(${PROJECT_NAME}
+sources(
 	PRIVATE
 		fdtd_data.cpp
 		transform.cpp

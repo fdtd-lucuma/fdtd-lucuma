@@ -14,16 +14,23 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
+# main() belongs to the executable only, never the Julia shared library.
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		main.cpp
+)
+
+sources(
+	PRIVATE
 		simulator.cpp
+		julia.cpp
 	PRIVATE
 		FILE_SET fdtd
 		TYPE CXX_MODULES
 		FILES
 			fdtd.cppm
 			simulator.cppm
+			julia.cppm
 )
 
 add_subdirectory(components)

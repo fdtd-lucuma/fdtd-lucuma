@@ -156,8 +156,19 @@ public:
 	Precision precision() const;
 	SaveAs    saveAs()    const;
 
+	const std::filesystem::path& savePath() const;
+
+	// Overrides for callers outside the command line (e.g. the Julia API); unset -> CLI value.
+	void setSaveAsOverride(SaveAs saveAs);
+	void setDebugOverride(bool enabled);
+	void setSavePath(std::filesystem::path path);
+
 private:
 	ArgumentParser& argumentParser;
+
+	std::optional<SaveAs> _saveAsOverride = std::nullopt;
+	std::optional<bool>   _debugOverride  = std::nullopt;
+	std::filesystem::path _savePath       = ".";
 
 };
 

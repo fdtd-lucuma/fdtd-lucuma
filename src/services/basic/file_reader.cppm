@@ -116,7 +116,7 @@ public:
 
 	FileToFloat(FileBuffer&& buffer):
 		buffer(std::move(buffer)),
-		currentPtr(this->buffer.getBuffer().begin().base())
+		currentPtr(this->buffer.getBuffer().data())
 	{}
 
 	template <typename T>
@@ -124,7 +124,8 @@ public:
 	bool readOne(T& result)
 	{
 		assert(currentPtr != nullptr);
-		auto answer = fast_float::from_chars<T, char>(currentPtr, buffer.getBuffer().end().base(), result);
+		const auto span = buffer.getBuffer();
+		auto answer = fast_float::from_chars<T, char>(currentPtr, span.data() + span.size(), result);
 
 		currentPtr = answer.ptr+1;
 

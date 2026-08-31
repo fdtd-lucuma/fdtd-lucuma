@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with fdtd-lucuma.  If not, see <http://www.gnu.org/licenses/>.
 
-target_sources(${PROJECT_NAME}
+sources(
 	PRIVATE
 		argument_parser.cpp
 		file_reader.cpp
@@ -48,7 +48,7 @@ else()
 	set(FDTD_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 endif()
 
-target_include_directories(${PROJECT_NAME}
+include_dirs(
 	PRIVATE
 	${CMAKE_CURRENT_BINARY_DIR}
 )

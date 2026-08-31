@@ -54,3 +54,6 @@ _deps
 build
 .SRCINFO
 imgui.ini
+
+# tool checkout
+/vcpkg/

@@ -481,39 +481,47 @@ target_include_directories(magic_enumModule
 		${magic_enum_SOURCE_DIR}/include
 )
 
-# Linking
-target_link_libraries(${PROJECT_NAME}
-	PRIVATE
-		EnTT::EnTT
-		FastFloat::fast_float
-		GlmModule
-		PkgConfig::libraries
-		Taskflow::Taskflow
-		Threads::Threads
-		VulkanMemoryAllocator-HppModule2
-		imgui
-		imgui-graphnode
-		implot
-		implot3d
-		magic_enumModule
-		nfd
-		Tracy::TracyClient
-)
+# Julia bindings
 
-if (XdgUtils_FOUND)
-	target_link_libraries(${PROJECT_NAME}
-		PRIVATE
-			XdgUtils::BaseDir
-	)
-else()
-	target_compile_definitions(${PROJECT_NAME}
-		PRIVATE
-			NO_XDG
-	)
+set(_lucuma_targets ${PROJECT_NAME})
+if(TARGET ${PROJECT_NAME}-julia)
+	list(APPEND _lucuma_targets ${PROJECT_NAME}-julia)
 endif()
 
-target_include_directories(${PROJECT_NAME}
-	PRIVATE
-		${mdspan_SOURCE_DIR}/include
-		${icon-fonts-cpp-headers_SOURCE_DIR}
-)
+foreach(_lucuma_target IN LISTS _lucuma_targets)
+	target_link_libraries(${_lucuma_target}
+		PRIVATE
+			EnTT::EnTT
+			FastFloat::fast_float
+			GlmModule
+			PkgConfig::libraries
+			Taskflow::Taskflow
+			Threads::Threads
+			VulkanMemoryAllocator-HppModule2
+			imgui
+			imgui-graphnode
+			implot
+			implot3d
+			magic_enumModule
+			nfd
+			Tracy::TracyClient
+	)
+
+	if (XdgUtils_FOUND)
+		target_link_libraries(${_lucuma_target}
+			PRIVATE
+				XdgUtils::BaseDir
+		)
+	else()
+		target_compile_definitions(${_lucuma_target}
+			PRIVATE
+				NO_XDG
+		)
+	endif()
+
+	target_include_directories(${_lucuma_target}
+		PRIVATE
+			${mdspan_SOURCE_DIR}/include
+			${icon-fonts-cpp-headers_SOURCE_DIR}
+	)
+endforeach()

@@ -80,10 +80,80 @@ set_target_properties(${PROJECT_NAME}
 		CXX_STANDARD 26
 )
 
+# Julia bindings: compile the whole engine again into a shared library CxxWrap.jl loads.
+option(BUILD_JULIA_BINDINGS "Build the CxxWrap.jl bindings shared library" OFF)
+
+if(BUILD_JULIA_BINDINGS)
+	find_program(JULIA_EXECUTABLE julia REQUIRED)
+
+	execute_process(
+		COMMAND ${JULIA_EXECUTABLE} -e "using CxxWrap; print(CxxWrap.prefix_path())"
+		OUTPUT_VARIABLE JLCXX_PREFIX
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		COMMAND_ERROR_IS_FATAL ANY
+	)
+
+	list(APPEND CMAKE_PREFIX_PATH "${JLCXX_PREFIX}")
+
+	find_package(JlCxx REQUIRED)
+
+	add_library(${PROJECT_NAME}-julia SHARED)
+
+	set_target_properties(${PROJECT_NAME}-julia
+		PROPERTIES
+			CXX_STANDARD 26
+			PREFIX ""
+			OUTPUT_NAME "lucuma-fdtd-julia"
+			POSITION_INDEPENDENT_CODE ON
+	)
+
+	target_sources(${PROJECT_NAME}-julia
+		PRIVATE
+			src/julia-lib.cpp
+	)
+
+	# jlcxx's type registry needs RTTI (overrides the project-wide -fno-rtti).
+	target_compile_options(${PROJECT_NAME}-julia
+		PRIVATE
+			-frtti
+	)
+
+	target_compile_definitions(${PROJECT_NAME}-julia
+		PRIVATE
+			$<$<NOT:$<CONFIG:DEBUG>>:NDEBUG>
+	)
+
+	target_link_libraries(${PROJECT_NAME}-julia
+		PRIVATE
+			JlCxx::cxxwrap_julia
+	)
+endif()
+
+# Feed sources / include dirs to the executable and, when enabled, the Julia bindings library.
+function(sources)
+	target_sources(${PROJECT_NAME} ${ARGN})
+	if(TARGET ${PROJECT_NAME}-julia)
+		target_sources(${PROJECT_NAME}-julia ${ARGN})
+	endif()
+endfunction()
+
+function(include_dirs)
+	target_include_directories(${PROJECT_NAME} ${ARGN})
+	if(TARGET ${PROJECT_NAME}-julia)
+		target_include_directories(${PROJECT_NAME}-julia ${ARGN})
+	endif()
+endfunction()
+
 add_subdirectory(src) # Sources list
 add_subdirectory(pkg) # Packaging
 add_subdirectory(deps) # Hardcoded dependencies
 add_subdirectory(share)
+
+# The Vulkan backend loads these SPIR-V blobs at runtime.
+add_dependencies(${PROJECT_NAME} shaders)
+if(TARGET ${PROJECT_NAME}-julia)
+	add_dependencies(${PROJECT_NAME}-julia shaders)
+endif()
 
 # Macros
 target_compile_definitions(${PROJECT_NAME}
