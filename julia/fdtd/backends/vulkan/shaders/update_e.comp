@@ -1,6 +1,9 @@
 #version 450
 // == fdtd/parallel.jl UpdateE  (0-based; E over x in [1,Nx-1], y,z likewise)
-layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
+// Workgroup 16×16×1: tiles X-Y plane for better cache reuse (X is fast-varying
+// in the linear index x + Nx*(y + Ny*z)), avoids large-stride Z jumps inside
+// a workgroup.  Z is swept via the gz dispatch dimension.
+layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 
 layout(std430, binding = 0) buffer BEx { float Ex[]; };
 layout(std430, binding = 1) buffer BEy { float Ey[]; };

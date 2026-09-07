@@ -11,12 +11,16 @@
 #include "fdtd/backends/taskflow.hpp"
 #include "fdtd/backends/vulkan/vulkan.hpp"
 #include "pipeline/4_fdtd_setup.hpp"
+#include "pipeline/7_forw_fdtd.hpp"
+
+#include <chrono>
+#include <iostream>
 
 namespace lucuma::julia {
 
 ForwardRunOptions MakeForwardRunOptions(const std::filesystem::path &root,
-                                       const std::string &layout,
-                                       const Debug &debug) {
+                                        const std::string &layout,
+                                        const Debug &debug) {
   ForwardRunOptions opts;
   opts.vis_path = root / "vis" / layout / "fw";
   opts.norm_path = root / "input" / layout / "norm.toml";
@@ -57,24 +61,37 @@ ForwardResult run_typed(Backend b, FDTDParams &params,
                         const ForwardRunOptions &o) {
   auto be = MakeBackend<T>(b);
   be->init(params);
+
+  auto start = std::chrono::steady_clock::now();
+
   const SourceNormalization sn = CalibrateIncidentPower<T>(
       params, *be, monitors_in, o.vis_path, o.norm_path, o.calibration_tag,
       o.snapshot_plane, o.snapshot_field);
-  return RunForwardFDTD<T>(params, *be, params.opt_region_values, monitors_in,
-                           monitors_out, sn, o.vis_path, o.proj, o.forward_tag,
-                           o.snapshot_plane, o.snapshot_field, o.step,
-                           o.save_result);
+
+  const ForwardResult result = RunForwardFDTD<T>(
+      params, *be, params.opt_region_values, monitors_in, monitors_out, sn,
+      o.vis_path, o.proj, o.forward_tag, o.snapshot_plane, o.snapshot_field,
+      o.step, o.save_result);
+
+  auto end = std::chrono::steady_clock::now();
+
+  std::chrono::duration<double> elapsed_seconds = end - start;
+
+  std::cout << "Elapsed time: " << elapsed_seconds.count() << " s\n";
+
+  return result;
 }
 } // namespace
 
-ForwardResult
-RunForwardOnBackend(Backend backend, Precision precision, FDTDParams &params,
-                    const std::vector<std::string> &monitors_in,
-                    const std::vector<std::string> &monitors_out,
-                    const ForwardRunOptions &options) {
+ForwardResult RunForwardOnBackend(Backend backend, Precision precision,
+                                  FDTDParams &params,
+                                  const std::vector<std::string> &monitors_in,
+                                  const std::vector<std::string> &monitors_out,
+                                  const ForwardRunOptions &options) {
   switch (precision) {
   case Precision::f32:
-    return run_typed<float>(backend, params, monitors_in, monitors_out, options);
+    return run_typed<float>(backend, params, monitors_in, monitors_out,
+                            options);
   case Precision::f64:
     return run_typed<double>(backend, params, monitors_in, monitors_out,
                              options);

@@ -28,8 +28,8 @@ namespace fs = std::filesystem;
 
 namespace lucuma::julia {
 
-ForwardResult Challenge(const std::string &layout, const fs::path &root,
-                        Backend backend, Precision precision) {
+ForwardResult Optimization(const std::string &layout, const fs::path &root,
+                           Backend backend, Precision precision) {
 
   const fs::path input_dir = root / "input" / layout;
   const fs::path output_dir = root / "output" / layout;
@@ -118,7 +118,8 @@ int main(int argc, char **argv) {
   }
 
   try {
-    Challenge(layout, root, backend, precision);
+    const ForwardResult result = Optimization(layout, root, backend, precision);
+    std::cout << result.loss << "\n" << result.transmittance;
     return EXIT_SUCCESS;
   } catch (const std::exception &e) {
     std::cerr << "error: " << e.what() << "\n";

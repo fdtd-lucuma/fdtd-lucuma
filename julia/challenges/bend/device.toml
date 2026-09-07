@@ -1,0 +1,52 @@
+# Coordinates are cell-boundary positions in meters, not Julia indices.
+# Both ports point INTO the device: a = inward, b = outward.
+[elements]
+waveguides = ["win", "wout"]
+ports = ["port1", "port2"]
+sources = ["source1", "source2"]
+
+[P]
+x = [1750e-9, 3750e-9]
+y = [1750e-9, 3750e-9]
+z = [850e-9, 1450e-9]
+
+[win]
+x = [0.0, 1750e-9]
+y = [2650e-9, 2850e-9]
+z = [850e-9, 1450e-9]
+
+[wout]
+x = [2650e-9, 2850e-9]
+y = [0.0, 1750e-9]
+z = [850e-9, 1450e-9]
+
+# Ceviche source position (x0,y0) = (21,55), transverse width = 34 cells.
+[source1]
+x = [1050e-9, 1100e-9]
+y = [1900e-9, 3600e-9]
+z = [400e-9, 1900e-9]
+direction = "+x"
+mode_index = 1
+
+# Ceviche source position (x0,y0) = (55,21), transverse width = 34 cells.
+[source2]
+x = [1900e-9, 3600e-9]
+y = [1050e-9, 1100e-9]
+z = [400e-9, 1900e-9]
+direction = "+y"
+mode_index = 1
+
+# Monitor offset from its source = 1 cell toward the device.
+[port1]
+x = [1100e-9, 1150e-9]
+y = [1900e-9, 3600e-9]
+z = [400e-9, 1900e-9]
+direction = "+x"
+mode_index = 1
+
+[port2]
+x = [1900e-9, 3600e-9]
+y = [1100e-9, 1150e-9]
+z = [400e-9, 1900e-9]
+direction = "+y"
+mode_index = 1

@@ -6,6 +6,7 @@
 #include <complex>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <Eigen/Dense>
@@ -96,6 +97,10 @@ VectorModeProfile SolveVectorMode(const PortSection& section, double omega,
                                   int nmodes = 4, int mode_index = 1,
                                   double c0 = kC0, double eps0 = kEps0);
 
+// == CanonicalizeVectorModePhase : fix a solved mode's global phase so its
+// largest-magnitude transverse E sample is real and positive.
+VectorModeProfile CanonicalizeVectorModePhase(const VectorModeProfile& mode);
+
 // ---- tracked mode family (broadband source) -----------------------------
 
 struct TrackedModeFamily {
@@ -166,6 +171,13 @@ using FreqsField = std::map<double, FreqFields>;
 // Forward modal amplitude of the DFT fields at `freq_hz` through `monitor`.
 cdouble ModalOverlapAtFrequency(const ModeMonitor& monitor, double freq_hz,
                                 const FreqFields& fields);
+
+// == ModalAmplitudesAtFrequency : (forward, backward) directional modal
+// amplitudes of the DFT fields at `freq_hz` through `monitor`. `forward`
+// travels along +monitor.polarity, `backward` against it.
+std::pair<cdouble, cdouble> ModalAmplitudesAtFrequency(const ModeMonitor& monitor,
+                                                       double freq_hz,
+                                                       const FreqFields& fields);
 
 struct SourceNormalization {
 	std::vector<std::string> monitor_names;

@@ -1,0 +1,45 @@
+# Snapshot extracted from the local Ceviche model on 2026-09-02.
+[reference]
+prefab = "mode_converter_spec_12"
+simulation_prefab = "mode_converter_sim_params"
+ceviche_version = "0.1.3"
+domain_shape_xy = [100,90]
+design_shape_xy = [30,30]
+design_coords0 = [35,30,65,60]
+wavelengths_nm = [1550]
+pml_xy_cells = 20
+
+[domain]
+Lx = 5000e-9
+Ly = 4500e-9
+Lz = 2300e-9
+dx = 50e-9
+dy = 50e-9
+dz = 50e-9
+
+[material]
+eps0 = 8.854187817e-12
+mu0 = 1.2566370614e-6
+c0 = 299792458.0
+eps_bg = 1.0
+eps_fg = 12.25
+sigma_bg = 0.0
+sigma_fg = 0.0
+sigma_m = 0.0
+
+[pml]
+xy = 1000e-9
+z = 400e-9
+m = 4
+R = 1e-12
+
+[simulation]
+freqs = [193414489032258.03]
+design_value = 1.0
+courant = 0.45
+ramp_cycles = 6
+nmodes = 6
+source_amplitude = 1.0
+
+steps = 10000
+dft_cycles = 4

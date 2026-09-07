@@ -1,0 +1,106 @@
+# Cell-boundary positions in meters. Port directions point into the device.
+# Background regions are only for eigenmodes; they do not freeze the design.
+[elements]
+waveguides = ["guide1","guide2","guide3","guide4"]
+background_regions = ["background1","background2"]
+ports = ["port1","port2","port3","port4"]
+sources = ["source1","source2","source3","source4"]
+
+[P]
+x = [1200e-9, 3200e-9]
+y = [1280e-9, 2680e-9]
+z = [840e-9, 1440e-9]
+
+[guide1]
+x = [0.0, 1200e-9]
+y = [1280e-9, 1440e-9]
+z = [840e-9, 1440e-9]
+
+[guide2]
+x = [3200e-9, 4400e-9]
+y = [1280e-9, 1440e-9]
+z = [840e-9, 1440e-9]
+
+[guide3]
+x = [0.0, 1200e-9]
+y = [2520e-9, 2680e-9]
+z = [840e-9, 1440e-9]
+
+[guide4]
+x = [3200e-9, 4400e-9]
+y = [2520e-9, 2680e-9]
+z = [840e-9, 1440e-9]
+
+[background1]
+x = [0.0, 4400e-9]
+y = [1280e-9, 1440e-9]
+z = [840e-9, 1440e-9]
+
+[background2]
+x = [0.0, 4400e-9]
+y = [2520e-9, 2680e-9]
+z = [840e-9, 1440e-9]
+
+[source1]
+x = [840e-9, 880e-9]
+y = [2040e-9, 3160e-9]
+z = [400e-9, 1880e-9]
+direction = "+x"
+reference_mode_order = 1
+mode_index = 1
+
+[source2]
+x = [3560e-9, 3600e-9]
+y = [2040e-9, 3160e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1
+
+[source3]
+x = [3560e-9, 3600e-9]
+y = [800e-9, 1920e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1
+
+[source4]
+x = [840e-9, 880e-9]
+y = [800e-9, 1920e-9]
+z = [400e-9, 1880e-9]
+direction = "+x"
+reference_mode_order = 1
+mode_index = 1
+
+[port1]
+x = [880e-9, 920e-9]
+y = [2040e-9, 3160e-9]
+z = [400e-9, 1880e-9]
+direction = "+x"
+reference_mode_order = 1
+mode_index = 1
+
+[port2]
+x = [3520e-9, 3560e-9]
+y = [2040e-9, 3160e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1
+
+[port3]
+x = [3520e-9, 3560e-9]
+y = [800e-9, 1920e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1
+
+[port4]
+x = [880e-9, 920e-9]
+y = [800e-9, 1920e-9]
+z = [400e-9, 1880e-9]
+direction = "+x"
+reference_mode_order = 1
+mode_index = 1

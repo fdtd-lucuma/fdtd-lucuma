@@ -1,17 +1,3 @@
-# LucumaFDTD forward engine — C++ port of ~/Desktop/LucumaFDTD/server
-# SPDX-License-Identifier: GPL-3.0-or-later
-#
-# Standalone project. Build (Linux / macOS):
-#   cmake -B build -G Ninja .
-#   cmake --build build
-#   ./build/lucuma-julia challenge_bend [--backend sequential|taskflow|vulkan] [--precision f32|f64]
-#
-# The vulkan backend needs a Vulkan ICD the loader can see. Linux with a native
-# driver installed needs nothing extra; macOS needs MoltenVK on the loader path:
-#   VK_ICD_FILENAMES=$(brew --prefix)/etc/vulkan/icd.d/MoltenVK_icd.json ./build/lucuma-julia ... --backend vulkan --precision f32
-#
-# Plain C++23 + headers, no modules / import std (builds on Clang 16+ / GCC 13+).
-
 cmake_minimum_required(VERSION 3.28)
 project(lucuma-julia CXX)
 
@@ -76,8 +62,8 @@ if(GLSLANG)
 endif()
 add_custom_target(lucuma-julia-shaders DEPENDS ${SHADER_HEADERS})
 
-add_executable(lucuma-julia
-	challenge.cpp
+# --- shared core (all but the entry points) ---
+add_library(lucuma-julia-core STATIC
 	auxiliaries/funcs.cpp
 	auxiliaries/modes.cpp
 	auxiliaries/sources.cpp
@@ -97,25 +83,38 @@ add_executable(lucuma-julia
 	pipeline/4_fdtd_setup.cpp
 	pipeline/7_forw_fdtd.cpp
 )
-add_dependencies(lucuma-julia lucuma-julia-shaders)
+add_dependencies(lucuma-julia-core lucuma-julia-shaders)
 
-target_include_directories(lucuma-julia PRIVATE
+target_include_directories(lucuma-julia-core PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/deps
 	${SHADER_GEN_DIR}
 )
 
 if(TARGET Eigen3::Eigen)
-	target_link_libraries(lucuma-julia PRIVATE Eigen3::Eigen)
+	target_link_libraries(lucuma-julia-core PUBLIC Eigen3::Eigen)
 endif()
-target_link_libraries(lucuma-julia PRIVATE Threads::Threads)
+target_link_libraries(lucuma-julia-core PUBLIC Threads::Threads)
 if(TARGET Vulkan::Vulkan)
-	target_link_libraries(lucuma-julia PRIVATE Vulkan::Vulkan)
-	target_compile_definitions(lucuma-julia PRIVATE LUCUMA_HAVE_VULKAN=1)
+	target_link_libraries(lucuma-julia-core PUBLIC Vulkan::Vulkan)
+	target_compile_definitions(lucuma-julia-core PUBLIC LUCUMA_HAVE_VULKAN=1)
 endif()
 
-target_compile_definitions(lucuma-julia PRIVATE
+target_compile_definitions(lucuma-julia-core PUBLIC
 	LUCUMA_JULIA_ROOT="${CMAKE_CURRENT_SOURCE_DIR}"
 )
+target_compile_options(lucuma-julia-core PRIVATE -Wall -Wextra)
 
+add_executable(lucuma-julia optimization.cpp)
+target_link_libraries(lucuma-julia PRIVATE lucuma-julia-core)
 target_compile_options(lucuma-julia PRIVATE -Wall -Wextra)
+
+# --- Ceviche design tests ---
+foreach(challenge bend wdm mode_converter beam_splitter)
+	add_executable(lucuma-${challenge}-test
+		challenges/${challenge}/${challenge}_design_test.cpp)
+	target_link_libraries(lucuma-${challenge}-test PRIVATE lucuma-julia-core)
+	target_compile_definitions(lucuma-${challenge}-test PRIVATE
+		LUCUMA_CHALLENGE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/challenges/${challenge}")
+	target_compile_options(lucuma-${challenge}-test PRIVATE -Wall -Wextra)
+endforeach()

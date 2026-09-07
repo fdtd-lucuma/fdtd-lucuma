@@ -1,40 +1,72 @@
 #version 450
-// == fdtd/parallel.jl AccumDTF  (running DFT over the whole grid, one frequency)
-layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
+// == fdtd/parallel.jl AccumDFT — accumulates all frequencies in ONE dispatch.
+//
+// DFT buffer layout (per buffer, e.g. dftE1):
+//   dftE1[ f * cells + idx ]  where f in [0, nfreqs), idx = x + Nx*(y + Ny*z)
+//
+// Push constants carry up to MAX_FREQS complex phase pairs.  If the simulation
+// uses more frequencies the host issues multiple dispatches batching
+// MAX_FREQS at a time, with firstFreq advancing each batch.
+//
+// Workgroup 8×8×4 = 256 threads → good occupancy on most GPU schedulers.
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 4) in;
 
+#define MAX_FREQS 8
+
+// DFT accumulator buffers — flat, frequency-major: [freq][cell]
 layout(std430, binding = 0) buffer BE1 { vec2 dftE1[]; };
 layout(std430, binding = 1) buffer BE2 { vec2 dftE2[]; };
 layout(std430, binding = 2) buffer BE3 { vec2 dftE3[]; };
 layout(std430, binding = 3) buffer BH1 { vec2 dftH1[]; };
 layout(std430, binding = 4) buffer BH2 { vec2 dftH2[]; };
 layout(std430, binding = 5) buffer BH3 { vec2 dftH3[]; };
-layout(std430, binding = 6) readonly buffer BEx { float Ex[]; };
-layout(std430, binding = 7) readonly buffer BEy { float Ey[]; };
-layout(std430, binding = 8) readonly buffer BEz { float Ez[]; };
-layout(std430, binding = 9) readonly buffer BHx { float Hx[]; };
+
+// Field snapshots (read-only, one float per cell)
+layout(std430, binding = 6)  readonly buffer BEx { float Ex[]; };
+layout(std430, binding = 7)  readonly buffer BEy { float Ey[]; };
+layout(std430, binding = 8)  readonly buffer BEz { float Ez[]; };
+layout(std430, binding = 9)  readonly buffer BHx { float Hx[]; };
 layout(std430, binding = 10) readonly buffer BHy { float Hy[]; };
 layout(std430, binding = 11) readonly buffer BHz { float Hz[]; };
 
 layout(push_constant) uniform PC {
-	ivec4 dims;   // Nx, Ny, Nz, _
-	vec4  phase;  // phaseE.re, phaseE.im, phaseH.re, phaseH.im
+	ivec4 dims;              // Nx, Ny, Nz, nfreqs (number of freqs THIS batch)
+	int   firstFreq;         // offset into the full frequency array for this batch
+	int   _pad0, _pad1, _pad2;
+	// Phase pairs for each frequency in this batch:
+	//   phaseE[f] = (cos(wE*t), sin(wE*t))  — real, imag
+	//   phaseH[f] = (cos(wH*t), sin(wH*t))
+	vec2  phaseE[MAX_FREQS];
+	vec2  phaseH[MAX_FREQS];
 } pc;
 
 void main() {
 	int Nx = pc.dims.x, Ny = pc.dims.y, Nz = pc.dims.z;
-	int x = int(gl_GlobalInvocationID.x);
-	int y = int(gl_GlobalInvocationID.y);
-	int z = int(gl_GlobalInvocationID.z);
+	int nf = pc.dims.w;   // freqs in this batch (≤ MAX_FREQS)
+	int x  = int(gl_GlobalInvocationID.x);
+	int y  = int(gl_GlobalInvocationID.y);
+	int z  = int(gl_GlobalInvocationID.z);
 	if (x >= Nx || y >= Ny || z >= Nz) return;
+
 	int idx = x + Nx * (y + Ny * z);
 
-	vec2 pe = pc.phase.xy;
-	vec2 ph = pc.phase.zw;
+	// Read each field component ONCE, then accumulate into all frequencies.
+	float ex = Ex[idx], ey = Ey[idx], ez = Ez[idx];
+	float hx = Hx[idx], hy = Hy[idx], hz = Hz[idx];
 
-	dftE1[idx] += Ex[idx] * pe;
-	dftE2[idx] += Ey[idx] * pe;
-	dftE3[idx] += Ez[idx] * pe;
-	dftH1[idx] += Hx[idx] * ph;
-	dftH2[idx] += Hy[idx] * ph;
-	dftH3[idx] += Hz[idx] * ph;
+	int cells = Nx * Ny * Nz;
+	int base  = pc.firstFreq * cells + idx;
+
+	for (int f = 0; f < nf; ++f) {
+		vec2 pe = pc.phaseE[f];
+		vec2 ph = pc.phaseH[f];
+		int  fi = f * cells;
+
+		dftE1[base + fi] += ex * pe;
+		dftE2[base + fi] += ey * pe;
+		dftE3[base + fi] += ez * pe;
+		dftH1[base + fi] += hx * ph;
+		dftH2[base + fi] += hy * ph;
+		dftH3[base + fi] += hz * ph;
+	}
 }

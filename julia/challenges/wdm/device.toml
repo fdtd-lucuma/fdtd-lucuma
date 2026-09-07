@@ -1,0 +1,75 @@
+# Cell-boundary positions in meters. Port directions point into the device.
+# Background regions are only for eigenmodes; they do not freeze the design.
+[elements]
+waveguides = ["guide1","guide2","guide3"]
+background_regions = ["guide1","P","guide2","guide3"]
+ports = ["port1","port2","port3"]
+sources = ["source1","source2","source3"]
+
+[P]
+x = [1000e-9, 4200e-9]
+y = [960e-9, 4160e-9]
+z = [840e-9, 1440e-9]
+
+[guide1]
+x = [0.0, 1000e-9]
+y = [2360e-9, 2760e-9]
+z = [840e-9, 1440e-9]
+
+[guide2]
+x = [4200e-9, 5120e-9]
+y = [1600e-9, 2000e-9]
+z = [840e-9, 1440e-9]
+
+[guide3]
+x = [4200e-9, 5120e-9]
+y = [3120e-9, 3520e-9]
+z = [840e-9, 1440e-9]
+
+[source1]
+x = [440e-9, 480e-9]
+y = [1960e-9, 3160e-9]
+z = [400e-9, 1880e-9]
+direction = "+x"
+reference_mode_order = 1
+mode_index = 1
+
+[source2]
+x = [4680e-9, 4720e-9]
+y = [1200e-9, 2400e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1
+
+[source3]
+x = [4680e-9, 4720e-9]
+y = [2720e-9, 3920e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1
+
+[port1]
+x = [640e-9, 680e-9]
+y = [1960e-9, 3160e-9]
+z = [400e-9, 1880e-9]
+direction = "+x"
+reference_mode_order = 1
+mode_index = 1
+
+[port2]
+x = [4480e-9, 4520e-9]
+y = [1200e-9, 2400e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1
+
+[port3]
+x = [4480e-9, 4520e-9]
+y = [2720e-9, 3920e-9]
+z = [400e-9, 1880e-9]
+direction = "-x"
+reference_mode_order = 1
+mode_index = 1

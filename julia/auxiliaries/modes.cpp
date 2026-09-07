@@ -848,6 +848,25 @@ cdouble ModalOverlapAtFrequency(const ModeMonitor& monitor, double freq_hz,
 	return forward;
 }
 
+std::pair<cdouble, cdouble> ModalAmplitudesAtFrequency(const ModeMonitor& monitor,
+                                                       double freq_hz,
+                                                       const FreqFields& fields) {
+	const VectorModeProfile& mode = ModeForFrequency(monitor, freq_hz);
+	const std::array<MatrixXcd, 3> Esec{extract_section(fields.E[0], monitor),
+	                                    extract_section(fields.E[1], monitor),
+	                                    extract_section(fields.E[2], monitor)};
+	const std::array<MatrixXcd, 3> Hsec{extract_h_at_e(fields.H[0], monitor),
+	                                    extract_h_at_e(fields.H[1], monitor),
+	                                    extract_h_at_e(fields.H[2], monitor)};
+	return directional_modal_amplitudes(monitor.axis, monitor.polarity, Esec, Hsec,
+	                                    mode, monitor.delta1, monitor.delta2,
+	                                    monitor.delta_normal);
+}
+
+VectorModeProfile CanonicalizeVectorModePhase(const VectorModeProfile& mode) {
+	return canonicalize_phase(mode);
+}
+
 SourceNormalization ComputeSourceNormalization(
     const std::vector<double>& freqs,
     const std::map<std::string, ModeMonitor>& monitors,
