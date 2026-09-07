@@ -167,13 +167,21 @@ Buffer Context::createBuffer(VkDeviceSize bytes, bool preferDeviceLocal) {
 
 	if (preferDeviceLocal) {
 		// Priority 1: DEVICE_LOCAL + HOST_VISIBLE + HOST_COHERENT
-		//   → Metal shared on Apple Silicon (UMA): zero-copy, same DRAM, fast for GPU.
-		//   → HOST_COHERENT eliminates manual cache flushes.
+		//   → Metal shared on Apple Silicon (UMA): zero-copy, same DRAM.
+		//   → discrete GPU with resizable BAR: whole VRAM, also zero-copy.
+		// Reject it when it lives in a small heap (the 256 MB PCIe BAR window on
+		// a discrete GPU without ReBAR) — there it OOMs; use pure VRAM instead.
 		uint32_t idx = findMemoryTypeSafe(
 		    req.memoryTypeBits,
 		    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
 		    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT  |
 		    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+		if (idx != UINT32_MAX) {
+			const VkDeviceSize heap =
+			    memProps_.memoryHeaps[memProps_.memoryTypes[idx].heapIndex].size;
+			if (heap < (VkDeviceSize{1} << 30)) idx = UINT32_MAX;  // < 1 GiB
+		}
 
 		if (idx != UINT32_MAX) {
 			mai.memoryTypeIndex = idx;
