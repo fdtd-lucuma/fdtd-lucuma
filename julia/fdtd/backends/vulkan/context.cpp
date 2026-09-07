@@ -2,6 +2,7 @@
 
 #include "fdtd/backends/vulkan/context.hpp"
 
+#include <cstdio>
 #include <cstring>
 #include <stdexcept>
 
@@ -55,13 +56,24 @@ Context::Context() {
 	ici.ppEnabledExtensionNames = instExts.data();
 	check(vkCreateInstance(&ici, nullptr, &instance_), "vkCreateInstance");
 
-	// ---- physical device: first one with a compute queue ----
+	// ---- physical device: best compute-capable one (real GPU over software) ----
 	uint32_t nDev = 0;
 	vkEnumeratePhysicalDevices(instance_, &nDev, nullptr);
 	if (nDev == 0) throw std::runtime_error("vulkan: no physical devices");
 	std::vector<VkPhysicalDevice> devs(nDev);
 	vkEnumeratePhysicalDevices(instance_, &nDev, devs.data());
 
+	auto rank = [](VkPhysicalDeviceType t) {
+		switch (t) {
+			case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:   return 4;
+			case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return 3;
+			case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:    return 2;
+			case VK_PHYSICAL_DEVICE_TYPE_CPU:            return 0;  // llvmpipe / swiftshader
+			default:                                     return 1;
+		}
+	};
+
+	int bestRank = -1;
 	bool found = false;
 	for (auto d : devs) {
 		uint32_t nQ = 0;
@@ -70,12 +82,16 @@ Context::Context() {
 		vkGetPhysicalDeviceQueueFamilyProperties(d, &nQ, qf.data());
 		for (uint32_t i = 0; i < nQ; ++i)
 			if (qf[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
-				phys_   = d;
-				family_ = i;
-				found   = true;
+				VkPhysicalDeviceProperties p;
+				vkGetPhysicalDeviceProperties(d, &p);
+				if (rank(p.deviceType) > bestRank) {
+					bestRank = rank(p.deviceType);
+					phys_    = d;
+					family_  = i;
+					found    = true;
+				}
 				break;
 			}
-		if (found) break;
 	}
 	if (!found) throw std::runtime_error("vulkan: no compute queue family");
 
@@ -83,6 +99,8 @@ Context::Context() {
 	vkGetPhysicalDeviceProperties(phys_, &props);
 	deviceName_ = props.deviceName;
 	vkGetPhysicalDeviceMemoryProperties(phys_, &memProps_);
+	std::fprintf(stderr, "vulkan device: %s (type %d)\n", props.deviceName,
+	             int(props.deviceType));
 
 	// ---- logical device ----
 	uint32_t devExtCount = 0;
