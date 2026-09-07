@@ -126,19 +126,26 @@ Context::~Context() {
 	if (instance_) vkDestroyInstance(instance_, nullptr);
 }
 
-uint32_t Context::findMemoryType(uint32_t typeBits,
-                                 VkMemoryPropertyFlags props) const {
+uint32_t Context::findMemoryTypeSafe(uint32_t typeBits,
+                                     VkMemoryPropertyFlags props) const noexcept {
 	for (uint32_t i = 0; i < memProps_.memoryTypeCount; ++i)
 		if ((typeBits & (1u << i)) &&
 		    (memProps_.memoryTypes[i].propertyFlags & props) == props)
 			return i;
-	throw std::runtime_error("vulkan: no suitable memory type");
+	return UINT32_MAX;
 }
 
-Buffer Context::createBuffer(VkDeviceSize bytes, bool deviceLocal) {
+uint32_t Context::findMemoryType(uint32_t typeBits,
+                                 VkMemoryPropertyFlags props) const {
+	uint32_t idx = findMemoryTypeSafe(typeBits, props);
+	if (idx == UINT32_MAX)
+		throw std::runtime_error("vulkan: no suitable memory type");
+	return idx;
+}
+
+Buffer Context::createBuffer(VkDeviceSize bytes, bool preferDeviceLocal) {
 	Buffer b;
-	b.size        = bytes;
-	b.deviceLocal = deviceLocal;
+	b.size = bytes;
 
 	VkBufferCreateInfo bci{};
 	bci.sType       = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -153,48 +160,60 @@ Buffer Context::createBuffer(VkDeviceSize bytes, bool deviceLocal) {
 	vkGetBufferMemoryRequirements(device_, b.buffer, &req);
 
 	VkMemoryAllocateInfo mai{};
-	mai.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	mai.allocationSize  = req.size;
+	mai.sType          = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	mai.allocationSize = req.size;
 
-	if (deviceLocal) {
-		// Prefer pure DEVICE_LOCAL (fast VRAM on discrete GPUs).
-		// Fall back to HOST_VISIBLE (UMA / integrated) if unavailable.
-		uint32_t idx = UINT32_MAX;
-		try {
-			idx = findMemoryType(req.memoryTypeBits,
-			                     VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-		} catch (...) {
-			idx = findMemoryType(req.memoryTypeBits,
-			                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-			                     VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-			b.deviceLocal = false;  // UMA path — treat like staging
-		}
-		mai.memoryTypeIndex = idx;
-		check(vkAllocateMemory(device_, &mai, nullptr, &b.memory),
-		      "vkAllocateMemory (device-local)");
-		check(vkBindBufferMemory(device_, b.buffer, b.memory, 0),
-		      "vkBindBufferMemory");
-		// b.mapped stays nullptr for true device-local memory
-		if (!b.deviceLocal) {
-			// UMA fallback: map it so callers can write directly
-			check(vkMapMemory(device_, b.memory, 0, VK_WHOLE_SIZE, 0, &b.mapped),
-			      "vkMapMemory (UMA)");
-			std::memset(b.mapped, 0, static_cast<size_t>(bytes));
+	bool hostVisible = false;
+
+	if (preferDeviceLocal) {
+		// Priority 1: DEVICE_LOCAL + HOST_VISIBLE + HOST_COHERENT
+		//   → Metal shared on Apple Silicon (UMA): zero-copy, same DRAM, fast for GPU.
+		//   → HOST_COHERENT eliminates manual cache flushes.
+		uint32_t idx = findMemoryTypeSafe(
+		    req.memoryTypeBits,
+		    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
+		    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT  |
+		    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+		if (idx != UINT32_MAX) {
+			mai.memoryTypeIndex = idx;
+			hostVisible = true;
+		} else {
+			// Priority 2: pure DEVICE_LOCAL (discrete GPU VRAM — staging needed)
+			idx = findMemoryTypeSafe(req.memoryTypeBits,
+			                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+			if (idx != UINT32_MAX) {
+				mai.memoryTypeIndex = idx;
+				hostVisible = false;
+			} else {
+				// Fallback: any host-visible memory
+				mai.memoryTypeIndex = findMemoryType(
+				    req.memoryTypeBits,
+				    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+				    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+				hostVisible = true;
+			}
 		}
 	} else {
-		// Staging / host-visible buffer
-		mai.memoryTypeIndex =
-		    findMemoryType(req.memoryTypeBits,
-		                   VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-		                   VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		check(vkAllocateMemory(device_, &mai, nullptr, &b.memory),
-		      "vkAllocateMemory (staging)");
-		check(vkBindBufferMemory(device_, b.buffer, b.memory, 0),
-		      "vkBindBufferMemory");
+		// Staging / readback buffer: HOST_VISIBLE + HOST_COHERENT
+		mai.memoryTypeIndex = findMemoryType(
+		    req.memoryTypeBits,
+		    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+		    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+		hostVisible = true;
+	}
+
+	check(vkAllocateMemory(device_, &mai, nullptr, &b.memory),
+	      "vkAllocateMemory");
+	check(vkBindBufferMemory(device_, b.buffer, b.memory, 0),
+	      "vkBindBufferMemory");
+
+	if (hostVisible) {
 		check(vkMapMemory(device_, b.memory, 0, VK_WHOLE_SIZE, 0, &b.mapped),
 		      "vkMapMemory");
 		std::memset(b.mapped, 0, static_cast<size_t>(bytes));
 	}
+	// b.mapped == nullptr for pure-DEVICE_LOCAL allocations
 
 	return b;
 }
@@ -207,63 +226,60 @@ void Context::destroy(Buffer& b) {
 }
 
 // ---------------------------------------------------------------------------
-// Internal helper — create a transient HOST_VISIBLE staging buffer and fill it
-// from `src`.  Caller owns the returned buffer and must destroy it.
-Buffer Context::makeStagingBuffer(const void* src, VkDeviceSize bytes) {
-	Buffer stg = createBuffer(bytes, /*deviceLocal=*/false);
-	std::memcpy(stg.mapped, src, static_cast<size_t>(bytes));
-	return stg;
-}
+// Transfer helpers
 
 void Context::uploadToDevice(Buffer& dst, const void* src, VkDeviceSize bytes,
                              VkDeviceSize dstOffset) {
-	if (!dst.deviceLocal) {
-		// UMA fallback: buffer is already host-visible, write directly
+	if (dst.mapped) {
+		// HOST_VISIBLE path (UMA / Metal shared): direct memcpy, no GPU work.
 		std::memcpy(static_cast<char*>(dst.mapped) + dstOffset, src,
 		            static_cast<size_t>(bytes));
 		return;
 	}
-	Buffer stg = makeStagingBuffer(src, bytes);
+	// Pure DEVICE_LOCAL: stage through a transient HOST_VISIBLE buffer.
+	Buffer stg = createBuffer(bytes, /*preferDeviceLocal=*/false);
+	std::memcpy(stg.mapped, src, static_cast<size_t>(bytes));
 	submitSync([&](VkCommandBuffer cb) {
-		VkBufferCopy region{};
-		region.srcOffset = 0;
-		region.dstOffset = dstOffset;
-		region.size      = bytes;
-		vkCmdCopyBuffer(cb, stg.buffer, dst.buffer, 1, &region);
+		recordCopy(cb, stg.buffer, dst.buffer, bytes, 0, dstOffset);
 	});
 	destroy(stg);
 }
 
 void Context::downloadFromDevice(const Buffer& src, void* dst,
                                  VkDeviceSize bytes, VkDeviceSize srcOffset) {
-	if (!src.deviceLocal) {
-		// UMA: mapped directly
+	if (src.mapped) {
 		std::memcpy(dst,
 		            static_cast<const char*>(src.mapped) + srcOffset,
 		            static_cast<size_t>(bytes));
 		return;
 	}
-	Buffer stg = createBuffer(bytes, /*deviceLocal=*/false);
+	Buffer stg = createBuffer(bytes, /*preferDeviceLocal=*/false);
 	submitSync([&](VkCommandBuffer cb) {
-		VkBufferCopy region{};
-		region.srcOffset = srcOffset;
-		region.dstOffset = 0;
-		region.size      = bytes;
-		vkCmdCopyBuffer(cb, src.buffer, stg.buffer, 1, &region);
+		recordCopy(cb, src.buffer, stg.buffer, bytes, srcOffset, 0);
 	});
 	std::memcpy(dst, stg.mapped, static_cast<size_t>(bytes));
 	destroy(stg);
 }
 
 void Context::fillBuffer(Buffer& b, uint32_t value) {
-	if (!b.deviceLocal) {
-		// UMA: just memset
-		std::memset(b.mapped, 0, static_cast<size_t>(b.size));
+	if (b.mapped) {
+		std::memset(b.mapped, static_cast<int>(value), static_cast<size_t>(b.size));
 		return;
 	}
-	submitSync([&](VkCommandBuffer cb) {
-		vkCmdFillBuffer(cb, b.buffer, 0, VK_WHOLE_SIZE, value);
-	});
+	submitSync([&](VkCommandBuffer cb) { recordFill(cb, b, value); });
+}
+
+/*static*/ void Context::recordFill(VkCommandBuffer cb, const Buffer& b,
+                                    uint32_t value) {
+	vkCmdFillBuffer(cb, b.buffer, 0, VK_WHOLE_SIZE, value);
+}
+
+/*static*/ void Context::recordCopy(VkCommandBuffer cb, VkBuffer src,
+                                    VkBuffer dst, VkDeviceSize size,
+                                    VkDeviceSize srcOffset,
+                                    VkDeviceSize dstOffset) {
+	VkBufferCopy region{srcOffset, dstOffset, size};
+	vkCmdCopyBuffer(cb, src, dst, 1, &region);
 }
 
 // ---------------------------------------------------------------------------

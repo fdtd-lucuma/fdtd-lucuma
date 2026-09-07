@@ -1,8 +1,6 @@
 #version 450
-// == fdtd/parallel.jl UpdateH  (0-based; H over x in [0,Nx-2], y,z likewise)
-// Workgroup 16×16×1: tiles X-Y plane for better cache reuse (X is fast-varying
-// in the linear index x + Nx*(y + Ny*z)), avoids large-stride Z jumps inside
-// a workgroup.  Z is swept via the gz dispatch dimension.
+// == fdtd/parallel.jl UpdateH + optional fused InjectMagneticSurfaceCurrent.
+// Workgroup 16×16×1 tiles the X-Y plane; Z is swept via the gz dispatch dim.
 layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 
 layout(std430, binding = 0) buffer BHx { float Hx[]; };
@@ -13,10 +11,17 @@ layout(std430, binding = 4) readonly buffer BEy { float Ey[]; };
 layout(std430, binding = 5) readonly buffer BEz { float Ez[]; };
 layout(std430, binding = 6) readonly buffer BChh { float Chh[]; };
 layout(std430, binding = 7) readonly buffer BChe { float Che[]; };
+layout(std430, binding = 8) readonly buffer BMx { vec2 Mx[]; };
+layout(std430, binding = 9) readonly buffer BMy { vec2 My[]; };
+layout(std430, binding = 10) readonly buffer BMz { vec2 Mz[]; };
+layout(std430, binding = 11) readonly buffer BW  { float omegas[]; };
 
 layout(push_constant) uniform PC {
 	ivec4 dims;   // Nx, Ny, Nz, _
-	vec4  delta;  // dx, dy, dz, _
+	vec4  delta;  // 1/dx, 1/dy, 1/dz, _
+	ivec4 s0;     // src: axis, fixed0, r1_lo0, r2_lo0
+	ivec4 s1;     // src: size1, size2, nfreqs, enable
+	vec4  s2;     // src: scale, tau, _, _
 } pc;
 
 void main() {
@@ -31,14 +36,41 @@ void main() {
 	int py = idx + Nx;
 	int pz = idx + Nx * Ny;
 
-	float dx = pc.delta.x, dy = pc.delta.y, dz = pc.delta.z;
+	float rdx = pc.delta.x, rdy = pc.delta.y, rdz = pc.delta.z;
 	float chh = Chh[idx];
 	float che = Che[idx];
 
 	Hx[idx] = chh * Hx[idx] +
-	          che * ((Ey[pz] - Ey[idx]) / dz - (Ez[py] - Ez[idx]) / dy);
+	          che * ((Ey[pz] - Ey[idx]) * rdz - (Ez[py] - Ez[idx]) * rdy);
 	Hy[idx] = chh * Hy[idx] +
-	          che * ((Ez[px] - Ez[idx]) / dx - (Ex[pz] - Ex[idx]) / dz);
+	          che * ((Ez[px] - Ez[idx]) * rdx - (Ex[pz] - Ex[idx]) * rdz);
 	Hz[idx] = chh * Hz[idx] +
-	          che * ((Ex[py] - Ex[idx]) / dy - (Ey[px] - Ey[idx]) / dx);
+	          che * ((Ex[py] - Ex[idx]) * rdy - (Ey[px] - Ey[idx]) * rdx);
+
+	if (pc.s1.w != 1) return;
+	int axis = pc.s0.x, fix = pc.s0.y, r1 = pc.s0.z, r2 = pc.s0.w;
+	int sz1 = pc.s1.x, sz2 = pc.s1.y, nf = pc.s1.z;
+	int a0, b0;
+	bool on;
+	if (axis == 1)      { on = (x == fix); a0 = y - r1; b0 = z - r2; }
+	else if (axis == 2) { on = (y == fix); a0 = x - r1; b0 = z - r2; }
+	else                { on = (z == fix); a0 = x - r1; b0 = y - r2; }
+	if (!on || a0 < 0 || a0 >= sz1 || b0 < 0 || b0 >= sz2) return;
+
+	int slab = sz1 * sz2;
+	int base = a0 + sz1 * b0;
+	float tau = pc.s2.y;
+	float sx = 0.0, sy = 0.0, szz = 0.0;
+	for (int n = 0; n < nf; ++n) {
+		float th = omegas[n] * tau;
+		float cs = cos(th), sn = sin(th);
+		int j = base + slab * n;
+		sx  += Mx[j].x * cs - Mx[j].y * sn;
+		sy  += My[j].x * cs - My[j].y * sn;
+		szz += Mz[j].x * cs - Mz[j].y * sn;
+	}
+	float g = che * pc.s2.x;
+	Hx[idx] -= g * sx;
+	Hy[idx] -= g * sy;
+	Hz[idx] -= g * szz;
 }

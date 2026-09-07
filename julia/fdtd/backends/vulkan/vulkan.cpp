@@ -4,7 +4,6 @@
 #include "fdtd/backends/vulkan/vulkan.hpp"
 
 #include <array>
-#include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <vector>
@@ -66,19 +65,42 @@ struct Vulkan<T>::Impl {
 		Buffer Jx, Jy, Jz, Mx, My, Mz, omegas;
 	};
 	std::vector<Src> srcs;
+	Buffer srcStub;  // bound to update_e/h source slots when srcs.size() != 1
 
 	std::unique_ptr<ComputePipeline> uh, ue;
 	std::vector<std::unique_ptr<ComputePipeline>> ie, im;  // per source
 	std::unique_ptr<ComputePipeline> adft;                 // single multi-freq pipeline
 
-	// Allocate a device-local buffer.
-	Buffer mk(std::size_t bytes) { return ctx.createBuffer(bytes, /*deviceLocal=*/true); }
+	// Allocate a buffer (preferring DEVICE_LOCAL|HOST_VISIBLE for zero-copy on UMA).
+	Buffer mk(std::size_t bytes) { return ctx.createBuffer(bytes); }
 
 	void uploadCoeffsWhole() {
-		ctx.uploadToDevice(Chh, chhCpu.data(), cells * sizeof(float));
-		ctx.uploadToDevice(Che, cheCpu.data(), cells * sizeof(float));
-		ctx.uploadToDevice(Cee, ceeCpu.data(), cells * sizeof(float));
-		ctx.uploadToDevice(Ceh, cehCpu.data(), cells * sizeof(float));
+		const std::size_t bytes = cells * sizeof(float);
+		if (Chh.mapped) {
+			// HOST_VISIBLE (UMA / Metal shared): plain memcpy, no GPU submission.
+			std::memcpy(Chh.mapped, chhCpu.data(), bytes);
+			std::memcpy(Che.mapped, cheCpu.data(), bytes);
+			std::memcpy(Cee.mapped, ceeCpu.data(), bytes);
+			std::memcpy(Ceh.mapped, cehCpu.data(), bytes);
+		} else {
+			// Pure DEVICE_LOCAL: batch all four uploads in ONE submitSync.
+			auto stgChh = ctx.createBuffer(bytes, false);
+			auto stgChe = ctx.createBuffer(bytes, false);
+			auto stgCee = ctx.createBuffer(bytes, false);
+			auto stgCeh = ctx.createBuffer(bytes, false);
+			std::memcpy(stgChh.mapped, chhCpu.data(), bytes);
+			std::memcpy(stgChe.mapped, cheCpu.data(), bytes);
+			std::memcpy(stgCee.mapped, ceeCpu.data(), bytes);
+			std::memcpy(stgCeh.mapped, cehCpu.data(), bytes);
+			ctx.submitSync([&](VkCommandBuffer cb) {
+				Context::recordCopy(cb, stgChh.buffer, Chh.buffer, bytes);
+				Context::recordCopy(cb, stgChe.buffer, Che.buffer, bytes);
+				Context::recordCopy(cb, stgCee.buffer, Cee.buffer, bytes);
+				Context::recordCopy(cb, stgCeh.buffer, Ceh.buffer, bytes);
+			});
+			ctx.destroy(stgChh); ctx.destroy(stgChe);
+			ctx.destroy(stgCee); ctx.destroy(stgCeh);
+		}
 	}
 
 	// Record up to kBatchSteps Yee steps into one reused command buffer,
@@ -137,7 +159,7 @@ Vulkan<T>::~Vulkan() {
 	d.flushBatch();
 	if (d.batchFence) vkDestroyFence(d.ctx.device(), d.batchFence, nullptr);
 	for (Buffer* b : {&d.Ex, &d.Ey, &d.Ez, &d.Hx, &d.Hy, &d.Hz,
-	                  &d.Chh, &d.Che, &d.Cee, &d.Ceh})
+	                  &d.Chh, &d.Che, &d.Cee, &d.Ceh, &d.srcStub})
 		d.ctx.destroy(*b);
 	for (auto& b : d.dft) d.ctx.destroy(b);
 	for (auto& s : d.srcs)
@@ -213,21 +235,35 @@ void Vulkan<T>::init(const FDTDParams& p) {
 		return std::span<const uint32_t>(a, n);
 	};
 
-	// Update H — workgroup 16×16×1, dispatch gz = Nz slices
-	d.uh = std::make_unique<ComputePipeline>(
-	    d.ctx, spv(update_h_comp_spv, std::size(update_h_comp_spv)), 8, 32);
-	d.uh->bindBuffers(std::array<VkBuffer, 8>{d.Hx.buffer, d.Hy.buffer,
-	                                          d.Hz.buffer, d.Ex.buffer,
-	                                          d.Ey.buffer, d.Ez.buffer,
-	                                          d.Chh.buffer, d.Che.buffer});
+	// update_e/h fold the surface-current injection in when there is exactly one
+	// source (the common case) — one dispatch, no extra barrier. Slots 8..11 are
+	// bound to that source's J/M/omega buffers, or to a stub otherwise.
+	d.srcStub = d.mk(4 * sizeof(float));
+	const bool fuse = d.srcs.size() == 1;
+	const VkBuffer sbM[4] = {
+	    fuse ? d.srcs[0].Mx.buffer : d.srcStub.buffer,
+	    fuse ? d.srcs[0].My.buffer : d.srcStub.buffer,
+	    fuse ? d.srcs[0].Mz.buffer : d.srcStub.buffer,
+	    fuse ? d.srcs[0].omegas.buffer : d.srcStub.buffer};
+	const VkBuffer sbJ[4] = {
+	    fuse ? d.srcs[0].Jx.buffer : d.srcStub.buffer,
+	    fuse ? d.srcs[0].Jy.buffer : d.srcStub.buffer,
+	    fuse ? d.srcs[0].Jz.buffer : d.srcStub.buffer,
+	    fuse ? d.srcs[0].omegas.buffer : d.srcStub.buffer};
 
-	// Update E — workgroup 16×16×1, dispatch gz = Nz slices
+	constexpr uint32_t kUpdPush = 5 * 4 * sizeof(float);  // dims,delta,s0,s1,s2
+
+	d.uh = std::make_unique<ComputePipeline>(
+	    d.ctx, spv(update_h_comp_spv, std::size(update_h_comp_spv)), 12, kUpdPush);
+	d.uh->bindBuffers(std::array<VkBuffer, 12>{
+	    d.Hx.buffer, d.Hy.buffer, d.Hz.buffer, d.Ex.buffer, d.Ey.buffer,
+	    d.Ez.buffer, d.Chh.buffer, d.Che.buffer, sbM[0], sbM[1], sbM[2], sbM[3]});
+
 	d.ue = std::make_unique<ComputePipeline>(
-	    d.ctx, spv(update_e_comp_spv, std::size(update_e_comp_spv)), 8, 32);
-	d.ue->bindBuffers(std::array<VkBuffer, 8>{d.Ex.buffer, d.Ey.buffer,
-	                                          d.Ez.buffer, d.Hx.buffer,
-	                                          d.Hy.buffer, d.Hz.buffer,
-	                                          d.Cee.buffer, d.Ceh.buffer});
+	    d.ctx, spv(update_e_comp_spv, std::size(update_e_comp_spv)), 12, kUpdPush);
+	d.ue->bindBuffers(std::array<VkBuffer, 12>{
+	    d.Ex.buffer, d.Ey.buffer, d.Ez.buffer, d.Hx.buffer, d.Hy.buffer,
+	    d.Hz.buffer, d.Cee.buffer, d.Ceh.buffer, sbJ[0], sbJ[1], sbJ[2], sbJ[3]});
 
 	// Inject pipelines — one per source, unchanged workgroup (8×8×1)
 	for (auto& S : d.srcs) {
@@ -284,17 +320,32 @@ template <class T>
 void Vulkan<T>::reset() {
 	auto& d = *impl_;
 	d.flushBatch();
-	// Zero field buffers on the GPU — no PCIe transfer needed.
-	for (Buffer* b : {&d.Ex, &d.Ey, &d.Ez, &d.Hx, &d.Hy, &d.Hz})
-		d.ctx.fillBuffer(*b, 0);
-	for (auto& b : d.dft) d.ctx.fillBuffer(b, 0);
+	if (d.Ex.mapped) {
+		// HOST_VISIBLE buffers (UMA / Metal shared): memset directly, no GPU work.
+		for (Buffer* b : {&d.Ex, &d.Ey, &d.Ez, &d.Hx, &d.Hy, &d.Hz})
+			std::memset(b->mapped, 0, static_cast<size_t>(b->size));
+		for (auto& b : d.dft) std::memset(b.mapped, 0, static_cast<size_t>(b.size));
+	} else {
+		// Pure DEVICE_LOCAL: batch ALL fills into a single GPU submission.
+		d.ctx.submitSync([&](VkCommandBuffer cb) {
+			for (Buffer* b : {&d.Ex, &d.Ey, &d.Ez, &d.Hx, &d.Hy, &d.Hz})
+				Context::recordFill(cb, *b, 0);
+			for (auto& b : d.dft) Context::recordFill(cb, b, 0);
+		});
+	}
 }
 
 template <class T>
 void Vulkan<T>::resetDftAccumulators() {
 	auto& d = *impl_;
 	d.flushBatch();
-	for (auto& b : d.dft) d.ctx.fillBuffer(b, 0);
+	if (d.dft[0].mapped) {
+		for (auto& b : d.dft) std::memset(b.mapped, 0, static_cast<size_t>(b.size));
+	} else {
+		d.ctx.submitSync([&](VkCommandBuffer cb) {
+			for (auto& b : d.dft) Context::recordFill(cb, b, 0);
+		});
+	}
 }
 
 template <class T>
@@ -319,55 +370,77 @@ void Vulkan<T>::step(int t, bool accumulate_dft) {
 	struct PcUpd {
 		int32_t dims[4];
 		float   delta[4];
-	} pcU{{Nx, Ny, Nz, 0}, {d.dx, d.dy, d.dz, 0}};
+		int32_t s0[4];   // src: axis, fixed0, r1_lo0, r2_lo0
+		int32_t s1[4];   // src: size1, size2, nfreqs, enable
+		float   s2[4];   // src: scale, tau, _, _
+	};
 
 	const auto [et, mt] = DFTSampleTimes(t, d.dt);
+	const bool fused = d.srcs.size() == 1;
+
+	auto pcFor = [&](int fixed0, double tau) {
+		PcUpd p{{Nx, Ny, Nz, 0},
+		        {1.0f / d.dx, 1.0f / d.dy, 1.0f / d.dz, 0},
+		        {}, {}, {}};
+		if (fused) {
+			const auto& S = d.srcs[0];
+			p.s0[0] = S.axis; p.s0[1] = fixed0;
+			p.s0[2] = S.r1_lo0; p.s0[3] = S.r2_lo0;
+			p.s1[0] = S.size1; p.s1[1] = S.size2; p.s1[2] = S.nfreqs; p.s1[3] = 1;
+			p.s2[0] = S.scale; p.s2[1] = float(tau);
+		}
+		return p;
+	};
 
 	d.beginBatch();
 	VkCommandBuffer cb = d.batchCb;
 
-	// Update H  (workgroup 16×16×1 → dispatch gz = Nz)
-	d.uh->dispatch(cb, &pcU, sizeof pcU,
+	const int hFixed = fused ? d.srcs[0].mfixed0 : 0;
+	const int eFixed = fused ? d.srcs[0].efixed0 : 0;
+	const PcUpd pcH = pcFor(hFixed, (double(t) - 1.0) * d.dt -
+	                                    (fused ? d.srcs[0].time_origin : 0.0));
+	const PcUpd pcE = pcFor(eFixed, (double(t) - 0.5) * d.dt -
+	                                    (fused ? d.srcs[0].time_origin : 0.0));
+
+	d.uh->dispatch(cb, &pcH, sizeof pcH,
 	               ceilDiv(Nx - 1, 16), ceilDiv(Ny - 1, 16), Nz);
 	vk::computeBarrier(cb);
 
-	// Inject magnetic surface currents
-	for (std::size_t s = 0; s < d.srcs.size(); ++s) {
-		const auto& S   = d.srcs[s];
-		const double tau = (double(t) - 1.0) * d.dt - S.time_origin;
-		struct {
-			int32_t a[4], b[4], dd[4];
-			float   c[4];
-		} pc{{S.axis, S.mfixed0, S.r1_lo0, S.r2_lo0},
-		     {S.size1, S.size2, S.nfreqs, Nx},
-		     {Ny, Nz, 0, 0},
-		     {S.scale, float(tau), 0, 0}};
-		d.im[s]->dispatch(cb, &pc, sizeof pc,
-		                  ceilDiv(S.size1, 8), ceilDiv(S.size2, 8), 1);
-	}
-	// Only barrier if sources actually ran (avoids a gratuitous pipeline stall)
-	if (!d.srcs.empty()) vk::computeBarrier(cb);
+	if (!fused)
+		for (std::size_t s = 0; s < d.srcs.size(); ++s) {
+			const auto& S = d.srcs[s];
+			const double tau = (double(t) - 1.0) * d.dt - S.time_origin;
+			struct {
+				int32_t a[4], b[4], dd[4];
+				float   c[4];
+			} pc{{S.axis, S.mfixed0, S.r1_lo0, S.r2_lo0},
+			     {S.size1, S.size2, S.nfreqs, Nx},
+			     {Ny, Nz, 0, 0},
+			     {S.scale, float(tau), 0, 0}};
+			d.im[s]->dispatch(cb, &pc, sizeof pc,
+			                  ceilDiv(S.size1, 8), ceilDiv(S.size2, 8), 1);
+		}
+	if (!fused && !d.srcs.empty()) vk::computeBarrier(cb);
 
-	// Update E  (workgroup 16×16×1 → dispatch gz = Nz)
-	d.ue->dispatch(cb, &pcU, sizeof pcU,
+	d.ue->dispatch(cb, &pcE, sizeof pcE,
 	               ceilDiv(Nx, 16), ceilDiv(Ny, 16), Nz);
 	vk::computeBarrier(cb);
 
-	// Inject electric surface currents
-	for (std::size_t s = 0; s < d.srcs.size(); ++s) {
-		const auto& S    = d.srcs[s];
-		const double tau = (double(t) - 0.5) * d.dt - S.time_origin;
-		struct {
-			int32_t a[4], b[4], dd[4];
-			float   c[4];
-		} pc{{S.axis, S.efixed0, S.r1_lo0, S.r2_lo0},
-		     {S.size1, S.size2, S.nfreqs, Nx},
-		     {Ny, Nz, 0, 0},
-		     {S.scale, float(tau), 0, 0}};
-		d.ie[s]->dispatch(cb, &pc, sizeof pc,
-		                  ceilDiv(S.size1, 8), ceilDiv(S.size2, 8), 1);
-	}
-	if (!d.srcs.empty()) vk::computeBarrier(cb);
+	if (!fused)
+		for (std::size_t s = 0; s < d.srcs.size(); ++s) {
+			const auto& S = d.srcs[s];
+			const double tau = (double(t) - 0.5) * d.dt - S.time_origin;
+			struct {
+				int32_t a[4], b[4], dd[4];
+				float   c[4];
+			} pc{{S.axis, S.efixed0, S.r1_lo0, S.r2_lo0},
+			     {S.size1, S.size2, S.nfreqs, Nx},
+			     {Ny, Nz, 0, 0},
+			     {S.scale, float(tau), 0, 0}};
+			d.ie[s]->dispatch(cb, &pc, sizeof pc,
+			                  ceilDiv(S.size1, 8), ceilDiv(S.size2, 8), 1);
+		}
+	if (!fused && !d.srcs.empty()) vk::computeBarrier(cb);
 
 	// DFT accumulation — single dispatch batching all frequencies
 	if (accumulate_dft && !d.freqs.empty()) {
@@ -414,21 +487,41 @@ FreqsField Vulkan<T>::collectFreqFields() const {
 	auto& d = *impl_;
 	d.flushBatch();
 
-	const std::size_t nf    = d.freqs.size();
-	const std::size_t cells = d.cells;
+	const std::size_t nf      = d.freqs.size();
+	const std::size_t cells   = d.cells;
+	const std::size_t bufBytes = nf * cells * 2 * sizeof(float);
 
-	// Download all 6 DFT buffers (each of size nf * cells * vec2) at once.
-	// Each buffer is freq-major: buf[f * cells + idx].
+	// Download all 6 DFT buffers.  Each is freq-major: buf[f * cells + idx].
+	// When buffers are HOST_VISIBLE we read directly; otherwise batch all 6
+	// downloads into a single GPU submission with temporary staging buffers.
 	std::vector<std::array<std::vector<float>, 6>> raw(nf);
-	for (int c = 0; c < 6; ++c) {
-		std::vector<float> tmp(nf * cells * 2);
-		d.ctx.downloadFromDevice(d.dft[c], tmp.data(),
-		                         nf * cells * 2 * sizeof(float));
-		for (std::size_t f = 0; f < nf; ++f) {
-			raw[f][c].resize(cells * 2);
-			std::memcpy(raw[f][c].data(),
-			            tmp.data() + f * cells * 2,
-			            cells * 2 * sizeof(float));
+	if (d.dft[0].mapped) {
+		// HOST_VISIBLE path: memcpy directly from mapped memory.
+		for (int c = 0; c < 6; ++c) {
+			const float* src = static_cast<const float*>(d.dft[c].mapped);
+			for (std::size_t f = 0; f < nf; ++f) {
+				raw[f][c].resize(cells * 2);
+				std::memcpy(raw[f][c].data(), src + f * cells * 2,
+				            cells * 2 * sizeof(float));
+			}
+		}
+	} else {
+		// Pure DEVICE_LOCAL: allocate 6 staging buffers, batch the copies.
+		std::array<Buffer, 6> stg;
+		for (int c = 0; c < 6; ++c)
+			stg[c] = d.ctx.createBuffer(bufBytes, /*preferDeviceLocal=*/false);
+		d.ctx.submitSync([&](VkCommandBuffer cb) {
+			for (int c = 0; c < 6; ++c)
+				Context::recordCopy(cb, d.dft[c].buffer, stg[c].buffer, bufBytes);
+		});
+		for (int c = 0; c < 6; ++c) {
+			const float* src = static_cast<const float*>(stg[c].mapped);
+			for (std::size_t f = 0; f < nf; ++f) {
+				raw[f][c].resize(cells * 2);
+				std::memcpy(raw[f][c].data(), src + f * cells * 2,
+				            cells * 2 * sizeof(float));
+			}
+			d.ctx.destroy(stg[c]);
 		}
 	}
 
