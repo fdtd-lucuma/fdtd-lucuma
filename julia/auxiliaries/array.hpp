@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <vector>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 template <class T>
 class Mat2 {
@@ -73,4 +73,4 @@ private:
 	std::vector<T> data_;
 };
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

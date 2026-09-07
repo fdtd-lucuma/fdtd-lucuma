@@ -12,7 +12,7 @@
 
 #include "auxiliaries/funcs.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 void DefineParams(const std::filesystem::path& params_path) {
 	const Params p = LoadParams(params_path);
@@ -71,4 +71,4 @@ void DefineParams(const std::filesystem::path& params_path) {
 	    << "  # max PML conductivity in z: [S/m]\n";
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

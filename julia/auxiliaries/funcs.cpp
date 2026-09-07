@@ -10,7 +10,7 @@
 #include <regex>
 #include <sstream>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // ---------------------------------------------------------------------------
 
@@ -221,4 +221,4 @@ std::vector<std::string> unite(std::vector<std::string> a,
 	return a;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

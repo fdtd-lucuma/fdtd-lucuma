@@ -13,7 +13,6 @@
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
-#include <iostream>
 #include <limits>
 #include <map>
 #include <sstream>
@@ -34,7 +33,7 @@
 #include "pipeline/4_fdtd_setup.hpp"
 #include "utils/precision.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 namespace ceviche_design_test {
 
@@ -305,7 +304,6 @@ int Run(const fs::path& input_dir, const fs::path& out_base, Backend backend) {
 			    << ',' << num(r.transmission) << '\n';
 	}
 
-	std::cout << "END OF SIMULATION\n";
 	return EXIT_SUCCESS;
 }
 
@@ -329,20 +327,16 @@ inline int RunCevicheDesignTest(const std::filesystem::path& default_dir,
 				backend = Backend::taskflow;
 			else if (v == "vulkan")
 				backend = Backend::vulkan;
-			else {
-				std::cerr << "unknown --backend " << v << "\n";
+			else
 				return 2;
-			}
 		} else if (a == "--precision" && i + 1 < argc) {
 			const std::string v = argv[++i];
 			if (v == "f32")
 				precision = Precision::f32;
 			else if (v == "f64")
 				precision = Precision::f64;
-			else {
-				std::cerr << "unknown --precision " << v << "\n";
+			else
 				return 2;
-			}
 		} else if ((a == "--in" || a == "--dir") && i + 1 < argc) {
 			input_dir = argv[++i];
 		} else if (a == "--out" && i + 1 < argc) {
@@ -351,10 +345,6 @@ inline int RunCevicheDesignTest(const std::filesystem::path& default_dir,
 		} else if (!a.empty() && a[0] != '-') {
 			input_dir = a;
 		} else {
-			std::cerr << "usage: " << (argc ? argv[0] : "design_test")
-			          << " [DIR] [--in DIR] [--out DIR] "
-			             "[--backend sequential|taskflow|vulkan] "
-			             "[--precision f32|f64]\n";
 			return 2;
 		}
 	}
@@ -365,10 +355,9 @@ inline int RunCevicheDesignTest(const std::filesystem::path& default_dir,
 		return precision == Precision::f32
 		           ? ceviche_design_test::Run<float>(input_dir, out_base, backend)
 		           : ceviche_design_test::Run<double>(input_dir, out_base, backend);
-	} catch (const std::exception& e) {
-		std::cerr << "error: " << e.what() << "\n";
+	} catch (const std::exception&) {
 		return EXIT_FAILURE;
 	}
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

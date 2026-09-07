@@ -17,7 +17,7 @@
 #include "fdtd/params.hpp"
 #include "fdtd/utils.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // [Nx, Ny, Nz] = round(L / d)
 std::array<int, 3> WholeRegionSizes(const Params& params);
@@ -83,4 +83,4 @@ SourceNormalization CalibrateIncidentPower(
 	return sn;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

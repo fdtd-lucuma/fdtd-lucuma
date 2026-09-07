@@ -9,7 +9,7 @@
 #include <limits>
 #include <utility>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 BroadbandBand BroadbandModalBand(const std::vector<double>& freqs,
                                  double duration, double alpha,
@@ -122,4 +122,4 @@ ModeMonitor DefineModeMonitor(const Params& params, const Params& device,
 	return MakeModeMonitor(section, std::move(modes_by_freq), std::move(targets));
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

@@ -13,7 +13,7 @@
 #include "pipeline/7_forw_fdtd.hpp"
 #include "utils/precision.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 enum class Backend { sequential, taskflow, vulkan };
 
@@ -46,4 +46,4 @@ ForwardResult RunForwardOnBackend(Backend backend, Precision precision,
                                   const std::vector<std::string>& monitors_out,
                                   const ForwardRunOptions& options = {});
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

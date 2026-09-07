@@ -5,11 +5,11 @@
 
 #include <filesystem>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // DefineParams: derive cfg, cbg, dt (Courant), sigma_max_xy, sigma_max_z from
 // the material / domain / pml tables and write the five values back into
 // params.toml (existing lines for those keys are dropped first).
 void DefineParams(const std::filesystem::path& params_path);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

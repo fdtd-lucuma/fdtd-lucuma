@@ -14,7 +14,7 @@
 #include "auxiliaries/modes.hpp"
 #include "fdtd/utils.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // == ChhChe : coefficient math in double, stored as T (== fdtd/params.jl ChhChe).
 template <class T>
@@ -137,4 +137,4 @@ void FillCoeffsOptBox(Grid3<T>& Chh, Grid3<T>& Che, Grid3<T>& Cee,
 	          c.sigma_max_z, c.dt);
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

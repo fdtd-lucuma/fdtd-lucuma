@@ -11,7 +11,7 @@
 
 #include "auxiliaries/modes.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // == ConstantEnvelope : envelope == 1, origin == To.
 struct ConstantEnvelope {
@@ -66,4 +66,4 @@ struct SurfaceCurrents {
 SurfaceCurrents EquivalentSurfaceCurrents(const VectorModeProfile& mode,
                                           const PortSection& section);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

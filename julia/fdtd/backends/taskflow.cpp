@@ -6,7 +6,7 @@
 #include <taskflow/taskflow.hpp>
 #include <taskflow/algorithm/for_each.hpp>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 template <class T>
 Taskflow<T>::Taskflow() : exec_(std::make_unique<tf::Executor>()) {}
@@ -101,4 +101,4 @@ Grid3<double> Taskflow<T>::collectField(int component) const {
 template class Taskflow<float>;
 template class Taskflow<double>;
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

@@ -9,7 +9,7 @@
 
 namespace fs = std::filesystem;
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 void WriteMatrixCSV(const fs::path& path, const Mat2<double>& m) {
 	if (path.has_parent_path()) fs::create_directories(path.parent_path());
@@ -59,4 +59,4 @@ void FDTDSnapshot(const Grid3<double>& field, const std::string& field_name,
 	               data);
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

@@ -5,7 +5,7 @@
 
 #include <numeric>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 double TotalLoss(const ForwardResult& r,
                  const std::vector<std::string>& monitors_out) {
@@ -119,4 +119,4 @@ std::map<std::string, WrappedAdjointSource> WrapAdjointSourcesForFDTD(
 	return wrapped;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

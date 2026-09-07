@@ -19,7 +19,7 @@
 #include "inject_m_comp_spv.h"
 #include "accum_dft_comp_spv.h"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 using vk::Buffer;
 using vk::ComputePipeline;
@@ -545,4 +545,4 @@ FreqsField Vulkan<T>::collectFreqFields() const {
 
 template class Vulkan<float>;
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(lucuma-julia CXX)
+project(vulkan-fdtd CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -68,10 +68,10 @@ else()
 	endif()
 	file(COPY ${PREBUILT_SPV} DESTINATION ${SHADER_GEN_DIR})
 endif()
-add_custom_target(lucuma-julia-shaders DEPENDS ${SHADER_HEADERS})
+add_custom_target(vulkan-shaders DEPENDS ${SHADER_HEADERS})
 
 # --- shared core (all but the entry points) ---
-add_library(lucuma-julia-core STATIC
+add_library(vulkan-core STATIC
 	auxiliaries/funcs.cpp
 	auxiliaries/modes.cpp
 	auxiliaries/sources.cpp
@@ -91,38 +91,38 @@ add_library(lucuma-julia-core STATIC
 	pipeline/4_fdtd_setup.cpp
 	pipeline/7_forw_fdtd.cpp
 )
-add_dependencies(lucuma-julia-core lucuma-julia-shaders)
+add_dependencies(vulkan-core vulkan-shaders)
 
-target_include_directories(lucuma-julia-core PUBLIC
+target_include_directories(vulkan-core PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/deps
 	${SHADER_GEN_DIR}
 )
 
 if(TARGET Eigen3::Eigen)
-	target_link_libraries(lucuma-julia-core PUBLIC Eigen3::Eigen)
+	target_link_libraries(vulkan-core PUBLIC Eigen3::Eigen)
 endif()
-target_link_libraries(lucuma-julia-core PUBLIC Threads::Threads)
+target_link_libraries(vulkan-core PUBLIC Threads::Threads)
 if(TARGET Vulkan::Vulkan)
-	target_link_libraries(lucuma-julia-core PUBLIC Vulkan::Vulkan)
-	target_compile_definitions(lucuma-julia-core PUBLIC LUCUMA_HAVE_VULKAN=1)
+	target_link_libraries(vulkan-core PUBLIC Vulkan::Vulkan)
+	target_compile_definitions(vulkan-core PUBLIC VULKAN_BACKEND_AVAILABLE=1)
 endif()
 
-target_compile_definitions(lucuma-julia-core PUBLIC
-	LUCUMA_JULIA_ROOT="${CMAKE_CURRENT_SOURCE_DIR}"
+target_compile_definitions(vulkan-core PUBLIC
+	VULKAN_FDTD_ROOT="${CMAKE_CURRENT_SOURCE_DIR}"
 )
-target_compile_options(lucuma-julia-core PRIVATE -Wall -Wextra)
+target_compile_options(vulkan-core PRIVATE -Wall -Wextra)
 
-add_executable(lucuma-julia optimization.cpp)
-target_link_libraries(lucuma-julia PRIVATE lucuma-julia-core)
-target_compile_options(lucuma-julia PRIVATE -Wall -Wextra)
+add_executable(vulkan-fdtd optimization.cpp)
+target_link_libraries(vulkan-fdtd PRIVATE vulkan-core)
+target_compile_options(vulkan-fdtd PRIVATE -Wall -Wextra)
 
 # --- Ceviche design tests ---
 foreach(challenge bend wdm mode_converter beam_splitter)
-	add_executable(lucuma-${challenge}-test
+	add_executable(vulkan-${challenge}-test
 		challenges/${challenge}/${challenge}_design_test.cpp)
-	target_link_libraries(lucuma-${challenge}-test PRIVATE lucuma-julia-core)
-	target_compile_definitions(lucuma-${challenge}-test PRIVATE
-		LUCUMA_CHALLENGE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/challenges/${challenge}")
-	target_compile_options(lucuma-${challenge}-test PRIVATE -Wall -Wextra)
+	target_link_libraries(vulkan-${challenge}-test PRIVATE vulkan-core)
+	target_compile_definitions(vulkan-${challenge}-test PRIVATE
+		VULKAN_CHALLENGE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/challenges/${challenge}")
+	target_compile_options(vulkan-${challenge}-test PRIVATE -Wall -Wextra)
 endforeach()

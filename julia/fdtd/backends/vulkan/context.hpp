@@ -13,7 +13,7 @@
 
 #include <vulkan/vulkan.h>
 
-namespace lucuma::julia::vk {
+namespace lucuma::vulkan::vk {
 
 // A Vulkan SSBO.
 //
@@ -110,4 +110,4 @@ void computeBarrier(VkCommandBuffer cb);
 
 const char* resultString(VkResult r);
 
-}  // namespace lucuma::julia::vk
+}  // namespace lucuma::vulkan::vk

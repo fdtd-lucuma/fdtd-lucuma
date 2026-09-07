@@ -15,7 +15,7 @@
 #include "fdtd/fw_sim.hpp"
 #include "fdtd/params.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // == BuildOutputPortData entry: everything the adjoint stage needs per monitor.
 struct OutputPort {
@@ -134,4 +134,4 @@ ForwardResult RunForwardFDTD(
 	return r;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

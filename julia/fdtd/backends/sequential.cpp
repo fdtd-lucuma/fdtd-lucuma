@@ -3,7 +3,7 @@
 
 #include "fdtd/backends/sequential.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 template <class T>
 void Sequential<T>::init(const FDTDParams& p) {
@@ -74,4 +74,4 @@ Grid3<double> Sequential<T>::collectField(int component) const {
 template class Sequential<float>;
 template class Sequential<double>;
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

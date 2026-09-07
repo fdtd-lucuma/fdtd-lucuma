@@ -12,7 +12,7 @@
 
 #include "fdtd/backends/vulkan/context.hpp"
 
-namespace lucuma::julia::vk {
+namespace lucuma::vulkan::vk {
 
 // One compute shader with `nBuffers` storage buffers at bindings 0..n-1 and a
 // single push-constant block of `pushBytes`.
@@ -42,4 +42,4 @@ private:
 	VkDescriptorSet set_ = VK_NULL_HANDLE;
 };
 
-}  // namespace lucuma::julia::vk
+}  // namespace lucuma::vulkan::vk

@@ -5,7 +5,7 @@
 
 #include <cmath>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 using cplx = std::complex<double>;
 
@@ -166,4 +166,4 @@ std::vector<Source> CreateSources(
 	return out;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

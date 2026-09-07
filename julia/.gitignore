@@ -6,3 +6,5 @@ output/
 vis/*/
 # per-layout working copies created by LoadInputs()
 input/*/
+
+.deps/

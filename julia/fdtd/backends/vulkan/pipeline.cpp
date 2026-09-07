@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 
-namespace lucuma::julia::vk {
+namespace lucuma::vulkan::vk {
 
 static void check(VkResult r, const char* what) {
 	if (r != VK_SUCCESS)
@@ -121,4 +121,4 @@ void ComputePipeline::dispatch(VkCommandBuffer cb, const void* push,
 	vkCmdDispatch(cb, gx, gy, gz);
 }
 
-}  // namespace lucuma::julia::vk
+}  // namespace lucuma::vulkan::vk

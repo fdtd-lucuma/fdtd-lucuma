@@ -18,7 +18,7 @@
 #include "fdtd/parallel.hpp"
 #include "fdtd/utils.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // Running DFT: per frequency, 6 complex<T> volumes [Ex,Ey,Ez,Hx,Hy,Hz].
 template <class T>
@@ -117,4 +117,4 @@ void InjectMagneticSources(Grid3<T>& Hx, Grid3<T>& Hy, Grid3<T>& Hz,
 	}
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

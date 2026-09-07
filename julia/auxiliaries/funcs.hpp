@@ -18,7 +18,7 @@
 
 #include "toml.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 using Params = toml::table;
 
@@ -94,4 +94,4 @@ std::array<long, 2> ValuesToIndx(double b0, double b1, double step);
 std::vector<std::string> unite(std::vector<std::string> a,
                                const std::vector<std::string>& b);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

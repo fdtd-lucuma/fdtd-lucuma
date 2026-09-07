@@ -16,7 +16,7 @@ namespace tf {
 class Executor;
 }
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 template <class T>
 class Taskflow final : public IFdtdBackend<T> {
@@ -43,4 +43,4 @@ private:
 extern template class Taskflow<float>;
 extern template class Taskflow<double>;
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

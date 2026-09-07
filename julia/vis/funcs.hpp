@@ -8,7 +8,7 @@
 
 #include "auxiliaries/array.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // writedlm(path, matrix, ',') : one row per line, comma separated, row-major.
 void WriteMatrixCSV(const std::filesystem::path& path, const Mat2<double>& m);
@@ -19,4 +19,4 @@ void FDTDSnapshot(const Grid3<double>& field, const std::string& field_name,
                   const std::filesystem::path& vis_path,
                   const std::string& plane = "xy");
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

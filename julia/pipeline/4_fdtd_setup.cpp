@@ -13,7 +13,7 @@
 #include "auxiliaries/funcs.hpp"
 #include "fdtd/fw_sim.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 namespace {
 
@@ -342,4 +342,4 @@ void SaveSourceNormalization(const SourceNormalization& sn,
 	f << t;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

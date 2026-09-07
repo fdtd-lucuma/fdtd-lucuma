@@ -1,11 +1,13 @@
-#!/bin/bash
-#SBATCH -J vulkanfdtd-build
-#SBATCH -c 8
-#SBATCH --mem=16GB
-#SBATCH --time=00:40:00
+#!/bin/sh
+#SBATCH -J vulkanfdtd-opt
+#SBATCH --partition=gpu
+#SBATCH --nodelist=ds001
+#SBATCH --gres=gpu:1
+#SBATCH -c 4
+#SBATCH --mem=32GB
+#SBATCH --time=24:00:00
 #SBATCH --output=%x-%j.out
 #SBATCH --error=%x-%j.err
-# Build the C++ Vulkan port. Run on a login node or: sbatch build.sh
 
 set -euo pipefail
 
@@ -14,20 +16,24 @@ PREFIX="$JULIA_DIR/.deps"
 JOBS="${SLURM_CPUS_PER_TASK:-8}"
 mkdir -p "$PREFIX"
 
+# ---- compiler ----
 module purge > /dev/null 2>&1 || true
-for m in gnu14 gnu13 gnu12 gcc; do module load "$m" > /dev/null 2>&1 && break || true; done
+GNU_MOD=""
+for m in gnu14 gnu13 gnu12 gcc; do
+	module load "$m" > /dev/null 2>&1 && GNU_MOD="$m" && break || true
+done
 g++ --version | head -1
 
-# cmake + ninja from a venv (the module cmake is broken; pip wheels are self-contained)
+# ---- cmake + ninja (module cmake is broken; pip wheels are self-contained) ----
 python3 -m venv "$PREFIX/venv"
-source "$PREFIX/venv/bin/activate"
-pip install --quiet --upgrade pip cmake ninja
+"$PREFIX/venv/bin/pip" install --quiet --upgrade pip cmake ninja
+export PATH="$PREFIX/venv/bin:$PATH"
 cmake --version | head -1
 
-# Vulkan headers + loader — build from source only if the node lacks them
+# ---- Vulkan headers + loader (only if the node lacks them) ----
 have_vulkan() { echo '#include <vulkan/vulkan.h>' | g++ -x c++ -E - > /dev/null 2>&1 \
                 && ldconfig -p 2>/dev/null | grep -q 'libvulkan\.so\.1'; }
-VK_ARGS=()
+VK_ARG=""
 RUNTIME_LDPATH=""
 if have_vulkan; then
 	echo "system Vulkan loader/headers OK"
@@ -36,7 +42,7 @@ else
 	mkdir -p "$PREFIX/src" && cd "$PREFIX/src"
 	for repo in Vulkan-Headers Vulkan-Loader; do
 		[ -d "$repo" ] || git clone --depth 1 "https://github.com/KhronosGroup/${repo}.git"
-		# Headless compute node: no window-system integration (avoids X11/xrandr/wayland deps)
+		# headless compute node: no window-system integration
 		cmake -S "$repo" -B "$repo/build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
 			-DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" \
 			-DUPDATE_DEPS=OFF \
@@ -46,25 +52,21 @@ else
 		cmake --build "$repo/build" -j "$JOBS"
 		cmake --install "$repo/build"
 	done
-	VK_ARGS=(-DCMAKE_PREFIX_PATH="$PREFIX")
+	VK_ARG="-DCMAKE_PREFIX_PATH=$PREFIX"
 	RUNTIME_LDPATH="$PREFIX/lib:$PREFIX/lib64"
 fi
 
-# Eigen (header-only) — vendor it if the node lacks it
-EIGEN_ARG=()
+# ---- Eigen (header-only) ----
 if [ ! -d "$PREFIX/eigen/Eigen" ]; then
 	git clone --depth 1 https://gitlab.com/libeigen/eigen.git "$PREFIX/eigen" \
 		|| git clone --depth 1 https://github.com/eigen-mirror/eigen.git "$PREFIX/eigen"
 fi
-[ -d "$PREFIX/eigen/Eigen" ] && EIGEN_ARG=(-DEIGEN3_INCLUDE_DIR="$PREFIX/eigen")
+EIGEN_ARG="-DEIGEN3_INCLUDE_DIR=$PREFIX/eigen"
 
-# Build (no glslangValidator on the cluster: uses shaders/prebuilt/*.h)
-cd "$JULIA_DIR"
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DGLSLANG=GLSLANG-NOTFOUND \
-	"${VK_ARGS[@]}" "${EIGEN_ARG[@]}"
-cmake --build build -j "$JOBS"
-
-# Runtime env for run.sh
-: > "$PREFIX/env.sh"
-[ -n "$RUNTIME_LDPATH" ] && echo "export LD_LIBRARY_PATH=\"$RUNTIME_LDPATH:\${LD_LIBRARY_PATH:-}\"" >> "$PREFIX/env.sh"
-echo "build OK -> $JULIA_DIR/build/lucuma-julia"
+# ---- record env for jobs/opt.sh ----
+{
+	echo "command -v module >/dev/null 2>&1 && module load ${GNU_MOD:-gcc} >/dev/null 2>&1 || true"
+	echo "export PATH=\"$PREFIX/venv/bin:\$PATH\""
+	[ -n "$RUNTIME_LDPATH" ] && echo "export LD_LIBRARY_PATH=\"$RUNTIME_LDPATH:\${LD_LIBRARY_PATH:-}\""
+	echo "export VULKAN_CMAKE_ARGS=\"-DGLSLANG=GLSLANG-NOTFOUND $VK_ARG $EIGEN_ARG\""
+} > "$PREFIX/env.sh"

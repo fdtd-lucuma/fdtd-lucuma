@@ -16,7 +16,7 @@
 #include <chrono>
 #include <iostream>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 ForwardRunOptions MakeForwardRunOptions(const std::filesystem::path &root,
                                         const std::string &layout,
@@ -62,11 +62,11 @@ ForwardResult run_typed(Backend b, FDTDParams &params,
   auto be = MakeBackend<T>(b);
   be->init(params);
 
-  auto start = std::chrono::steady_clock::now();
-
   const SourceNormalization sn = CalibrateIncidentPower<T>(
       params, *be, monitors_in, o.vis_path, o.norm_path, o.calibration_tag,
       o.snapshot_plane, o.snapshot_field);
+
+  auto start = std::chrono::steady_clock::now();
 
   const ForwardResult result = RunForwardFDTD<T>(
       params, *be, params.opt_region_values, monitors_in, monitors_out, sn,
@@ -99,4 +99,4 @@ ForwardResult RunForwardOnBackend(Backend backend, Precision precision,
   throw std::runtime_error("unknown precision");
 }
 
-} // namespace lucuma::julia
+} // namespace lucuma::vulkan

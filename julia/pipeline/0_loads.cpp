@@ -10,7 +10,7 @@
 
 namespace fs = std::filesystem;
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 void LoadInputs(const fs::path& base_path, const std::string& design) {
 	const fs::path design_path = base_path / design;
@@ -109,4 +109,4 @@ Debug DebugParams(const fs::path& debug_path) {
 	return dbg;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

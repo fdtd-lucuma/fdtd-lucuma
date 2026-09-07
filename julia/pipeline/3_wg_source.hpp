@@ -11,7 +11,7 @@
 #include "auxiliaries/modes.hpp"
 #include "auxiliaries/sources.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 BBox BuildModalBoundingBox(const std::string& name, const Params& device,
                            const Params& params, bool with_direction = true);
@@ -48,4 +48,4 @@ ModeMonitor DefineModeMonitor(const Params& params, const Params& device,
                               long transverse_pad = 0, int nmodes = 4,
                               int mode_index = 1);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

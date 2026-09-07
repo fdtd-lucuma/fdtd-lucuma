@@ -15,7 +15,7 @@
 #include "fdtd/params.hpp"
 #include "vis/funcs.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // == DFTSampleTimes : (electric_time, magnetic_time) for Yee step t.
 std::pair<double, double> DFTSampleTimes(int t, double dt,
@@ -63,4 +63,4 @@ FreqsField FwFDTDSimulation(
 	return be.collectFreqFields();
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

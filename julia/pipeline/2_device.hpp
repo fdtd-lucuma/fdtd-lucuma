@@ -6,7 +6,7 @@
 #include <array>
 #include <filesystem>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // DefineDevice: size the optimisation region P from device["P"] extents and
 // the domain steps, write output/<layout>/P.csv (ones when p_ones), and append
@@ -17,4 +17,4 @@ std::array<int, 3> DefineDevice(const std::filesystem::path& params_path,
                                 const std::filesystem::path& output_path,
                                 bool p_ones = false);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

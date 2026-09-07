@@ -14,7 +14,7 @@
 #include "auxiliaries/array.hpp"
 #include "auxiliaries/funcs.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 using cdouble = std::complex<double>;
 
@@ -209,4 +209,4 @@ ModalOutputs ComputeModalOutputs(
     const SourceNormalization* source_normalization,
     const std::vector<std::string>& input_monitor_names);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

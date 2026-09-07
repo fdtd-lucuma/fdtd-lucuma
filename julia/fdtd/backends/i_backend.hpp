@@ -6,7 +6,7 @@
 #include "auxiliaries/modes.hpp"   // FreqsField
 #include "fdtd/params.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // A forward-FDTD compute backend, templated on the Yee-field scalar type
 // (T = float | double). The mode solver, monitors and modal-output reductions
@@ -41,4 +41,4 @@ public:
 	virtual Grid3<double> collectField(int component) const = 0;
 };
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

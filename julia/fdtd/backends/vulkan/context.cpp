@@ -2,11 +2,10 @@
 
 #include "fdtd/backends/vulkan/context.hpp"
 
-#include <cstdio>
 #include <cstring>
 #include <stdexcept>
 
-namespace lucuma::julia::vk {
+namespace lucuma::vulkan::vk {
 
 const char* resultString(VkResult r) {
 	switch (r) {
@@ -99,8 +98,6 @@ Context::Context() {
 	vkGetPhysicalDeviceProperties(phys_, &props);
 	deviceName_ = props.deviceName;
 	vkGetPhysicalDeviceMemoryProperties(phys_, &memProps_);
-	std::fprintf(stderr, "vulkan device: %s (type %d)\n", props.deviceName,
-	             int(props.deviceType));
 
 	// ---- logical device ----
 	uint32_t devExtCount = 0;
@@ -357,4 +354,4 @@ void computeBarrier(VkCommandBuffer cb) {
 	                     nullptr, 0, nullptr);
 }
 
-}  // namespace lucuma::julia::vk
+}  // namespace lucuma::vulkan::vk

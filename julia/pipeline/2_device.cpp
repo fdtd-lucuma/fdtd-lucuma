@@ -10,7 +10,7 @@
 
 #include "auxiliaries/funcs.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 std::array<int, 3> DefineDevice(const std::filesystem::path& params_path,
                                 const std::filesystem::path& device_path,
@@ -51,4 +51,4 @@ std::array<int, 3> DefineDevice(const std::filesystem::path& params_path,
 	return {nx, ny, nz};
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

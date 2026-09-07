@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 std::vector<double> DFTBinFrequencies(double fmin, double fmax, double dt,
                                       long sample_count) {
@@ -88,4 +88,4 @@ SurfaceCurrents EquivalentSurfaceCurrents(const VectorModeProfile& mode,
 	return sc;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

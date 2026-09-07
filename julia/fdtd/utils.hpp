@@ -11,7 +11,7 @@
 #include "auxiliaries/funcs.hpp"
 #include "auxiliaries/sources.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // sim_region is [[x_lo,x_hi],[y_lo,y_hi],[z_lo,z_hi]] (1-based inclusive).
 using SimRegion = std::array<std::array<long, 2>, 3>;
@@ -95,4 +95,4 @@ struct Source {
 std::vector<Source> CreateSources(
     const std::vector<EquivalentModalSource>& sources);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

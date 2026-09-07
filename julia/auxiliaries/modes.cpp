@@ -14,7 +14,7 @@
 #include <Spectra/GenEigsSolver.h>
 #include <Spectra/MatOp/SparseGenMatProd.h>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 using Eigen::MatrixXcd;
 using Eigen::MatrixXd;
@@ -972,4 +972,4 @@ const VectorModeProfile& ModeForAdjointSourceFrequency(
 	return *best;
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

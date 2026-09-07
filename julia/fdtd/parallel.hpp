@@ -10,7 +10,7 @@
 #include "auxiliaries/array.hpp"
 #include "fdtd/utils.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // H update over i in 1..i_hi (== Nx-1), j in 1..j_hi, k in k_lo..k_hi
 // (k_lo lets the Taskflow backend partition the k axis; == 1 for the whole run).
@@ -145,4 +145,4 @@ void InjectMagneticSurfaceCurrent(Grid3<T>& Hx, Grid3<T>& Hy, Grid3<T>& Hz,
 	                          {&s.Mx, &s.My, &s.Mz}, tau, envelope);
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

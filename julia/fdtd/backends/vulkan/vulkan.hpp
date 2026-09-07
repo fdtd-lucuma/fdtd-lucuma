@@ -9,7 +9,7 @@
 
 #include "fdtd/backends/i_backend.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 template <class T>
 class Vulkan final : public IFdtdBackend<T> {
@@ -35,4 +35,4 @@ private:
 
 extern template class Vulkan<float>;
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

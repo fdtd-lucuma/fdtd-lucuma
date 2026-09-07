@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 // LoadInputs(base_path, design): create input/<design>/ and copy the base
 // TOMLs into it if they are not there yet.
@@ -60,4 +60,4 @@ struct Debug {
 };
 Debug DebugParams(const std::filesystem::path& debug_path);
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

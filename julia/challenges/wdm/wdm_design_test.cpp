@@ -3,10 +3,10 @@
 
 #include "challenges/common/ceviche_design_test.hpp"
 
-#ifndef LUCUMA_CHALLENGE_DIR
-#define LUCUMA_CHALLENGE_DIR "."
+#ifndef VULKAN_CHALLENGE_DIR
+#define VULKAN_CHALLENGE_DIR "."
 #endif
 
 int main(int argc, char **argv) {
-  return lucuma::julia::RunCevicheDesignTest(LUCUMA_CHALLENGE_DIR, argc, argv);
+  return lucuma::vulkan::RunCevicheDesignTest(VULKAN_CHALLENGE_DIR, argc, argv);
 }

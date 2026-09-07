@@ -3,8 +3,8 @@
 
 #pragma once
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 enum class Precision { f32, f64 };
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

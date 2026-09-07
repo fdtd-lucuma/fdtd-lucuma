@@ -3,7 +3,7 @@
 
 #include "fdtd/fw_sim.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 std::pair<double, double> DFTSampleTimes(int t, double dt,
                                          double h_offset_steps) {
@@ -11,4 +11,4 @@ std::pair<double, double> DFTSampleTimes(int t, double dt,
 	        (static_cast<double>(t) + h_offset_steps) * dt};
 }
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

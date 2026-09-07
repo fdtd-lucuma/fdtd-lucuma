@@ -9,7 +9,7 @@
 #include "fdtd/backends/cpu_common.hpp"
 #include "fdtd/backends/i_backend.hpp"
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 template <class T>
 class Sequential final : public IFdtdBackend<T> {
@@ -32,4 +32,4 @@ private:
 extern template class Sequential<float>;
 extern template class Sequential<double>;
 
-}  // namespace lucuma::julia
+}  // namespace lucuma::vulkan

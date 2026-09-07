@@ -1,4 +1,4 @@
-// lucuma-julia [--root DIR] [--backend sequential|taskflow|vulkan] [--precision
+// vulkan-fdtd [--root DIR] [--backend sequential|taskflow|vulkan] [--precision
 // f32|f64]
 
 #include <cstdlib>
@@ -20,13 +20,13 @@
 #include "pipeline/7_forw_fdtd.hpp"
 #include "utils/precision.hpp"
 
-#ifndef LUCUMA_JULIA_ROOT
-#define LUCUMA_JULIA_ROOT "."
+#ifndef VULKAN_FDTD_ROOT
+#define VULKAN_FDTD_ROOT "."
 #endif
 
 namespace fs = std::filesystem;
 
-namespace lucuma::julia {
+namespace lucuma::vulkan {
 
 ForwardResult Optimization(const std::string &layout, const fs::path &root,
                            Backend backend, Precision precision) {
@@ -78,13 +78,13 @@ ForwardResult Optimization(const std::string &layout, const fs::path &root,
                              elements.monitors_out, opts);
 }
 
-} // namespace lucuma::julia
+} // namespace lucuma::vulkan
 
 int main(int argc, char **argv) {
-  using namespace lucuma::julia;
+  using namespace lucuma::vulkan;
 
   std::string layout = "challenge_bend";
-  std::filesystem::path root = LUCUMA_JULIA_ROOT;
+  std::filesystem::path root = VULKAN_FDTD_ROOT;
   Backend backend = Backend::taskflow;
   Precision precision = Precision::f64;
 
@@ -114,6 +114,8 @@ int main(int argc, char **argv) {
         std::cerr << "unknown --precision " << v << "\n";
         return 2;
       }
+    } else if (!a.empty() && a[0] != '-') {
+      layout = a;
     }
   }
 
