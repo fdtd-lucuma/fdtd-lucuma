@@ -36,8 +36,13 @@ else
 	mkdir -p "$PREFIX/src" && cd "$PREFIX/src"
 	for repo in Vulkan-Headers Vulkan-Loader; do
 		[ -d "$repo" ] || git clone --depth 1 "https://github.com/KhronosGroup/${repo}.git"
+		# Headless compute node: no window-system integration (avoids X11/xrandr/wayland deps)
 		cmake -S "$repo" -B "$repo/build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
-			-DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX"
+			-DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" \
+			-DUPDATE_DEPS=OFF \
+			-DBUILD_WSI_XCB_SUPPORT=OFF -DBUILD_WSI_XLIB_SUPPORT=OFF \
+			-DBUILD_WSI_WAYLAND_SUPPORT=OFF -DBUILD_WSI_DIRECTFB_SUPPORT=OFF \
+			-DBUILD_WSI_SCREEN_QNX_SUPPORT=OFF
 		cmake --build "$repo/build" -j "$JOBS"
 		cmake --install "$repo/build"
 	done
