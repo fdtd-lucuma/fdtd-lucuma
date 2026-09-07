@@ -50,9 +50,18 @@ else
 	RUNTIME_LDPATH="$PREFIX/lib:$PREFIX/lib64"
 fi
 
+# Eigen (header-only) — vendor it if the node lacks it
+EIGEN_ARG=()
+if [ ! -d "$PREFIX/eigen/Eigen" ]; then
+	git clone --depth 1 https://gitlab.com/libeigen/eigen.git "$PREFIX/eigen" \
+		|| git clone --depth 1 https://github.com/eigen-mirror/eigen.git "$PREFIX/eigen"
+fi
+[ -d "$PREFIX/eigen/Eigen" ] && EIGEN_ARG=(-DEIGEN3_INCLUDE_DIR="$PREFIX/eigen")
+
 # Build (no glslangValidator on the cluster: uses shaders/prebuilt/*.h)
 cd "$JULIA_DIR"
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DGLSLANG=GLSLANG-NOTFOUND "${VK_ARGS[@]}"
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DGLSLANG=GLSLANG-NOTFOUND \
+	"${VK_ARGS[@]}" "${EIGEN_ARG[@]}"
 cmake --build build -j "$JOBS"
 
 # Runtime env for run.sh
