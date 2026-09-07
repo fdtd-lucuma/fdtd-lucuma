@@ -1,0 +1,53 @@
+#version 450
+// == fdtd/parallel.jl InjectElectricSurfaceCurrent  (0-based sheet coords)
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer BEx { float Ex[]; };
+layout(std430, binding = 1) buffer BEy { float Ey[]; };
+layout(std430, binding = 2) buffer BEz { float Ez[]; };
+layout(std430, binding = 3) readonly buffer BCeh { float Ceh[]; };
+layout(std430, binding = 4) readonly buffer BJx { vec2 Jx[]; };
+layout(std430, binding = 5) readonly buffer BJy { vec2 Jy[]; };
+layout(std430, binding = 6) readonly buffer BJz { vec2 Jz[]; };
+layout(std430, binding = 7) readonly buffer BW  { float omegas[]; };
+
+layout(push_constant) uniform PC {
+	ivec4 a;  // axis(1=x,2=y,3=z), fixed0, r1_lo0, r2_lo0
+	ivec4 b;  // size1, size2, nfreqs, Nx
+	ivec4 d;  // Ny, Nz, _, _
+	vec4  c;  // scale, tau, _, _
+} pc;
+
+void main() {
+	int a0 = int(gl_GlobalInvocationID.x);
+	int b0 = int(gl_GlobalInvocationID.y);
+	if (a0 >= pc.b.x || b0 >= pc.b.y) return;
+
+	int axis = pc.a.x, fixed0 = pc.a.y, r1 = pc.a.z, r2 = pc.a.w;
+	int size1 = pc.b.x, size2 = pc.b.y, nfreqs = pc.b.z;
+	int Nx = pc.b.w, Ny = pc.d.x, Nz = pc.d.y;
+	float scale = pc.c.x, tau = pc.c.y;
+
+	int x = fixed0, y = fixed0, z = fixed0;
+	if (axis == 3) { x = r1 + a0; y = r2 + b0; }
+	else if (axis == 1) { y = r1 + a0; z = r2 + b0; }
+	else { x = r1 + a0; z = r2 + b0; }
+
+	int cell = x + Nx * (y + Ny * z);
+	int base = a0 + size1 * (b0 + size2 * 0);
+	int slab = size1 * size2;
+
+	float sx = 0.0, sy = 0.0, sz = 0.0;
+	for (int n = 0; n < nfreqs; ++n) {
+		float th = omegas[n] * tau;
+		float cs = cos(th), sn = sin(th);
+		int j = base + slab * n;
+		sx += Jx[j].x * cs - Jx[j].y * sn;
+		sy += Jy[j].x * cs - Jy[j].y * sn;
+		sz += Jz[j].x * cs - Jz[j].y * sn;
+	}
+	float g = Ceh[cell] * scale;
+	Ex[cell] -= g * sx;
+	Ey[cell] -= g * sy;
+	Ez[cell] -= g * sz;
+}

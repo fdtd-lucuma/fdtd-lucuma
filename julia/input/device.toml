@@ -1,0 +1,53 @@
+[elements]
+waveguides_in = ["win"]
+waveguides_out = ["wout"]
+monitors_in = ["monitor_in"]
+monitors_out = ["monitor_out"]
+sources = ["source"]
+
+[win]
+# Input waveguide core: horizontal, positioned at the bottom portion of P.
+# Extends from the left active boundary to P's left edge.
+x = [600e-9, 2100e-9]
+y = [1635e-9, 1905e-9]
+z = [420e-9, 570e-9]
+direction = "+x"
+
+[source]
+# Modal source plane: thin in x, wider in y,z to include cladding (210 nm each side).
+x = [630e-9, 660e-9]
+y = [1635e-9, 1905e-9]
+z = [420e-9, 570e-9]
+direction = "+x"
+
+[monitor_in]
+# Input monitor, in the Win arm before P.
+x = [1800e-9, 1830e-9]
+y = [1425e-9, 2115e-9]
+z = [270e-9, 720e-9]
+direction = "+x"
+
+[wout]
+# Output waveguide core: vertical, at the right side of P.
+# Starts at P's top edge, ends at the upper active boundary.
+x = [5850e-9, 6120e-9]
+y = [5700e-9, 7020e-9]
+z = [420e-9, 570e-9]
+direction = "+y"
+
+[monitor_out]
+# Output monitor in Wout arm above P: 600 nm above P top, 930 nm from top PML boundary.
+x = [5640e-9, 6330e-9]
+y = [6300e-9, 6330e-9]
+z = [270e-9, 720e-9]
+direction = "+y"
+# Target J_{m,k} in the same order as simulation.freqs.
+targets = [1.0, 1.0]
+
+
+[P]
+# Design region: 4200 x 4200 nm (140 x 140 cells).
+# Contains the full bend — Win enters from left at bottom, Wout exits from top at right.
+x = [2100e-9, 6300e-9]
+y = [1500e-9, 5700e-9]
+z = [420e-9, 570e-9]

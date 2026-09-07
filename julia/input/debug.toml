@@ -1,0 +1,7 @@
+[fdtd]
+plane="xy"
+field="Ey"
+step=20
+
+[result]
+plane="xy"

@@ -1,0 +1,40 @@
+#version 450
+// == fdtd/parallel.jl AccumDTF  (running DFT over the whole grid, one frequency)
+layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
+
+layout(std430, binding = 0) buffer BE1 { vec2 dftE1[]; };
+layout(std430, binding = 1) buffer BE2 { vec2 dftE2[]; };
+layout(std430, binding = 2) buffer BE3 { vec2 dftE3[]; };
+layout(std430, binding = 3) buffer BH1 { vec2 dftH1[]; };
+layout(std430, binding = 4) buffer BH2 { vec2 dftH2[]; };
+layout(std430, binding = 5) buffer BH3 { vec2 dftH3[]; };
+layout(std430, binding = 6) readonly buffer BEx { float Ex[]; };
+layout(std430, binding = 7) readonly buffer BEy { float Ey[]; };
+layout(std430, binding = 8) readonly buffer BEz { float Ez[]; };
+layout(std430, binding = 9) readonly buffer BHx { float Hx[]; };
+layout(std430, binding = 10) readonly buffer BHy { float Hy[]; };
+layout(std430, binding = 11) readonly buffer BHz { float Hz[]; };
+
+layout(push_constant) uniform PC {
+	ivec4 dims;   // Nx, Ny, Nz, _
+	vec4  phase;  // phaseE.re, phaseE.im, phaseH.re, phaseH.im
+} pc;
+
+void main() {
+	int Nx = pc.dims.x, Ny = pc.dims.y, Nz = pc.dims.z;
+	int x = int(gl_GlobalInvocationID.x);
+	int y = int(gl_GlobalInvocationID.y);
+	int z = int(gl_GlobalInvocationID.z);
+	if (x >= Nx || y >= Ny || z >= Nz) return;
+	int idx = x + Nx * (y + Ny * z);
+
+	vec2 pe = pc.phase.xy;
+	vec2 ph = pc.phase.zw;
+
+	dftE1[idx] += Ex[idx] * pe;
+	dftE2[idx] += Ey[idx] * pe;
+	dftE3[idx] += Ez[idx] * pe;
+	dftH1[idx] += Hx[idx] * ph;
+	dftH2[idx] += Hy[idx] * ph;
+	dftH3[idx] += Hz[idx] * ph;
+}

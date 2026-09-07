@@ -1,0 +1,41 @@
+#version 450
+// == fdtd/parallel.jl UpdateH  (0-based; H over x in [0,Nx-2], y,z likewise)
+layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
+
+layout(std430, binding = 0) buffer BHx { float Hx[]; };
+layout(std430, binding = 1) buffer BHy { float Hy[]; };
+layout(std430, binding = 2) buffer BHz { float Hz[]; };
+layout(std430, binding = 3) readonly buffer BEx { float Ex[]; };
+layout(std430, binding = 4) readonly buffer BEy { float Ey[]; };
+layout(std430, binding = 5) readonly buffer BEz { float Ez[]; };
+layout(std430, binding = 6) readonly buffer BChh { float Chh[]; };
+layout(std430, binding = 7) readonly buffer BChe { float Che[]; };
+
+layout(push_constant) uniform PC {
+	ivec4 dims;   // Nx, Ny, Nz, _
+	vec4  delta;  // dx, dy, dz, _
+} pc;
+
+void main() {
+	int Nx = pc.dims.x, Ny = pc.dims.y, Nz = pc.dims.z;
+	int x = int(gl_GlobalInvocationID.x);
+	int y = int(gl_GlobalInvocationID.y);
+	int z = int(gl_GlobalInvocationID.z);
+	if (x > Nx - 2 || y > Ny - 2 || z > Nz - 2) return;
+
+	int idx = x + Nx * (y + Ny * z);
+	int px = idx + 1;
+	int py = idx + Nx;
+	int pz = idx + Nx * Ny;
+
+	float dx = pc.delta.x, dy = pc.delta.y, dz = pc.delta.z;
+	float chh = Chh[idx];
+	float che = Che[idx];
+
+	Hx[idx] = chh * Hx[idx] +
+	          che * ((Ey[pz] - Ey[idx]) / dz - (Ez[py] - Ez[idx]) / dy);
+	Hy[idx] = chh * Hy[idx] +
+	          che * ((Ez[px] - Ez[idx]) / dx - (Ex[pz] - Ex[idx]) / dz);
+	Hz[idx] = chh * Hz[idx] +
+	          che * ((Ex[py] - Ex[idx]) / dy - (Ey[px] - Ey[idx]) / dx);
+}

@@ -1,0 +1,42 @@
+#version 450
+// == fdtd/parallel.jl UpdateE  (0-based; E over x in [1,Nx-1], y,z likewise)
+layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
+
+layout(std430, binding = 0) buffer BEx { float Ex[]; };
+layout(std430, binding = 1) buffer BEy { float Ey[]; };
+layout(std430, binding = 2) buffer BEz { float Ez[]; };
+layout(std430, binding = 3) readonly buffer BHx { float Hx[]; };
+layout(std430, binding = 4) readonly buffer BHy { float Hy[]; };
+layout(std430, binding = 5) readonly buffer BHz { float Hz[]; };
+layout(std430, binding = 6) readonly buffer BCee { float Cee[]; };
+layout(std430, binding = 7) readonly buffer BCeh { float Ceh[]; };
+
+layout(push_constant) uniform PC {
+	ivec4 dims;   // Nx, Ny, Nz, _
+	vec4  delta;  // dx, dy, dz, _
+} pc;
+
+void main() {
+	int Nx = pc.dims.x, Ny = pc.dims.y, Nz = pc.dims.z;
+	int x = int(gl_GlobalInvocationID.x);
+	int y = int(gl_GlobalInvocationID.y);
+	int z = int(gl_GlobalInvocationID.z);
+	if (x < 1 || y < 1 || z < 1 || x > Nx - 1 || y > Ny - 1 || z > Nz - 1)
+		return;
+
+	int idx = x + Nx * (y + Ny * z);
+	int mx = idx - 1;
+	int my = idx - Nx;
+	int mz = idx - Nx * Ny;
+
+	float dx = pc.delta.x, dy = pc.delta.y, dz = pc.delta.z;
+	float cee = Cee[idx];
+	float ceh = Ceh[idx];
+
+	Ex[idx] = cee * Ex[idx] +
+	          ceh * ((Hz[idx] - Hz[my]) / dy - (Hy[idx] - Hy[mz]) / dz);
+	Ey[idx] = cee * Ey[idx] +
+	          ceh * ((Hx[idx] - Hx[mz]) / dz - (Hz[idx] - Hz[mx]) / dx);
+	Ez[idx] = cee * Ez[idx] +
+	          ceh * ((Hy[idx] - Hy[mx]) / dx - (Hx[idx] - Hx[my]) / dy);
+}

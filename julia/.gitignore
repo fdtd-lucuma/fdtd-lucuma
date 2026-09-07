@@ -1,0 +1,8 @@
+build/
+output/
+# clangd language-server symbol index
+.cache/
+# generated snapshot output lives under vis/<layout>/ next to vis/funcs.*
+vis/*/
+# per-layout working copies created by LoadInputs()
+input/*/

@@ -1,0 +1,53 @@
+#version 450
+// == fdtd/parallel.jl InjectMagneticSurfaceCurrent  (0-based sheet coords)
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer BHx { float Hx[]; };
+layout(std430, binding = 1) buffer BHy { float Hy[]; };
+layout(std430, binding = 2) buffer BHz { float Hz[]; };
+layout(std430, binding = 3) readonly buffer BChe { float Che[]; };
+layout(std430, binding = 4) readonly buffer BMx { vec2 Mx[]; };
+layout(std430, binding = 5) readonly buffer BMy { vec2 My[]; };
+layout(std430, binding = 6) readonly buffer BMz { vec2 Mz[]; };
+layout(std430, binding = 7) readonly buffer BW  { float omegas[]; };
+
+layout(push_constant) uniform PC {
+	ivec4 a;  // axis, fixed0, r1_lo0, r2_lo0
+	ivec4 b;  // size1, size2, nfreqs, Nx
+	ivec4 d;  // Ny, Nz, _, _
+	vec4  c;  // scale, tau, _, _
+} pc;
+
+void main() {
+	int a0 = int(gl_GlobalInvocationID.x);
+	int b0 = int(gl_GlobalInvocationID.y);
+	if (a0 >= pc.b.x || b0 >= pc.b.y) return;
+
+	int axis = pc.a.x, fixed0 = pc.a.y, r1 = pc.a.z, r2 = pc.a.w;
+	int size1 = pc.b.x, size2 = pc.b.y, nfreqs = pc.b.z;
+	int Nx = pc.b.w, Ny = pc.d.x;
+	float scale = pc.c.x, tau = pc.c.y;
+
+	int x = fixed0, y = fixed0, z = fixed0;
+	if (axis == 3) { x = r1 + a0; y = r2 + b0; }
+	else if (axis == 1) { y = r1 + a0; z = r2 + b0; }
+	else { x = r1 + a0; z = r2 + b0; }
+
+	int cell = x + Nx * (y + Ny * z);
+	int base = a0 + size1 * b0;
+	int slab = size1 * size2;
+
+	float sx = 0.0, sy = 0.0, sz = 0.0;
+	for (int n = 0; n < nfreqs; ++n) {
+		float th = omegas[n] * tau;
+		float cs = cos(th), sn = sin(th);
+		int j = base + slab * n;
+		sx += Mx[j].x * cs - Mx[j].y * sn;
+		sy += My[j].x * cs - My[j].y * sn;
+		sz += Mz[j].x * cs - Mz[j].y * sn;
+	}
+	float g = Che[cell] * scale;
+	Hx[cell] -= g * sx;
+	Hy[cell] -= g * sy;
+	Hz[cell] -= g * sz;
+}
