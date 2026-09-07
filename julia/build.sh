@@ -9,7 +9,7 @@
 
 set -euo pipefail
 
-JULIA_DIR="$(cd "$(dirname "$0")" && pwd)"
+JULIA_DIR="$(cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}" && pwd)"
 PREFIX="$JULIA_DIR/.deps"
 JOBS="${SLURM_CPUS_PER_TASK:-8}"
 mkdir -p "$PREFIX"
