@@ -31,7 +31,6 @@ using Kokkos::layout_left;
 using Kokkos::layout_right;
 using Kokkos::layout_stride;
 using Kokkos::mdspan;
-using Kokkos::strided_slice;
 using Kokkos::submdspan;
 
 };
